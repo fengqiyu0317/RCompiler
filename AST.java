@@ -23,6 +23,10 @@ class FunctionNode extends ItemNode {
     BlockExprNode body;
     TypeExprNode returnType; // can be null
     SelfParaNode selfPara; // can be null
+    // set isConst to false initially
+    FunctionNode() {
+        isConst = false;
+    }
 }
 class SelfParaNode extends ASTNode {
     boolean isMutable;
@@ -75,18 +79,20 @@ class TraitNode extends ItemNode {
     Vector<AssoItemNode> items;
 }
 class AssoItemNode extends ItemNode {
+    // can be FunctionNode or ConstItemNode
+    FunctionNode function;
+    ConstItemNode constant;
 }
 
 
 class ImplNode extends ItemNode {
-    TraitNode trait; // can be null if it's an inherent impl
+    IdentifierNode trait; // can be null if it's an inherent impl
     TypeExprNode typeName;
     Vector<AssoItemNode> items;
 }
 
 
 class ExprWithBlockNode extends ExprStmtNode {
-    Vector<ASTNode> statements;
 }
 class ExprWithoutBlockNode extends ExprStmtNode {
     ASTNode expression;

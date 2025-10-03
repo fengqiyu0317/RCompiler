@@ -326,6 +326,283 @@ public class Parser {
         }
     }
 
+    public void parse(TraitNode node) {
+        // consume the "trait" token
+        i++;
+        if (i < tokens.size() && token_t.isIdentifier(tokens.get(i))) {
+            IdentifierNode name = new IdentifierNode();
+            parse(name);
+            node.name = name;
+        } else {
+            assert false : "Expected trait name after 'trait'";
+        }
+        if (i < tokens.size() && tokens.get(i).tokentype.name == "{") {
+            i++;
+        } else {
+            assert false : "Expected '{' after trait name";
+        }
+        Vector<AssoItemNode> items = new Vector<>();
+        while (i < tokens.size() && tokens.get(i).tokentype.name != "}") {
+            AssoItemNode item = new AssoItemNode();
+            parse(item);
+            items.add(item);
+        }
+        node.items = items;
+        if (i < tokens.size() && tokens.get(i).tokentype.name == "}") {
+            i++;
+        } else {
+            assert false : "Expected '}' at end of trait body";
+        }
+    }
+
+    public void parse(ImplNode node) {
+        // consume the "impl" token
+        i++;
+        // check if it's an inherent impl or a trait impl
+        if (i < tokens.size() && token_t.isIdentifier(tokens.get(i))) {
+            // it's may be a trait name or a type name
+            // we need to look ahead to see if there is a "for" token
+            // we just need to check the (i + 1)th token
+            if (i + 1 < tokens.size() && tokens.get(i + 1).name.equals("for")) {
+                // it's a trait impl
+                IdentifierNode trait = new IdentifierNode();
+                parse(trait);
+                node.trait = trait;
+                // consume for
+                i++;
+            }
+        }
+        TypeExprNode typeName = new TypeExprNode();
+        parse(typeName);
+        node.typeName = typeName;
+        // expect {
+        if (i < tokens.size() && tokens.get(i).tokentype.name == "{") {
+            i++;
+        } else {
+            assert false : "Expected '{' after impl type";
+        }
+        Vector<AssoItemNode> items = new Vector<>();
+        while (i < tokens.size() && tokens.get(i).tokentype.name != "}") {
+            AssoItemNode item = new AssoItemNode();
+            parse(item);
+            items.add(item);
+        }
+        node.items = items;
+        if (i < tokens.size() && tokens.get(i).tokentype.name == "}") {
+            i++;
+        } else {
+            assert false : "Expected '}' at end of impl body";
+        }
+    }
+
+    public void parse(AssoItemNode node) {
+        // It can be a function or a const item
+        // the function may be const
+        if (i < tokens.size() && tokens.get(i).name.equals("fn")) {
+            FunctionNode funcNode = new FunctionNode();
+            funcNode.isConst = false;
+            parse(funcNode);
+            node = funcNode;
+        } else if (i < tokens.size() && tokens.get(i).name.equals("const")) {
+            // It may be a const item or a const function
+            if (i + 1 < tokens.size() && tokens.get(i + 1).name.equals("fn")) {
+                FunctionNode funcNode = new FunctionNode();
+                funcNode.isConst = true;
+                // consume const
+                i++;
+                parse(funcNode);
+                node = funcNode;
+            } else {
+                ConstItemNode constNode = new ConstItemNode();
+                parse(constNode);
+                node = constNode;
+            }
+        } else {
+            assert false : "Expected 'fn' or 'const' in associated item";
+        }
+    }
+
+
+
+    public void parse(PathExprNode node) {
+        if (i < tokens.size()) {
+            PathExprSegNode LSeg = new PathExprSegNode();
+            parse(LSeg);
+            node.LSeg = LSeg;
+        } else {
+            assert false : "Expected path segment in path expression";
+        }
+        if (i < tokens.size() && tokens.get(i).tokentype.name == "::") {
+            i++;
+            if (i < tokens.size()) {
+                PathExprSegNode RSeg = new PathExprSegNode();
+                parse(RSeg);
+                node.RSeg = RSeg;
+            } else {
+                assert false : "Expected path segment after '::' in path expression";
+            }
+        } else {
+            node.RSeg = null;
+        }
+    }
+
+    public void parse(PathExprSegNode node) {
+        if (i < tokens.size() && token_t.isIdentifier(tokens.get(i))) {
+            IdentifierNode name = new IdentifierNode();
+            parse(name);
+            node.name = name;
+            node.patternType = patternSeg_t.IDENTIFIER;
+        } else if (i < tokens.size() && tokens.get(i).tokentype.name.equals("self")) {
+            node.patternType = patternSeg_t.SELF;
+            i++;
+        } else if (i < tokens.size() && tokens.get(i).tokentype.name.equals("Self")) {
+            node.patternType = patternSeg_t.SELF_TYPE;
+            i++;
+        } else {
+            assert false : "Expected identifier, 'self' or 'Self' in path segment";
+        }
+    }
+
+    public void parse(ArrayExprNode node) {
+        // expect [
+        if (i < tokens.size() && tokens.get(i).tokentype.name == "[") {
+            i++;
+        } else {
+            assert false : "Expected '[' at start of array expression";
+        }
+        Vector<ExprStmtNode> elements = new Vector<>();
+        boolean isList = true, isFirst = true;
+        while (i < tokens.size() && tokens.get(i).tokentype.name != "]") {
+            ExprStmtNode element = new ExprStmtNode();
+            parse(element);
+            elements.add(element);
+            if (i < tokens.size() && tokens.get(i).tokentype.name == ",") {
+                i++;
+                isFirst = false;
+            } else if (i < tokens.size() && tokens.get(i).tokentype.name == ";") {
+                if (!isFirst) {
+                    assert false : "Unexpected ';' in array expression";
+                }
+                isList = false;
+                i++;
+                ExprStmtNode size = new ExprStmtNode();
+                parse(size);
+                node.size = size;
+                node.repeatedElement = element;
+                break;
+            } else if (i >= tokens.size() || tokens.get(i).tokentype.name != "]") {
+                assert false : "Expected ',' or ']' in array expression";
+            }
+        }
+        node.isList = isList;
+        if (isList) {
+            node.elements = elements;
+            node.repeatedElement = null;
+            node.size = null;
+        } else {
+            node.elements = null;
+        }
+    }
+
+
+    public void parse(ExprWithBlockNode node) {
+        // if the expression is an if-expression
+        if (i < tokens.size() && tokens.get(i).name.equals("if")) {
+            IfExprNode ifNode = new IfExprNode();
+            parse(ifNode);
+            node = ifNode;
+        } else if (i < tokens.size() && tokens.get(i).name.equals("while")) {
+            LoopExprNode loopNode = new LoopExprNode();
+            parse(loopNode);
+            node = loopNode;
+        } else if (i < tokens.size() && tokens.get(i).name.equals("loop")) {
+            LoopExprNode loopNode = new LoopExprNode();
+            parse(loopNode);
+            node = loopNode;
+        } else if (i < tokens.size() && tokens.get(i).tokentype.name == "{") {
+            BlockExprNode blockNode = new BlockExprNode();
+            parse(blockNode);
+            node = blockNode;
+        } else {
+            assert false : "Expected 'if', 'while', 'loop' or '{' in block expression";
+        }
+    }
+
+    public void parse(BlockExprNode node) {
+        // expect {
+        if (i < tokens.size() && tokens.get(i).tokentype.name == "{") {
+            i++;
+        } else {
+            assert false : "Expected '{' at start of block expression";
+        }
+        Vector<StmtNode> statements = new Vector<>();
+        while (i < tokens.size() && tokens.get(i).tokentype.name != "}") {
+            StmtNode stmt = new StmtNode();
+            parse(stmt);
+            statements.add(stmt);
+        }
+        node.statements = statements;
+        // expect }
+        if (i < tokens.size() && tokens.get(i).tokentype.name == "}") {
+            i++;
+        } else {
+            assert false : "Expected '}' at end of block expression";
+        }
+    }
+
+    public void parse(IfExprNode node) {
+        // expect if
+        if (i < tokens.size() && tokens.get(i).name.equals("if")) {
+            i++;
+        } else {
+            assert false : "Expected 'if' at start of if expression";
+        }
+        ExprStmtNode condition = new ExprStmtNode();
+        parse(condition);
+        node.condition = condition;
+        BlockExprNode thenBranch = new BlockExprNode();
+        parse(thenBranch);
+        node.thenBranch = thenBranch;
+        // check for else or elseif
+        if (i < tokens.size() && tokens.get(i).name.equals("else")) {
+            i++;
+            if (i < tokens.size() && tokens.get(i).name.equals("if")) {
+                IfExprNode elseifBranch = new IfExprNode();
+                parse(elseifBranch);
+                node.elseifBranch = elseifBranch;
+                node.elseBranch = null;
+            } else {
+                BlockExprNode elseBranch = new BlockExprNode();
+                parse(elseBranch);
+                node.elseBranch = elseBranch;
+                node.elseifBranch = null;
+            }
+        } else {
+            node.elseBranch = null;
+            node.elseifBranch = null;
+        }
+    }
+
+    public void parse(LoopExprNode node) {
+        // expect while or loop
+        if (i < tokens.size() && tokens.get(i).name.equals("while")) {
+            i++;
+            ExprStmtNode condition = new ExprStmtNode();
+            parse(condition);
+            node.contidion = condition;
+        } else if (i < tokens.size() && tokens.get(i).name.equals("loop")) {
+            i++;
+            node.contidion = null;
+        } else {
+            assert false : "Expected 'while' or 'loop' at start of loop expression";
+        }
+        BlockExprNode body = new BlockExprNode();
+        parse(body);
+        node.body = body;
+    }
+
+    // public void parse()
+
     public void parse(StmtNode node) {
         assert i < tokens.size() : "No more tokens to parse";
         token_t token = tokens.get(i);
