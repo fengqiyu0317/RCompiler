@@ -195,10 +195,10 @@ class FieldExprNode extends ExprWithoutBlockNode {
 class ContinueExprNode extends ExprWithoutBlockNode {
 }
 class BreakExprNode extends ExprWithoutBlockNode {
-    ASTNode value; // can be null
+    ExprStmtNode value; // can be null
 }
 class ReturnExprNode extends ExprWithoutBlockNode {
-    ASTNode value; // can be null
+    ExprStmtNode value; // can be null
 }
 
 
