@@ -118,6 +118,7 @@ class PathExprSegNode extends ASTNode {
 class OperExprNode extends ExprWithoutBlockNode {
 }
 class BorrowExprNode extends OperExprNode {
+    boolean isDouble;
     boolean isMutable;
     ExprStmtNode innerExpr;
 }
@@ -133,6 +134,11 @@ class ArithExprNode extends OperExprNode {
     ASTNode left;
     ASTNode right; 
 }
+class CompExprNode extends OperExprNode {
+    oper_t operator; 
+    ASTNode left; 
+    ASTNode right; 
+}
 class LazyExprNode extends OperExprNode {
     oper_t operator; 
     ASTNode left; 
@@ -143,6 +149,11 @@ class TypeCastExprNode extends OperExprNode {
     TypeExprNode targetType; 
 }
 class AssignExprNode extends OperExprNode {
+    oper_t operator;
+    ASTNode left; 
+    ASTNode right; 
+}
+class ComAssignExprNode extends OperExprNode {
     oper_t operator;
     ASTNode left; 
     ASTNode right; 
@@ -228,11 +239,11 @@ class IdentifierNode extends ASTNode {
 
 
 class TypeExprNode extends ExprStmtNode {
-    String value; 
 }
 
+
 class TypePathExprNode extends TypeExprNode {
-    PathExprSegNode Seg;
+    PathExprSegNode path;
 }
 
 class TypeRefExprNode extends TypeExprNode {

@@ -422,6 +422,404 @@ public class Parser {
         }
     }
 
+    public void parse(ExprStmtNode node) {
+        assert i < tokens.size() : "No more tokens to parse in expression statement";
+        token_t token = tokens.get(i);
+        // check if it's an expression with block
+        if (token.name.equals("if") || token.name.equals("while") || token.name.equals("loop") || token.tokentype.name == "{") {
+            ExprWithBlockNode blockNode = new ExprWithBlockNode();
+            parse(blockNode);
+            node = blockNode;
+            return ;
+        }
+        // otherwise it's an expression without block
+        ExprWithoutBlockNode exprNode = new ExprWithoutBlockNode();
+        parse(exprNode);
+        node = exprNode;
+        // expect semicolon
+        if (i < tokens.size() && tokens.get(i).tokentype.name == ";") {
+            i++;
+        } else {
+            assert false : "Expected ';' at end of expression statement";
+        }
+    }
+
+    // we write a function: for tokens (arg1, arg2, ..., argn), the function return a vector of ExprStmtNode
+    public Vector<ExprStmtNode> parseFunctionArgs() {
+        Vector<ExprStmtNode> args = new Vector<>();
+        // expect (
+        if (i < tokens.size() && tokens.get(i).tokentype.name == "(") {
+            i++;
+        } else {
+            assert false : "Expected '(' at start of function argument list";
+        }
+        while (i < tokens.size() && tokens.get(i).tokentype.name != ")") {
+            ExprStmtNode arg = new ExprStmtNode();
+            parse(arg);
+            args.add(arg);
+            if (i < tokens.size() && tokens.get(i).tokentype.name == ",") {
+                i++;
+            } else if (i >= tokens.size() || tokens.get(i).tokentype.name != ")") {
+                assert false : "Expected ',' or ')' in function argument list";
+            }
+        }
+        // expect )
+        if (i < tokens.size() && tokens.get(i).tokentype.name == ")") {
+            i++;
+        } else {
+            assert false : "Expected ')' at end of function argument list";
+        }
+        return args;
+    }
+
+
+    // we need use the function "isOper" to check if a token is a binary operator; there are arith, comp, lazy, assign, comassign operators
+    public boolean isOper(token_t token) {
+        // arith operators: +, -, *, /, %, &, |, ^, <<, >>
+        if (token.name.equals("+") || token.name.equals("-") || token.name.equals("*") || token.name.equals("/") || token.name.equals("%") || token.name.equals("&") || token.name.equals("|") || token.name.equals("^") || token.name.equals("<<") || token.name.equals(">>")) {
+            return true;
+        }
+        // comp operators: ==, !=, <, <=, >, >=
+        if (token.name.equals("==") || token.name.equals("!=") || token.name.equals("<") || token.name.equals("<=") || token.name.equals(">") || token.name.equals(">=")) {
+            return true;
+        }
+        // lazy operators: &&, ||
+        if (token.name.equals("&&") || token.name.equals("||")) {
+            return true;
+        }
+        // assign operators: =
+        if (token.name.equals("=")) {
+            return true;
+        }
+        // comassign operators: +=, -=, *=, /=, %=, |=, ^=, <<=, >>=, &=
+        if (token.name.equals("+=") || token.name.equals("-=") || token.name.equals("*=") || token.name.equals("/=") || token.name.equals("%=") || token.name.equals("|=") || token.name.equals("^=") || token.name.equals("<<=") || token.name.equals(">>=") || token.name.equals("&=")) {
+            return true;
+        }
+        return false;
+    }
+    // we also need a function "getPrecedence" to get the precedence of a binary operator; there are 10 levels of precedence for the operators we support; the higher the number, the higher the precedence; 
+    // the precedence levels are as follows:
+    // 1. * / %
+    // 2. + -
+    // 3. << >>
+    // 4. &
+    // 5. ^
+    // 6. |
+    // 7. == != < <= > >=
+    // 8. &&
+    // 9. ||
+    // 10. = += -= *= /= %= &= |= ^= <<= >>=
+    // we define the precedence of "*" is 110; 
+    public int getPrecedence(token_t token) {
+        if (token.name.equals("*") || token.name.equals("/") || token.name.equals("%")) {
+            return 110;
+        }
+        if (token.name.equals("+") || token.name.equals("-")) {
+            return 100;
+        }
+        if (token.name.equals("<<") || token.name.equals(">>")) {
+            return 90;
+        }
+        if (token.name.equals("&")) {
+            return 80;
+        }
+        if (token.name.equals("^")) {
+            return 70;
+        }
+        if (token.name.equals("|")) {
+            return 60;
+        }
+        if (token.name.equals("==") || token.name.equals("!=") || token.name.equals("<") || token.name.equals("<=") || token.name.equals(">") || token.name.equals(">=")) {
+            return 50;
+        }
+        if (token.name.equals("&&")) {
+            return 40;
+        }
+        if (token.name.equals("||")) {
+            return 30;
+        }
+        if (token.name.equals("=") || token.name.equals("+=") || token.name.equals("-=") || token.name.equals("*=") || token.name.equals("/=") || token.name.equals("%=") || token.name.equals("&=") || token.name.equals("|=") || token.name.equals("^=") || token.name.equals("<<=") || token.name.equals(">>=")) {
+            return 20;
+        }
+        return 0;
+    }
+
+    public void parse(ExprWithoutBlockNode node, int precedence) {
+        assert i < tokens.size() : "No more tokens to parse in expression without block";
+        token_t token = tokens.get(i);
+
+        if (token.tokentype == token_t.TokenType_t.INTEGER_LITERAL || token.tokentype == token_t.TokenType_t.CHAR_LITERAL || token.tokentype == token_t.TokenType_t.STRING_LITERAL || token.tokentype == token_t.TokenType_t.RAW_STRING_LITERAL || token.tokentype == token_t.TokenType_t.C_STRING_LITERAL || token.tokentype == token_t.TokenType_t.RAW_C_STRING_LITERAL || token.name.equals("true") || token.name.equals("false")) {
+            LiteralExprNode litNode = new LiteralExprNode();
+            parse(litNode);
+            node = litNode;
+        } else if (isIdentifier(token) || token.name.equals("self") || token.name.equals("Self")) {
+            PathExprSegNode pathSeg = new PathExprSegNode();
+            parse(pathSeg);
+            node = pathSeg;
+        } else if (token.name.equals("[")) {
+            ArrayExprNode arrayNode = new ArrayExprNode();
+            parse(arrayNode);
+            node = arrayNode;
+        } else if (token.name.equals("(")) {
+            // it's a parenthesized expression
+            i++;
+            ExprStmtNode innerExpr = new ExprStmtNode();
+            parse(innerExpr, 0);
+            // expect )
+            if (i < tokens.size() && tokens.get(i).tokentype.name == ")") {
+                i++;
+            } else {
+                assert false : "Expected ')' at end of parenthesized expression";
+            }
+            node = innerExpr;
+        } else if (token.name.equals("&") || token.name.equals("&&")) {
+            BorrowExprNode borrowNode = new BorrowExprNode();
+            parse(borrowNode);
+            node = borrowNode;
+        } else if (token.name.equals("*")) {
+            DerefExprNode derefNode = new DerefExprNode();
+            parse(derefNode);
+            node = derefNode;
+        } else if (token.name.equals("-") || token.name.equals("~")) {
+            NegaExprNode negaNode = new NegaExprNode();
+            parse(negaNode);
+            node = negaNode;
+        } else if (token.name.equals("continue")) {
+            ContinueExprNode contNode = new ContinueExprNode();
+            parse(contNode);
+            node = contNode;
+        } else if (token.name.equals("break")) {
+            BreakExprNode breakNode = new BreakExprNode();
+            parse(breakNode);
+            node = breakNode;
+        } else if (token.name.equals("return")) {
+            ReturnExprNode retNode = new ReturnExprNode();
+            parse(retNode);
+            node = retNode;
+        } else if (token.name.equals("_")) {
+            UnderscoreExprNode underNode = new UnderscoreExprNode();
+            parse(underNode);
+            node = underNode;
+        } 
+        while (i < tokens.size()) {
+            token = tokens.get(i);
+            if (token.name.equals(".")) {
+                // for a field access, the next token must be an identifier; but for a method call, the next token is a PathExprSegNode.
+                // the next expression may be a field access or a method call; the difference between them is whether there is a '(' after the next token
+                // for the field access, we use the FieldExprNode; for the method call, we use the MethodCallExprNode
+                i++;
+                PathExprSegNode pathSeg = new PathExprSegNode();
+                parse(pathSeg);
+                if (i < tokens.size() && tokens.get(i).tokentype.name == "(") {
+                    // it's a method call
+                    MethodCallExprNode methodCallNode = new MethodCallExprNode();
+                    methodCallNode.receiver = node;
+                    methodCallNode.methodName = pathSeg;
+                    Vector<ExprStmtNode> arguments = parseFunctionArgs();
+                    methodCallNode.arguments = arguments;
+                    node = methodCallNode;
+                } else {
+                    // it's a field access
+                    FieldExprNode fieldNode = new FieldExprNode();
+                    fieldNode.receiver = node;
+                    if (pathSeg.patternType == patternSeg_t.IDENTIFIER) {
+                        fieldNode.fieldName = pathSeg.name;
+                    } else {
+                        assert false : "Expected identifier after '.' in field access";
+                    }
+                    node = fieldNode;
+                }
+            } else if (isOper(token)) {
+                int opPrecedence = getPrecedence(token);
+                if (opPrecedence <= precedence) {
+                    break;
+                }
+                if (isComAssignOper(token)) {
+                    ComAssignExprNode comAssignNode = new ComAssignExprNode();
+                    comAssignNode.operator = getComAssignOper(token);
+                    i++;
+                    ExprStmtNode right = new ExprStmtNode();
+                    parse(right, opPrecedence);
+                    comAssignNode.left = node;
+                    comAssignNode.right = right;
+                    node = comAssignNode;
+                } else if (isAssignOper(token)) {
+                    AssignExprNode assignNode = new AssignExprNode();
+                    assignNode.operator = getAssignOper(token);
+                    i++;
+                    ExprStmtNode right = new ExprStmtNode();
+                    parse(right, opPrecedence);
+                    assignNode.left = node;
+                    assignNode.right = right;
+                    node = assignNode;
+                } else if (isComp(token)) {
+                    CompExprNode compNode = new CompExprNode();
+                    compNode.operator = getCompOper(token);
+                    i++;
+                    ExprStmtNode right = new ExprStmtNode();
+                    parse(right, opPrecedence);
+                    compNode.left = node;
+                    compNode.right = right;
+                    node = compNode;
+                } else if (isArith(token)) {
+                    ArithExprNode arithNode = new ArithExprNode();
+                    arithNode.operator = getArithOper(token);
+                    i++;
+                    ExprStmtNode right = new ExprStmtNode();
+                    parse(right, opPrecedence);
+                    arithNode.left = node;
+                    arithNode.right = right;
+                    node = arithNode;
+                } else if (isLazy(token)) {
+                    LazyExprNode lazyNode = new LazyExprNode();
+                    lazyNode.operator = getLazyOper(token);
+                    i++;
+                    ExprStmtNode right = new ExprStmtNode();
+                    parse(right, opPrecedence);
+                    lazyNode.left = node;
+                    lazyNode.right = right;
+                    node = lazyNode;
+                }
+            } else if (token.name.equals("as")) {
+                if (precedence >= 120) {
+                    break;
+                }
+                TypeCastExprNode typeCastNode = new TypeCastExprNode();
+                i++;
+                TypeExprNode targetType = new TypeExprNode();
+                parse(targetType);
+                typeCastNode.expression = node;
+                typeCastNode.targetType = targetType;
+                node = typeCastNode;
+            } else if (token.name.equals("::")) {
+                if (precedence >= 170) {
+                    break;
+                }
+                i++;
+                PathExprSegNode pathSeg = new PathExprSegNode();
+                parse(pathSeg);
+                PathExprNode pathNode = new PathExprNode();
+                // check if node is a PathExprSegNode
+                if (node instanceof PathExprSegNode) {
+                    pathNode.LSeg = (PathExprSegNode)node;
+                    pathNode.RSeg = pathSeg;
+                    node = pathNode;
+                    continue;
+                }
+                assert false : "Expected path segment before '::' in path expression";
+            } else if (token.name.equals("[")) {
+                // consume [
+                i++;
+                IndexExprNode indexNode = new IndexExprNode();
+                indexNode.array = node;
+                parse(indexNode.index, precedence);
+                node = indexNode;
+                // expect ]
+                if (i < tokens.size() && tokens.get(i).tokentype.name == "]") {
+                    i++;
+                } else {
+                    assert false : "Expected ']' at end of index expression";
+                }
+            } else if (token.name.equals("(")) {
+                // it's a function call
+                CallExprNode callNode = new CallExprNode();
+                callNode.function = node;
+                Vector<ExprStmtNode> arguments = parseFunctionArgs();
+                callNode.arguments = arguments;
+                node = callNode;
+            } else if (token.name.equals("{")) {
+                // it's a struct expression
+                StructExprNode structNode = new StructExprNode();
+                if (node instanceof PathExprNode) {
+                    structNode.structName = (PathExprNode)node;
+                } else if (node instanceof PathExprSegNode) {
+                    PathExprNode pathNode = new PathExprNode();
+                    pathNode.LSeg = (PathExprSegNode)node;
+                    structNode.structName = pathNode;
+                } else {
+                    assert false : "Expected path expression before '{' in struct expression";
+                }
+                i++;
+                Vector<FieldValNode> fieldAssignments = new Vector<>();
+                while (i < tokens.size()) {
+                    if (tokens.get(i).tokentype.name == "}") {
+                        break;
+                    }
+                    FieldValNode fieldVal = new FieldValNode();
+                    parse(fieldVal);
+                    fieldAssignments.add(fieldVal);
+                    if (i < tokens.size() && tokens.get(i).tokentype.name == ",") {
+                        i++;
+                    } else if (i < tokens.size() && tokens.get(i).tokentype.name == "}") {
+                        break;
+                    } else {
+                        assert false : "Expected ',' or '}' in field assignment list";
+                    }
+                }
+                node = structNode;
+                structNode.fieldAssignments = fieldAssignments;
+                // expect }
+                if (i < tokens.size() && tokens.get(i).tokentype.name == "}") {
+                    i++;
+                } else {
+                    assert false : "Expected '}' at end of struct expression";
+                }
+            } else {
+                // if it's not a binary operator; for example, if it's a semicolon, comma, etc., we just break the loop
+                // but except some characters like ")", "]", "}", which may be the end of the current expression, other characters isn't legal.
+                if (token.name.equals(")") || token.name.equals("]") || token.name.equals("}") || token.name.equals(",") || token.name.equals(";")) {
+                    break;
+                }
+                assert false : "Unexpected token '" + token.name + "' in expression";
+            }
+        }
+    }
+
+
+    public void parse(BorrowExprNode node) {
+        if (tokens.get(i).name.equals("&")) {
+            node.isDouble = false;
+        } else if (tokens.get(i).name.equals("&&")) {
+            node.isDouble = true;
+        } else {
+            assert false : "Expected '&' or '&&' in borrow expression";
+        }
+        i++;
+        if (tokens.get(i).name.equals("mut")) {
+            node.isMutable = true;
+            i++;
+        } else {
+            node.isMutable = false;
+        }
+        ExprStmtNode innerExpr = new ExprStmtNode();
+        parse(innerExpr, 130);
+        node.innerExpr = innerExpr;
+    }
+
+    public void parse(DerefExprNode node) {
+        // consume *
+        i++;
+        ExprStmtNode innerExpr = new ExprStmtNode();
+        parse(innerExpr, 130);
+        node.innerExpr = innerExpr;
+    }
+
+    public void parse(NegaExprNode node) {
+        // consume - or ~
+        if (tokens.get(i).name.equals("-")) {
+            node.isBitwise = false;
+        } else if (tokens.get(i).name.equals("~")) {
+            node.isBitwise = true;
+        } else {
+            assert false : "Expected '-' or '~' in negation expression";
+        }
+        i++;
+        ExprStmtNode innerExpr = new ExprStmtNode();
+        parse(innerExpr, 130);
+        node.innerExpr = innerExpr;
+    }
+
+
 
     public void parse(LiteralExprNode node) {
         if (i < tokens.size()) {
@@ -588,6 +986,26 @@ public class Parser {
         }
     }
 
+    public void parse(FieldValNode node) {
+        // expect identifier
+        if (i < tokens.size() && token_t.isIdentifier(tokens.get(i))) {
+            IdentifierNode name = new IdentifierNode();
+            parse(name);
+            node.name = name;
+        } else {
+            assert false : "Expected field name in struct expression";
+        }
+        // expect :
+        if (i < tokens.size() && tokens.get(i).tokentype.name == ":") {
+            i++;
+        } else {
+            assert false : "Expected ':' after field name in struct expression";
+        }
+        ExprStmtNode value = new ExprStmtNode();
+        parse(value);
+        node.value = value;
+    }
+
     public void parse(CallExprNode node) {
         ExprStmtNode function = new ExprStmtNode();
         parse(function);
@@ -686,7 +1104,7 @@ public class Parser {
         i++;
         if (i < tokens.size() && tokens.get(i).tokentype.name != ";") {
             ExprStmtNode value = new ExprStmtNode();
-            parse(value);
+            parse(value, 10);
             node.value = value;
         } else {
             node.value = null;
@@ -698,7 +1116,7 @@ public class Parser {
         i++;
         if (i < tokens.size() && tokens.get(i).tokentype.name != ";") {
             ExprStmtNode value = new ExprStmtNode();
-            parse(value);
+            parse(value, 10);
             node.value = value;
         } else {
             node.value = null;
@@ -810,7 +1228,101 @@ public class Parser {
         node.body = body;
     }
 
-    // public void parse()
+    public void parse(IdentifierNode node) {
+        assert i < tokens.size() && token_t.isIdentifier(tokens.get(i)) : "Expected identifier";
+        node.name = tokens.get(i).name;
+        i++;
+    }
+
+    // now we parse type expressions. 
+    // there are four types of type expressions:
+    // 1. typepath (for TypePathExprNode): a PathExprSegNode
+    // 2. reference type (for TypeRefExprNode): & or & mut followed by a type expression
+    // 3. array type (for TypeArrayExprNode): [type; size] 
+    // 4. unit type (for TypeUnitExprNode): ()
+    public void parse(TypeExprNode node) {
+        if (i < tokens.size() && tokens.get(i).name.equals("&")) {
+            TypeRefExprNode refNode = new TypeRefExprNode();
+            parse(refNode);
+            node = refNode;
+        } else if (i < tokens.size() && tokens.get(i).name.equals("[")) {
+            TypeArrayExprNode arrayNode = new TypeArrayExprNode();
+            parse(arrayNode);
+            node = arrayNode;
+        } else if (i < tokens.size() && tokens.get(i).name.equals("(")) {
+            // it's a unit type
+            TypeUnitExprNode unitNode = new TypeUnitExprNode();
+            parse(unitNode);
+            node = unitNode;
+        } else {
+            // it's a type path
+            TypePathExprNode pathNode = new TypePathExprNode();
+            parse(pathNode);
+            node = pathNode;
+        }
+    }
+    public void parse(TypePathExprNode node) {
+        PathExprSegNode seg = new PathExprSegNode();
+        parse(seg);
+        node.path = seg;
+    }
+    public void parse(TypeRefExprNode node) {
+        // expect &
+        if (i < tokens.size() && tokens.get(i).name.equals("&")) {
+            i++;
+        } else {
+            assert false : "Expected '&' at start of reference type";
+        }
+        if (i < tokens.size() && tokens.get(i).name.equals("mut")) {
+            node.isMutable = true;
+            i++;
+        } else {
+            node.isMutable = false;
+        }
+        TypeExprNode innerType = new TypeExprNode();
+        parse(innerType);
+        node.innerType = innerType;
+    }
+    public void parse(TypeArrayExprNode node) {
+        // expect [
+        if (i < tokens.size() && tokens.get(i).name.equals("[")) {
+            i++;
+        } else {
+            assert false : "Expected '[' at start of array type";
+        }
+        TypeExprNode elementType = new TypeExprNode();
+        parse(elementType);
+        node.elementType = elementType;
+        // expect ;
+        if (i < tokens.size() && tokens.get(i).name.equals(";")) {
+            i++;
+        } else {
+            assert false : "Expected ';' in array type";
+        }
+        ExprStmtNode size = new ExprStmtNode();
+        parse(size, 0);
+        node.size = size;
+        // expect ]
+        if (i < tokens.size() && tokens.get(i).name.equals("]")) {
+            i++;
+        } else {
+            assert false : "Expected ']' at end of array type";
+        }
+    }
+    public void parse(TypeUnitExprNode node) {
+        // expect (
+        if (i < tokens.size() && tokens.get(i).name.equals("(")) {
+            i++;
+        } else {
+            assert false : "Expected '(' at start of unit type";
+        }
+        // expect )
+        if (i < tokens.size() && tokens.get(i).name.equals(")")) {
+            i++;
+        } else {
+            assert false : "Expected ')' at end of unit type";
+        }
+    }
 
     public void parse(StmtNode node) {
         assert i < tokens.size() : "No more tokens to parse";
@@ -824,6 +1336,7 @@ public class Parser {
                 node = letNode;             
             } else if(token.name.equals("fn")) {
                 FunctionNode funcNode = new FunctionNode();
+                funcNode.isConst = false;
                 parse(funcNode);
                 node = funcNode;
             } else if(token.name.equals("struct")) {
@@ -835,13 +1348,47 @@ public class Parser {
                 parse(enumNode);
                 node = enumNode;
             } else if(token.name.equals("const")) {
+                // it may be a const item or a const function
+                if (i + 1 < tokens.size() && tokens.get(i + 1).name.equals("fn")) {
+                    FunctionNode funcNode = new FunctionNode();
+                    funcNode.isConst = true;
+                    // consume const
+                    i++;
+                    parse(funcNode);
+                    node = funcNode;
+                } else {
+                    ConstItemNode constNode = new ConstItemNode();
+                    parse(constNode);
+                    node = constNode;
+                }
             } else if(token.name.equals("trait")) {
+                TraitNode traitNode = new TraitNode();
+                parse(traitNode);
+                node = traitNode;
             } else if(token.name.equals("impl")) {
+                ImplNode implNode = new ImplNode();
+                parse(implNode);
+                node = implNode;
             } else {
-                // assume it's an expression statement
                 ExprStmtNode exprNode = new ExprStmtNode();
                 parse(exprNode);
                 node = exprNode;
+            }
+        } else {
+            // if it's ";", it's an empty statement
+            if (token.tokentype.name == ";") {
+                // consume ";"
+                i++;
+            } else {
+                ExprStmtNode exprNode = new ExprStmtNode();
+                parse(exprNode);
+                node = exprNode;
+                // consume ";"
+                if (i < tokens.size() && tokens.get(i).tokentype.name == ";") {
+                    i++;
+                } else {
+                    assert false : "Expected ';' at end of expression statement";
+                }
             }
         }
     }
