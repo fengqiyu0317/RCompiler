@@ -355,78 +355,122 @@ class FieldValNode extends ASTNode {
     ExprNode value;
 }
 
-
+// CallExprNode represents a function call expression <callexpr>.
+// the grammer for function call expression is:
+// <callexpr> = <expression> ( <arguments>? )
+// <arguments> = <expression> (, <expression>)* ,?
 class CallExprNode extends ExprWithoutBlockNode {
-    ExprStmtNode function;
-    Vector<ExprStmtNode> arguments;
+    ExprNode function;
+    Vector<ExprNode> arguments; // can be null
 }
 
-
+// MethodCallExprNode represents a method call expression <methodcallexpr>.
+// the grammer for method call expression is:
+// <methodcallexpr> = <expression> . <pathseg> ( <arguments>? )
+// <arguments> = <expression> (, <expression>)* ,?
 class MethodCallExprNode extends ExprWithoutBlockNode {
-    ExprStmtNode receiver;
+    ExprNode receiver;
     PathExprSegNode methodName;
-    Vector<ExprStmtNode> arguments;
+    Vector<ExprNode> arguments; // can be null
 }
 
-
+// FieldExprNode represents a field access expression <fieldexpr>.
+// the grammer for field access expression is:
+// <fieldexpr> = <expression> . <identifier>
 class FieldExprNode extends ExprWithoutBlockNode {
-    ExprStmtNode receiver;
+    ExprNode receiver;
     IdentifierNode fieldName;
 }
 
-
+// ContinueExprNode represents a continue expression <continueexpr>.
+// the grammer for continue expression is:
+// <continueexpr> = continue
 class ContinueExprNode extends ExprWithoutBlockNode {
 }
+// BreakExprNode represents a break expression <breakexpr>.
+// the grammer for break expression is:
+// <breakexpr> = break (<expression>)?
 class BreakExprNode extends ExprWithoutBlockNode {
-    ExprStmtNode value; // can be null
+    ExprNode value; // can be null
 }
+// ReturnExprNode represents a return expression <returnexpr>.
+// the grammer for return expression is:
+// <returnexpr> = return (<expression>)?
 class ReturnExprNode extends ExprWithoutBlockNode {
-    ExprStmtNode value; // can be null
+    ExprNode value; // can be null
 }
-
-
+// UnderscoreExprNode represents an underscore expression <underscoreexpr>.
+// the grammer for underscore expression is:
+// <underscoreexpr> = _
 class UnderscoreExprNode extends ExprWithoutBlockNode {
 }
 
-
+// BlockExprNode represents a block expression <blockexpr>.
+// the grammer for block expression is:
+// <blockexpr> = { <statements>* }
 class BlockExprNode extends ExprWithBlockNode {
     Vector<StmtNode> statements;
 }
 
+// IfExprNode represents an if expression <ifexpr>.
+// the grammer for if expression is:
+// <ifexpr> = if <expression except structexpr> <blockexpr> (else (<ifexpr> | <blockexpr>))?
 class IfExprNode extends ExprWithBlockNode {
-    ExprStmtNode condition;  
-    BlockExprNode thenBranch;
-    BlockExprNode elseBranch; // can be null
-    IfExprNode elseifBranch; // can be null
+    ExprNode condition;
+    BlockExprNode thenBlock;
+    ExprWithBlockNode elseBlock; // can be null
+    IfExprNode elseIfBlock; // can be null
 }
 
+// LoopExprNode represents a loop expression <loopexpr>.
+// the grammer for loop expression is:
+// <loopexpr> = <infinite_loop> | <conditional_loop>
+// <infinite_loop> = loop <blockexpr>
+// <conditional_loop> = while <expression except structexpr> <blockexpr>
 class LoopExprNode extends ExprWithBlockNode {
-    ExprStmtNode contidion; // can be null
+    boolean isInfinite; // true if it's an infinite loop, false if it's a conditional loop
+    ExprNode condition; // can be null if it's an infinite loop
     BlockExprNode body;
 }
 
+// IdentifierNode represents an identifier <identifier>.
+// an identifier is just a string, so we just need to store the string here.
 class IdentifierNode extends ASTNode {
     String name;
 }
 
 
-class TypeExprNode extends ExprStmtNode {
+// TypeExprNode represents a type expression <type>.
+// the grammer for type expression is:
+// <type> = <typepathexpr> | <typerefexpr> | <typearrayexpr> | <typeunitexpr>
+abstract class TypeExprNode extends ASTNode {
 }
 
-
+// TypePathExprNode represents a path type expression <typepathexpr>.
+// the grammer for path type expression is:
+// <typepathexpr> = <pathseg>
 class TypePathExprNode extends TypeExprNode {
     PathExprSegNode path;
 }
 
+// TypeRefExprNode represents a reference type expression <typerefexpr>.
+// the grammer for reference type expression is:
+// <typerefexpr> = & (mut)? <type>
 class TypeRefExprNode extends TypeExprNode {
     boolean isMutable;
-    TypeExprNode innerType;
+    TypeExprNode referencedType;
 }
 
+// TypeArrayExprNode represents an array type expression <typearrayexpr>.
+// the grammer for array type expression is:
+// <typearrayexpr> = [ <type> ; <expression> ]
 class TypeArrayExprNode extends TypeExprNode {
     TypeExprNode elementType;
-    ExprStmtNode size;
+    ExprNode size;
 }
 
+// TypeUnitExprNode represents a unit type expression <typeunitexpr>.
+// the grammer for unit type expression is:
+// <typeunitexpr> = ()
 class TypeUnitExprNode extends TypeExprNode {
 }
