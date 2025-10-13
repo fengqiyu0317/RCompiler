@@ -1,3 +1,4 @@
+import java.util.Vector;
 // use the tokens we get, construct the AST.
 
 // ASTNode is the base class for all AST nodes.
@@ -7,11 +8,11 @@ abstract class ASTNode {
 // StmtNode represents a statement <statement>.
 // The grammer for statement is:
 // <statement> = <item> | <letstmt> | <exprstmt> | ;
-abstract class StmtNode extends ASTNode {
+class StmtNode extends ASTNode {
 }
 // ItemNode represents an item <item>.
 // There are several kinds of items: function, struct, enum, constant, trait, impl. so <item> = <function> | <structitem> | <enumitem> | <constitem> | <traititem> | <implitem>.
-abstract class ItemNode extends StmtNode {
+class ItemNode extends StmtNode {
 }
 // LetStmtNode represents a let statement <letstmt>.
 // The grammer for let statement is:
@@ -75,6 +76,7 @@ class PatternNode extends ASTNode {
 // <idpat> = (ref)? (mut)? <identifier>
 class IdPatNode extends PatternNode {
     boolean isReference;
+    boolean isMutable;
     IdentifierNode name;
 }
 // WildPatNode represents a wildcard pattern <wildpat>.
@@ -155,13 +157,13 @@ class ImplNode extends ItemNode {
 // ExprNode represents an expression <expression>.
 // The grammer for expression is:
 // <expression> = <exprwithblock> | <exprwithoutblock>
-abstract class ExprNode extends ASTNode {
+class ExprNode extends ASTNode {
 }
 
 // ExprWithBlockNode represents an expression with block <exprwithblock>.
 // the grammer for expression with block is:
 // <exprwithblock> = <blockexpr> | <ifexpr> | <loopexpr>
-abstract class ExprWithBlockNode extends ExprNode {
+class ExprWithBlockNode extends ExprNode {
 }
 
 // ExprWithoutBlockNode represents an expression without block <exprwithoutblock>.
@@ -169,26 +171,19 @@ abstract class ExprWithBlockNode extends ExprNode {
 // <exprwithoutblock> = <literalexpr> | <pathexpr> | <operexpr> | <arrayexpr> | <indexexpr> | <structexpr> | <callexpr> | <methodcallexpr> | <fieldexpr> | <continueexpr> | <breakexpr> | <returnexpr> | <underscoreexpr> | <groupedexpr>
 // among them, <groupedexpr> represents an expression in parentheses, which is just an expression itself, so we don't need a separate node for it. the grammer for grouped expression is:
 // <groupedexpr> = ( <expression> )
-abstract class ExprWithoutBlockNode extends ExprNode {
+class ExprWithoutBlockNode extends ExprNode {
 }
 // LiteralExprNode represents a literal expression <literalexpr>.
 // a literal has several types: char_literal, string_literal, raw_string_literal, c_string_literal, raw_c_string_literal, integer_literal, boolean_literal. These literal already exist in the token level, so we just need to store their type and value here. 
 // the literalType can be one of the following: CHAR, STRING, CSTRING, INT, BOOL.
 class LiteralExprNode extends ExprWithoutBlockNode {
-    type_t literalType;
+    literal_t literalType;
     String value_string; // for string and char literal
     int value_int; // for integer literal
     boolean value_bool; // for boolean literal
 }
 
-// the type_t enum is defined here.
-enum type_t {
-    CHAR,
-    STRING,
-    CSTRING,
-    INT,
-    BOOL
-}
+
 
 // PathExprNode represents a path expression <pathexpr>.
 // the grammer for path expression is:
@@ -201,14 +196,16 @@ class PathExprNode extends ExprWithoutBlockNode {
 // the grammer for path segment is:
 // <pathseg> = <identifier> | self | Self
 // patternType can be one of the following: IDENT, SELF, SELF_TYPE.
-enum patternSeg_t {
-    IDENT,
-    SELF,
-    SELF_TYPE
-}
 class PathExprSegNode extends ASTNode {
     patternSeg_t patternType;
     IdentifierNode name;
+}
+
+// GroupExprNode represents a grouped expression <groupedexpr>.
+// the grammer for grouped expression is:
+// <groupedexpr> = ( <expression> )
+class GroupExprNode extends ExprWithoutBlockNode {
+    ExprNode innerExpr;
 }
 
 // OperExprNode represents an operator expression <operexpr>.
@@ -272,6 +269,7 @@ class TypeCastExprNode extends OperExprNode {
 // the grammer for assignment expression is:
 // <assignexpr> = <expression> = <expression>
 class AssignExprNode extends OperExprNode {
+    oper_t operator; // always ASSIGN
     ExprNode left;
     ExprNode right;
 }
@@ -284,37 +282,6 @@ class ComAssignExprNode extends OperExprNode {
     ExprNode right; 
 }
 // the oper_t enum is defined here.
-enum oper_t {
-    ADD, // +
-    SUB, // -
-    MUL, // *
-    DIV, // /
-    MOD, // %
-    BITAND, // &
-    BITOR, // |
-    BITXOR, // ^
-    SHL, // <<
-    SHR, // >>
-    EQ, // ==
-    NEQ, // !=
-    GT, // >
-    LT, // <
-    GTE, // >=
-    LTE, // <=
-    LOGAND, // &&
-    LOGOR, // ||
-    ASSIGN, // =
-    ADD_ASSIGN, // +=
-    SUB_ASSIGN, // -=
-    MUL_ASSIGN, // *=
-    DIV_ASSIGN, // /=
-    MOD_ASSIGN, // %=
-    BITAND_ASSIGN, // &=
-    BITOR_ASSIGN, // |=
-    BITXOR_ASSIGN, // ^=
-    SHL_ASSIGN, // <<=
-    SHR_ASSIGN // >>=
-}
 
 // ArrayExprNode represents an array expression <arrayexpr>.
 // the grammer for array expression is:
@@ -417,9 +384,9 @@ class BlockExprNode extends ExprWithBlockNode {
 // <ifexpr> = if <expression except structexpr> <blockexpr> (else (<ifexpr> | <blockexpr>))?
 class IfExprNode extends ExprWithBlockNode {
     ExprNode condition;
-    BlockExprNode thenBlock;
-    ExprWithBlockNode elseBlock; // can be null
-    IfExprNode elseIfBlock; // can be null
+    BlockExprNode thenBranch;
+    ExprWithBlockNode elseBranch; // can be null
+    IfExprNode elseifBranch; // can be null
 }
 
 // LoopExprNode represents a loop expression <loopexpr>.
@@ -443,7 +410,7 @@ class IdentifierNode extends ASTNode {
 // TypeExprNode represents a type expression <type>.
 // the grammer for type expression is:
 // <type> = <typepathexpr> | <typerefexpr> | <typearrayexpr> | <typeunitexpr>
-abstract class TypeExprNode extends ASTNode {
+class TypeExprNode extends ASTNode {
 }
 
 // TypePathExprNode represents a path type expression <typepathexpr>.
@@ -458,7 +425,7 @@ class TypePathExprNode extends TypeExprNode {
 // <typerefexpr> = & (mut)? <type>
 class TypeRefExprNode extends TypeExprNode {
     boolean isMutable;
-    TypeExprNode referencedType;
+    TypeExprNode innerType;
 }
 
 // TypeArrayExprNode represents an array type expression <typearrayexpr>.

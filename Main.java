@@ -1,5 +1,8 @@
 import java.util.Scanner;
 import java.util.Vector;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
 
 
 public class Main {
@@ -8,7 +11,7 @@ public class Main {
     }
 }
 
-public class token_t {
+class token_t {
     public enum TokenType_t {
         IDENTIFIER_OR_KEYWORD, 
         CHAR_LITERAL, 
@@ -33,9 +36,10 @@ public class token_t {
         name = "";
         number_raw = 0;
     }
+
 }
 
-public class character_check {
+class character_check {
     public static boolean isPunctuation(char c) {
         String punctuations = "=<!>&|~+-*/%^@.,:;#$?_{}()[]";
         return punctuations.indexOf(c) != -1;
@@ -45,7 +49,7 @@ public class character_check {
     }
 }
 
-public class Tokenizer extends token_t {
+class Tokenizer extends token_t {
     public boolean isCompleted(TokenType_t tokentype) {
         if(tokentype == TokenType_t.STRING_LITERAL_MID || tokentype == TokenType_t.RAW_STRING_LITERAL_MID ||
            tokentype == TokenType_t.C_STRING_LITERAL_MID || tokentype == TokenType_t.RAW_C_STRING_LITERAL_MID ||
@@ -57,12 +61,12 @@ public class Tokenizer extends token_t {
 
     Vector<token_t> tokens;
     // pos record the current position in the tokens vector.
-    // int pos, block_comment_level;
-    // public Tokenizer() {
-    //     pos = 0;
-    //     block_comment_level = 0;
-    //     tokens = new Vector<token_t>();
-    // }
+    int pos, block_comment_level;
+    public Tokenizer() {
+        pos = 0;
+        block_comment_level = 0;
+        tokens = new Vector<token_t>();
+    }
     // public token_t next_token() {
     //     if (pos >= tokens.size()) {
     //         return null;
@@ -400,7 +404,7 @@ public class Tokenizer extends token_t {
     }
 }
 
-public class ReadRustFile {
+class ReadRustFile {
     public static void read_init() {
         Tokenizer tokenizer = new Tokenizer();
         try (Scanner scanner = new Scanner(System.in)) {
@@ -413,10 +417,11 @@ public class ReadRustFile {
         for (token_t token : tokenizer.tokens) {
             System.out.println("Token Type: " + token.tokentype + ", Name: " + token.name);
         }
-        // then we need to use the parser to parse the tokens into an AST
+        // parse the tokens
         Parser parser = new Parser(tokenizer.tokens);
-        ASTNode ast = parser.parse();
-        // output the AST
+        parser.parse();
+        // print the AST
+        parser.root.print(0);
     }
 }
 

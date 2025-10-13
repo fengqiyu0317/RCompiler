@@ -1,5 +1,7 @@
-// now we need to design a new type "oper_t":
-// 
+import java.util.Vector;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
 
 public class Parser {
     private Vector<token_t> tokens;
@@ -10,14 +12,26 @@ public class Parser {
 
     int i = 0;
 
+    // we need a list to store all the keywords in Rust
+    private static final Set<String> keywords = new HashSet<>(Arrays.asList(
+        "as", "break", "const", "continue", "crate", "else", "enum", "extern", "false", "fn", "for", "if", "impl", "in", 
+        "let", "loop", "match", "mod", "move", "mut", "ref", "return", "self", "Self", "static", "struct", 
+        "super", "trait", "true", "type", "unsafe", "use", "where", "while"
+    ));
+    public boolean isIdentifier(token_t token) {
+        // an identifier is a token whose type is IDENTIFIER_OR_KEYWORD and its name is not a keyword
+        return token.tokentype == token_t.TokenType_t.IDENTIFIER_OR_KEYWORD && !keywords.contains(token.name);
+    }
+
+
     public void parse(LetStmtNode node) {
         // consume let
         i++;
         PatternNode pattern = new PatternNode();
         parse(pattern);
-        node.variable = pattern;
+        node.name = pattern;
         // expect colon
-        if (i < tokens.size() && tokens.get(i).tokentype.name == ":") {
+        if (i < tokens.size() && tokens.get(i).name == ":") {
             i++;
             TypeExprNode type = new TypeExprNode();
             parse(type);
@@ -26,16 +40,16 @@ public class Parser {
             assert false : "Expected ':' after pattern in let statement";
         }
         // expect equal
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "=") {
+        if (i < tokens.size() && tokens.get(i).name == "=") {
             i++;
-            ExprStmtNode expr = new ExprStmtNode();
+            ExprNode expr = new ExprNode();
             parse(expr);
             node.value = expr;
         } else {
             node.value = null;
         }
         // expect semicolon
-        if (i < tokens.size() && tokens.get(i).tokentype.name == ";") {
+        if (i < tokens.size() && tokens.get(i).name == ";") {
             i++;
         } else {
             assert false : "Expected ';' at end of let statement";
@@ -46,7 +60,7 @@ public class Parser {
         // consume fn
         i++;
         // expect identifier
-        if (i < tokens.size() && token_t.isIdentifier(tokens.get(i))) {
+        if (i < tokens.size() && isIdentifier(tokens.get(i))) {
             IdentifierNode name = new IdentifierNode();
             parse(name);
             node.name = name;
@@ -54,7 +68,7 @@ public class Parser {
             assert false : "Expected function name after 'fn'";
         }
         // expect (
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "(") {
+        if (i < tokens.size() && tokens.get(i).name == "(") {
             i++;
         } else {
             assert false : "Expected '(' after function name";
@@ -63,25 +77,25 @@ public class Parser {
         Vector<ParameterNode> parameters = new Vector<>();
         // try to check if there is a self parameter
         parse(node.selfPara);
-        while (i < tokens.size() && tokens.get(i).tokentype.name != ")") {
+        while (i < tokens.size() && tokens.get(i).name != ")") {
             ParameterNode param = new ParameterNode();
             parse(param);
             parameters.add(param);
-            if (i < tokens.size() && tokens.get(i).tokentype.name == ",") {
+            if (i < tokens.size() && tokens.get(i).name == ",") {
                 i++;
-            } else if (i >= tokens.size() || tokens.get(i).tokentype.name != ")") {
+            } else if (i >= tokens.size() || tokens.get(i).name != ")") {
                 assert false : "Expected ',' or ')' in parameter list";
             }
         }
         node.parameters = parameters;
         // expect )
-        if (i < tokens.size() && tokens.get(i).tokentype.name == ")") {
+        if (i < tokens.size() && tokens.get(i).name == ")") {
             i++;
         } else {
             assert false : "Expected ')' at end of parameter list"; 
         }
         // check for return type
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "->") {
+        if (i < tokens.size() && tokens.get(i).name == "->") {
             i++;
             TypeExprNode returnType = new TypeExprNode();
             parse(returnType);
@@ -90,14 +104,14 @@ public class Parser {
             node.returnType = null;
         }
         // expect {
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "{") {
+        if (i < tokens.size() && tokens.get(i).name == "{") {
             i++;
             BlockExprNode body = new BlockExprNode();
             parse(body);
             node.body = body;
         } else {
             // if the next token is ";", then it's function declaration without body
-            if (i < tokens.size() && tokens.get(i).tokentype.name == ";") {
+            if (i < tokens.size() && tokens.get(i).name == ";") {
                 i++;
                 node.body = null;
             } else {
@@ -119,7 +133,6 @@ public class Parser {
             i++;
         }
         if (tokens.get(i).name.equals("self")) {
-            node.isSelf = true;
             i++;
             if (istyped && i < tokens.size() && tokens.get(i).name.equals(":")) {
                 i++;
@@ -134,10 +147,10 @@ public class Parser {
     }
 
     public void parse(ParameterNode node) {
-        PatternNode pattern = new PatternNode();
-        parse(pattern);
-        node.pattern = pattern;
-        if (i < tokens.size() && tokens.get(i).tokentype.name == ":") {
+        PatternNode name = new PatternNode();
+        parse(name);
+        node.name = name;
+        if (i < tokens.size() && tokens.get(i).name == ":") {
             i++;
             TypeExprNode type = new TypeExprNode();
             parse(type);
@@ -181,7 +194,7 @@ public class Parser {
             idNode.isMutable = true;
             i++;
         }
-        if (i < tokens.size() && token_t.isIdentifier(tokens.get(i))) {
+        if (i < tokens.size() && isIdentifier(tokens.get(i))) {
             IdentifierNode name = new IdentifierNode();
             parse(name);
             idNode.name = name;
@@ -195,7 +208,7 @@ public class Parser {
         // consume struct
         i++;
         // expect identifier
-        if (i < tokens.size() && token_t.isIdentifier(tokens.get(i))) {
+        if (i < tokens.size() && isIdentifier(tokens.get(i))) {
             IdentifierNode name = new IdentifierNode();
             parse(name);
             node.name = name;
@@ -203,11 +216,11 @@ public class Parser {
             assert false : "Expected struct name after 'struct'";
         }
         // expect {
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "{") {
+        if (i < tokens.size() && tokens.get(i).name == "{") {
             i++;
         } else {
             // if the next token is ";", then it's struct declaration without body
-            if (i < tokens.size() && tokens.get(i).tokentype.name == ";") {
+            if (i < tokens.size() && tokens.get(i).name == ";") {
                 i++;
                 node.fields = null;
                 return;
@@ -217,19 +230,19 @@ public class Parser {
         }
         // parse fields
         Vector<FieldNode> fields = new Vector<>();
-        while (i < tokens.size() && tokens.get(i).tokentype.name != "}") {
+        while (i < tokens.size() && tokens.get(i).name != "}") {
             FieldNode field = new FieldNode();
             parse(field);
             fields.add(field);
-            if (i < tokens.size() && tokens.get(i).tokentype.name == ",") {
+            if (i < tokens.size() && tokens.get(i).name == ",") {
                 i++;
-            } else if (i >= tokens.size() || tokens.get(i).tokentype.name != "}") {
+            } else if (i >= tokens.size() || tokens.get(i).name != "}") {
                 assert false : "Expected ',' or '}' in field list";
             }
         }
         node.fields = fields;
         // expect }
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "}") {
+        if (i < tokens.size() && tokens.get(i).name == "}") {
             i++;
         } else {
             assert false : "Expected '}' at end of field list";
@@ -238,7 +251,7 @@ public class Parser {
 
     public void parse(FieldNode node) {
         // expect identifier
-        if (i < tokens.size() && token_t.isIdentifier(tokens.get(i))) {
+        if (i < tokens.size() && isIdentifier(tokens.get(i))) {
             IdentifierNode name = new IdentifierNode();
             parse(name);
             node.name = name;
@@ -246,7 +259,7 @@ public class Parser {
             assert false : "Expected field name in struct";
         }
         // expect :
-        if (i < tokens.size() && tokens.get(i).tokentype.name == ":") {
+        if (i < tokens.size() && tokens.get(i).name == ":") {
             i++;
         } else {
             assert false : "Expected ':' after field name in struct";
@@ -260,7 +273,7 @@ public class Parser {
         // consume enum
         i++;
         // expect identifier
-        if (i < tokens.size() && token_t.isIdentifier(tokens.get(i))) {
+        if (i < tokens.size() && isIdentifier(tokens.get(i))) {
             IdentifierNode name = new IdentifierNode();
             parse(name);
             node.name = name;
@@ -268,30 +281,30 @@ public class Parser {
             assert false : "Expected enum name after 'enum'";
         }
         // expect {
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "{") {
+        if (i < tokens.size() && tokens.get(i).name == "{") {
             i++;
         } else {
             assert false : "Expected '{' after enum name";
         }
         // parse variants
         Vector<IdentifierNode> variants = new Vector<>();
-        while (i < tokens.size() && tokens.get(i).tokentype.name != "}") {
-            if (i < tokens.size() && token_t.isIdentifier(tokens.get(i))) {
+        while (i < tokens.size() && tokens.get(i).name != "}") {
+            if (i < tokens.size() && isIdentifier(tokens.get(i))) {
                 IdentifierNode variant = new IdentifierNode();
                 parse(variant);
                 variants.add(variant);
             } else {
                 assert false : "Expected variant name in enum";
             }
-            if (i < tokens.size() && tokens.get(i).tokentype.name == ",") {
+            if (i < tokens.size() && tokens.get(i).name == ",") {
                 i++;
-            } else if (i >= tokens.size() || tokens.get(i).tokentype.name != "}") {
+            } else if (i >= tokens.size() || tokens.get(i).name != "}") {
                 assert false : "Expected ',' or '}' in variant list";
             }
         }
         node.variants = variants;
         // expect }
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "}") {
+        if (i < tokens.size() && tokens.get(i).name == "}") {
             i++;
         } else {
             assert false : "Expected '}' at end of variant list";
@@ -301,14 +314,14 @@ public class Parser {
     public void parse(ConstItemNode node) {
         // consume the "const" token
         i++;
-        if (i < tokens.size() && token_t.isIdentifier(tokens.get(i))) {
+        if (i < tokens.size() && isIdentifier(tokens.get(i))) {
             IdentifierNode name = new IdentifierNode();
             parse(name);
             node.name = name;
         } else {
             assert false : "Expected const name after 'const'";
         }
-        if (i < tokens.size() && tokens.get(i).tokentype.name == ":") {
+        if (i < tokens.size() && tokens.get(i).name == ":") {
             i++;
             TypeExprNode type = new TypeExprNode();
             parse(type);
@@ -316,13 +329,13 @@ public class Parser {
         } else {
             assert false : "Expected ':' after const name";
         }
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "=") {
+        if (i < tokens.size() && tokens.get(i).name == "=") {
             i++;
-            ExprStmtNode value = new ExprStmtNode();
+            ExprNode value = new ExprNode();
             parse(value);
             node.value = value;
         }
-        if (i < tokens.size() && tokens.get(i).tokentype.name == ";") {
+        if (i < tokens.size() && tokens.get(i).name == ";") {
             i++;
         } else {
             assert false : "Expected ';' at end of const item";
@@ -332,26 +345,26 @@ public class Parser {
     public void parse(TraitNode node) {
         // consume the "trait" token
         i++;
-        if (i < tokens.size() && token_t.isIdentifier(tokens.get(i))) {
+        if (i < tokens.size() && isIdentifier(tokens.get(i))) {
             IdentifierNode name = new IdentifierNode();
             parse(name);
             node.name = name;
         } else {
             assert false : "Expected trait name after 'trait'";
         }
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "{") {
+        if (i < tokens.size() && tokens.get(i).name == "{") {
             i++;
         } else {
             assert false : "Expected '{' after trait name";
         }
         Vector<AssoItemNode> items = new Vector<>();
-        while (i < tokens.size() && tokens.get(i).tokentype.name != "}") {
+        while (i < tokens.size() && tokens.get(i).name != "}") {
             AssoItemNode item = new AssoItemNode();
             parse(item);
             items.add(item);
         }
         node.items = items;
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "}") {
+        if (i < tokens.size() && tokens.get(i).name == "}") {
             i++;
         } else {
             assert false : "Expected '}' at end of trait body";
@@ -362,7 +375,7 @@ public class Parser {
         // consume the "impl" token
         i++;
         // check if it's an inherent impl or a trait impl
-        if (i < tokens.size() && token_t.isIdentifier(tokens.get(i))) {
+        if (i < tokens.size() && isIdentifier(tokens.get(i))) {
             // it's may be a trait name or a type name
             // we need to look ahead to see if there is a "for" token
             // we just need to check the (i + 1)th token
@@ -379,19 +392,19 @@ public class Parser {
         parse(typeName);
         node.typeName = typeName;
         // expect {
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "{") {
+        if (i < tokens.size() && tokens.get(i).name == "{") {
             i++;
         } else {
             assert false : "Expected '{' after impl type";
         }
         Vector<AssoItemNode> items = new Vector<>();
-        while (i < tokens.size() && tokens.get(i).tokentype.name != "}") {
+        while (i < tokens.size() && tokens.get(i).name != "}") {
             AssoItemNode item = new AssoItemNode();
             parse(item);
             items.add(item);
         }
         node.items = items;
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "}") {
+        if (i < tokens.size() && tokens.get(i).name == "}") {
             i++;
         } else {
             assert false : "Expected '}' at end of impl body";
@@ -405,7 +418,7 @@ public class Parser {
             FunctionNode funcNode = new FunctionNode();
             funcNode.isConst = false;
             parse(funcNode);
-            node = funcNode;
+            node.function = funcNode;
         } else if (i < tokens.size() && tokens.get(i).name.equals("const")) {
             // It may be a const item or a const function
             if (i + 1 < tokens.size() && tokens.get(i + 1).name.equals("fn")) {
@@ -414,11 +427,11 @@ public class Parser {
                 // consume const
                 i++;
                 parse(funcNode);
-                node = funcNode;
+                node.function = funcNode;
             } else {
                 ConstItemNode constNode = new ConstItemNode();
                 parse(constNode);
-                node = constNode;
+                node.constant = constNode;
             }
         } else {
             assert false : "Expected 'fn' or 'const' in associated item";
@@ -429,45 +442,64 @@ public class Parser {
         assert i < tokens.size() : "No more tokens to parse in expression statement";
         token_t token = tokens.get(i);
         // check if it's an expression with block
-        if (token.name.equals("if") || token.name.equals("while") || token.name.equals("loop") || token.tokentype.name == "{") {
+        if (token.name.equals("if") || token.name.equals("while") || token.name.equals("loop") || token.name == "{") {
             ExprWithBlockNode blockNode = new ExprWithBlockNode();
             parse(blockNode);
-            node = blockNode;
+            node.expr = blockNode;
             return ;
         }
         // otherwise it's an expression without block
         ExprWithoutBlockNode exprNode = new ExprWithoutBlockNode();
-        parse(exprNode);
-        node = exprNode;
+        parse(exprNode, 0);
+        node.expr = exprNode;
         // expect semicolon
-        if (i < tokens.size() && tokens.get(i).tokentype.name == ";") {
+        if (i < tokens.size() && tokens.get(i).name == ";") {
             i++;
         } else {
             assert false : "Expected ';' at end of expression statement";
         }
     }
 
-    // we write a function: for tokens (arg1, arg2, ..., argn), the function return a vector of ExprStmtNode
-    public Vector<ExprStmtNode> parseFunctionArgs() {
-        Vector<ExprStmtNode> args = new Vector<>();
+    public void parse(ExprNode node, int precedence) {
+        // we need to check if it's an expression with block or without block
+        assert i < tokens.size() : "No more tokens to parse in expression";
+        token_t token = tokens.get(i);
+        if (token.name.equals("if") || token.name.equals("while") || token.name.equals("loop") || token.name == "{") {
+            ExprWithBlockNode blockNode = new ExprWithBlockNode();
+            parse(blockNode);
+            node = blockNode;
+        } else {
+            ExprWithoutBlockNode exprNode = new ExprWithoutBlockNode();
+            parse(exprNode, precedence);
+            node = exprNode;
+        }
+    }
+
+    public void parse(ExprNode node) {
+        parse(node, 0);
+    }
+
+    // we write a function: for tokens (arg1, arg2, ..., argn), the function return a vector of ExprNode
+    public Vector<ExprNode> parseFunctionArgs() {
+        Vector<ExprNode> args = new Vector<>();
         // expect (
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "(") {
+        if (i < tokens.size() && tokens.get(i).name == "(") {
             i++;
         } else {
             assert false : "Expected '(' at start of function argument list";
         }
-        while (i < tokens.size() && tokens.get(i).tokentype.name != ")") {
-            ExprStmtNode arg = new ExprStmtNode();
+        while (i < tokens.size() && tokens.get(i).name != ")") {
+            ExprNode arg = new ExprNode();
             parse(arg);
             args.add(arg);
-            if (i < tokens.size() && tokens.get(i).tokentype.name == ",") {
+            if (i < tokens.size() && tokens.get(i).name == ",") {
                 i++;
-            } else if (i >= tokens.size() || tokens.get(i).tokentype.name != ")") {
+            } else if (i >= tokens.size() || tokens.get(i).name != ")") {
                 assert false : "Expected ',' or ')' in function argument list";
             }
         }
         // expect )
-        if (i < tokens.size() && tokens.get(i).tokentype.name == ")") {
+        if (i < tokens.size() && tokens.get(i).name == ")") {
             i++;
         } else {
             assert false : "Expected ')' at end of function argument list";
@@ -499,6 +531,91 @@ public class Parser {
             return true;
         }
         return false;
+    }
+    public boolean isArith(token_t token) {
+        // arith operators: +, -, *, /, %, &, |, ^, <<, >>
+        return token.name.equals("+") || token.name.equals("-") || token.name.equals("*") || token.name.equals("/") || token.name.equals("%") || token.name.equals("&") || token.name.equals("|") || token.name.equals("^") || token.name.equals("<<") || token.name.equals(">>");
+    }
+    public boolean isComp(token_t token) {
+        // comp operators: ==, !=, <, <=, >, >=
+        return token.name.equals("==") || token.name.equals("!=") || token.name.equals("<") || token.name.equals("<=") || token.name.equals(">") || token.name.equals(">=");
+    }
+    public boolean isLazy(token_t token) {
+        // lazy operators: &&, ||
+        return token.name.equals("&&") || token.name.equals("||");
+    }
+    public boolean isAssignOper(token_t token) {
+        // assign operators: =
+        return token.name.equals("=");
+    }
+    public boolean isComAssignOper(token_t token) {
+        // comassign operators: +=, -=, *=, /=, %=, |=, ^=, <<=, >>=, &=
+        return token.name.equals("+=") || token.name.equals("-=") || token.name.equals("*=") || token.name.equals("/=") || token.name.equals("%=") || token.name.equals("|=") || token.name.equals("^=") || token.name.equals("<<=") || token.name.equals(">>=") || token.name.equals("&=");
+    }
+    public oper_t getOper(String name) {
+        switch (name) {
+            case "+":
+                return oper_t.PLUS;
+            case "-":
+                return oper_t.MINUS;
+            case "*":
+                return oper_t.MUL;
+            case "/":
+                return oper_t.DIV;
+            case "%":
+                return oper_t.MOD;
+            case "&":
+                return oper_t.AND;
+            case "|":
+                return oper_t.OR;
+            case "^":
+                return oper_t.XOR;
+            case "<<":
+                return oper_t.SHL;
+            case ">>":
+                return oper_t.SHR;
+            case "==":
+                return oper_t.EQ;
+            case "!=":
+                return oper_t.NEQ;
+            case "<":
+                return oper_t.LT;
+            case "<=":
+                return oper_t.LTE;
+            case ">":
+                return oper_t.GT;
+            case ">=":
+                return oper_t.GTE;
+            case "&&":
+                return oper_t.LOGICAL_AND;
+            case "||":
+                return oper_t.LOGICAL_OR;
+            case "=":
+                return oper_t.ASSIGN;
+            case "+=":
+                return oper_t.PLUS_ASSIGN;
+            case "-=":
+                return oper_t.MINUS_ASSIGN;
+            case "*=":
+                return oper_t.MUL_ASSIGN;
+            case "/=":
+                return oper_t.DIV_ASSIGN;
+            case "%=":
+                return oper_t.MOD_ASSIGN;
+            case "&=":
+                return oper_t.AND_ASSIGN;
+            case "|=":
+                return oper_t.OR_ASSIGN;
+            case "^=":
+                return oper_t.XOR_ASSIGN;
+            case "<<=":
+                return oper_t.SHL_ASSIGN;
+            case ">>=":
+                return oper_t.SHR_ASSIGN;
+            default:
+                assert false : "Unknown operator: " + name;
+                return null; // to satisfy the compiler
+        }
     }
     // we also need a function "getPrecedence" to get the precedence of a binary operator; there are 10 levels of precedence for the operators we support; the higher the number, the higher the precedence; 
     // the precedence levels are as follows:
@@ -547,6 +664,24 @@ public class Parser {
         return 0;
     }
 
+    public void parse(GroupExprNode node) {
+        // expect (
+        if (i < tokens.size() && tokens.get(i).name == "(") {
+            i++;
+        } else {
+            assert false : "Expected '(' at start of grouped expression";
+        }
+        ExprNode innerExpr = new ExprNode();
+        parse(innerExpr, 0);
+        node.innerExpr = innerExpr;
+        // expect )
+        if (i < tokens.size() && tokens.get(i).name == ")") {
+            i++;
+        } else {
+            assert false : "Expected ')' at end of grouped expression";
+        }
+    }
+
     public void parse(ExprWithoutBlockNode node, int precedence) {
         assert i < tokens.size() : "No more tokens to parse in expression without block";
         token_t token = tokens.get(i);
@@ -556,25 +691,17 @@ public class Parser {
             parse(litNode);
             node = litNode;
         } else if (isIdentifier(token) || token.name.equals("self") || token.name.equals("Self")) {
-            PathExprSegNode pathSeg = new PathExprSegNode();
-            parse(pathSeg);
-            node = pathSeg;
+            PathExprNode path = new PathExprNode();
+            parse(path.LSeg);
+            node = path;
         } else if (token.name.equals("[")) {
             ArrayExprNode arrayNode = new ArrayExprNode();
             parse(arrayNode);
             node = arrayNode;
         } else if (token.name.equals("(")) {
-            // it's a parenthesized expression
-            i++;
-            ExprStmtNode innerExpr = new ExprStmtNode();
-            parse(innerExpr, 0);
-            // expect )
-            if (i < tokens.size() && tokens.get(i).tokentype.name == ")") {
-                i++;
-            } else {
-                assert false : "Expected ')' at end of parenthesized expression";
-            }
-            node = innerExpr;
+            GroupExprNode groupNode = new GroupExprNode();
+            parse(groupNode);
+            node = groupNode;
         } else if (token.name.equals("&") || token.name.equals("&&")) {
             BorrowExprNode borrowNode = new BorrowExprNode();
             parse(borrowNode);
@@ -613,19 +740,19 @@ public class Parser {
                 i++;
                 PathExprSegNode pathSeg = new PathExprSegNode();
                 parse(pathSeg);
-                if (i < tokens.size() && tokens.get(i).tokentype.name == "(") {
+                if (i < tokens.size() && tokens.get(i).name == "(") {
                     // it's a method call
                     MethodCallExprNode methodCallNode = new MethodCallExprNode();
                     methodCallNode.receiver = node;
                     methodCallNode.methodName = pathSeg;
-                    Vector<ExprStmtNode> arguments = parseFunctionArgs();
+                    Vector<ExprNode> arguments = parseFunctionArgs();
                     methodCallNode.arguments = arguments;
                     node = methodCallNode;
                 } else {
                     // it's a field access
                     FieldExprNode fieldNode = new FieldExprNode();
                     fieldNode.receiver = node;
-                    if (pathSeg.patternType == patternSeg_t.IDENTIFIER) {
+                    if (pathSeg.patternType == patternSeg_t.IDENT) {
                         fieldNode.fieldName = pathSeg.name;
                     } else {
                         assert false : "Expected identifier after '.' in field access";
@@ -637,47 +764,50 @@ public class Parser {
                 if (opPrecedence <= precedence) {
                     break;
                 }
+                // get the operator
+                oper_t operator = getOper(token.name);
+                // check the type of operator
                 if (isComAssignOper(token)) {
                     ComAssignExprNode comAssignNode = new ComAssignExprNode();
-                    comAssignNode.operator = getComAssignOper(token);
+                    comAssignNode.operator = operator;
                     i++;
-                    ExprStmtNode right = new ExprStmtNode();
+                    ExprNode right = new ExprNode();
                     parse(right, opPrecedence);
                     comAssignNode.left = node;
                     comAssignNode.right = right;
                     node = comAssignNode;
                 } else if (isAssignOper(token)) {
                     AssignExprNode assignNode = new AssignExprNode();
-                    assignNode.operator = getAssignOper(token);
+                    assignNode.operator = operator;
                     i++;
-                    ExprStmtNode right = new ExprStmtNode();
+                    ExprNode right = new ExprNode();
                     parse(right, opPrecedence);
                     assignNode.left = node;
                     assignNode.right = right;
                     node = assignNode;
                 } else if (isComp(token)) {
                     CompExprNode compNode = new CompExprNode();
-                    compNode.operator = getCompOper(token);
+                    compNode.operator = operator;
                     i++;
-                    ExprStmtNode right = new ExprStmtNode();
+                    ExprNode right = new ExprNode();
                     parse(right, opPrecedence);
                     compNode.left = node;
                     compNode.right = right;
                     node = compNode;
                 } else if (isArith(token)) {
                     ArithExprNode arithNode = new ArithExprNode();
-                    arithNode.operator = getArithOper(token);
+                    arithNode.operator = operator;
                     i++;
-                    ExprStmtNode right = new ExprStmtNode();
+                    ExprNode right = new ExprNode();
                     parse(right, opPrecedence);
                     arithNode.left = node;
                     arithNode.right = right;
                     node = arithNode;
                 } else if (isLazy(token)) {
                     LazyExprNode lazyNode = new LazyExprNode();
-                    lazyNode.operator = getLazyOper(token);
+                    lazyNode.operator = operator;
                     i++;
-                    ExprStmtNode right = new ExprStmtNode();
+                    ExprNode right = new ExprNode();
                     parse(right, opPrecedence);
                     lazyNode.left = node;
                     lazyNode.right = right;
@@ -691,8 +821,8 @@ public class Parser {
                 i++;
                 TypeExprNode targetType = new TypeExprNode();
                 parse(targetType);
-                typeCastNode.expression = node;
-                typeCastNode.targetType = targetType;
+                typeCastNode.expr = node;
+                typeCastNode.type = targetType;
                 node = typeCastNode;
             } else if (token.name.equals("::")) {
                 if (precedence >= 170) {
@@ -701,12 +831,9 @@ public class Parser {
                 i++;
                 PathExprSegNode pathSeg = new PathExprSegNode();
                 parse(pathSeg);
-                PathExprNode pathNode = new PathExprNode();
-                // check if node is a PathExprSegNode
-                if (node instanceof PathExprSegNode) {
-                    pathNode.LSeg = (PathExprSegNode)node;
-                    pathNode.RSeg = pathSeg;
-                    node = pathNode;
+                if (node instanceof PathExprNode) {
+                    assert ((PathExprNode)node).RSeg == null : "Unexpected state: PathExprNode already has RSeg in path expression";
+                    ((PathExprNode)node).RSeg = pathSeg;
                     continue;
                 }
                 assert false : "Expected path segment before '::' in path expression";
@@ -718,7 +845,7 @@ public class Parser {
                 parse(indexNode.index, precedence);
                 node = indexNode;
                 // expect ]
-                if (i < tokens.size() && tokens.get(i).tokentype.name == "]") {
+                if (i < tokens.size() && tokens.get(i).name == "]") {
                     i++;
                 } else {
                     assert false : "Expected ']' at end of index expression";
@@ -727,42 +854,38 @@ public class Parser {
                 // it's a function call
                 CallExprNode callNode = new CallExprNode();
                 callNode.function = node;
-                Vector<ExprStmtNode> arguments = parseFunctionArgs();
+                Vector<ExprNode> arguments = parseFunctionArgs();
                 callNode.arguments = arguments;
                 node = callNode;
             } else if (token.name.equals("{")) {
                 // it's a struct expression
                 StructExprNode structNode = new StructExprNode();
                 if (node instanceof PathExprNode) {
-                    structNode.structName = (PathExprNode)node;
-                } else if (node instanceof PathExprSegNode) {
-                    PathExprNode pathNode = new PathExprNode();
-                    pathNode.LSeg = (PathExprSegNode)node;
-                    structNode.structName = pathNode;
+                    structNode.structName = ((PathExprNode)node).LSeg;
                 } else {
                     assert false : "Expected path expression before '{' in struct expression";
                 }
                 i++;
-                Vector<FieldValNode> fieldAssignments = new Vector<>();
+                Vector<FieldValNode> fieldValues = new Vector<>();
                 while (i < tokens.size()) {
-                    if (tokens.get(i).tokentype.name == "}") {
+                    if (tokens.get(i).name == "}") {
                         break;
                     }
                     FieldValNode fieldVal = new FieldValNode();
                     parse(fieldVal);
-                    fieldAssignments.add(fieldVal);
-                    if (i < tokens.size() && tokens.get(i).tokentype.name == ",") {
+                    fieldValues.add(fieldVal);
+                    if (i < tokens.size() && tokens.get(i).name == ",") {
                         i++;
-                    } else if (i < tokens.size() && tokens.get(i).tokentype.name == "}") {
+                    } else if (i < tokens.size() && tokens.get(i).name == "}") {
                         break;
                     } else {
                         assert false : "Expected ',' or '}' in field assignment list";
                     }
                 }
                 node = structNode;
-                structNode.fieldAssignments = fieldAssignments;
+                structNode.fieldValues = fieldValues;
                 // expect }
-                if (i < tokens.size() && tokens.get(i).tokentype.name == "}") {
+                if (i < tokens.size() && tokens.get(i).name == "}") {
                     i++;
                 } else {
                     assert false : "Expected '}' at end of struct expression";
@@ -776,6 +899,11 @@ public class Parser {
                 assert false : "Unexpected token '" + token.name + "' in expression";
             }
         }
+        node = node;
+    }
+
+    public void parse(ExprWithoutBlockNode node) {
+        parse(node, 0);
     }
 
 
@@ -794,7 +922,7 @@ public class Parser {
         } else {
             node.isMutable = false;
         }
-        ExprStmtNode innerExpr = new ExprStmtNode();
+        ExprNode innerExpr = new ExprNode();
         parse(innerExpr, 130);
         node.innerExpr = innerExpr;
     }
@@ -802,7 +930,7 @@ public class Parser {
     public void parse(DerefExprNode node) {
         // consume *
         i++;
-        ExprStmtNode innerExpr = new ExprStmtNode();
+        ExprNode innerExpr = new ExprNode();
         parse(innerExpr, 130);
         node.innerExpr = innerExpr;
     }
@@ -810,14 +938,14 @@ public class Parser {
     public void parse(NegaExprNode node) {
         // consume - or ~
         if (tokens.get(i).name.equals("-")) {
-            node.isBitwise = false;
+            node.isLogical = false;
         } else if (tokens.get(i).name.equals("~")) {
-            node.isBitwise = true;
+            node.isLogical = true;
         } else {
             assert false : "Expected '-' or '~' in negation expression";
         }
         i++;
-        ExprStmtNode innerExpr = new ExprStmtNode();
+        ExprNode innerExpr = new ExprNode();
         parse(innerExpr, 130);
         node.innerExpr = innerExpr;
     }
@@ -828,7 +956,7 @@ public class Parser {
         if (i < tokens.size()) {
             token_t token = tokens.get(i);
             if (token.tokentype == token_t.TokenType_t.INTEGER_LITERAL) {
-                node.literalType = literal_t.INTEGER;
+                node.literalType = literal_t.INT;
                 node.value_int = Integer.parseInt(token.name);
                 i++;
             } else if (token.name.equals("true") || token.name.equals("false")) {
@@ -866,7 +994,7 @@ public class Parser {
         } else {
             assert false : "Expected path segment in path expression";
         }
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "::") {
+        if (i < tokens.size() && tokens.get(i).name == "::") {
             i++;
             if (i < tokens.size()) {
                 PathExprSegNode RSeg = new PathExprSegNode();
@@ -881,15 +1009,15 @@ public class Parser {
     }
 
     public void parse(PathExprSegNode node) {
-        if (i < tokens.size() && token_t.isIdentifier(tokens.get(i))) {
+        if (i < tokens.size() && isIdentifier(tokens.get(i))) {
             IdentifierNode name = new IdentifierNode();
             parse(name);
             node.name = name;
-            node.patternType = patternSeg_t.IDENTIFIER;
-        } else if (i < tokens.size() && tokens.get(i).tokentype.name.equals("self")) {
+            node.patternType = patternSeg_t.IDENT;
+        } else if (i < tokens.size() && tokens.get(i).name.equals("self")) {
             node.patternType = patternSeg_t.SELF;
             i++;
-        } else if (i < tokens.size() && tokens.get(i).tokentype.name.equals("Self")) {
+        } else if (i < tokens.size() && tokens.get(i).name.equals("Self")) {
             node.patternType = patternSeg_t.SELF_TYPE;
             i++;
         } else {
@@ -899,36 +1027,35 @@ public class Parser {
 
     public void parse(ArrayExprNode node) {
         // expect [
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "[") {
+        if (i < tokens.size() && tokens.get(i).name == "[") {
             i++;
         } else {
             assert false : "Expected '[' at start of array expression";
         }
-        Vector<ExprStmtNode> elements = new Vector<>();
+        Vector<ExprNode> elements = new Vector<>();
         boolean isList = true, isFirst = true;
-        while (i < tokens.size() && tokens.get(i).tokentype.name != "]") {
-            ExprStmtNode element = new ExprStmtNode();
+        while (i < tokens.size() && tokens.get(i).name != "]") {
+            ExprNode element = new ExprNode();
             parse(element);
             elements.add(element);
-            if (i < tokens.size() && tokens.get(i).tokentype.name == ",") {
+            if (i < tokens.size() && tokens.get(i).name == ",") {
                 i++;
                 isFirst = false;
-            } else if (i < tokens.size() && tokens.get(i).tokentype.name == ";") {
+            } else if (i < tokens.size() && tokens.get(i).name == ";") {
                 if (!isFirst) {
                     assert false : "Unexpected ';' in array expression";
                 }
                 isList = false;
                 i++;
-                ExprStmtNode size = new ExprStmtNode();
+                ExprNode size = new ExprNode();
                 parse(size);
                 node.size = size;
                 node.repeatedElement = element;
                 break;
-            } else if (i >= tokens.size() || tokens.get(i).tokentype.name != "]") {
+            } else if (i >= tokens.size() || tokens.get(i).name != "]") {
                 assert false : "Expected ',' or ']' in array expression";
             }
         }
-        node.isList = isList;
         if (isList) {
             node.elements = elements;
             node.repeatedElement = null;
@@ -939,20 +1066,20 @@ public class Parser {
     }
 
     public void parse(IndexExprNode node) {
-        ExprStmtNode array = new ExprStmtNode();
+        ExprNode array = new ExprNode();
         parse(array);
         node.array = array;
         // expect [
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "[") {
+        if (i < tokens.size() && tokens.get(i).name == "[") {
             i++;
         } else {
             assert false : "Expected '[' at start of index expression";
         }
-        ExprStmtNode index = new ExprStmtNode();
+        ExprNode index = new ExprNode();
         parse(index);
         node.index = index;
         // expect ]
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "]") {
+        if (i < tokens.size() && tokens.get(i).name == "]") {
             i++;
         } else {
             assert false : "Expected ']' at end of index expression";
@@ -960,29 +1087,29 @@ public class Parser {
     }
 
     public void parse(StructExprNode node) {
-        PathExprNode structName = new PathExprNode();
+        PathExprSegNode structName = new PathExprSegNode();
         parse(structName);
         node.structName = structName;
         // expect {
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "{") {
+        if (i < tokens.size() && tokens.get(i).name == "{") {
             i++;
         } else {
             assert false : "Expected '{' at start of struct expression";
         }
-        Vector<FieldValNode> fieldAssignments = new Vector<>();
-        while (i < tokens.size() && tokens.get(i).tokentype.name != "}") {
+        Vector<FieldValNode> fieldValues = new Vector<>();
+        while (i < tokens.size() && tokens.get(i).name != "}") {
             FieldValNode fieldVal = new FieldValNode();
             parse(fieldVal);
-            fieldAssignments.add(fieldVal);
-            if (i < tokens.size() && tokens.get(i).tokentype.name == ",") {
+            fieldValues.add(fieldVal);
+            if (i < tokens.size() && tokens.get(i).name == ",") {
                 i++;
-            } else if (i >= tokens.size() || tokens.get(i).tokentype.name != "}") {
+            } else if (i >= tokens.size() || tokens.get(i).name != "}") {
                 assert false : "Expected ',' or '}' in field assignment list";
             }
         }
-        node.fieldAssignments = fieldAssignments;
+        node.fieldValues = fieldValues;
         // expect }
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "}") {
+        if (i < tokens.size() && tokens.get(i).name == "}") {
             i++;
         } else {
             assert false : "Expected '}' at end of struct expression";
@@ -991,48 +1118,48 @@ public class Parser {
 
     public void parse(FieldValNode node) {
         // expect identifier
-        if (i < tokens.size() && token_t.isIdentifier(tokens.get(i))) {
+        if (i < tokens.size() && isIdentifier(tokens.get(i))) {
             IdentifierNode name = new IdentifierNode();
             parse(name);
-            node.name = name;
+            node.fieldName = name;
         } else {
             assert false : "Expected field name in struct expression";
         }
         // expect :
-        if (i < tokens.size() && tokens.get(i).tokentype.name == ":") {
+        if (i < tokens.size() && tokens.get(i).name == ":") {
             i++;
         } else {
             assert false : "Expected ':' after field name in struct expression";
         }
-        ExprStmtNode value = new ExprStmtNode();
+        ExprNode value = new ExprNode();
         parse(value);
         node.value = value;
     }
 
     public void parse(CallExprNode node) {
-        ExprStmtNode function = new ExprStmtNode();
+        ExprNode function = new ExprNode();
         parse(function);
         node.function = function;
         // expect (
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "(") {
+        if (i < tokens.size() && tokens.get(i).name == "(") {
             i++;
         } else {
             assert false : "Expected '(' at start of call expression";
         }
-        Vector<ExprStmtNode> arguments = new Vector<>();
-        while (i < tokens.size() && tokens.get(i).tokentype.name != ")") {
-            ExprStmtNode argument = new ExprStmtNode();
+        Vector<ExprNode> arguments = new Vector<>();
+        while (i < tokens.size() && tokens.get(i).name != ")") {
+            ExprNode argument = new ExprNode();
             parse(argument);
             arguments.add(argument);
-            if (i < tokens.size() && tokens.get(i).tokentype.name == ",") {
+            if (i < tokens.size() && tokens.get(i).name == ",") {
                 i++;
-            } else if (i >= tokens.size() || tokens.get(i).tokentype.name != ")") {
+            } else if (i >= tokens.size() || tokens.get(i).name != ")") {
                 assert false : "Expected ',' or ')' in argument list";
             }
         }
         node.arguments = arguments;
         // expect )
-        if (i < tokens.size() && tokens.get(i).tokentype.name == ")") {
+        if (i < tokens.size() && tokens.get(i).name == ")") {
             i++;
         } else {
             assert false : "Expected ')' at end of argument list";
@@ -1040,11 +1167,11 @@ public class Parser {
     }
 
     public void parse(MethodCallExprNode node) {
-        ExprStmtNode receiver = new ExprStmtNode();
+        ExprNode receiver = new ExprNode();
         parse(receiver);
         node.receiver = receiver;
         // expect .
-        if (i < tokens.size() && tokens.get(i).tokentype.name == ".") {
+        if (i < tokens.size() && tokens.get(i).name == ".") {
             i++;
         } else {
             assert false : "Expected '.' before method name in method call";
@@ -1053,25 +1180,25 @@ public class Parser {
         parse(methodName);
         node.methodName = methodName;
         // expect (
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "(") {
+        if (i < tokens.size() && tokens.get(i).name == "(") {
             i++;
         } else {
             assert false : "Expected '(' at start of method call";
         }
-        Vector<ExprStmtNode> arguments = new Vector<>();
-        while (i < tokens.size() && tokens.get(i).tokentype.name != ")") {
-            ExprStmtNode argument = new ExprStmtNode();
+        Vector<ExprNode> arguments = new Vector<>();
+        while (i < tokens.size() && tokens.get(i).name != ")") {
+            ExprNode argument = new ExprNode();
             parse(argument);
             arguments.add(argument);
-            if (i < tokens.size() && tokens.get(i).tokentype.name == ",") {
+            if (i < tokens.size() && tokens.get(i).name == ",") {
                 i++;
-            } else if (i >= tokens.size() || tokens.get(i).tokentype.name != ")") {
+            } else if (i >= tokens.size() || tokens.get(i).name != ")") {
                 assert false : "Expected ',' or ')' in method call argument list";
             }
         }
         node.arguments = arguments;
         // expect )
-        if (i < tokens.size() && tokens.get(i).tokentype.name == ")") {
+        if (i < tokens.size() && tokens.get(i).name == ")") {
             i++;
         } else {
             assert false : "Expected ')' at end of method call argument list";
@@ -1079,16 +1206,16 @@ public class Parser {
     }
 
     public void parse(FieldExprNode node) {
-        ExprStmtNode receiver = new ExprStmtNode();
+        ExprNode receiver = new ExprNode();
         parse(receiver);
         node.receiver = receiver;
         // expect .
-        if (i < tokens.size() && tokens.get(i).tokentype.name == ".") {
+        if (i < tokens.size() && tokens.get(i).name == ".") {
             i++;
         } else {
             assert false : "Expected '.' before field name in field expression";
         }
-        if (i < tokens.size() && token_t.isIdentifier(tokens.get(i))) {
+        if (i < tokens.size() && isIdentifier(tokens.get(i))) {
             IdentifierNode fieldName = new IdentifierNode();
             parse(fieldName);
             node.fieldName = fieldName;
@@ -1105,8 +1232,8 @@ public class Parser {
     public void parse(BreakExprNode node) {
         // consume "break"
         i++;
-        if (i < tokens.size() && tokens.get(i).tokentype.name != ";") {
-            ExprStmtNode value = new ExprStmtNode();
+        if (i < tokens.size() && tokens.get(i).name != ";") {
+            ExprNode value = new ExprNode();
             parse(value, 10);
             node.value = value;
         } else {
@@ -1117,8 +1244,8 @@ public class Parser {
     public void parse(ReturnExprNode node) {
         // consume "return"
         i++;
-        if (i < tokens.size() && tokens.get(i).tokentype.name != ";") {
-            ExprStmtNode value = new ExprStmtNode();
+        if (i < tokens.size() && tokens.get(i).name != ";") {
+            ExprNode value = new ExprNode();
             parse(value, 10);
             node.value = value;
         } else {
@@ -1149,7 +1276,7 @@ public class Parser {
             LoopExprNode loopNode = new LoopExprNode();
             parse(loopNode);
             node = loopNode;
-        } else if (i < tokens.size() && tokens.get(i).tokentype.name == "{") {
+        } else if (i < tokens.size() && tokens.get(i).name == "{") {
             BlockExprNode blockNode = new BlockExprNode();
             parse(blockNode);
             node = blockNode;
@@ -1160,20 +1287,20 @@ public class Parser {
 
     public void parse(BlockExprNode node) {
         // expect {
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "{") {
+        if (i < tokens.size() && tokens.get(i).name == "{") {
             i++;
         } else {
             assert false : "Expected '{' at start of block expression";
         }
         Vector<StmtNode> statements = new Vector<>();
-        while (i < tokens.size() && tokens.get(i).tokentype.name != "}") {
+        while (i < tokens.size() && tokens.get(i).name != "}") {
             StmtNode stmt = new StmtNode();
             parse(stmt);
             statements.add(stmt);
         }
         node.statements = statements;
         // expect }
-        if (i < tokens.size() && tokens.get(i).tokentype.name == "}") {
+        if (i < tokens.size() && tokens.get(i).name == "}") {
             i++;
         } else {
             assert false : "Expected '}' at end of block expression";
@@ -1187,7 +1314,7 @@ public class Parser {
         } else {
             assert false : "Expected 'if' at start of if expression";
         }
-        ExprStmtNode condition = new ExprStmtNode();
+        ExprNode condition = new ExprNode();
         parse(condition);
         node.condition = condition;
         BlockExprNode thenBranch = new BlockExprNode();
@@ -1217,12 +1344,12 @@ public class Parser {
         // expect while or loop
         if (i < tokens.size() && tokens.get(i).name.equals("while")) {
             i++;
-            ExprStmtNode condition = new ExprStmtNode();
+            ExprNode condition = new ExprNode();
             parse(condition);
-            node.contidion = condition;
+            node.condition = condition;
         } else if (i < tokens.size() && tokens.get(i).name.equals("loop")) {
             i++;
-            node.contidion = null;
+            node.condition = null;
         } else {
             assert false : "Expected 'while' or 'loop' at start of loop expression";
         }
@@ -1232,7 +1359,7 @@ public class Parser {
     }
 
     public void parse(IdentifierNode node) {
-        assert i < tokens.size() && token_t.isIdentifier(tokens.get(i)) : "Expected identifier";
+        assert i < tokens.size() && isIdentifier(tokens.get(i)) : "Expected identifier";
         node.name = tokens.get(i).name;
         i++;
     }
@@ -1302,7 +1429,7 @@ public class Parser {
         } else {
             assert false : "Expected ';' in array type";
         }
-        ExprStmtNode size = new ExprStmtNode();
+        ExprNode size = new ExprNode();
         parse(size, 0);
         node.size = size;
         // expect ]
@@ -1379,7 +1506,7 @@ public class Parser {
             }
         } else {
             // if it's ";", it's an empty statement
-            if (token.tokentype.name == ";") {
+            if (token.name == ";") {
                 // consume ";"
                 i++;
             } else {
@@ -1387,7 +1514,7 @@ public class Parser {
                 parse(exprNode);
                 node = exprNode;
                 // consume ";"
-                if (i < tokens.size() && tokens.get(i).tokentype.name == ";") {
+                if (i < tokens.size() && tokens.get(i).name == ";") {
                     i++;
                 } else {
                     assert false : "Expected ';' at end of expression statement";
@@ -1396,10 +1523,14 @@ public class Parser {
         }
     }
 
-    Vector<StmtNode> statements = new Vector<>();
-    while(i < tokens.size()) {
-        StmtNode stmt = new StmtNode();
-        parse(stmt);
-        statements.add(stmt);
+    // the entry point of the parser
+    public void parse() {
+        // the program is comprised of a series of statements
+        Vector<StmtNode> statements = new Vector<>();
+        while(i < tokens.size()) {
+            StmtNode stmt = new StmtNode();
+            parse(stmt);
+            statements.add(stmt);
+        }
     }
 }

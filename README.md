@@ -81,10 +81,8 @@
     - `RefPatNode`: represents a reference pattern, of which the syntax is `(& | &&) mut? pattern`.
 - `IdentifierNode` is used to represent an identifier in Rust.
 
-- now we need to design a new type "oper_t":
-    - arithmetic operators: + - * / %
-    - bitwise operators: & | ^ << >>
-    - comparison operators: == != > < >= <=
-    - logical operators: && || 
-    - assignment operators: = 
-    - compound assignment operators: += -= *= /= %= &= |= ^= <<= >>=
+#### Parsing Strategy:
+- the parser is implemented in `Parser.java`.
+- in `Parser.java`: the class `Parser` reads tokens from the lexer and has a method `parse()` which is the entry point of the parser. It returns a vector of `StmtNode`, which represents the top-level statements in the source code.
+- the parser uses recursive descent parsing to parse the source code. Specifically, it has a method for each kind of node in the AST. For example, it has a overloaded method `parse` for each derived type of `ASTNode`, such as `parse(FunctionNode node)`, `parse(StructNode node)`, `parse(LetStmtNode node)`, `parse(ExprStmtNode node)`, etc.
+- the parser decides which method to call according to the current tokens and the grammar provided in `AST.java`.
