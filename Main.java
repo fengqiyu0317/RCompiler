@@ -421,7 +421,8 @@ class ReadRustFile {
         Parser parser = new Parser(tokenizer.tokens);
         parser.parse();
         // print the AST
-        parser.root.print(0);
+        PrintAST printAST = new PrintAST();
+        printAST.visit(parser.root); // Assuming parser.root is the root of the AST
     }
 }
 

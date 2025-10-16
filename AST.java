@@ -38,7 +38,7 @@ class FunctionNode extends ItemNode {
     boolean isConst; // true if it's a const function, false if it's not
     IdentifierNode name;
     Vector<ParameterNode> parameters;
-    BlockExprNode body;
+    BlockExprNode body; // can be null if it's a function declaration
     TypeExprNode returnType; // can be null
     SelfParaNode selfPara; // can be null
     // set isConst to false initially
