@@ -23,7 +23,7 @@ public class PrintAST extends VisitorBase {
     public void visit(ASTNode node) {}
     @Override
     public void visit(StmtNode node) {
-        // System.out.println(node instanceof FunctionNode);
+        System.out.println(node instanceof FunctionNode);
         // decide which specific StmtNode it is
         if (node instanceof LetStmtNode n) {
             visit(n);
@@ -395,7 +395,7 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.print("BorrowExprNode: ");
         System.out.print("isMutable = " + node.isMutable + ", ");
-        System.out.println("isDouble = " + node.isDoubleReference);
+        System.out.println("isDouble = " + node.isDouble);
         indent();
         visit(node.innerExpr);
         dedent();

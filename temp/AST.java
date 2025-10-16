@@ -218,7 +218,7 @@ abstract class OperExprNode extends ExprWithoutBlockNode {
 // <borrowexpr> = (& | &&) (mut)? <expression>
 class BorrowExprNode extends OperExprNode {
     boolean isMutable; // true if it's mut, false if it's not
-    boolean isDoubleReference; // true if it's &&, false if it's &
+    boolean isDouble; // true if it's &&, false if it's &
     ExprNode innerExpr;
 }
 // DerefExprNode represents a dereference expression <derefexpr>.

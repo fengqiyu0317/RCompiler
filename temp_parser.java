@@ -879,33 +879,27 @@ public class Parser {
         LiteralExprNode node = new LiteralExprNode();
         token_t token = tokens.get(i);
         if (token.tokentype == token_t.TokenType_t.INTEGER_LITERAL) {
-            node.literalType = literal_t.INT;
-            try {
-                node.value_int = Integer.parseInt(token.name);
-            } catch (NumberFormatException e) {
-                // Handle integer literals that might be too large or in different formats
-                node.value_int = 0; // Default value in case of parsing error
-            }
+            node.literalType = literal_t.INTEGER;
+            node.value_string = token.name;
             i++;
         } else if (token.tokentype == token_t.TokenType_t.CHAR_LITERAL) {
             node.literalType = literal_t.CHAR;
             node.value_string = token.name;
             i++;
-        } else if (token.tokentype == token_t.TokenType_t.STRING_LITERAL || token.tokentype == token_t.TokenType_t.RAW_STRING_LITERAL) {
+        } else if (token.tokentype == token_t.TokenType_t.STRING_LITERAL || token.tokentype == token_t.TokenType_t.RAW_STRING_LITERAL || token.tokentype == token_t.TokenType_t.C_STRING_LITERAL || token.tokentype == token_t.TokenType_t.RAW_C_STRING_LITERAL) {
             node.literalType = literal_t.STRING;
             node.value_string = token.name;
-            i++;
-        } else if (token.tokentype == token_t.TokenType_t.C_STRING_LITERAL || token.tokentype == token_t.TokenType_t.RAW_C_STRING_LITERAL) {
-            node.literalType = literal_t.CSTRING;
-            node.value_string = token.name;
+            if (token.tokentype == token_t.TokenType_t.C_STRING_LITERAL || token.tokentype == token_t.TokenType_t.RAW_C_STRING_LITERAL) {
+                node.value_string += "\0"; // add null terminator for C-style strings
+            }
             i++;
         } else if (token.name.equals("true")) {
-            node.literalType = literal_t.BOOL;
-            node.value_bool = true;
+            node.literalType = literal_t.BOOLEAN;
+            node.value_string = "true";
             i++;
         } else if (token.name.equals("false")) {
-            node.literalType = literal_t.BOOL;
-            node.value_bool = false;
+            node.literalType = literal_t.BOOLEAN;
+            node.value_string = "false";
             i++;
         } else {
             assert false : "Expected literal in literal expression";
@@ -964,14 +958,9 @@ public class Parser {
         }
         Vector<ExprNode> elements = new Vector<>();
         boolean isList = true, isFirst = true;
-        ExprNode firstElement = null;
         while (i < tokens.size() && !tokens.get(i).name.equals("]")) {
             ExprNode element = new ExprNode();
-            element = parseExprWithoutBlockNode();
-            if (isFirst) {
-                firstElement = element;
-            }
-            elements.add(element);
+            elements.add(parseExprWithoutBlockNode());
                 if (i < tokens.size() && tokens.get(i).name.equals(",")) {
                 i++;
                 isFirst = false;
@@ -983,7 +972,7 @@ public class Parser {
                 i++;
                 ExprNode size = new ExprNode();
                 node.size = parseExprWithoutBlockNode();
-                node.repeatedElement = firstElement;
+                node.repeatedElement = element;
                 break;
                 } else if (i >= tokens.size() || !tokens.get(i).name.equals("]")) {
                 assert false : "Expected ',' or ']' in array expression";
@@ -1431,8 +1420,9 @@ public class Parser {
         statements = new Vector<>();
         while(i < tokens.size()) {
             StmtNode stmt = parseStmtNode();
-            // System.out.println(stmt instanceof FunctionNode);
+            System.out.println(stmt instanceof FunctionNode);
             statements.add(stmt);
         }
     }
+}
 }

@@ -415,9 +415,9 @@ class ReadRustFile {
             }
         }
         // output the tokens
-        // for (token_t token : tokenizer.tokens) {
-        //     System.out.println("Token Type: " + token.tokentype + ", Name: " + token.name);
-        // }
+        for (token_t token : tokenizer.tokens) {
+            System.out.println("Token Type: " + token.tokentype + ", Name: " + token.name);
+        }
         // parse the tokens
         Parser parser = new Parser(tokenizer.tokens);
         parser.parse();
