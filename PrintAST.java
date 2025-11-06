@@ -664,6 +664,10 @@ public class PrintAST extends VisitorBase {
     @Override
     public void visit(IdentifierNode node) {
         printIndent();
-        System.out.println("IdentifierNode: " + node.name);
+        if (node != null && node.name != null) {
+            System.out.println("IdentifierNode: " + node.name);
+        } else {
+            System.out.println("IdentifierNode: null");
+        }
     }
 }

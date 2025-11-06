@@ -11,6 +11,8 @@ public class Parser {
     }
 
     int i = 0;
+    private static final int MAX_RECURSION_DEPTH = 100;
+    private int recursionDepth = 0;
 
     // we need a list to store all the keywords in Rust
     private static final Set<String> keywords = new HashSet<>(Arrays.asList(
@@ -325,7 +327,6 @@ public class Parser {
             // we just need to check the (i + 1)th token
             if (i + 1 < tokens.size() && tokens.get(i + 1).name.equals("for")) {
                 // it's a trait impl
-                IdentifierNode trait = new IdentifierNode();
                 node.trait = parseIdentifierNode();
                 // consume for
                 i++;
@@ -616,6 +617,10 @@ public class Parser {
     }
 
     public ExprWithoutBlockNode parseExprWithoutBlockNode(int precedence) {
+        if (recursionDepth > MAX_RECURSION_DEPTH) {
+            throw new RuntimeException("Maximum recursion depth exceeded in expression parsing");
+        }
+        recursionDepth++;
         assert i < tokens.size() : "No more tokens to parse in expression without block";
         token_t token = tokens.get(i);
         ExprWithoutBlockNode node = new ExprWithoutBlockNode();
@@ -816,10 +821,12 @@ public class Parser {
                 assert false : "Unexpected token '" + token.name + "' in expression";
             }
         }
+        recursionDepth--;
         return node;
     }
 
     public ExprWithoutBlockNode parseExprWithoutBlockNode() {
+        recursionDepth = 0;
         return parseExprWithoutBlockNode(0);
     }
 
@@ -939,7 +946,6 @@ public class Parser {
         PathExprSegNode node = new PathExprSegNode();
         if (i < tokens.size() && isIdentifier(tokens.get(i))) {
             // System.out.println(tokens.get(i).name);
-            IdentifierNode name = new IdentifierNode();
             node.name = parseIdentifierNode();
             node.patternType = patternSeg_t.IDENT;
         } else if (i < tokens.size() && tokens.get(i).name.equals("self")) {
@@ -1060,7 +1066,6 @@ public class Parser {
         FieldValNode node = new FieldValNode();
         // expect identifier
         if (i < tokens.size() && isIdentifier(tokens.get(i))) {
-            IdentifierNode name = new IdentifierNode();
             node.fieldName = parseIdentifierNode();
         } else {
             assert false : "Expected field name in struct expression";
@@ -1155,7 +1160,6 @@ public class Parser {
             assert false : "Expected '.' before field name in field expression";
         }
         if (i < tokens.size() && isIdentifier(tokens.get(i))) {
-            IdentifierNode fieldName = new IdentifierNode();
             node.fieldName = parseIdentifierNode();
         } else {
             assert false : "Expected identifier as field name in field expression";

@@ -1,0 +1,1 @@
+- 请你根据`printAST.java`中的输出格式，`grammar.md`中的语法，`AST.java`中的类，来为`RCompiler-Testcases`中`semantic-1`和`semantic-2`中后缀名为`.rx`的程序生成一个输出，并作为`.txt`文件分类放至`answer`文件夹中
