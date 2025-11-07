@@ -2,23 +2,15 @@ FunctionNode: isConst = false
   IdentifierNode: main
   BlockExprNode
     LetStmtNode
-      IdPatNode: isMutable = true, isReference = false
-        IdentifierNode: flags
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: arr
       TypeArrayExprNode
         TypePathExprNode
           PathExprSegNode: patternType = IDENT
-            IdentifierNode: bool
-        LiteralExprNode: INT = 5
-      ArrayExprNode: repeated element
-        LiteralExprNode: BOOL = false
-        LiteralExprNode: INT = 5
-    ExprStmtNode
-      AssignExprNode
-        IndexExprNode
-          PathExprNode
-            PathExprSegNode: patternType = IDENT
-              IdentifierNode: flags
-          LiteralExprNode: INT = 2
+            IdentifierNode: i32
+        LiteralExprNode: INT = 2
+      ArrayExprNode: elements
+        LiteralExprNode: INT = 1
         LiteralExprNode: BOOL = true
     ExprStmtNode
       CallExprNode

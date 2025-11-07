@@ -1,25 +1,205 @@
+EnumNode
+  IdentifierNode: Priority
+  IdentifierNode: Low
+  IdentifierNode: Medium
+  IdentifierNode: High
+StructNode
+  IdentifierNode: Task
+  FieldNode
+    IdentifierNode: id
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  FieldNode
+    IdentifierNode: priority
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: Priority
+  FieldNode
+    IdentifierNode: completed
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: bool
+FunctionNode: isConst = false
+  IdentifierNode: initialize_tasks
+  TypeArrayExprNode
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: Task
+    LiteralExprNode: INT = 3
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: task1
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Task
+      StructExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Task
+        FieldValNode
+          IdentifierNode: id
+          LiteralExprNode: INT = 1
+        FieldValNode
+          IdentifierNode: priority
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: Priority
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: High
+        FieldValNode
+          IdentifierNode: completed
+          LiteralExprNode: BOOL = false
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: task2
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Task
+      StructExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Task
+        FieldValNode
+          IdentifierNode: id
+          LiteralExprNode: INT = 2
+        FieldValNode
+          IdentifierNode: priority
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: Priority
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: Medium
+        FieldValNode
+          IdentifierNode: completed
+          LiteralExprNode: BOOL = true
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: task3
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Task
+      StructExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Task
+        FieldValNode
+          IdentifierNode: id
+          LiteralExprNode: INT = 3
+        FieldValNode
+          IdentifierNode: priority
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: Priority
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: Low
+        FieldValNode
+          IdentifierNode: completed
+          LiteralExprNode: BOOL = false
+    ExprStmtNode
+      ReturnExprNode
+        ArrayExprNode: elements
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: task1
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: task2
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: task3
+FunctionNode: isConst = false
+  IdentifierNode: process_task_queue
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: tasks
+    TypeRefExprNode: isMutable = true
+      TypeArrayExprNode
+        TypePathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: Task
+        LiteralExprNode: INT = 3
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: i
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: usize
+      LiteralExprNode: INT = 0
+    ExprStmtNode
+      LoopExprNode
+        GroupExprNode
+          CompExprNode: operator = LT
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: i
+            LiteralExprNode: INT = 3
+        BlockExprNode
+          ExprStmtNode
+            IfExprNode
+              GroupExprNode
+                NegaExprNode: isLogical = true
+                  IndexExprNode
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: tasks
+                    FieldExprNode
+                      ArrayExprNode: elements
+                        PathExprNode
+                          PathExprSegNode: patternType = IDENT
+                            IdentifierNode: i
+                      IdentifierNode: completed
+              BlockExprNode
+          ExprStmtNode
+            AssignExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: i
+              ArithExprNode: operator = ADD
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: i
+                LiteralExprNode: INT = 1
 FunctionNode: isConst = false
   IdentifierNode: main
   BlockExprNode
     LetStmtNode
       IdPatNode: isMutable = true, isReference = false
-        IdentifierNode: flags
+        IdentifierNode: task_queue
       TypeArrayExprNode
         TypePathExprNode
           PathExprSegNode: patternType = IDENT
-            IdentifierNode: bool
-        LiteralExprNode: INT = 5
-      ArrayExprNode: repeated element
-        LiteralExprNode: BOOL = false
-        LiteralExprNode: INT = 5
+            IdentifierNode: Task
+        LiteralExprNode: INT = 3
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: initialize_tasks
     ExprStmtNode
-      AssignExprNode
-        IndexExprNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: process_task_queue
+        BorrowExprNode: isMutable = true, isDouble = false
           PathExprNode
             PathExprSegNode: patternType = IDENT
-              IdentifierNode: flags
-          LiteralExprNode: INT = 2
-        LiteralExprNode: BOOL = true
+              IdentifierNode: task_queue
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: small_queue
+      TypeArrayExprNode
+        TypePathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: Task
+        LiteralExprNode: INT = 2
+      PathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: task_queue
+    ExprStmtNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: printInt
+        LiteralExprNode: INT = 1
     ExprStmtNode
       CallExprNode
         PathExprNode

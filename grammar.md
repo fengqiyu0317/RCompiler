@@ -10,7 +10,8 @@ This document describes the grammar for the language implemented in RCompiler, b
 4. [Patterns](#patterns)
 5. [Expressions](#expressions)
 6. [Types](#types)
-7. [Literals and Identifiers](#literals-and-identifiers)
+7. [Tokens](#tokens)
+8. [Literals and Identifiers](#literals-and-identifiers)
 
 ## Basic Structure
 
@@ -145,9 +146,11 @@ This document describes the grammar for the language implemented in RCompiler, b
 
 ### Block Expression
 ```
-<blockexpr> ::= { <statements>* }
+<blockexpr> ::= { <statements>? }
 
-<statements> ::= <statement>*
+<statements> ::= <statement>+
+               | <statement>+ <expressionwithoutblock>
+               | <expressionwithoutblock>
 ```
 
 ### If Expression
@@ -321,6 +324,88 @@ This document describes the grammar for the language implemented in RCompiler, b
 <typeunitexpr> ::= ()
 ```
 
+## Tokens
+
+### Token
+```
+<token> ::= <identifier_or_keyword> | <char_literal> | <string_literal> | <raw_string_literal> | <c_string_literal> | <raw_c_string_literal> | <integer_literal> | <punctuation>
+```
+
+### Suffix
+```
+<suffix> ::= <identifier_or_keyword>
+
+<suffix_no_e> ::= <suffix> (not beginning with 'e' or 'E')
+```
+
+### Character Literal
+```
+<char_literal> ::= ' ( ~[' \ <lf> <cr> <tab>] | <quote_escape> | <ascii_escape> ) '
+
+<quote_escape> ::= \' | \"
+
+<ascii_escape> ::= \x <oct_digit> <hex_digit>
+                | \n | \r | \t | \\ | \0
+```
+
+### String Literal
+```
+<string_literal> ::= " ( ~[" \ <cr>] | <quote_escape> | <ascii_escape> | <string_continue> )* "
+
+<string_continue> ::= \ <lf>
+```
+
+### Raw String Literal
+```
+<raw_string_literal> ::= r <raw_string_content>
+
+<raw_string_content> ::= " ( ~<cr> )* " (non-greedy)
+                       | # <raw_string_content> #
+```
+
+### C String Literal
+```
+<c_string_literal> ::= c" ( ~[" \ <cr> <nul>] | <byte_escape> | <string_continue> )* "
+
+<byte_escape> ::= \x <oct_digit> <hex_digit>
+```
+
+### Raw C String Literal
+```
+<raw_c_string_literal> ::= cr <raw_c_string_content>
+
+<raw_c_string_content> ::= " ( ~[<cr> <nul>] )* " (non-greedy)
+                          | # <raw_c_string_content> #
+```
+
+### Integer Literal
+```
+<integer_literal> ::= <dec_literal> | <bin_literal> | <oct_literal> | <hex_literal> <suffix_no_e>?
+
+<dec_literal> ::= <dec_digit> ( <dec_digit> | _ )*
+
+<bin_literal> ::= 0b ( <bin_digit> | _ )* <bin_digit> ( <bin_digit> | _ )*
+
+<oct_literal> ::= 0o ( <oct_digit> | _ )* <oct_digit> ( <oct_digit> | _ )*
+
+<hex_literal> ::= 0x ( <hex_digit> | _ )* <hex_digit> ( <hex_digit> | _ )*
+
+<bin_digit> ::= 0 | 1
+
+<oct_digit> ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
+
+<dec_digit> ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+
+<hex_digit> ::= <dec_digit> | a | b | c | d | e | f | A | B | C | D | E | F
+```
+
+### Punctuation
+```
+<punctuation> ::= = | + | - | * | / | % | ^ | ! | & | | | && | || | << | >>
+                | == | != | > | < | >= | <= | @ | . | .. | ... | ..= | : | ::
+                | ; | , | -> | <- | => | # | $ | ? | [ | ] | ( | ) | { | } | _
+```
+
 ## Literals and Identifiers
 
 ### Identifier
@@ -329,10 +414,11 @@ This document describes the grammar for the language implemented in RCompiler, b
 ```
 
 ### Literals
-- **Character Literal**: `'c'`
-- **String Literal**: `"string"`
-- **Raw String Literal**: `r"string"`
-- **C String Literal**: `c"string"`
-- **Raw C String Literal**: `cr"string"`
-- **Integer Literal**: `[0-9]+`
+- **Character Literal**: `<char_literal>`
+- **String Literal**: `<string_literal>`
+- **Raw String Literal**: `<raw_string_literal>`
+- **C String Literal**: `<c_string_literal>`
+- **Raw C String Literal**: `<raw_c_string_literal>`
+- **Integer Literal**: `<integer_literal>`
 - **Boolean Literal**: `true` | `false`
+

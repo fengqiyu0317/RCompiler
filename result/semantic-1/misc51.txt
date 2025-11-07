@@ -1,25 +1,190 @@
 FunctionNode: isConst = false
-  IdentifierNode: main
+  IdentifierNode: catalan_recursive
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: n
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  TypePathExprNode
+    PathExprSegNode: patternType = IDENT
+      IdentifierNode: i32
+  BlockExprNode
+    ExprStmtNode
+      IfExprNode
+        GroupExprNode
+          CompExprNode: operator = LTE
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: n
+            LiteralExprNode: INT = 1
+        BlockExprNode
+          ExprStmtNode
+            ReturnExprNode
+              LiteralExprNode: INT = 1
+        BlockExprNode
+          LetStmtNode
+            IdPatNode: isMutable = true, isReference = false
+              IdentifierNode: sum
+            TypePathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: i32
+            LiteralExprNode: INT = 0
+          LetStmtNode
+            IdPatNode: isMutable = true, isReference = false
+              IdentifierNode: i
+            TypePathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: i32
+            LiteralExprNode: INT = 0
+          ExprStmtNode
+            LoopExprNode
+              GroupExprNode
+                CompExprNode: operator = LT
+                  PathExprNode
+                    PathExprSegNode: patternType = IDENT
+                      IdentifierNode: i
+                  PathExprNode
+                    PathExprSegNode: patternType = IDENT
+                      IdentifierNode: n
+              BlockExprNode
+                ExprStmtNode
+                  ComAssignExprNode: operator = ADD_ASSIGN
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: sum
+                    ArithExprNode: operator = MUL
+                      CallExprNode
+                        PathExprNode
+                          PathExprSegNode: patternType = IDENT
+                            IdentifierNode: catalan_recursive
+                        PathExprNode
+                          PathExprSegNode: patternType = IDENT
+                            IdentifierNode: i
+                      CallExprNode
+                        PathExprNode
+                          PathExprSegNode: patternType = IDENT
+                            IdentifierNode: catalan_recursive
+                        ArithExprNode: operator = SUB
+                          ArithExprNode: operator = SUB
+                            PathExprNode
+                              PathExprSegNode: patternType = IDENT
+                                IdentifierNode: n
+                            LiteralExprNode: INT = 1
+                          PathExprNode
+                            PathExprSegNode: patternType = IDENT
+                              IdentifierNode: i
+                ExprStmtNode
+                  ComAssignExprNode: operator = ADD_ASSIGN
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: i
+                    LiteralExprNode: INT = 1
+          ExprStmtNode
+            ReturnExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: sum
+FunctionNode: isConst = false
+  IdentifierNode: sum_catalan_numbers
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: limit
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  TypePathExprNode
+    PathExprSegNode: patternType = IDENT
+      IdentifierNode: i32
   BlockExprNode
     LetStmtNode
       IdPatNode: isMutable = true, isReference = false
-        IdentifierNode: flags
-      TypeArrayExprNode
-        TypePathExprNode
-          PathExprSegNode: patternType = IDENT
-            IdentifierNode: bool
-        LiteralExprNode: INT = 5
-      ArrayExprNode: repeated element
-        LiteralExprNode: BOOL = false
-        LiteralExprNode: INT = 5
+        IdentifierNode: total
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      LiteralExprNode: INT = 0
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: n
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      LiteralExprNode: INT = 0
     ExprStmtNode
-      AssignExprNode
-        IndexExprNode
-          PathExprNode
-            PathExprSegNode: patternType = IDENT
-              IdentifierNode: flags
-          LiteralExprNode: INT = 2
-        LiteralExprNode: BOOL = true
+      LoopExprNode
+        GroupExprNode
+          CompExprNode: operator = LTE
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: n
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: limit
+        BlockExprNode
+          LetStmtNode
+            IdPatNode: isMutable = false, isReference = false
+              IdentifierNode: catalan_n
+            TypePathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: i32
+            CallExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: catalan_recursive
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: n
+          ExprStmtNode
+            ComAssignExprNode: operator = ADD_ASSIGN
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: total
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: catalan_n
+          ExprStmtNode
+            ComAssignExprNode: operator = ADD_ASSIGN
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: n
+              LiteralExprNode: INT = 1
+    ExprStmtNode
+      ReturnExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: total
+FunctionNode: isConst = false
+  IdentifierNode: main
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: limit
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      LiteralExprNode: INT = 4
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: result
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: sum_catalan_numbers
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: limit
+    ExprStmtNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: printInt
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: result
     ExprStmtNode
       CallExprNode
         PathExprNode

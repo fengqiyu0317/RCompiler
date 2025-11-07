@@ -32,15 +32,115 @@ ImplNode
     SelfParaNode: isMutable = true, isReference = true
     ParameterNode
       IdPatNode: isMutable = false, isReference = false
-        Exception in thread "main" java.lang.NullPointerException: Cannot read field "name" because "<parameter1>" is null
-	at PrintAST.visit(PrintAST.java:667)
-	at PrintAST.visit(PrintAST.java:129)
-	at PrintAST.visit(PrintAST.java:113)
-	at PrintAST.visit(PrintAST.java:105)
-	at PrintAST.visit(PrintAST.java:84)
-	at PrintAST.visit(PrintAST.java:214)
-	at PrintAST.visit(PrintAST.java:206)
-	at PrintAST.visit(PrintAST.java:52)
-	at PrintAST.visit(PrintAST.java:33)
-	at ReadRustFile.read_init(Main.java:427)
-	at Main.main(Main.java:10)
+        IdentifierNode: amount
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+    BlockExprNode
+      ExprStmtNode
+        AssignExprNode
+          FieldExprNode
+            PathExprNode
+              PathExprSegNode: patternType = SELF
+            IdentifierNode: balance
+          ArithExprNode: operator = ADD
+            FieldExprNode
+              PathExprNode
+                PathExprSegNode: patternType = SELF
+              IdentifierNode: balance
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: amount
+  FunctionNode: isConst = false
+    IdentifierNode: get_id
+    SelfParaNode: isMutable = false, isReference = true
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+    BlockExprNode
+      ExprStmtNode
+        ReturnExprNode
+          FieldExprNode
+            PathExprNode
+              PathExprSegNode: patternType = SELF
+            IdentifierNode: id
+FunctionNode: isConst = false
+  IdentifierNode: main
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: account
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Account
+      StructExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Account
+        FieldValNode
+          IdentifierNode: balance
+          LiteralExprNode: INT = 100
+        FieldValNode
+          IdentifierNode: id
+          LiteralExprNode: INT = 12345
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: initial_balance
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      MethodCallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: account
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: get_balance
+    ExprStmtNode
+      MethodCallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: account
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: deposit
+        LiteralExprNode: INT = 50
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: new_balance
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      MethodCallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: account
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: get_balance
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: account_id
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      MethodCallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: account
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: get_id
+    ExprStmtNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: printInt
+        ArithExprNode: operator = ADD
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: new_balance
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: account_id
+    ExprStmtNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: exit
+        LiteralExprNode: INT = 0

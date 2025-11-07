@@ -1,25 +1,96 @@
+EnumNode
+  IdentifierNode: Status
+  IdentifierNode: Active
+  IdentifierNode: Inactive
+  IdentifierNode: Pending
+FunctionNode: isConst = false
+  IdentifierNode: process_statuses
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: statuses
+    TypeArrayExprNode
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Status
+      LiteralExprNode: INT = 3
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: i
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      LiteralExprNode: INT = 0
+    ExprStmtNode
+      LoopExprNode
+        GroupExprNode
+          CompExprNode: operator = LT
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: i
+            LiteralExprNode: INT = 3
+        BlockExprNode
+          ExprStmtNode
+            AssignExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: i
+              ArithExprNode: operator = ADD
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: i
+                LiteralExprNode: INT = 1
+          LetStmtNode
+            IdPatNode: isMutable = false, isReference = false
+              IdentifierNode: s
+            TypeRefExprNode: isMutable = false
+              TypePathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: Status
+            BorrowExprNode: isMutable = false, isDouble = false
+              IndexExprNode
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: statuses
+                ArrayExprNode: elements
+                  TypeCastExprNode
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: i
+                    TypePathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: usize
 FunctionNode: isConst = false
   IdentifierNode: main
   BlockExprNode
     LetStmtNode
-      IdPatNode: isMutable = true, isReference = false
-        IdentifierNode: flags
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: status_array
       TypeArrayExprNode
         TypePathExprNode
           PathExprSegNode: patternType = IDENT
-            IdentifierNode: bool
-        LiteralExprNode: INT = 5
-      ArrayExprNode: repeated element
-        LiteralExprNode: BOOL = false
-        LiteralExprNode: INT = 5
-    ExprStmtNode
-      AssignExprNode
-        IndexExprNode
-          PathExprNode
-            PathExprSegNode: patternType = IDENT
-              IdentifierNode: flags
-          LiteralExprNode: INT = 2
+            IdentifierNode: Status
+        LiteralExprNode: INT = 3
+      ArrayExprNode: elements
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: Status
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: Active
         LiteralExprNode: BOOL = true
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: Status
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: Pending
+    ExprStmtNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: process_statuses
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: status_array
     ExprStmtNode
       CallExprNode
         PathExprNode

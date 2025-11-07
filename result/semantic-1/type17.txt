@@ -1,25 +1,160 @@
+StructNode
+  IdentifierNode: Rectangle
+  FieldNode
+    IdentifierNode: width
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  FieldNode
+    IdentifierNode: height
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+StructNode
+  IdentifierNode: Circle
+  FieldNode
+    IdentifierNode: radius
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+FunctionNode: isConst = false
+  IdentifierNode: calculate_rectangle_area
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: rect
+    TypeRefExprNode: isMutable = false
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Rectangle
+  TypePathExprNode
+    PathExprSegNode: patternType = IDENT
+      IdentifierNode: i32
+  BlockExprNode
+    ExprStmtNode
+      ReturnExprNode
+        ArithExprNode: operator = MUL
+          FieldExprNode
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: rect
+            IdentifierNode: width
+          FieldExprNode
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: rect
+            IdentifierNode: height
+FunctionNode: isConst = false
+  IdentifierNode: calculate_circle_area
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: circle
+    TypeRefExprNode: isMutable = false
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Circle
+  TypePathExprNode
+    PathExprSegNode: patternType = IDENT
+      IdentifierNode: i32
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: pi
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      LiteralExprNode: INT = 3
+    ExprStmtNode
+      ReturnExprNode
+        ArithExprNode: operator = MUL
+          ArithExprNode: operator = MUL
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: pi
+            FieldExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: circle
+              IdentifierNode: radius
+          FieldExprNode
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: circle
+            IdentifierNode: radius
 FunctionNode: isConst = false
   IdentifierNode: main
   BlockExprNode
     LetStmtNode
-      IdPatNode: isMutable = true, isReference = false
-        IdentifierNode: flags
-      TypeArrayExprNode
-        TypePathExprNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: rect
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Rectangle
+      StructExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Rectangle
+        FieldValNode
+          IdentifierNode: width
+          LiteralExprNode: INT = 10
+        FieldValNode
+          IdentifierNode: height
+          LiteralExprNode: INT = 5
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: circle
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Circle
+      StructExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Circle
+        FieldValNode
+          IdentifierNode: radius
+          LiteralExprNode: INT = 3
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: rect_area
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      CallExprNode
+        PathExprNode
           PathExprSegNode: patternType = IDENT
-            IdentifierNode: bool
-        LiteralExprNode: INT = 5
-      ArrayExprNode: repeated element
-        LiteralExprNode: BOOL = false
-        LiteralExprNode: INT = 5
-    ExprStmtNode
-      AssignExprNode
-        IndexExprNode
+            IdentifierNode: calculate_rectangle_area
+        BorrowExprNode: isMutable = false, isDouble = false
           PathExprNode
             PathExprSegNode: patternType = IDENT
-              IdentifierNode: flags
-          LiteralExprNode: INT = 2
-        LiteralExprNode: BOOL = true
+              IdentifierNode: rect
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: circle_area
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: calculate_circle_area
+        BorrowExprNode: isMutable = false, isDouble = false
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: circle
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: invalid_access
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      FieldExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: circle
+        IdentifierNode: width
+    ExprStmtNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: printInt
+        LiteralExprNode: INT = 42
     ExprStmtNode
       CallExprNode
         PathExprNode

@@ -1,25 +1,211 @@
+StructNode
+  IdentifierNode: Vector2D
+  FieldNode
+    IdentifierNode: x
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  FieldNode
+    IdentifierNode: y
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+FunctionNode: isConst = false
+  IdentifierNode: add_vectors
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: v1
+    TypeRefExprNode: isMutable = false
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Vector2D
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: v2
+    TypeRefExprNode: isMutable = false
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Vector2D
+  TypePathExprNode
+    PathExprSegNode: patternType = IDENT
+      IdentifierNode: Vector2D
+  BlockExprNode
+    ExprStmtNode
+      ReturnExprNode
+        StructExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: Vector2D
+          FieldValNode
+            IdentifierNode: x
+            ArithExprNode: operator = ADD
+              FieldExprNode
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: v1
+                IdentifierNode: x
+              FieldExprNode
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: v2
+                IdentifierNode: x
+          FieldValNode
+            IdentifierNode: y
+            ArithExprNode: operator = ADD
+              FieldExprNode
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: v1
+                IdentifierNode: y
+              FieldExprNode
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: v2
+                IdentifierNode: y
+FunctionNode: isConst = false
+  IdentifierNode: dot_product
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: v1
+    TypeRefExprNode: isMutable = false
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Vector2D
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: v2
+    TypeRefExprNode: isMutable = false
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Vector2D
+  TypePathExprNode
+    PathExprSegNode: patternType = IDENT
+      IdentifierNode: i32
+  BlockExprNode
+    ExprStmtNode
+      ReturnExprNode
+        ArithExprNode: operator = ADD
+          ArithExprNode: operator = MUL
+            FieldExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: v1
+              IdentifierNode: x
+            FieldExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: v2
+              IdentifierNode: x
+          ArithExprNode: operator = MUL
+            FieldExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: v1
+              IdentifierNode: y
+            FieldExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: v2
+              IdentifierNode: y
 FunctionNode: isConst = false
   IdentifierNode: main
   BlockExprNode
     LetStmtNode
-      IdPatNode: isMutable = true, isReference = false
-        IdentifierNode: flags
-      TypeArrayExprNode
-        TypePathExprNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: vec1
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Vector2D
+      StructExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Vector2D
+        FieldValNode
+          IdentifierNode: x
+          LiteralExprNode: INT = 3
+        FieldValNode
+          IdentifierNode: y
+          LiteralExprNode: INT = 4
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: vec2
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Vector2D
+      StructExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Vector2D
+        FieldValNode
+          IdentifierNode: x
+          LiteralExprNode: INT = 1
+        FieldValNode
+          IdentifierNode: y
+          LiteralExprNode: INT = 2
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: scalar
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      LiteralExprNode: INT = 2
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: sum
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Vector2D
+      CallExprNode
+        PathExprNode
           PathExprSegNode: patternType = IDENT
-            IdentifierNode: bool
-        LiteralExprNode: INT = 5
-      ArrayExprNode: repeated element
-        LiteralExprNode: BOOL = false
-        LiteralExprNode: INT = 5
-    ExprStmtNode
-      AssignExprNode
-        IndexExprNode
+            IdentifierNode: add_vectors
+        BorrowExprNode: isMutable = false, isDouble = false
           PathExprNode
             PathExprSegNode: patternType = IDENT
-              IdentifierNode: flags
-          LiteralExprNode: INT = 2
-        LiteralExprNode: BOOL = true
+              IdentifierNode: vec1
+        BorrowExprNode: isMutable = false, isDouble = false
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: vec2
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: dot
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: dot_product
+        BorrowExprNode: isMutable = false, isDouble = false
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: vec1
+        BorrowExprNode: isMutable = false, isDouble = false
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: vec2
+    ExprStmtNode
+      IfExprNode
+        GroupExprNode
+          CompExprNode: operator = GT
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: sum
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: scalar
+        BlockExprNode
+          ExprStmtNode
+            CallExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: printInt
+              LiteralExprNode: INT = 1
+        BlockExprNode
+          ExprStmtNode
+            CallExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: printInt
+              LiteralExprNode: INT = 0
     ExprStmtNode
       CallExprNode
         PathExprNode

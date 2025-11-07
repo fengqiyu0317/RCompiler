@@ -32,7 +32,7 @@ public class PrintAST extends VisitorBase {
         } else if (node instanceof ItemNode n) {
             visit(n);
         } else {
-            assert false : "unknown StmtNode";
+            throw new ASTPrintException("unknown StmtNode");
         }
     }
     @Override
@@ -51,7 +51,7 @@ public class PrintAST extends VisitorBase {
         } else if (node instanceof ImplNode n) {
             visit(n);
         } else {
-            assert false : "unknown ItemNode";
+            throw new ASTPrintException("unknown ItemNode");
         }
     }
     @Override
@@ -116,7 +116,7 @@ public class PrintAST extends VisitorBase {
         } else if (node instanceof RefPatNode n) {
             visit(n);
         } else {
-            assert false : "unknown PatternNode";
+            throw new ASTPrintException("unknown PatternNode");
         }
     }
     @Override
@@ -226,7 +226,7 @@ public class PrintAST extends VisitorBase {
         } else if (node instanceof ExprWithoutBlockNode n) {
             visit(n);
         } else {
-            assert false : "unknown ExprNode";
+            throw new ASTPrintException("unknown ExprNode");
         }
     }
     @Override
@@ -239,7 +239,7 @@ public class PrintAST extends VisitorBase {
         } else if (node instanceof LoopExprNode n) {
             visit(n);
         } else {
-            assert false : "unknown ExprWithBlockNode";
+            throw new ASTPrintException("unknown ExprWithBlockNode");
         }
     }
     @Override
@@ -274,7 +274,7 @@ public class PrintAST extends VisitorBase {
         } else if (node instanceof UnderscoreExprNode n) {
             visit(n);
         } else {
-            assert false : "unknown ExprWithoutBlockNode";
+            throw new ASTPrintException("unknown ExprWithoutBlockNode");
         }
     }
     @Override
@@ -319,7 +319,7 @@ public class PrintAST extends VisitorBase {
             case CHAR -> System.out.println("'" + node.value_string + "'");
             case STRING -> System.out.println("\"" + node.value_string + "\"");
             case CSTRING -> System.out.println("\"" + node.value_string + "\"");
-            default -> {assert false : "unknown literal type";}
+            default -> {throw new ASTPrintException("unknown literal type");}
         }
     }
     private void print(literal_t type) {
@@ -329,7 +329,7 @@ public class PrintAST extends VisitorBase {
             case CSTRING -> System.out.print("CSTRING");
             case INT -> System.out.print("INT");
             case BOOL -> System.out.print("BOOL");
-            default -> {assert false : "unknown literal type";}
+            default -> {throw new ASTPrintException("unknown literal type");}
         }
     }
     @Override
@@ -353,7 +353,7 @@ public class PrintAST extends VisitorBase {
             }
             case SELF -> System.out.println("patternType = SELF");
             case SELF_TYPE -> System.out.println("patternType = SELF_TYPE");
-            default -> {assert false : "unknown pattern type";}
+            default -> {throw new ASTPrintException("unknown pattern type");}
         }
         dedent();
     }
@@ -387,7 +387,7 @@ public class PrintAST extends VisitorBase {
         } else if (node instanceof TypeCastExprNode n) {
             visit(n);
         } else {
-            assert false : "unknown OperExprNode";
+            throw new ASTPrintException("unknown OperExprNode");
         }
     }
     @Override
@@ -432,7 +432,7 @@ public class PrintAST extends VisitorBase {
             case XOR -> System.out.println("operator = XOR");
             case SHL -> System.out.println("operator = SHL");
             case SHR -> System.out.println("operator = SHR");
-            default -> {assert false : "unknown arithmetic operator";}
+            default -> {throw new ASTPrintException("unknown arithmetic operator");}
         }
         indent();
         visit(node.left);
@@ -450,7 +450,7 @@ public class PrintAST extends VisitorBase {
             case LT -> System.out.println("operator = LT");
             case GTE -> System.out.println("operator = GTE");
             case LTE -> System.out.println("operator = LTE");
-            default -> {assert false : "unknown comparison operator";}
+            default -> {throw new ASTPrintException("unknown comparison operator");}
         }
         indent();
         visit(node.left);
@@ -464,7 +464,7 @@ public class PrintAST extends VisitorBase {
         switch (node.operator) {
             case LOGICAL_AND -> System.out.println("operator = LOGICAL_AND");
             case LOGICAL_OR -> System.out.println("operator = LOGICAL_OR");
-            default -> {assert false : "unknown lazy operator";}
+            default -> {throw new ASTPrintException("unknown lazy operator");}
         }
         indent();
         visit(node.left);
@@ -495,7 +495,7 @@ public class PrintAST extends VisitorBase {
             case XOR_ASSIGN -> System.out.println("operator = XOR_ASSIGN");
             case SHL_ASSIGN -> System.out.println("operator = SHL_ASSIGN");
             case SHR_ASSIGN -> System.out.println("operator = SHR_ASSIGN");
-            default -> {assert false : "unknown compound assignment operator";}
+            default -> {throw new ASTPrintException("unknown compound assignment operator");}
         }
         indent();
         visit(node.left);
@@ -627,7 +627,7 @@ public class PrintAST extends VisitorBase {
         } else if (node instanceof TypeUnitExprNode n) {
             visit(n);
         } else {
-            assert false : "unknown TypeExprNode";
+            throw new ASTPrintException("unknown TypeExprNode");
         }
     }
     @Override

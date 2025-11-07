@@ -2,24 +2,60 @@ FunctionNode: isConst = false
   IdentifierNode: main
   BlockExprNode
     LetStmtNode
-      IdPatNode: isMutable = true, isReference = false
-        IdentifierNode: flags
-      TypeArrayExprNode
-        TypePathExprNode
-          PathExprSegNode: patternType = IDENT
-            IdentifierNode: bool
-        LiteralExprNode: INT = 5
-      ArrayExprNode: repeated element
-        LiteralExprNode: BOOL = false
-        LiteralExprNode: INT = 5
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: ch
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: char
+      LiteralExprNode: CHAR = 'a''
     ExprStmtNode
-      AssignExprNode
-        IndexExprNode
-          PathExprNode
-            PathExprSegNode: patternType = IDENT
-              IdentifierNode: flags
-          LiteralExprNode: INT = 2
-        LiteralExprNode: BOOL = true
+      IfExprNode
+        GroupExprNode
+          LazyExprNode: operator = LOGICAL_OR
+            LazyExprNode: operator = LOGICAL_OR
+              LazyExprNode: operator = LOGICAL_OR
+                LazyExprNode: operator = LOGICAL_OR
+                  CompExprNode: operator = EQ
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: ch
+                    LiteralExprNode: CHAR = 'a''
+                  CompExprNode: operator = EQ
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: ch
+                    LiteralExprNode: CHAR = 'e''
+                CompExprNode: operator = EQ
+                  PathExprNode
+                    PathExprSegNode: patternType = IDENT
+                      IdentifierNode: ch
+                  LiteralExprNode: CHAR = 'i''
+              CompExprNode: operator = EQ
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: ch
+                LiteralExprNode: CHAR = 'o''
+            CompExprNode: operator = EQ
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: ch
+              LiteralExprNode: CHAR = 'u''
+        BlockExprNode
+          LetStmtNode
+            IdPatNode: isMutable = false, isReference = false
+              IdentifierNode: vowel
+            TypePathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: bool
+            LiteralExprNode: BOOL = true
+        BlockExprNode
+          LetStmtNode
+            IdPatNode: isMutable = false, isReference = false
+              IdentifierNode: vowel
+            TypePathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: bool
+            LiteralExprNode: BOOL = false
     ExprStmtNode
       CallExprNode
         PathExprNode

@@ -234,43 +234,99 @@ class Tokenizer extends token_t {
                 tokens.add(token);
                 continue;
             } else if (Character.isDigit(c)) {
-                // check whether the next character is also a digit
-                char next_c = (i + 1 < input.length()) ? input.charAt(i + 1) : '\0';
                 token_t token = new token_t();
                 token.tokentype = TokenType_t.INTEGER_LITERAL;
                 token.name = String.valueOf(c);
-                if (next_c != '\0' && !Character.isDigit(next_c)) {
-                    if(next_c == 'b' || next_c == 'o' || next_c == 'x') {
+                
+                // Check if this is a non-decimal literal (binary, octal, or hex)
+                if (c == '0' && i + 1 < input.length()) {
+                    char next_c = input.charAt(i + 1);
+                    if (next_c == 'b' || next_c == 'o' || next_c == 'x') {
                         token.name += next_c;
+                        i += 2;
+                        
+                        // Process the digits after the prefix
+                        boolean hasValidDigit = false;
+                        while (i < input.length()) {
+                            char digit = input.charAt(i);
+                            if (digit == '_') {
+                                token.name += digit;
+                                i++;
+                                continue;
+                            }
+                            
+                            boolean isValidDigit = false;
+                            if (next_c == 'b') {
+                                isValidDigit = (digit == '0' || digit == '1');
+                            } else if (next_c == 'o') {
+                                isValidDigit = (digit >= '0' && digit <= '7');
+                            } else if (next_c == 'x') {
+                                isValidDigit = Character.isDigit(digit) ||
+                                              (digit >= 'a' && digit <= 'f') ||
+                                              (digit >= 'A' && digit <= 'F');
+                            }
+                            
+                            if (isValidDigit) {
+                                token.name += digit;
+                                hasValidDigit = true;
+                                i++;
+                            } else {
+                                break;
+                            }
+                        }
+                        
+                        if (!hasValidDigit) {
+                            assert false: "Invalid " +
+                                         (next_c == 'b' ? "binary" :
+                                          next_c == 'o' ? "octal" : "hexadecimal") +
+                                         " literal: no valid digits found";
+                        }
+                    } else {
+                        // Regular decimal literal starting with 0
                         i++;
-                    }
-                    else {
-                        assert false: "Invalid character after digit: " + next_c;
-                    }
-                }
-                while (next_c != '\0' && (Character.isDigit(next_c) || next_c == '_')) {
-                    token.name += next_c;
-                    i++;
-                    next_c = (i + 1 < input.length()) ? input.charAt(i + 1) : '\0';
-                }
-                // check if the next char is 'e' or 'E'
-                if (next_c == 'e' || next_c == 'E') {
-                    assert false: "Scientific notation is not supported yet.";
-                }
-                // then we need to get the suffix, which is an identifier
-                if (next_c != '\0' && Character.isLetter(next_c)) {
-                    token.name += next_c;
-                    i++;
-                    next_c = (i + 1 < input.length()) ? input.charAt(i + 1) : '\0';
-                    while (next_c != '\0' && (Character.isLetterOrDigit(next_c) || next_c == '_')) {
-                        token.name += next_c;
-                        i++;
-                        next_c = (i + 1 < input.length()) ? input.charAt(i + 1) : '\0';
+                        while (i < input.length()) {
+                            char digit = input.charAt(i);
+                            if (Character.isDigit(digit) || digit == '_') {
+                                token.name += digit;
+                                i++;
+                            } else {
+                                break;
+                            }
+                        }
                     }
                 } else {
-                    assert false: "Invalid suffix after integer literal.";
+                    // Regular decimal literal
+                    i++;
+                    while (i < input.length()) {
+                        char digit = input.charAt(i);
+                        if (Character.isDigit(digit) || digit == '_') {
+                            token.name += digit;
+                            i++;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                
+                // Check for suffix (identifier that doesn't start with 'e' or 'E')
+                if (i < input.length() && Character.isLetter(input.charAt(i))) {
+                    char first_suffix_char = input.charAt(i);
+                    if (first_suffix_char != 'e' && first_suffix_char != 'E') {
+                        token.name += first_suffix_char;
+                        i++;
+                        while (i < input.length()) {
+                            char suffix_char = input.charAt(i);
+                            if (Character.isLetterOrDigit(suffix_char) || suffix_char == '_') {
+                                token.name += suffix_char;
+                                i++;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
                 }
                 tokens.add(token);
+                continue;
             } else if (Character.isLetter(c)) {
                 char next_c = (i + 1 < input.length()) ? input.charAt(i + 1) : '\0';
                 // check if it is the head of a literal
@@ -287,6 +343,7 @@ class Tokenizer extends token_t {
                         }
                         token.tokentype = TokenType_t.RAW_STRING_LITERAL_MID;
                         token.number_raw = count_raw;
+                        last_token = token;
                         i = j;
                         assert input.charAt(i) == '\"': "Invalid raw string literal.";
                         i++;
@@ -419,14 +476,21 @@ class ReadRustFile {
         //     System.out.println("Token Type: " + token.tokentype + ", Name: " + token.name);
         // }
         // parse the tokens
-        Parser parser = new Parser(tokenizer.tokens);
-        parser.parse();
-        // print the AST
-        PrintAST printAST = new PrintAST();
-        for (StmtNode stmt : parser.statements) {
-            printAST.visit(stmt);
+        try {
+            Parser parser = new Parser(tokenizer.tokens);
+            parser.parse();
+            // print the AST
+            PrintAST printAST = new PrintAST();
+            for (StmtNode stmt : parser.statements) {
+                printAST.visit(stmt);
+            }
+        } catch (ParseException e) {
+            // 输出解析错误到标准错误
+            System.err.println("解析错误: " + e.getMessage());
+        } catch (Exception e) {
+            // 捕获其他可能的异常
+            System.err.println("系统错误: " + e.getMessage());
         }
-        
     }
 }
 

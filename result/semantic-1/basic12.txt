@@ -1,0 +1,287 @@
+FunctionNode: isConst = false
+  IdentifierNode: main
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: deck
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Deck
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: Deck
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: new
+    ExprStmtNode
+      MethodCallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: deck
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: shuffle
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: top
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Card
+      MethodCallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: deck
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: draw
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: sink
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Card
+      PathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: top
+    ExprStmtNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: exit
+        LiteralExprNode: INT = 0
+EnumNode
+  IdentifierNode: Suit
+  IdentifierNode: Heart
+  IdentifierNode: Diamond
+  IdentifierNode: Club
+  IdentifierNode: Spade
+StructNode
+  IdentifierNode: Card
+  FieldNode
+    IdentifierNode: v
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  FieldNode
+    IdentifierNode: s
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: Suit
+StructNode
+  IdentifierNode: Deck
+  FieldNode
+    IdentifierNode: pile
+    TypeArrayExprNode
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Card
+      LiteralExprNode: INT = 52
+  FieldNode
+    IdentifierNode: idx
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: usize
+ImplNode
+  TypePathExprNode
+    PathExprSegNode: patternType = IDENT
+      IdentifierNode: Deck
+  FunctionNode: isConst = false
+    IdentifierNode: new
+    TypePathExprNode
+      PathExprSegNode: patternType = SELF_TYPE
+    BlockExprNode
+      LetStmtNode
+        IdPatNode: isMutable = false, isReference = false
+          IdentifierNode: template
+        TypePathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: Card
+        StructExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: Card
+          FieldValNode
+            IdentifierNode: v
+            LiteralExprNode: INT = 0
+          FieldValNode
+            IdentifierNode: s
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: Suit
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: Heart
+      ExprStmtNode
+        StructExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: Deck
+          FieldValNode
+            IdentifierNode: pile
+            ArrayExprNode: repeated element
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: template
+              LiteralExprNode: INT = 52
+          FieldValNode
+            IdentifierNode: idx
+            LiteralExprNode: INT = 0
+  FunctionNode: isConst = false
+    IdentifierNode: shuffle
+    SelfParaNode: isMutable = true, isReference = true
+    BlockExprNode
+      ExprStmtNode
+        AssignExprNode
+          FieldExprNode
+            PathExprNode
+              PathExprSegNode: patternType = SELF
+            IdentifierNode: idx
+          LiteralExprNode: INT = 0
+      ExprStmtNode
+        LoopExprNode
+          GroupExprNode
+            CompExprNode: operator = LT
+              FieldExprNode
+                PathExprNode
+                  PathExprSegNode: patternType = SELF
+                IdentifierNode: idx
+              LiteralExprNode: INT = 52
+          BlockExprNode
+            LetStmtNode
+              IdPatNode: isMutable = false, isReference = false
+                IdentifierNode: swap
+              TypePathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: usize
+              ArithExprNode: operator = MOD
+                GroupExprNode
+                  ArithExprNode: operator = MUL
+                    FieldExprNode
+                      PathExprNode
+                        PathExprSegNode: patternType = SELF
+                      IdentifierNode: idx
+                    LiteralExprNode: INT = 31
+                LiteralExprNode: INT = 52
+            LetStmtNode
+              IdPatNode: isMutable = false, isReference = false
+                IdentifierNode: temp
+              TypePathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: Card
+              IndexExprNode
+                FieldExprNode
+                  PathExprNode
+                    PathExprSegNode: patternType = SELF
+                  IdentifierNode: pile
+                ArrayExprNode: elements
+                  FieldExprNode
+                    PathExprNode
+                      PathExprSegNode: patternType = SELF
+                    IdentifierNode: idx
+            ExprStmtNode
+              IndexExprNode
+                FieldExprNode
+                  PathExprNode
+                    PathExprSegNode: patternType = SELF
+                  IdentifierNode: pile
+                AssignExprNode
+                  ArrayExprNode: elements
+                    FieldExprNode
+                      PathExprNode
+                        PathExprSegNode: patternType = SELF
+                      IdentifierNode: idx
+                  IndexExprNode
+                    FieldExprNode
+                      PathExprNode
+                        PathExprSegNode: patternType = SELF
+                      IdentifierNode: pile
+                    ArrayExprNode: elements
+                      PathExprNode
+                        PathExprSegNode: patternType = IDENT
+                          IdentifierNode: swap
+            ExprStmtNode
+              IndexExprNode
+                FieldExprNode
+                  PathExprNode
+                    PathExprSegNode: patternType = SELF
+                  IdentifierNode: pile
+                AssignExprNode
+                  ArrayExprNode: elements
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: swap
+                  PathExprNode
+                    PathExprSegNode: patternType = IDENT
+                      IdentifierNode: temp
+            ExprStmtNode
+              ComAssignExprNode: operator = ADD_ASSIGN
+                FieldExprNode
+                  PathExprNode
+                    PathExprSegNode: patternType = SELF
+                  IdentifierNode: idx
+                LiteralExprNode: INT = 1
+      ExprStmtNode
+        AssignExprNode
+          FieldExprNode
+            PathExprNode
+              PathExprSegNode: patternType = SELF
+            IdentifierNode: idx
+          LiteralExprNode: INT = 0
+  FunctionNode: isConst = false
+    IdentifierNode: draw
+    SelfParaNode: isMutable = true, isReference = true
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: Card
+    BlockExprNode
+      ExprStmtNode
+        IfExprNode
+          GroupExprNode
+            CompExprNode: operator = GTE
+              FieldExprNode
+                PathExprNode
+                  PathExprSegNode: patternType = SELF
+                IdentifierNode: idx
+              LiteralExprNode: INT = 52
+          BlockExprNode
+            ExprStmtNode
+              ReturnExprNode
+                LiteralExprNode: INT = 0
+      LetStmtNode
+        IdPatNode: isMutable = false, isReference = false
+          IdentifierNode: card
+        TypePathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: Card
+        IndexExprNode
+          FieldExprNode
+            PathExprNode
+              PathExprSegNode: patternType = SELF
+            IdentifierNode: pile
+          ArrayExprNode: elements
+            FieldExprNode
+              PathExprNode
+                PathExprSegNode: patternType = SELF
+              IdentifierNode: idx
+      ExprStmtNode
+        ComAssignExprNode: operator = ADD_ASSIGN
+          FieldExprNode
+            PathExprNode
+              PathExprSegNode: patternType = SELF
+            IdentifierNode: idx
+          LiteralExprNode: INT = 1
+      ExprStmtNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: card
+TraitNode
+  IdentifierNode: Randomize
+  FunctionNode: isConst = false
+    IdentifierNode: shuffle
+    SelfParaNode: isMutable = true, isReference = true
+ImplNode
+  IdentifierNode: Randomize
+  TypePathExprNode
+    PathExprSegNode: patternType = IDENT
+      IdentifierNode: Deck
+ConstItem
+  IdentifierNode: COUNT
+  TypePathExprNode
+    PathExprSegNode: patternType = IDENT
+      IdentifierNode: i32
+  LiteralExprNode: STRING = "52"

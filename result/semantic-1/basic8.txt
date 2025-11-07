@@ -2,27 +2,167 @@ FunctionNode: isConst = false
   IdentifierNode: main
   BlockExprNode
     LetStmtNode
-      IdPatNode: isMutable = true, isReference = false
-        IdentifierNode: flags
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: size
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: usize
+      LiteralExprNode: INT = 5
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: table
       TypeArrayExprNode
-        TypePathExprNode
-          PathExprSegNode: patternType = IDENT
-            IdentifierNode: bool
-        LiteralExprNode: INT = 5
-      ArrayExprNode: repeated element
-        LiteralExprNode: BOOL = false
-        LiteralExprNode: INT = 5
-    ExprStmtNode
-      AssignExprNode
-        IndexExprNode
-          PathExprNode
+        TypeArrayExprNode
+          TypePathExprNode
             PathExprSegNode: patternType = IDENT
-              IdentifierNode: flags
-          LiteralExprNode: INT = 2
-        LiteralExprNode: BOOL = true
+              IdentifierNode: i32
+          LiteralExprNode: INT = 5
+        LiteralExprNode: INT = 5
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: make_table
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: size
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: unused
+      TypeArrayExprNode
+        TypeArrayExprNode
+          TypePathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: i32
+          LiteralExprNode: INT = 5
+        LiteralExprNode: INT = 5
+      PathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: table
     ExprStmtNode
       CallExprNode
         PathExprNode
           PathExprSegNode: patternType = IDENT
             IdentifierNode: exit
         LiteralExprNode: INT = 0
+FunctionNode: isConst = false
+  IdentifierNode: make_table
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: n
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: usize
+  TypeArrayExprNode
+    TypeArrayExprNode
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      PathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: n
+    PathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: n
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: arr
+      TypeArrayExprNode
+        TypeArrayExprNode
+          TypePathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: i32
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: n
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: n
+      ArrayExprNode: repeated element
+        ArrayExprNode: repeated element
+          LiteralExprNode: INT = 0
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: n
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: n
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: row
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: usize
+      LiteralExprNode: INT = 0
+    ExprStmtNode
+      LoopExprNode
+        GroupExprNode
+          CompExprNode: operator = LT
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: row
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: n
+        BlockExprNode
+          LetStmtNode
+            IdPatNode: isMutable = true, isReference = false
+              IdentifierNode: col
+            TypePathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: usize
+            LiteralExprNode: INT = 0
+          ExprStmtNode
+            LoopExprNode
+              GroupExprNode
+                CompExprNode: operator = LT
+                  PathExprNode
+                    PathExprSegNode: patternType = IDENT
+                      IdentifierNode: col
+                  PathExprNode
+                    PathExprSegNode: patternType = IDENT
+                      IdentifierNode: n
+              BlockExprNode
+                ExprStmtNode
+                  IndexExprNode
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: arr
+                    IndexExprNode
+                      ArrayExprNode: elements
+                        PathExprNode
+                          PathExprSegNode: patternType = IDENT
+                            IdentifierNode: row
+                      AssignExprNode
+                        ArrayExprNode: elements
+                          PathExprNode
+                            PathExprSegNode: patternType = IDENT
+                              IdentifierNode: col
+                        TypeCastExprNode
+                          GroupExprNode
+                            ArithExprNode: operator = MUL
+                              PathExprNode
+                                PathExprSegNode: patternType = IDENT
+                                  IdentifierNode: row
+                              PathExprNode
+                                PathExprSegNode: patternType = IDENT
+                                  IdentifierNode: col
+                          TypePathExprNode
+                            PathExprSegNode: patternType = IDENT
+                              IdentifierNode: i32
+                ExprStmtNode
+                  ComAssignExprNode: operator = ADD_ASSIGN
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: col
+                    LiteralExprNode: INT = 1
+          ExprStmtNode
+            ComAssignExprNode: operator = ADD_ASSIGN
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: row
+              LiteralExprNode: INT = 1
+    ExprStmtNode
+      PathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: arr

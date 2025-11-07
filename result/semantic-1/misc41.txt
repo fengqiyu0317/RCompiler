@@ -1,25 +1,962 @@
+StructNode
+  IdentifierNode: HashEntry
+  FieldNode
+    IdentifierNode: key
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  FieldNode
+    IdentifierNode: value
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  FieldNode
+    IdentifierNode: used
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: bool
+FunctionNode: isConst = false
+  IdentifierNode: power_mod
+  ParameterNode
+    IdPatNode: isMutable = true, isReference = false
+      IdentifierNode: base
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  ParameterNode
+    IdPatNode: isMutable = true, isReference = false
+      IdentifierNode: exp
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: modulus
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  TypePathExprNode
+    PathExprSegNode: patternType = IDENT
+      IdentifierNode: i32
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: result
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      LiteralExprNode: INT = 1
+    ExprStmtNode
+      AssignExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: base
+        ArithExprNode: operator = MOD
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: base
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: modulus
+    ExprStmtNode
+      LoopExprNode
+        GroupExprNode
+          CompExprNode: operator = GT
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: exp
+            LiteralExprNode: INT = 0
+        BlockExprNode
+          ExprStmtNode
+            IfExprNode
+              GroupExprNode
+                CompExprNode: operator = EQ
+                  ArithExprNode: operator = MOD
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: exp
+                    LiteralExprNode: INT = 2
+                  LiteralExprNode: INT = 1
+              BlockExprNode
+                ExprStmtNode
+                  AssignExprNode
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: result
+                    ArithExprNode: operator = MOD
+                      GroupExprNode
+                        ArithExprNode: operator = MUL
+                          PathExprNode
+                            PathExprSegNode: patternType = IDENT
+                              IdentifierNode: result
+                          PathExprNode
+                            PathExprSegNode: patternType = IDENT
+                              IdentifierNode: base
+                      PathExprNode
+                        PathExprSegNode: patternType = IDENT
+                          IdentifierNode: modulus
+          ExprStmtNode
+            AssignExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: exp
+              ArithExprNode: operator = DIV
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: exp
+                LiteralExprNode: INT = 2
+          ExprStmtNode
+            AssignExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: base
+              ArithExprNode: operator = MOD
+                GroupExprNode
+                  ArithExprNode: operator = MUL
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: base
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: base
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: modulus
+    ExprStmtNode
+      ReturnExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: result
+FunctionNode: isConst = false
+  IdentifierNode: hash_insert
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: table
+    TypeRefExprNode: isMutable = true
+      TypeArrayExprNode
+        TypePathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: HashEntry
+        LiteralExprNode: INT = 100
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: key
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: value
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: size
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: index
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      ArithExprNode: operator = MOD
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: key
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: size
+    ExprStmtNode
+      LoopExprNode
+        GroupExprNode
+          IndexExprNode
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: table
+            FieldExprNode
+              ArrayExprNode: elements
+                TypeCastExprNode
+                  PathExprNode
+                    PathExprSegNode: patternType = IDENT
+                      IdentifierNode: index
+                  TypePathExprNode
+                    PathExprSegNode: patternType = IDENT
+                      IdentifierNode: usize
+              IdentifierNode: used
+        BlockExprNode
+          ExprStmtNode
+            IfExprNode
+              GroupExprNode
+                IndexExprNode
+                  PathExprNode
+                    PathExprSegNode: patternType = IDENT
+                      IdentifierNode: table
+                  CompExprNode: operator = EQ
+                    FieldExprNode
+                      ArrayExprNode: elements
+                        TypeCastExprNode
+                          PathExprNode
+                            PathExprSegNode: patternType = IDENT
+                              IdentifierNode: index
+                          TypePathExprNode
+                            PathExprSegNode: patternType = IDENT
+                              IdentifierNode: usize
+                      IdentifierNode: key
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: key
+              BlockExprNode
+                ExprStmtNode
+                  ReturnExprNode
+          ExprStmtNode
+            AssignExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: index
+              ArithExprNode: operator = MOD
+                GroupExprNode
+                  ArithExprNode: operator = ADD
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: index
+                    LiteralExprNode: INT = 1
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: size
+    ExprStmtNode
+      IndexExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: table
+        AssignExprNode
+          FieldExprNode
+            ArrayExprNode: elements
+              TypeCastExprNode
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: index
+                TypePathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: usize
+            IdentifierNode: key
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: key
+    ExprStmtNode
+      IndexExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: table
+        AssignExprNode
+          FieldExprNode
+            ArrayExprNode: elements
+              TypeCastExprNode
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: index
+                TypePathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: usize
+            IdentifierNode: value
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: value
+    ExprStmtNode
+      IndexExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: table
+        AssignExprNode
+          FieldExprNode
+            ArrayExprNode: elements
+              TypeCastExprNode
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: index
+                TypePathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: usize
+            IdentifierNode: used
+          LiteralExprNode: BOOL = true
+FunctionNode: isConst = false
+  IdentifierNode: hash_lookup
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: table
+    TypeRefExprNode: isMutable = false
+      TypeArrayExprNode
+        TypePathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: HashEntry
+        LiteralExprNode: INT = 100
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: key
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: size
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  TypePathExprNode
+    PathExprSegNode: patternType = IDENT
+      IdentifierNode: i32
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: index
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      ArithExprNode: operator = MOD
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: key
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: size
+    ExprStmtNode
+      LoopExprNode
+        GroupExprNode
+          IndexExprNode
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: table
+            FieldExprNode
+              ArrayExprNode: elements
+                TypeCastExprNode
+                  PathExprNode
+                    PathExprSegNode: patternType = IDENT
+                      IdentifierNode: index
+                  TypePathExprNode
+                    PathExprSegNode: patternType = IDENT
+                      IdentifierNode: usize
+              IdentifierNode: used
+        BlockExprNode
+          ExprStmtNode
+            IfExprNode
+              GroupExprNode
+                IndexExprNode
+                  PathExprNode
+                    PathExprSegNode: patternType = IDENT
+                      IdentifierNode: table
+                  CompExprNode: operator = EQ
+                    FieldExprNode
+                      ArrayExprNode: elements
+                        TypeCastExprNode
+                          PathExprNode
+                            PathExprSegNode: patternType = IDENT
+                              IdentifierNode: index
+                          TypePathExprNode
+                            PathExprSegNode: patternType = IDENT
+                              IdentifierNode: usize
+                      IdentifierNode: key
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: key
+              BlockExprNode
+                ExprStmtNode
+                  ReturnExprNode
+                    IndexExprNode
+                      PathExprNode
+                        PathExprSegNode: patternType = IDENT
+                          IdentifierNode: table
+                      FieldExprNode
+                        ArrayExprNode: elements
+                          TypeCastExprNode
+                            PathExprNode
+                              PathExprSegNode: patternType = IDENT
+                                IdentifierNode: index
+                            TypePathExprNode
+                              PathExprSegNode: patternType = IDENT
+                                IdentifierNode: usize
+                        IdentifierNode: value
+          ExprStmtNode
+            AssignExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: index
+              ArithExprNode: operator = MOD
+                GroupExprNode
+                  ArithExprNode: operator = ADD
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: index
+                    LiteralExprNode: INT = 1
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: size
+    ExprStmtNode
+      ReturnExprNode
+        NegaExprNode: isLogical = false
+          LiteralExprNode: INT = 1
+FunctionNode: isConst = false
+  IdentifierNode: isqrt
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: n
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  TypePathExprNode
+    PathExprSegNode: patternType = IDENT
+      IdentifierNode: i32
+  BlockExprNode
+    ExprStmtNode
+      IfExprNode
+        GroupExprNode
+          CompExprNode: operator = LT
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: n
+            LiteralExprNode: INT = 2
+        BlockExprNode
+          ExprStmtNode
+            ReturnExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: n
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: x
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      PathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: n
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: y
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      ArithExprNode: operator = DIV
+        GroupExprNode
+          ArithExprNode: operator = ADD
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: x
+            LiteralExprNode: INT = 1
+        LiteralExprNode: INT = 2
+    ExprStmtNode
+      LoopExprNode
+        GroupExprNode
+          CompExprNode: operator = LT
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: y
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: x
+        BlockExprNode
+          ExprStmtNode
+            AssignExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: x
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: y
+          ExprStmtNode
+            AssignExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: y
+              ArithExprNode: operator = DIV
+                GroupExprNode
+                  ArithExprNode: operator = ADD
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: x
+                    ArithExprNode: operator = DIV
+                      PathExprNode
+                        PathExprSegNode: patternType = IDENT
+                          IdentifierNode: n
+                      PathExprNode
+                        PathExprSegNode: patternType = IDENT
+                          IdentifierNode: x
+                LiteralExprNode: INT = 2
+    ExprStmtNode
+      ReturnExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: x
+FunctionNode: isConst = false
+  IdentifierNode: baby_step_giant_step
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: g
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: h
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: p
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  TypePathExprNode
+    PathExprSegNode: patternType = IDENT
+      IdentifierNode: i32
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: m
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      ArithExprNode: operator = ADD
+        CallExprNode
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: isqrt
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: p
+        LiteralExprNode: INT = 1
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: baby_steps
+      TypeArrayExprNode
+        TypePathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: HashEntry
+        LiteralExprNode: INT = 100
+      ArrayExprNode: repeated element
+        StructExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: HashEntry
+          FieldValNode
+            IdentifierNode: key
+            LiteralExprNode: INT = 0
+          FieldValNode
+            IdentifierNode: value
+            LiteralExprNode: INT = 0
+          FieldValNode
+            IdentifierNode: used
+            LiteralExprNode: BOOL = false
+        LiteralExprNode: INT = 100
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: gamma
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      LiteralExprNode: INT = 1
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: j
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      LiteralExprNode: INT = 0
+    ExprStmtNode
+      LoopExprNode
+        GroupExprNode
+          LazyExprNode: operator = LOGICAL_AND
+            CompExprNode: operator = LT
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: j
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: m
+            CompExprNode: operator = LT
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: j
+              LiteralExprNode: INT = 100
+        BlockExprNode
+          ExprStmtNode
+            CallExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: hash_insert
+              BorrowExprNode: isMutable = true, isDouble = false
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: baby_steps
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: gamma
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: j
+              LiteralExprNode: INT = 100
+          ExprStmtNode
+            AssignExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: gamma
+              ArithExprNode: operator = MOD
+                GroupExprNode
+                  ArithExprNode: operator = MUL
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: gamma
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: g
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: p
+          ExprStmtNode
+            AssignExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: j
+              ArithExprNode: operator = ADD
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: j
+                LiteralExprNode: INT = 1
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: g_inv_m
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: power_mod
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: g
+        ArithExprNode: operator = SUB
+          ArithExprNode: operator = SUB
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: p
+            LiteralExprNode: INT = 1
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: m
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: p
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: y
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      PathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: h
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: i
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      LiteralExprNode: INT = 0
+    ExprStmtNode
+      LoopExprNode
+        GroupExprNode
+          LazyExprNode: operator = LOGICAL_AND
+            CompExprNode: operator = LT
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: i
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: m
+            CompExprNode: operator = LT
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: i
+              LiteralExprNode: INT = 100
+        BlockExprNode
+          LetStmtNode
+            IdPatNode: isMutable = false, isReference = false
+              IdentifierNode: lookup_result
+            TypePathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: i32
+            CallExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: hash_lookup
+              BorrowExprNode: isMutable = false, isDouble = false
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: baby_steps
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: y
+              LiteralExprNode: INT = 100
+          ExprStmtNode
+            IfExprNode
+              GroupExprNode
+                CompExprNode: operator = NEQ
+                  PathExprNode
+                    PathExprSegNode: patternType = IDENT
+                      IdentifierNode: lookup_result
+                  NegaExprNode: isLogical = false
+                    LiteralExprNode: INT = 1
+              BlockExprNode
+                ExprStmtNode
+                  ReturnExprNode
+                    ArithExprNode: operator = ADD
+                      ArithExprNode: operator = MUL
+                        PathExprNode
+                          PathExprSegNode: patternType = IDENT
+                            IdentifierNode: i
+                        PathExprNode
+                          PathExprSegNode: patternType = IDENT
+                            IdentifierNode: m
+                      PathExprNode
+                        PathExprSegNode: patternType = IDENT
+                          IdentifierNode: lookup_result
+          ExprStmtNode
+            AssignExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: y
+              ArithExprNode: operator = MOD
+                GroupExprNode
+                  ArithExprNode: operator = MUL
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: y
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: g_inv_m
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: p
+          ExprStmtNode
+            AssignExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: i
+              ArithExprNode: operator = ADD
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: i
+                LiteralExprNode: INT = 1
+    ExprStmtNode
+      ReturnExprNode
+        NegaExprNode: isLogical = false
+          LiteralExprNode: INT = 1
+FunctionNode: isConst = false
+  IdentifierNode: discrete_log_recursive
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: g
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: h
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: p
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: depth
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  TypePathExprNode
+    PathExprSegNode: patternType = IDENT
+      IdentifierNode: i32
+  BlockExprNode
+    ExprStmtNode
+      IfExprNode
+        GroupExprNode
+          CompExprNode: operator = GT
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: depth
+            LiteralExprNode: INT = 3
+        BlockExprNode
+          ExprStmtNode
+            ReturnExprNode
+              CallExprNode
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: baby_step_giant_step
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: g
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: h
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: p
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: x
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      LiteralExprNode: INT = 1
+    LetStmtNode
+      IdPatNode: isMutable = true, isReference = false
+        IdentifierNode: g_power
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      PathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: g
+    ExprStmtNode
+      LoopExprNode
+        GroupExprNode
+          CompExprNode: operator = LT
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: x
+            LiteralExprNode: INT = 10
+        BlockExprNode
+          ExprStmtNode
+            IfExprNode
+              GroupExprNode
+                CompExprNode: operator = EQ
+                  PathExprNode
+                    PathExprSegNode: patternType = IDENT
+                      IdentifierNode: g_power
+                  PathExprNode
+                    PathExprSegNode: patternType = IDENT
+                      IdentifierNode: h
+              BlockExprNode
+                ExprStmtNode
+                  ReturnExprNode
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: x
+          ExprStmtNode
+            AssignExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: g_power
+              ArithExprNode: operator = MOD
+                GroupExprNode
+                  ArithExprNode: operator = MUL
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: g_power
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: g
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: p
+          ExprStmtNode
+            AssignExprNode
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: x
+              ArithExprNode: operator = ADD
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: x
+                LiteralExprNode: INT = 1
+    ExprStmtNode
+      ReturnExprNode
+        CallExprNode
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: discrete_log_recursive
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: g
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: h
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: p
+          ArithExprNode: operator = ADD
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: depth
+            LiteralExprNode: INT = 1
 FunctionNode: isConst = false
   IdentifierNode: main
   BlockExprNode
     LetStmtNode
-      IdPatNode: isMutable = true, isReference = false
-        IdentifierNode: flags
-      TypeArrayExprNode
-        TypePathExprNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: g
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      CallExprNode
+        PathExprNode
           PathExprSegNode: patternType = IDENT
-            IdentifierNode: bool
-        LiteralExprNode: INT = 5
-      ArrayExprNode: repeated element
-        LiteralExprNode: BOOL = false
-        LiteralExprNode: INT = 5
+            IdentifierNode: getInt
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: h
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: getInt
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: p
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: getInt
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: result
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: discrete_log_recursive
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: g
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: h
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: p
+        LiteralExprNode: INT = 0
     ExprStmtNode
-      AssignExprNode
-        IndexExprNode
-          PathExprNode
-            PathExprSegNode: patternType = IDENT
-              IdentifierNode: flags
-          LiteralExprNode: INT = 2
-        LiteralExprNode: BOOL = true
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: printInt
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: result
     ExprStmtNode
       CallExprNode
         PathExprNode

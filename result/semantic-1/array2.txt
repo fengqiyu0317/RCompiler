@@ -13,13 +13,14 @@ FunctionNode: isConst = false
         LiteralExprNode: BOOL = false
         LiteralExprNode: INT = 5
     ExprStmtNode
-      AssignExprNode
-        IndexExprNode
-          PathExprNode
-            PathExprSegNode: patternType = IDENT
-              IdentifierNode: flags
-          LiteralExprNode: INT = 2
-        LiteralExprNode: BOOL = true
+      IndexExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: flags
+        AssignExprNode
+          ArrayExprNode: elements
+            LiteralExprNode: INT = 2
+          LiteralExprNode: BOOL = true
     ExprStmtNode
       CallExprNode
         PathExprNode
