@@ -1,0 +1,142 @@
+StructNode
+  IdentifierNode: Point
+  FieldNode
+    IdentifierNode: x
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+  FieldNode
+    IdentifierNode: y
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+FunctionNode: isConst = false
+  IdentifierNode: calculate_distance
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: p1
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: Point
+  ParameterNode
+    IdPatNode: isMutable = false, isReference = false
+      IdentifierNode: p2
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: Point
+  TypePathExprNode
+    PathExprSegNode: patternType = IDENT
+      IdentifierNode: i32
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: dx
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      ArithExprNode: operator = SUB
+        FieldExprNode
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: p1
+          IdentifierNode: x
+        FieldExprNode
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: p2
+          IdentifierNode: x
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: dy
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      ArithExprNode: operator = SUB
+        FieldExprNode
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: p1
+          IdentifierNode: y
+        FieldExprNode
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: p2
+          IdentifierNode: y
+    ExprStmtNode
+      ReturnExprNode
+        ArithExprNode: operator = ADD
+          ArithExprNode: operator = MUL
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: dx
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: dx
+          ArithExprNode: operator = MUL
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: dy
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: dy
+FunctionNode: isConst = false
+  IdentifierNode: main
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: point1
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Point
+      StructExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Point
+        FieldValNode
+          IdentifierNode: x
+          LiteralExprNode: INT = 10
+        FieldValNode
+          IdentifierNode: y
+          LiteralExprNode: INT = 20
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: point2
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Point
+      StructExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: Point
+        FieldValNode
+          IdentifierNode: x
+          LiteralExprNode: INT = 5
+        FieldValNode
+          IdentifierNode: y
+          LiteralExprNode: INT = 15
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: distance
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: calculate_distance
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: point1
+        LiteralExprNode: STRING = "invalid"
+    ExprStmtNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: printInt
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: distance
+    ExprStmtNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: exit
+        LiteralExprNode: INT = 0

@@ -1,0 +1,13 @@
+FunctionNode: isConst = false
+  IdentifierNode: main
+  TypePathExprNode
+    PathExprSegNode: patternType = IDENT
+      IdentifierNode: i32
+  BlockExprNode
+    ExprStmtNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: exit
+        NegaExprNode: isLogical = false
+          LiteralExprNode: INT = 1

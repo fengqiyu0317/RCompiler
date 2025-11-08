@@ -1,0 +1,62 @@
+// this is a base class for visitors that can visit different types of AST nodes
+
+public abstract class VisitorBase {
+    // visit a generic AST node
+    // each specific type of node in "AST.java" has its own visit method
+    public abstract void visit(ASTNode node);
+    public abstract void visit(StmtNode node);
+    public abstract void visit(ItemNode node);
+    public abstract void visit(LetStmtNode node);
+    public abstract void visit(ExprStmtNode node);
+    public abstract void visit(FunctionNode node);
+    public abstract void visit(SelfParaNode node);
+    public abstract void visit(ParameterNode node);
+    public abstract void visit(PatternNode node);
+    public abstract void visit(IdPatNode node);
+    public abstract void visit(WildPatNode node);
+    public abstract void visit(RefPatNode node);
+    public abstract void visit(StructNode node);
+    public abstract void visit(FieldNode node);
+    public abstract void visit(EnumNode node);
+    public abstract void visit(ConstItemNode node);
+    public abstract void visit(TraitNode node);
+    public abstract void visit(ImplNode node);
+    public abstract void visit(AssoItemNode node);
+    public abstract void visit(ExprNode node);
+    public abstract void visit(ExprWithBlockNode node);
+    public abstract void visit(ExprWithoutBlockNode node);
+    public abstract void visit(BlockExprNode node);
+    public abstract void visit(IfExprNode node);
+    public abstract void visit(LoopExprNode node);
+    public abstract void visit(LiteralExprNode node);
+    public abstract void visit(PathExprNode node);
+    public abstract void visit(PathExprSegNode node);
+    public abstract void visit(GroupExprNode node);
+    public abstract void visit(OperExprNode node);
+    public abstract void visit(BorrowExprNode node);
+    public abstract void visit(DerefExprNode node);
+    public abstract void visit(NegaExprNode node);
+    public abstract void visit(ArithExprNode node);
+    public abstract void visit(CompExprNode node);
+    public abstract void visit(LazyExprNode node);
+    public abstract void visit(AssignExprNode node);
+    public abstract void visit(ComAssignExprNode node);
+    public abstract void visit(TypeCastExprNode node);
+    public abstract void visit(ArrayExprNode node);
+    public abstract void visit(IndexExprNode node);
+    public abstract void visit(StructExprNode node);
+    public abstract void visit(FieldValNode node);
+    public abstract void visit(FieldExprNode node);
+    public abstract void visit(CallExprNode node);
+    public abstract void visit(MethodCallExprNode node);
+    public abstract void visit(ContinueExprNode node);
+    public abstract void visit(BreakExprNode node);
+    public abstract void visit(ReturnExprNode node);
+    public abstract void visit(UnderscoreExprNode node);
+    public abstract void visit(TypeExprNode node);
+    public abstract void visit(TypePathExprNode node);
+    public abstract void visit(TypeRefExprNode node);
+    public abstract void visit(TypeArrayExprNode node);
+    public abstract void visit(TypeUnitExprNode node);
+    public abstract void visit(IdentifierNode node);
+}

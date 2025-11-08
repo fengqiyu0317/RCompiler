@@ -1,0 +1,45 @@
+FunctionNode: isConst = false
+  IdentifierNode: main
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: score
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      LiteralExprNode: INT = 87
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: grade
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: char
+      IfExprNode
+        GroupExprNode
+          CompExprNode: operator = GTE
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: score
+            LiteralExprNode: INT = 90
+        BlockExprNode
+          ExprStmtNode
+            LiteralExprNode: CHAR = 'A''
+        IfExprNode
+          GroupExprNode
+            CompExprNode: operator = GTE
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: score
+              LiteralExprNode: INT = 80
+          BlockExprNode
+            ExprStmtNode
+              LiteralExprNode: CHAR = 'B''
+          BlockExprNode
+            ExprStmtNode
+              LiteralExprNode: CHAR = 'C''
+    ExprStmtNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: exit
+        LiteralExprNode: INT = 0

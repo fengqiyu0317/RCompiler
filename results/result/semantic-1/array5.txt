@@ -1,0 +1,30 @@
+FunctionNode: isConst = false
+  IdentifierNode: main
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: arr
+      TypeArrayExprNode
+        TypePathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: i32
+        LiteralExprNode: INT = 3
+      ArrayExprNode: elements
+        LiteralExprNode: INT = 1
+        LiteralExprNode: INT = 2
+        LiteralExprNode: INT = 3
+    ExprStmtNode
+      IndexExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: arr
+        AssignExprNode
+          ArrayExprNode: elements
+            LiteralExprNode: INT = 1
+          LiteralExprNode: INT = 4
+    ExprStmtNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: exit
+        LiteralExprNode: INT = 0

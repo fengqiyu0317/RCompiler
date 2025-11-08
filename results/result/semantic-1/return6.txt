@@ -1,0 +1,55 @@
+StructNode
+  IdentifierNode: TestStruct
+  FieldNode
+    IdentifierNode: value
+    TypePathExprNode
+      PathExprSegNode: patternType = IDENT
+        IdentifierNode: i32
+ImplNode
+  TypePathExprNode
+    PathExprSegNode: patternType = IDENT
+      IdentifierNode: TestStruct
+  FunctionNode: isConst = false
+    IdentifierNode: main
+    SelfParaNode: isMutable = false, isReference = true
+    BlockExprNode
+      ExprStmtNode
+        CallExprNode
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: println
+          LiteralExprNode: STRING = "This is a method named 'main' in a struct"
+      ExprStmtNode
+        CallExprNode
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: exit
+          LiteralExprNode: INT = 0
+FunctionNode: isConst = false
+  IdentifierNode: main
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: test
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: TestStruct
+      StructExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: TestStruct
+        FieldValNode
+          IdentifierNode: value
+          LiteralExprNode: INT = 39
+    ExprStmtNode
+      MethodCallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: test
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: main
+    ExprStmtNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: exit
+        LiteralExprNode: INT = 0

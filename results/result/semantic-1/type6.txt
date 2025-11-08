@@ -1,0 +1,37 @@
+FunctionNode: isConst = false
+  IdentifierNode: main
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: x
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      LiteralExprNode: INT = 42
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: ptr
+      TypeRefExprNode: isMutable = false
+        TypePathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: i32
+      BorrowExprNode: isMutable = false, isDouble = false
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: x
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: value
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: bool
+      DerefExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: ptr
+    ExprStmtNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: exit
+        LiteralExprNode: INT = 0

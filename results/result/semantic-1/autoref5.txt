@@ -1,0 +1,56 @@
+FunctionNode: isConst = false
+  IdentifierNode: main
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: numbers
+      TypeArrayExprNode
+        TypePathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: i32
+        LiteralExprNode: INT = 5
+      ArrayExprNode: elements
+        LiteralExprNode: INT = 10
+        LiteralExprNode: INT = 20
+        LiteralExprNode: INT = 30
+        LiteralExprNode: INT = 40
+        LiteralExprNode: INT = 50
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: numbers_ref
+      TypeRefExprNode: isMutable = false
+        TypeArrayExprNode
+          TypePathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: i32
+          LiteralExprNode: INT = 5
+      BorrowExprNode: isMutable = false, isDouble = false
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: numbers
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: third_item
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      IndexExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: numbers_ref
+        ArrayExprNode: elements
+          LiteralExprNode: INT = 2
+    ExprStmtNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: printInt
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: third_item
+    ExprStmtNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: exit
+        LiteralExprNode: INT = 0

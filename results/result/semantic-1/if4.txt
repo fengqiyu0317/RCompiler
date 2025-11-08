@@ -1,0 +1,58 @@
+FunctionNode: isConst = false
+  IdentifierNode: main
+  BlockExprNode
+    LetStmtNode
+      IdPatNode: isMutable = false, isReference = false
+        IdentifierNode: temperature
+      TypePathExprNode
+        PathExprSegNode: patternType = IDENT
+          IdentifierNode: i32
+      LiteralExprNode: INT = 25
+    ExprStmtNode
+      IfExprNode
+        GroupExprNode
+          CompExprNode: operator = GT
+            PathExprNode
+              PathExprSegNode: patternType = IDENT
+                IdentifierNode: temperature
+            LiteralExprNode: INT = 30
+        BlockExprNode
+          LetStmtNode
+            IdPatNode: isMutable = false, isReference = false
+              IdentifierNode: status_
+            TypeRefExprNode: isMutable = false
+              TypePathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: str
+            LiteralExprNode: STRING = "hot"
+        IfExprNode
+          GroupExprNode
+            CompExprNode: operator = LT
+              PathExprNode
+                PathExprSegNode: patternType = IDENT
+                  IdentifierNode: temperature
+              LiteralExprNode: INT = 10
+          BlockExprNode
+            LetStmtNode
+              IdPatNode: isMutable = false, isReference = false
+                IdentifierNode: status_
+              TypeRefExprNode: isMutable = false
+                TypePathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: str
+              LiteralExprNode: STRING = "cold"
+          BlockExprNode
+            LetStmtNode
+              IdPatNode: isMutable = false, isReference = false
+                IdentifierNode: status_
+              TypeRefExprNode: isMutable = false
+                TypePathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: str
+              LiteralExprNode: STRING = "mild"
+    ExprStmtNode
+      CallExprNode
+        PathExprNode
+          PathExprSegNode: patternType = IDENT
+            IdentifierNode: exit
+        LiteralExprNode: INT = 0
