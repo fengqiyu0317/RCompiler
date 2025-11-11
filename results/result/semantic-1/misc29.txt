@@ -1,3 +1,1553 @@
+Token Type: IDENTIFIER_OR_KEYWORD, Name: struct
+Token Type: IDENTIFIER_OR_KEYWORD, Name: FenwickTree
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree
+Token Type: PUNCTUATION, Name: :
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 1001
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: impl
+Token Type: IDENTIFIER_OR_KEYWORD, Name: FenwickTree
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: new
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: size
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ->
+Token Type: IDENTIFIER_OR_KEYWORD, Name: FenwickTree
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: FenwickTree
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree
+Token Type: PUNCTUATION, Name: :
+Token Type: PUNCTUATION, Name: [
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 1001
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: size
+Token Type: PUNCTUATION, Name: ,
+Token Type: PUNCTUATION, Name: }
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: update
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: +
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: while
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: <=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: IDENTIFIER_OR_KEYWORD, Name: as
+Token Type: IDENTIFIER_OR_KEYWORD, Name: usize
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: +=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: +=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: &
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: prefix_sum
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ->
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: sum
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: +
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: while
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: >
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: sum
+Token Type: PUNCTUATION, Name: +=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: IDENTIFIER_OR_KEYWORD, Name: as
+Token Type: IDENTIFIER_OR_KEYWORD, Name: usize
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: -=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: &
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: IDENTIFIER_OR_KEYWORD, Name: sum
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: range_sum
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: left
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: right
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ->
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: if
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: left
+Token Type: PUNCTUATION, Name: >
+Token Type: IDENTIFIER_OR_KEYWORD, Name: right
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: if
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: left
+Token Type: PUNCTUATION, Name: ==
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: prefix_sum
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: right
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: else
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: prefix_sum
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: right
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: prefix_sum
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: left
+Token Type: PUNCTUATION, Name: -
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: init_from_array
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: arr
+Token Type: PUNCTUATION, Name: :
+Token Type: PUNCTUATION, Name: &
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 1000
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: while
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i
+Token Type: PUNCTUATION, Name: <
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: update
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: arr
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i
+Token Type: IDENTIFIER_OR_KEYWORD, Name: as
+Token Type: IDENTIFIER_OR_KEYWORD, Name: usize
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i
+Token Type: PUNCTUATION, Name: +=
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: point_query
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ->
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: range_sum
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: set_value
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: new_val
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: current_val
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: point_query
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: new_val
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: current_val
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: update
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: struct
+Token Type: IDENTIFIER_OR_KEYWORD, Name: FenwickTree2D
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree
+Token Type: PUNCTUATION, Name: :
+Token Type: PUNCTUATION, Name: [
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 101
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 101
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: rows
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: cols
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: impl
+Token Type: IDENTIFIER_OR_KEYWORD, Name: FenwickTree2D
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: new
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: rows
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: cols
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ->
+Token Type: IDENTIFIER_OR_KEYWORD, Name: FenwickTree2D
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: FenwickTree2D
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree
+Token Type: PUNCTUATION, Name: :
+Token Type: PUNCTUATION, Name: [
+Token Type: PUNCTUATION, Name: [
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 101
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 101
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: rows
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: rows
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: cols
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: cols
+Token Type: PUNCTUATION, Name: ,
+Token Type: PUNCTUATION, Name: }
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: update
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: row
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: col
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: r
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: row
+Token Type: PUNCTUATION, Name: +
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: while
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: r
+Token Type: PUNCTUATION, Name: <=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: rows
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: c
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: col
+Token Type: PUNCTUATION, Name: +
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: while
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: c
+Token Type: PUNCTUATION, Name: <=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: cols
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: r
+Token Type: IDENTIFIER_OR_KEYWORD, Name: as
+Token Type: IDENTIFIER_OR_KEYWORD, Name: usize
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: c
+Token Type: IDENTIFIER_OR_KEYWORD, Name: as
+Token Type: IDENTIFIER_OR_KEYWORD, Name: usize
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: +=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: c
+Token Type: PUNCTUATION, Name: +=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: c
+Token Type: PUNCTUATION, Name: &
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: c
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: r
+Token Type: PUNCTUATION, Name: +=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: r
+Token Type: PUNCTUATION, Name: &
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: r
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: prefix_sum
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: row
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: col
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ->
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: sum
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: r
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: row
+Token Type: PUNCTUATION, Name: +
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: while
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: r
+Token Type: PUNCTUATION, Name: >
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: c
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: col
+Token Type: PUNCTUATION, Name: +
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: while
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: c
+Token Type: PUNCTUATION, Name: >
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: sum
+Token Type: PUNCTUATION, Name: +=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: r
+Token Type: IDENTIFIER_OR_KEYWORD, Name: as
+Token Type: IDENTIFIER_OR_KEYWORD, Name: usize
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: c
+Token Type: IDENTIFIER_OR_KEYWORD, Name: as
+Token Type: IDENTIFIER_OR_KEYWORD, Name: usize
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: c
+Token Type: PUNCTUATION, Name: -=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: c
+Token Type: PUNCTUATION, Name: &
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: c
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: r
+Token Type: PUNCTUATION, Name: -=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: r
+Token Type: PUNCTUATION, Name: &
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: r
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: IDENTIFIER_OR_KEYWORD, Name: sum
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: range_sum
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: row1
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: col1
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: row2
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: col2
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ->
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: prefix_sum
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: row2
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: col2
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: prefix_sum
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: row1
+Token Type: PUNCTUATION, Name: -
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: col2
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: prefix_sum
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: row2
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: col1
+Token Type: PUNCTUATION, Name: -
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: +
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: prefix_sum
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: row1
+Token Type: PUNCTUATION, Name: -
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: col1
+Token Type: PUNCTUATION, Name: -
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: struct
+Token Type: IDENTIFIER_OR_KEYWORD, Name: RangeUpdateFenwick
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree
+Token Type: PUNCTUATION, Name: :
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 1001
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: impl
+Token Type: IDENTIFIER_OR_KEYWORD, Name: RangeUpdateFenwick
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: new
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: size
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ->
+Token Type: IDENTIFIER_OR_KEYWORD, Name: RangeUpdateFenwick
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: RangeUpdateFenwick
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree
+Token Type: PUNCTUATION, Name: :
+Token Type: PUNCTUATION, Name: [
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 1001
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: size
+Token Type: PUNCTUATION, Name: ,
+Token Type: PUNCTUATION, Name: }
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: update_range
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: left
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: right
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: update_point
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: left
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: update_point
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: right
+Token Type: PUNCTUATION, Name: +
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ,
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: update_point
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: +
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: while
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: <=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: IDENTIFIER_OR_KEYWORD, Name: as
+Token Type: IDENTIFIER_OR_KEYWORD, Name: usize
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: +=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: +=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: &
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: query
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ->
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: sum
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: +
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: while
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: >
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: sum
+Token Type: PUNCTUATION, Name: +=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: IDENTIFIER_OR_KEYWORD, Name: as
+Token Type: IDENTIFIER_OR_KEYWORD, Name: usize
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: -=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: &
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: IDENTIFIER_OR_KEYWORD, Name: sum
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: struct
+Token Type: IDENTIFIER_OR_KEYWORD, Name: LazyFenwick
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree1
+Token Type: PUNCTUATION, Name: :
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 1001
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree2
+Token Type: PUNCTUATION, Name: :
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 1001
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: impl
+Token Type: IDENTIFIER_OR_KEYWORD, Name: LazyFenwick
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: new
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: size
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ->
+Token Type: IDENTIFIER_OR_KEYWORD, Name: LazyFenwick
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: LazyFenwick
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree1
+Token Type: PUNCTUATION, Name: :
+Token Type: PUNCTUATION, Name: [
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 1001
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree2
+Token Type: PUNCTUATION, Name: :
+Token Type: PUNCTUATION, Name: [
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 1001
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: size
+Token Type: PUNCTUATION, Name: ,
+Token Type: PUNCTUATION, Name: }
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: update_tree
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree
+Token Type: PUNCTUATION, Name: :
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 1001
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: +
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: while
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: <=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: IDENTIFIER_OR_KEYWORD, Name: as
+Token Type: IDENTIFIER_OR_KEYWORD, Name: usize
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: +=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: +=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: &
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: query_tree
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree
+Token Type: PUNCTUATION, Name: :
+Token Type: PUNCTUATION, Name: &
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 1001
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ->
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: sum
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: +
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: while
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: >
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: sum
+Token Type: PUNCTUATION, Name: +=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: IDENTIFIER_OR_KEYWORD, Name: as
+Token Type: IDENTIFIER_OR_KEYWORD, Name: usize
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: -=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: &
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: index
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: IDENTIFIER_OR_KEYWORD, Name: sum
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: range_update
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: left
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: right
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: Self
+Token Type: PUNCTUATION, Name: ::
+Token Type: IDENTIFIER_OR_KEYWORD, Name: update_tree
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: ,
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree1
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: left
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: Self
+Token Type: PUNCTUATION, Name: ::
+Token Type: IDENTIFIER_OR_KEYWORD, Name: update_tree
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: ,
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree1
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: right
+Token Type: PUNCTUATION, Name: +
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ,
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: Self
+Token Type: PUNCTUATION, Name: ::
+Token Type: IDENTIFIER_OR_KEYWORD, Name: update_tree
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: ,
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree2
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: left
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: *
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: left
+Token Type: PUNCTUATION, Name: -
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: Self
+Token Type: PUNCTUATION, Name: ::
+Token Type: IDENTIFIER_OR_KEYWORD, Name: update_tree
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: ,
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree2
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: right
+Token Type: PUNCTUATION, Name: +
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ,
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: delta
+Token Type: PUNCTUATION, Name: *
+Token Type: IDENTIFIER_OR_KEYWORD, Name: right
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: prefix_query
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ->
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: query_tree
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree1
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: *
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: query_tree
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: tree2
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: range_query
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: left
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: right
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ->
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: prefix_query
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: right
+Token Type: PUNCTUATION, Name: +
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: -
+Token Type: IDENTIFIER_OR_KEYWORD, Name: self
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: prefix_query
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: left
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: main
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: getInt
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fenwick
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: FenwickTree
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: FenwickTree
+Token Type: PUNCTUATION, Name: ::
+Token Type: IDENTIFIER_OR_KEYWORD, Name: new
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: arr
+Token Type: PUNCTUATION, Name: :
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 1000
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: =
+Token Type: PUNCTUATION, Name: [
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 1000
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: while
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i
+Token Type: PUNCTUATION, Name: <
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: arr
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i
+Token Type: IDENTIFIER_OR_KEYWORD, Name: as
+Token Type: IDENTIFIER_OR_KEYWORD, Name: usize
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: getInt
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i
+Token Type: PUNCTUATION, Name: +=
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fenwick
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: init_from_array
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: &
+Token Type: IDENTIFIER_OR_KEYWORD, Name: arr
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: queries
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: getInt
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i
+Token Type: PUNCTUATION, Name: =
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: while
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i
+Token Type: PUNCTUATION, Name: <
+Token Type: IDENTIFIER_OR_KEYWORD, Name: queries
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: operation
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: getInt
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: if
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: operation
+Token Type: PUNCTUATION, Name: ==
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: getInt
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: val
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: getInt
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fenwick
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: set_value
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: val
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: else
+Token Type: IDENTIFIER_OR_KEYWORD, Name: if
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: operation
+Token Type: PUNCTUATION, Name: ==
+Token Type: INTEGER_LITERAL, Name: 2
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: left
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: getInt
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: right
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: getInt
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: sum
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fenwick
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: range_sum
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: left
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: right
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: printInt
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: sum
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: else
+Token Type: IDENTIFIER_OR_KEYWORD, Name: if
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: operation
+Token Type: PUNCTUATION, Name: ==
+Token Type: INTEGER_LITERAL, Name: 3
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: getInt
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: sum
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fenwick
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: prefix_sum
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: printInt
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: sum
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: else
+Token Type: IDENTIFIER_OR_KEYWORD, Name: if
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: operation
+Token Type: PUNCTUATION, Name: ==
+Token Type: INTEGER_LITERAL, Name: 4
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: getInt
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: val
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fenwick
+Token Type: PUNCTUATION, Name: .
+Token Type: IDENTIFIER_OR_KEYWORD, Name: point_query
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: idx
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: printInt
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: val
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i
+Token Type: PUNCTUATION, Name: +=
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: exit
+Token Type: PUNCTUATION, Name: (
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
 StructNode
   IdentifierNode: FenwickTree
   FieldNode
@@ -6,7 +1556,7 @@ StructNode
       TypePathExprNode
         PathExprSegNode: patternType = IDENT
           IdentifierNode: i32
-      LiteralExprNode: INT = 1001
+      LiteralExprNode: I32 = 1001
   FieldNode
     IdentifierNode: n
     TypePathExprNode
@@ -35,8 +1585,8 @@ ImplNode
           FieldValNode
             IdentifierNode: tree
             ArrayExprNode: repeated element
-              LiteralExprNode: INT = 0
-              LiteralExprNode: INT = 1001
+              LiteralExprNode: I32 = 0
+              LiteralExprNode: I32 = 1001
           FieldValNode
             IdentifierNode: n
             PathExprNode
@@ -68,7 +1618,7 @@ ImplNode
           PathExprNode
             PathExprSegNode: patternType = IDENT
               IdentifierNode: idx
-          LiteralExprNode: INT = 1
+          LiteralExprNode: I32 = 1
       ExprStmtNode
         LoopExprNode
           GroupExprNode
@@ -82,25 +1632,24 @@ ImplNode
                 IdentifierNode: n
           BlockExprNode
             ExprStmtNode
-              IndexExprNode
-                FieldExprNode
-                  PathExprNode
-                    PathExprSegNode: patternType = SELF
-                  IdentifierNode: tree
-                ComAssignExprNode: operator = ADD_ASSIGN
-                  ArrayExprNode: elements
-                    TypeCastExprNode
-                      PathExprNode
-                        PathExprSegNode: patternType = IDENT
-                          IdentifierNode: index
-                      TypePathExprNode
-                        PathExprSegNode: patternType = IDENT
-                          IdentifierNode: usize
-                  PathExprNode
-                    PathExprSegNode: patternType = IDENT
-                      IdentifierNode: delta
+              AssignExprNode
+                IndexExprNode
+                  FieldExprNode
+                    PathExprNode
+                      PathExprSegNode: patternType = SELF
+                    IdentifierNode: tree
+                  TypeCastExprNode
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: index
+                    TypePathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: usize
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: delta
             ExprStmtNode
-              ComAssignExprNode: operator = ADD_ASSIGN
+              AssignExprNode
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: index
@@ -132,7 +1681,7 @@ ImplNode
         TypePathExprNode
           PathExprSegNode: patternType = IDENT
             IdentifierNode: i32
-        LiteralExprNode: INT = 0
+        LiteralExprNode: I32 = 0
       LetStmtNode
         IdPatNode: isMutable = true, isReference = false
           IdentifierNode: index
@@ -143,7 +1692,7 @@ ImplNode
           PathExprNode
             PathExprSegNode: patternType = IDENT
               IdentifierNode: idx
-          LiteralExprNode: INT = 1
+          LiteralExprNode: I32 = 1
       ExprStmtNode
         LoopExprNode
           GroupExprNode
@@ -151,10 +1700,10 @@ ImplNode
               PathExprNode
                 PathExprSegNode: patternType = IDENT
                   IdentifierNode: index
-              LiteralExprNode: INT = 0
+              LiteralExprNode: I32 = 0
           BlockExprNode
             ExprStmtNode
-              ComAssignExprNode: operator = ADD_ASSIGN
+              AssignExprNode
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: sum
@@ -163,16 +1712,15 @@ ImplNode
                     PathExprNode
                       PathExprSegNode: patternType = SELF
                     IdentifierNode: tree
-                  ArrayExprNode: elements
-                    TypeCastExprNode
-                      PathExprNode
-                        PathExprSegNode: patternType = IDENT
-                          IdentifierNode: index
-                      TypePathExprNode
-                        PathExprSegNode: patternType = IDENT
-                          IdentifierNode: usize
+                  TypeCastExprNode
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: index
+                    TypePathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: usize
             ExprStmtNode
-              ComAssignExprNode: operator = SUB_ASSIGN
+              AssignExprNode
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: index
@@ -222,7 +1770,7 @@ ImplNode
           BlockExprNode
             ExprStmtNode
               ReturnExprNode
-                LiteralExprNode: INT = 0
+                LiteralExprNode: I32 = 0
       ExprStmtNode
         IfExprNode
           GroupExprNode
@@ -230,7 +1778,7 @@ ImplNode
               PathExprNode
                 PathExprSegNode: patternType = IDENT
                   IdentifierNode: left
-              LiteralExprNode: INT = 0
+              LiteralExprNode: I32 = 0
           BlockExprNode
             ExprStmtNode
               ReturnExprNode
@@ -263,7 +1811,7 @@ ImplNode
                       PathExprNode
                         PathExprSegNode: patternType = IDENT
                           IdentifierNode: left
-                      LiteralExprNode: INT = 1
+                      LiteralExprNode: I32 = 1
   FunctionNode: isConst = false
     IdentifierNode: init_from_array
     SelfParaNode: isMutable = true, isReference = true
@@ -275,7 +1823,7 @@ ImplNode
           TypePathExprNode
             PathExprSegNode: patternType = IDENT
               IdentifierNode: i32
-          LiteralExprNode: INT = 1000
+          LiteralExprNode: I32 = 1000
     BlockExprNode
       LetStmtNode
         IdPatNode: isMutable = true, isReference = false
@@ -283,7 +1831,7 @@ ImplNode
         TypePathExprNode
           PathExprSegNode: patternType = IDENT
             IdentifierNode: i32
-        LiteralExprNode: INT = 0
+        LiteralExprNode: I32 = 0
       ExprStmtNode
         LoopExprNode
           GroupExprNode
@@ -309,20 +1857,19 @@ ImplNode
                   PathExprNode
                     PathExprSegNode: patternType = IDENT
                       IdentifierNode: arr
-                  ArrayExprNode: elements
-                    TypeCastExprNode
-                      PathExprNode
-                        PathExprSegNode: patternType = IDENT
-                          IdentifierNode: i
-                      TypePathExprNode
-                        PathExprSegNode: patternType = IDENT
-                          IdentifierNode: usize
+                  TypeCastExprNode
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: i
+                    TypePathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: usize
             ExprStmtNode
-              ComAssignExprNode: operator = ADD_ASSIGN
+              AssignExprNode
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: i
-                LiteralExprNode: INT = 1
+                LiteralExprNode: I32 = 1
   FunctionNode: isConst = false
     IdentifierNode: point_query
     SelfParaNode: isMutable = false, isReference = true
@@ -413,8 +1960,8 @@ StructNode
         TypePathExprNode
           PathExprSegNode: patternType = IDENT
             IdentifierNode: i32
-        LiteralExprNode: INT = 101
-      LiteralExprNode: INT = 101
+        LiteralExprNode: I32 = 101
+      LiteralExprNode: I32 = 101
   FieldNode
     IdentifierNode: rows
     TypePathExprNode
@@ -455,9 +2002,9 @@ ImplNode
             IdentifierNode: tree
             ArrayExprNode: repeated element
               ArrayExprNode: repeated element
-                LiteralExprNode: INT = 0
-                LiteralExprNode: INT = 101
-              LiteralExprNode: INT = 101
+                LiteralExprNode: I32 = 0
+                LiteralExprNode: I32 = 101
+              LiteralExprNode: I32 = 101
           FieldValNode
             IdentifierNode: rows
             PathExprNode
@@ -500,7 +2047,7 @@ ImplNode
           PathExprNode
             PathExprSegNode: patternType = IDENT
               IdentifierNode: row
-          LiteralExprNode: INT = 1
+          LiteralExprNode: I32 = 1
       ExprStmtNode
         LoopExprNode
           GroupExprNode
@@ -523,7 +2070,7 @@ ImplNode
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: col
-                LiteralExprNode: INT = 1
+                LiteralExprNode: I32 = 1
             ExprStmtNode
               LoopExprNode
                 GroupExprNode
@@ -537,13 +2084,13 @@ ImplNode
                       IdentifierNode: cols
                 BlockExprNode
                   ExprStmtNode
-                    IndexExprNode
-                      FieldExprNode
-                        PathExprNode
-                          PathExprSegNode: patternType = SELF
-                        IdentifierNode: tree
+                    AssignExprNode
                       IndexExprNode
-                        ArrayExprNode: elements
+                        IndexExprNode
+                          FieldExprNode
+                            PathExprNode
+                              PathExprSegNode: patternType = SELF
+                            IdentifierNode: tree
                           TypeCastExprNode
                             PathExprNode
                               PathExprSegNode: patternType = IDENT
@@ -551,20 +2098,18 @@ ImplNode
                             TypePathExprNode
                               PathExprSegNode: patternType = IDENT
                                 IdentifierNode: usize
-                        ComAssignExprNode: operator = ADD_ASSIGN
-                          ArrayExprNode: elements
-                            TypeCastExprNode
-                              PathExprNode
-                                PathExprSegNode: patternType = IDENT
-                                  IdentifierNode: c
-                              TypePathExprNode
-                                PathExprSegNode: patternType = IDENT
-                                  IdentifierNode: usize
+                        TypeCastExprNode
                           PathExprNode
                             PathExprSegNode: patternType = IDENT
-                              IdentifierNode: delta
+                              IdentifierNode: c
+                          TypePathExprNode
+                            PathExprSegNode: patternType = IDENT
+                              IdentifierNode: usize
+                      PathExprNode
+                        PathExprSegNode: patternType = IDENT
+                          IdentifierNode: delta
                   ExprStmtNode
-                    ComAssignExprNode: operator = ADD_ASSIGN
+                    AssignExprNode
                       PathExprNode
                         PathExprSegNode: patternType = IDENT
                           IdentifierNode: c
@@ -578,7 +2123,7 @@ ImplNode
                               PathExprSegNode: patternType = IDENT
                                 IdentifierNode: c
             ExprStmtNode
-              ComAssignExprNode: operator = ADD_ASSIGN
+              AssignExprNode
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: r
@@ -616,7 +2161,7 @@ ImplNode
         TypePathExprNode
           PathExprSegNode: patternType = IDENT
             IdentifierNode: i32
-        LiteralExprNode: INT = 0
+        LiteralExprNode: I32 = 0
       LetStmtNode
         IdPatNode: isMutable = true, isReference = false
           IdentifierNode: r
@@ -627,7 +2172,7 @@ ImplNode
           PathExprNode
             PathExprSegNode: patternType = IDENT
               IdentifierNode: row
-          LiteralExprNode: INT = 1
+          LiteralExprNode: I32 = 1
       ExprStmtNode
         LoopExprNode
           GroupExprNode
@@ -635,7 +2180,7 @@ ImplNode
               PathExprNode
                 PathExprSegNode: patternType = IDENT
                   IdentifierNode: r
-              LiteralExprNode: INT = 0
+              LiteralExprNode: I32 = 0
           BlockExprNode
             LetStmtNode
               IdPatNode: isMutable = true, isReference = false
@@ -647,7 +2192,7 @@ ImplNode
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: col
-                LiteralExprNode: INT = 1
+                LiteralExprNode: I32 = 1
             ExprStmtNode
               LoopExprNode
                 GroupExprNode
@@ -655,37 +2200,35 @@ ImplNode
                     PathExprNode
                       PathExprSegNode: patternType = IDENT
                         IdentifierNode: c
-                    LiteralExprNode: INT = 0
+                    LiteralExprNode: I32 = 0
                 BlockExprNode
                   ExprStmtNode
-                    ComAssignExprNode: operator = ADD_ASSIGN
+                    AssignExprNode
                       PathExprNode
                         PathExprSegNode: patternType = IDENT
                           IdentifierNode: sum
                       IndexExprNode
-                        FieldExprNode
-                          PathExprNode
-                            PathExprSegNode: patternType = SELF
-                          IdentifierNode: tree
                         IndexExprNode
-                          ArrayExprNode: elements
-                            TypeCastExprNode
-                              PathExprNode
-                                PathExprSegNode: patternType = IDENT
-                                  IdentifierNode: r
-                              TypePathExprNode
-                                PathExprSegNode: patternType = IDENT
-                                  IdentifierNode: usize
-                          ArrayExprNode: elements
-                            TypeCastExprNode
-                              PathExprNode
-                                PathExprSegNode: patternType = IDENT
-                                  IdentifierNode: c
-                              TypePathExprNode
-                                PathExprSegNode: patternType = IDENT
-                                  IdentifierNode: usize
+                          FieldExprNode
+                            PathExprNode
+                              PathExprSegNode: patternType = SELF
+                            IdentifierNode: tree
+                          TypeCastExprNode
+                            PathExprNode
+                              PathExprSegNode: patternType = IDENT
+                                IdentifierNode: r
+                            TypePathExprNode
+                              PathExprSegNode: patternType = IDENT
+                                IdentifierNode: usize
+                        TypeCastExprNode
+                          PathExprNode
+                            PathExprSegNode: patternType = IDENT
+                              IdentifierNode: c
+                          TypePathExprNode
+                            PathExprSegNode: patternType = IDENT
+                              IdentifierNode: usize
                   ExprStmtNode
-                    ComAssignExprNode: operator = SUB_ASSIGN
+                    AssignExprNode
                       PathExprNode
                         PathExprSegNode: patternType = IDENT
                           IdentifierNode: c
@@ -699,7 +2242,7 @@ ImplNode
                               PathExprSegNode: patternType = IDENT
                                 IdentifierNode: c
             ExprStmtNode
-              ComAssignExprNode: operator = SUB_ASSIGN
+              AssignExprNode
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: r
@@ -773,7 +2316,7 @@ ImplNode
                     PathExprNode
                       PathExprSegNode: patternType = IDENT
                         IdentifierNode: row1
-                    LiteralExprNode: INT = 1
+                    LiteralExprNode: I32 = 1
                   PathExprNode
                     PathExprSegNode: patternType = IDENT
                       IdentifierNode: col2
@@ -789,7 +2332,7 @@ ImplNode
                   PathExprNode
                     PathExprSegNode: patternType = IDENT
                       IdentifierNode: col1
-                  LiteralExprNode: INT = 1
+                  LiteralExprNode: I32 = 1
             MethodCallExprNode
               PathExprNode
                 PathExprSegNode: patternType = SELF
@@ -799,12 +2342,12 @@ ImplNode
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: row1
-                LiteralExprNode: INT = 1
+                LiteralExprNode: I32 = 1
               ArithExprNode: operator = SUB
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: col1
-                LiteralExprNode: INT = 1
+                LiteralExprNode: I32 = 1
 StructNode
   IdentifierNode: RangeUpdateFenwick
   FieldNode
@@ -813,7 +2356,7 @@ StructNode
       TypePathExprNode
         PathExprSegNode: patternType = IDENT
           IdentifierNode: i32
-      LiteralExprNode: INT = 1001
+      LiteralExprNode: I32 = 1001
   FieldNode
     IdentifierNode: n
     TypePathExprNode
@@ -842,8 +2385,8 @@ ImplNode
           FieldValNode
             IdentifierNode: tree
             ArrayExprNode: repeated element
-              LiteralExprNode: INT = 0
-              LiteralExprNode: INT = 1001
+              LiteralExprNode: I32 = 0
+              LiteralExprNode: I32 = 1001
           FieldValNode
             IdentifierNode: n
             PathExprNode
@@ -893,7 +2436,7 @@ ImplNode
             PathExprNode
               PathExprSegNode: patternType = IDENT
                 IdentifierNode: right
-            LiteralExprNode: INT = 1
+            LiteralExprNode: I32 = 1
           NegaExprNode: isLogical = false
             PathExprNode
               PathExprSegNode: patternType = IDENT
@@ -924,7 +2467,7 @@ ImplNode
           PathExprNode
             PathExprSegNode: patternType = IDENT
               IdentifierNode: idx
-          LiteralExprNode: INT = 1
+          LiteralExprNode: I32 = 1
       ExprStmtNode
         LoopExprNode
           GroupExprNode
@@ -938,25 +2481,24 @@ ImplNode
                 IdentifierNode: n
           BlockExprNode
             ExprStmtNode
-              IndexExprNode
-                FieldExprNode
-                  PathExprNode
-                    PathExprSegNode: patternType = SELF
-                  IdentifierNode: tree
-                ComAssignExprNode: operator = ADD_ASSIGN
-                  ArrayExprNode: elements
-                    TypeCastExprNode
-                      PathExprNode
-                        PathExprSegNode: patternType = IDENT
-                          IdentifierNode: index
-                      TypePathExprNode
-                        PathExprSegNode: patternType = IDENT
-                          IdentifierNode: usize
-                  PathExprNode
-                    PathExprSegNode: patternType = IDENT
-                      IdentifierNode: delta
+              AssignExprNode
+                IndexExprNode
+                  FieldExprNode
+                    PathExprNode
+                      PathExprSegNode: patternType = SELF
+                    IdentifierNode: tree
+                  TypeCastExprNode
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: index
+                    TypePathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: usize
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: delta
             ExprStmtNode
-              ComAssignExprNode: operator = ADD_ASSIGN
+              AssignExprNode
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: index
@@ -988,7 +2530,7 @@ ImplNode
         TypePathExprNode
           PathExprSegNode: patternType = IDENT
             IdentifierNode: i32
-        LiteralExprNode: INT = 0
+        LiteralExprNode: I32 = 0
       LetStmtNode
         IdPatNode: isMutable = true, isReference = false
           IdentifierNode: index
@@ -999,7 +2541,7 @@ ImplNode
           PathExprNode
             PathExprSegNode: patternType = IDENT
               IdentifierNode: idx
-          LiteralExprNode: INT = 1
+          LiteralExprNode: I32 = 1
       ExprStmtNode
         LoopExprNode
           GroupExprNode
@@ -1007,10 +2549,10 @@ ImplNode
               PathExprNode
                 PathExprSegNode: patternType = IDENT
                   IdentifierNode: index
-              LiteralExprNode: INT = 0
+              LiteralExprNode: I32 = 0
           BlockExprNode
             ExprStmtNode
-              ComAssignExprNode: operator = ADD_ASSIGN
+              AssignExprNode
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: sum
@@ -1019,16 +2561,15 @@ ImplNode
                     PathExprNode
                       PathExprSegNode: patternType = SELF
                     IdentifierNode: tree
-                  ArrayExprNode: elements
-                    TypeCastExprNode
-                      PathExprNode
-                        PathExprSegNode: patternType = IDENT
-                          IdentifierNode: index
-                      TypePathExprNode
-                        PathExprSegNode: patternType = IDENT
-                          IdentifierNode: usize
+                  TypeCastExprNode
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: index
+                    TypePathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: usize
             ExprStmtNode
-              ComAssignExprNode: operator = SUB_ASSIGN
+              AssignExprNode
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: index
@@ -1054,14 +2595,14 @@ StructNode
       TypePathExprNode
         PathExprSegNode: patternType = IDENT
           IdentifierNode: i32
-      LiteralExprNode: INT = 1001
+      LiteralExprNode: I32 = 1001
   FieldNode
     IdentifierNode: tree2
     TypeArrayExprNode
       TypePathExprNode
         PathExprSegNode: patternType = IDENT
           IdentifierNode: i32
-      LiteralExprNode: INT = 1001
+      LiteralExprNode: I32 = 1001
   FieldNode
     IdentifierNode: n
     TypePathExprNode
@@ -1090,13 +2631,13 @@ ImplNode
           FieldValNode
             IdentifierNode: tree1
             ArrayExprNode: repeated element
-              LiteralExprNode: INT = 0
-              LiteralExprNode: INT = 1001
+              LiteralExprNode: I32 = 0
+              LiteralExprNode: I32 = 1001
           FieldValNode
             IdentifierNode: tree2
             ArrayExprNode: repeated element
-              LiteralExprNode: INT = 0
-              LiteralExprNode: INT = 1001
+              LiteralExprNode: I32 = 0
+              LiteralExprNode: I32 = 1001
           FieldValNode
             IdentifierNode: n
             PathExprNode
@@ -1118,7 +2659,7 @@ ImplNode
           TypePathExprNode
             PathExprSegNode: patternType = IDENT
               IdentifierNode: i32
-          LiteralExprNode: INT = 1001
+          LiteralExprNode: I32 = 1001
     ParameterNode
       IdPatNode: isMutable = false, isReference = false
         IdentifierNode: idx
@@ -1142,7 +2683,7 @@ ImplNode
           PathExprNode
             PathExprSegNode: patternType = IDENT
               IdentifierNode: idx
-          LiteralExprNode: INT = 1
+          LiteralExprNode: I32 = 1
       ExprStmtNode
         LoopExprNode
           GroupExprNode
@@ -1155,24 +2696,23 @@ ImplNode
                   IdentifierNode: n
           BlockExprNode
             ExprStmtNode
-              IndexExprNode
-                PathExprNode
-                  PathExprSegNode: patternType = IDENT
-                    IdentifierNode: tree
-                ComAssignExprNode: operator = ADD_ASSIGN
-                  ArrayExprNode: elements
-                    TypeCastExprNode
-                      PathExprNode
-                        PathExprSegNode: patternType = IDENT
-                          IdentifierNode: index
-                      TypePathExprNode
-                        PathExprSegNode: patternType = IDENT
-                          IdentifierNode: usize
+              AssignExprNode
+                IndexExprNode
                   PathExprNode
                     PathExprSegNode: patternType = IDENT
-                      IdentifierNode: delta
+                      IdentifierNode: tree
+                  TypeCastExprNode
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: index
+                    TypePathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: usize
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: delta
             ExprStmtNode
-              ComAssignExprNode: operator = ADD_ASSIGN
+              AssignExprNode
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: index
@@ -1196,7 +2736,7 @@ ImplNode
           TypePathExprNode
             PathExprSegNode: patternType = IDENT
               IdentifierNode: i32
-          LiteralExprNode: INT = 1001
+          LiteralExprNode: I32 = 1001
     ParameterNode
       IdPatNode: isMutable = false, isReference = false
         IdentifierNode: idx
@@ -1213,7 +2753,7 @@ ImplNode
         TypePathExprNode
           PathExprSegNode: patternType = IDENT
             IdentifierNode: i32
-        LiteralExprNode: INT = 0
+        LiteralExprNode: I32 = 0
       LetStmtNode
         IdPatNode: isMutable = true, isReference = false
           IdentifierNode: index
@@ -1224,7 +2764,7 @@ ImplNode
           PathExprNode
             PathExprSegNode: patternType = IDENT
               IdentifierNode: idx
-          LiteralExprNode: INT = 1
+          LiteralExprNode: I32 = 1
       ExprStmtNode
         LoopExprNode
           GroupExprNode
@@ -1232,10 +2772,10 @@ ImplNode
               PathExprNode
                 PathExprSegNode: patternType = IDENT
                   IdentifierNode: index
-              LiteralExprNode: INT = 0
+              LiteralExprNode: I32 = 0
           BlockExprNode
             ExprStmtNode
-              ComAssignExprNode: operator = ADD_ASSIGN
+              AssignExprNode
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: sum
@@ -1243,16 +2783,15 @@ ImplNode
                   PathExprNode
                     PathExprSegNode: patternType = IDENT
                       IdentifierNode: tree
-                  ArrayExprNode: elements
-                    TypeCastExprNode
-                      PathExprNode
-                        PathExprSegNode: patternType = IDENT
-                          IdentifierNode: index
-                      TypePathExprNode
-                        PathExprSegNode: patternType = IDENT
-                          IdentifierNode: usize
+                  TypeCastExprNode
+                    PathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: index
+                    TypePathExprNode
+                      PathExprSegNode: patternType = IDENT
+                        IdentifierNode: usize
             ExprStmtNode
-              ComAssignExprNode: operator = SUB_ASSIGN
+              AssignExprNode
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: index
@@ -1332,7 +2871,7 @@ ImplNode
             PathExprNode
               PathExprSegNode: patternType = IDENT
                 IdentifierNode: right
-            LiteralExprNode: INT = 1
+            LiteralExprNode: I32 = 1
           NegaExprNode: isLogical = false
             PathExprNode
               PathExprSegNode: patternType = IDENT
@@ -1364,7 +2903,7 @@ ImplNode
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: left
-                LiteralExprNode: INT = 1
+                LiteralExprNode: I32 = 1
       ExprStmtNode
         CallExprNode
           PathExprNode
@@ -1384,7 +2923,7 @@ ImplNode
             PathExprNode
               PathExprSegNode: patternType = IDENT
                 IdentifierNode: right
-            LiteralExprNode: INT = 1
+            LiteralExprNode: I32 = 1
           ArithExprNode: operator = MUL
             NegaExprNode: isLogical = false
               PathExprNode
@@ -1470,7 +3009,7 @@ ImplNode
                 PathExprNode
                   PathExprSegNode: patternType = IDENT
                     IdentifierNode: right
-                LiteralExprNode: INT = 1
+                LiteralExprNode: I32 = 1
             MethodCallExprNode
               PathExprNode
                 PathExprSegNode: patternType = SELF
@@ -1514,17 +3053,17 @@ FunctionNode: isConst = false
         TypePathExprNode
           PathExprSegNode: patternType = IDENT
             IdentifierNode: i32
-        LiteralExprNode: INT = 1000
+        LiteralExprNode: I32 = 1000
       ArrayExprNode: repeated element
-        LiteralExprNode: INT = 0
-        LiteralExprNode: INT = 1000
+        LiteralExprNode: I32 = 0
+        LiteralExprNode: I32 = 1000
     LetStmtNode
       IdPatNode: isMutable = true, isReference = false
         IdentifierNode: i
       TypePathExprNode
         PathExprSegNode: patternType = IDENT
           IdentifierNode: i32
-      LiteralExprNode: INT = 0
+      LiteralExprNode: I32 = 0
     ExprStmtNode
       LoopExprNode
         GroupExprNode
@@ -1537,29 +3076,28 @@ FunctionNode: isConst = false
                 IdentifierNode: n
         BlockExprNode
           ExprStmtNode
-            IndexExprNode
-              PathExprNode
-                PathExprSegNode: patternType = IDENT
-                  IdentifierNode: arr
-              AssignExprNode
-                ArrayExprNode: elements
-                  TypeCastExprNode
-                    PathExprNode
-                      PathExprSegNode: patternType = IDENT
-                        IdentifierNode: i
-                    TypePathExprNode
-                      PathExprSegNode: patternType = IDENT
-                        IdentifierNode: usize
-                CallExprNode
+            AssignExprNode
+              IndexExprNode
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: arr
+                TypeCastExprNode
                   PathExprNode
                     PathExprSegNode: patternType = IDENT
-                      IdentifierNode: getInt
+                      IdentifierNode: i
+                  TypePathExprNode
+                    PathExprSegNode: patternType = IDENT
+                      IdentifierNode: usize
+              CallExprNode
+                PathExprNode
+                  PathExprSegNode: patternType = IDENT
+                    IdentifierNode: getInt
           ExprStmtNode
-            ComAssignExprNode: operator = ADD_ASSIGN
+            AssignExprNode
               PathExprNode
                 PathExprSegNode: patternType = IDENT
                   IdentifierNode: i
-              LiteralExprNode: INT = 1
+              LiteralExprNode: I32 = 1
     ExprStmtNode
       MethodCallExprNode
         PathExprNode
@@ -1586,7 +3124,7 @@ FunctionNode: isConst = false
         PathExprNode
           PathExprSegNode: patternType = IDENT
             IdentifierNode: i
-        LiteralExprNode: INT = 0
+        LiteralExprNode: I32 = 0
     ExprStmtNode
       LoopExprNode
         GroupExprNode
@@ -1615,7 +3153,7 @@ FunctionNode: isConst = false
                   PathExprNode
                     PathExprSegNode: patternType = IDENT
                       IdentifierNode: operation
-                  LiteralExprNode: INT = 1
+                  LiteralExprNode: I32 = 1
               BlockExprNode
                 LetStmtNode
                   IdPatNode: isMutable = false, isReference = false
@@ -1656,7 +3194,7 @@ FunctionNode: isConst = false
                     PathExprNode
                       PathExprSegNode: patternType = IDENT
                         IdentifierNode: operation
-                    LiteralExprNode: INT = 2
+                    LiteralExprNode: I32 = 2
                 BlockExprNode
                   LetStmtNode
                     IdPatNode: isMutable = false, isReference = false
@@ -1710,7 +3248,7 @@ FunctionNode: isConst = false
                       PathExprNode
                         PathExprSegNode: patternType = IDENT
                           IdentifierNode: operation
-                      LiteralExprNode: INT = 3
+                      LiteralExprNode: I32 = 3
                   BlockExprNode
                     LetStmtNode
                       IdPatNode: isMutable = false, isReference = false
@@ -1751,7 +3289,7 @@ FunctionNode: isConst = false
                         PathExprNode
                           PathExprSegNode: patternType = IDENT
                             IdentifierNode: operation
-                        LiteralExprNode: INT = 4
+                        LiteralExprNode: I32 = 4
                     BlockExprNode
                       LetStmtNode
                         IdPatNode: isMutable = false, isReference = false
@@ -1787,14 +3325,14 @@ FunctionNode: isConst = false
                             PathExprSegNode: patternType = IDENT
                               IdentifierNode: val
           ExprStmtNode
-            ComAssignExprNode: operator = ADD_ASSIGN
+            AssignExprNode
               PathExprNode
                 PathExprSegNode: patternType = IDENT
                   IdentifierNode: i
-              LiteralExprNode: INT = 1
+              LiteralExprNode: I32 = 1
     ExprStmtNode
       CallExprNode
         PathExprNode
           PathExprSegNode: patternType = IDENT
             IdentifierNode: exit
-        LiteralExprNode: INT = 0
+        LiteralExprNode: I32 = 0

@@ -47,9 +47,24 @@ compile-test: compile $(TEST_FILES)
 	@echo "测试编译完成！"
 
 # 运行主程序
-run: compile
+run:
 	@echo "运行主程序..."
 	$(JAVA) $(JAVA_FLAGS) $(MAIN_CLASS)
+
+# 运行主程序并重定向输入输出
+# 使用方法: make run-redirect INPUT=input.txt OUTPUT=output.txt
+run-redirect:
+	@echo "运行主程序（重定向输入输出）..."
+	@if [ -n "$(INPUT)" ] && [ -n "$(OUTPUT)" ]; then \
+		$(JAVA) $(JAVA_FLAGS) $(MAIN_CLASS) < $(INPUT) > $(OUTPUT); \
+	elif [ -n "$(INPUT)" ]; then \
+		$(JAVA) $(JAVA_FLAGS) $(MAIN_CLASS) < $(INPUT); \
+	elif [ -n "$(OUTPUT)" ]; then \
+		$(JAVA) $(JAVA_FLAGS) $(MAIN_CLASS) > $(OUTPUT); \
+	else \
+		echo "错误: 请指定INPUT和/或OUTPUT参数"; \
+		echo "用法: make run-redirect INPUT=input.txt OUTPUT=output.txt"; \
+	fi
 
 # 运行单个测试
 test: compile-test
@@ -109,6 +124,7 @@ help:
 	@echo "  make          - 编译项目 (等同于 make compile)"
 	@echo "  make compile  - 编译所有Java源文件"
 	@echo "  make run      - 编译并运行主程序"
+	@echo "  make run-redirect - 编译并运行主程序（支持输入输出重定向）"
 	@echo "  make test     - 编译并运行基本测试"
 	@echo ""
 	@echo "测试命令:"
@@ -128,6 +144,9 @@ help:
 	@echo ""
 	@echo "示例用法:"
 	@echo "  make run                    # 编译并运行主程序"
+	@echo "  make run-redirect INPUT=test.rs OUTPUT=output.txt  # 重定向输入输出"
+	@echo "  make run-redirect INPUT=test.rs  # 只重定向输入"
+	@echo "  make run-redirect OUTPUT=output.txt  # 只重定向输出"
 	@echo "  make test-case TESTCASE=tests/inputs/test.rs  # 运行特定测试"
 	@echo "  make rebuild                # 完全重新编译项目"
 

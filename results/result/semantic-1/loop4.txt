@@ -1,3 +1,122 @@
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: main
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: count
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: u32
+Token Type: PUNCTUATION, Name: =
+Token Type: INTEGER_LITERAL, Name: 0u32
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: should_break
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: bool
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: false
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: loop
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: if
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i
+Token Type: PUNCTUATION, Name: >=
+Token Type: INTEGER_LITERAL, Name: 5
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: break
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: j
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: u32
+Token Type: PUNCTUATION, Name: =
+Token Type: INTEGER_LITERAL, Name: 0u32
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: loop
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: if
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: j
+Token Type: PUNCTUATION, Name: >=
+Token Type: INTEGER_LITERAL, Name: 5
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: break
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: if
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i
+Token Type: PUNCTUATION, Name: ==
+Token Type: IDENTIFIER_OR_KEYWORD, Name: j
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: j
+Token Type: PUNCTUATION, Name: +=
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: continue
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: if
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i
+Token Type: PUNCTUATION, Name: +
+Token Type: IDENTIFIER_OR_KEYWORD, Name: j
+Token Type: PUNCTUATION, Name: >
+Token Type: INTEGER_LITERAL, Name: 6
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: should_break
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: true
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: break
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: count
+Token Type: PUNCTUATION, Name: +=
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: j
+Token Type: PUNCTUATION, Name: +=
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: if
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: should_break
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: break
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i
+Token Type: PUNCTUATION, Name: +=
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: exit
+Token Type: PUNCTUATION, Name: (
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
 FunctionNode: isConst = false
   IdentifierNode: main
   BlockExprNode
@@ -7,14 +126,14 @@ FunctionNode: isConst = false
       TypePathExprNode
         PathExprSegNode: patternType = IDENT
           IdentifierNode: i32
-      LiteralExprNode: INT = 0
+      LiteralExprNode: I32 = 0
     LetStmtNode
       IdPatNode: isMutable = true, isReference = false
         IdentifierNode: i
       TypePathExprNode
         PathExprSegNode: patternType = IDENT
           IdentifierNode: u32
-      LiteralExprNode: INT = 0
+      LiteralExprNode: U32 = 0
     LetStmtNode
       IdPatNode: isMutable = true, isReference = false
         IdentifierNode: should_break
@@ -32,7 +151,7 @@ FunctionNode: isConst = false
                   PathExprNode
                     PathExprSegNode: patternType = IDENT
                       IdentifierNode: i
-                  LiteralExprNode: INT = 5
+                  LiteralExprNode: I32 = 5
               BlockExprNode
                 ExprStmtNode
                   BreakExprNode
@@ -42,7 +161,7 @@ FunctionNode: isConst = false
             TypePathExprNode
               PathExprSegNode: patternType = IDENT
                 IdentifierNode: u32
-            LiteralExprNode: INT = 0
+            LiteralExprNode: U32 = 0
           ExprStmtNode
             LoopExprNode
               BlockExprNode
@@ -53,7 +172,7 @@ FunctionNode: isConst = false
                         PathExprNode
                           PathExprSegNode: patternType = IDENT
                             IdentifierNode: j
-                        LiteralExprNode: INT = 5
+                        LiteralExprNode: I32 = 5
                     BlockExprNode
                       ExprStmtNode
                         BreakExprNode
@@ -69,11 +188,11 @@ FunctionNode: isConst = false
                             IdentifierNode: j
                     BlockExprNode
                       ExprStmtNode
-                        ComAssignExprNode: operator = ADD_ASSIGN
+                        AssignExprNode
                           PathExprNode
                             PathExprSegNode: patternType = IDENT
                               IdentifierNode: j
-                          LiteralExprNode: INT = 1
+                          LiteralExprNode: I32 = 1
                       ExprStmtNode
                         ContinueExprNode
                 ExprStmtNode
@@ -87,7 +206,7 @@ FunctionNode: isConst = false
                           PathExprNode
                             PathExprSegNode: patternType = IDENT
                               IdentifierNode: j
-                        LiteralExprNode: INT = 6
+                        LiteralExprNode: I32 = 6
                     BlockExprNode
                       ExprStmtNode
                         AssignExprNode
@@ -98,17 +217,17 @@ FunctionNode: isConst = false
                       ExprStmtNode
                         BreakExprNode
                 ExprStmtNode
-                  ComAssignExprNode: operator = ADD_ASSIGN
+                  AssignExprNode
                     PathExprNode
                       PathExprSegNode: patternType = IDENT
                         IdentifierNode: count
-                    LiteralExprNode: INT = 1
+                    LiteralExprNode: I32 = 1
                 ExprStmtNode
-                  ComAssignExprNode: operator = ADD_ASSIGN
+                  AssignExprNode
                     PathExprNode
                       PathExprSegNode: patternType = IDENT
                         IdentifierNode: j
-                    LiteralExprNode: INT = 1
+                    LiteralExprNode: I32 = 1
           ExprStmtNode
             IfExprNode
               GroupExprNode
@@ -119,14 +238,14 @@ FunctionNode: isConst = false
                 ExprStmtNode
                   BreakExprNode
           ExprStmtNode
-            ComAssignExprNode: operator = ADD_ASSIGN
+            AssignExprNode
               PathExprNode
                 PathExprSegNode: patternType = IDENT
                   IdentifierNode: i
-              LiteralExprNode: INT = 1
+              LiteralExprNode: I32 = 1
     ExprStmtNode
       CallExprNode
         PathExprNode
           PathExprSegNode: patternType = IDENT
             IdentifierNode: exit
-        LiteralExprNode: INT = 0
+        LiteralExprNode: I32 = 0

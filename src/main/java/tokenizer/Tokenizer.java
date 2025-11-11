@@ -1,6 +1,20 @@
 import java.util.Vector;
+import static tokenizer.TokenizerConstants.*;
 
 public class Tokenizer extends token_t {
+    public Vector<token_t> tokens;
+    int pos, block_comment_level;
+    private int currentLine = 1;
+    private int currentColumn = 0;
+    private token_t last_token = null;
+    
+    public Tokenizer() {
+        pos = 0;
+        block_comment_level = 0;
+        tokens = new Vector<token_t>();
+        last_token = null;
+    }
+    
     public boolean isCompleted(TokenType_t tokentype) {
         if(tokentype == TokenType_t.STRING_LITERAL_MID || tokentype == TokenType_t.RAW_STRING_LITERAL_MID ||
            tokentype == TokenType_t.C_STRING_LITERAL_MID || tokentype == TokenType_t.RAW_C_STRING_LITERAL_MID ||
@@ -9,31 +23,15 @@ public class Tokenizer extends token_t {
         }
         return true;
     }
-
-    public Vector<token_t> tokens;
-    // pos record the current position in the tokens vector.
-    int pos, block_comment_level;
-    public Tokenizer() {
-        pos = 0;
-        block_comment_level = 0;
-        tokens = new Vector<token_t>();
-    }
-    // public token_t next_token() {
-    //     if (pos >= tokens.size()) {
-    //         return null;
-    //     }
-    //     return tokens.get(pos++);
-    // }
-    // public token_t peek_token() {
-    //     if (pos >= tokens.size()) {
-    //         return null;
-    //     }
-    //     return tokens.get(pos);
-    // }
-    // With a string as input, tokenize it and store the tokens in the tokens vector.
+    
     public void tokenize(String input) {
+        initializeTokenization();
+        processInput(input);
+        finalizeIncompleteTokens();
+    }
+    
+    private void initializeTokenization() {
         // Extract the last token. If it is not complete, keep it for the next line.
-        token_t last_token = null;
         if (!tokens.isEmpty()) {
             last_token = tokens.get(tokens.size() - 1);
             if (isCompleted(last_token.tokentype)) {
@@ -42,372 +40,340 @@ public class Tokenizer extends token_t {
                 tokens.remove(tokens.size() - 1);
             }
         }
-        // scan each character in part
-        // Use a variable to record the position of the input string.
+    }
+    
+    private void processInput(String input) {
         int i = 0;
-        while(i < input.length()) {
-            char c = input.charAt(i);
-            if (block_comment_level > 0) {
-                // we are in a block comment, we need to skip until the end of the block comment
-                if (c == '/' && i + 1 < input.length() && input.charAt(i + 1) == '*') {
-                    block_comment_level++;
-                    i += 2;
-                    continue;
-                }
-                if (c == '*' && i + 1 < input.length() && input.charAt(i + 1) == '/') {
-                    block_comment_level--;
-                    i += 2;
-                    continue;
-                }
-                i++;
+        while (i < input.length()) {
+            i = processCharacter(input, i);
+        }
+    }
+    
+    private int processCharacter(String input, int i) {
+        char c = input.charAt(i);
+        
+        // Update position tracking
+        updatePosition(c);
+        
+        if (block_comment_level > 0) {
+            return handleBlockComment(input, i);
+        }
+        
+        if (last_token != null && !isCompleted(last_token.tokentype)) {
+            return handleIncompleteToken(input, i);
+        }
+        
+        return handleNewToken(input, i);
+    }
+    
+    private void updatePosition(char c) {
+        if (c == LINE_FEED) {
+            currentLine++;
+            currentColumn = 0;
+        } else {
+            currentColumn++;
+        }
+    }
+    
+    private int handleBlockComment(String input, int i) {
+        char c = input.charAt(i);
+        if (c == FORWARD_SLASH && i + 1 < input.length() && input.charAt(i + 1) == ASTERISK) {
+            block_comment_level++;
+            return i + 2;
+        }
+        if (c == ASTERISK && i + 1 < input.length() && input.charAt(i + 1) == FORWARD_SLASH) {
+            block_comment_level--;
+            return i + 2;
+        }
+        return i + 1;
+    }
+    
+    private int handleIncompleteToken(String input, int i) {
+        char c = input.charAt(i);
+        
+        // Handle continuation escape mode
+        if (character_check.isWhitespace(c) && (last_token.tokentype == TokenType_t.C_STRING_CONTINUATION_ESCAPE || last_token.tokentype == TokenType_t.STRING_CONTINUATION_ESCAPE)) {
+            return i + 1;
+        }
+        
+        // Exit continuation escape mode
+        if (!character_check.isWhitespace(c) && (last_token.tokentype == TokenType_t.C_STRING_CONTINUATION_ESCAPE || last_token.tokentype == TokenType_t.STRING_CONTINUATION_ESCAPE)) {
+            last_token.tokentype = (last_token.tokentype == TokenType_t.C_STRING_CONTINUATION_ESCAPE) ? TokenType_t.C_STRING_LITERAL_MID : TokenType_t.STRING_LITERAL_MID;
+        }
+        
+        // Handle escape sequences
+        if (c == BACKSLASH && last_token.tokentype != TokenType_t.RAW_STRING_LITERAL_MID && last_token.tokentype != TokenType_t.RAW_C_STRING_LITERAL_MID) {
+            if (i + 1 == input.length()) {
+                last_token.tokentype = (last_token.tokentype == TokenType_t.C_STRING_LITERAL_MID) ? TokenType_t.C_STRING_CONTINUATION_ESCAPE : TokenType_t.STRING_CONTINUATION_ESCAPE;
+                return i + 1;
+            }
+            int newPosition = EscapeSequenceProcessor.processEscapeInToken(last_token, input, i);
+            return newPosition + 1;
+        }
+        
+        // Handle string termination
+        if (c == DOUBLE_QUOTE && (last_token.tokentype == TokenType_t.STRING_LITERAL_MID || last_token.tokentype == TokenType_t.C_STRING_LITERAL_MID)) {
+            last_token.tokentype = (last_token.tokentype == TokenType_t.C_STRING_LITERAL_MID) ? TokenType_t.C_STRING_LITERAL : TokenType_t.STRING_LITERAL;
+            tokens.add(last_token);
+            last_token = null;
+            return i + 1;
+        }
+        
+        // Handle raw string termination
+        if (c == DOUBLE_QUOTE && (last_token.tokentype == TokenType_t.RAW_STRING_LITERAL_MID || last_token.tokentype == TokenType_t.RAW_C_STRING_LITERAL_MID)) {
+            return handleRawStringTermination(input, i);
+        }
+        
+        // Add character to incomplete token
+        last_token.name += c;
+        return i + 1;
+    }
+    
+    private int handleRawStringTermination(String input, int i) {
+        int j = i + 1;
+        int count_raw = 0;
+        while (j < input.length() && input.charAt(j) == HASH) {
+            count_raw++;
+            j++;
+        }
+        
+        if (count_raw == last_token.number_raw) {
+            last_token.tokentype = (last_token.tokentype == TokenType_t.RAW_C_STRING_LITERAL_MID) ? TokenType_t.RAW_C_STRING_LITERAL : TokenType_t.RAW_STRING_LITERAL;
+            tokens.add(last_token);
+            last_token = null;
+            return j;
+        } else {
+            last_token.name += DOUBLE_QUOTE;
+            for (int k = 0; k < count_raw; k++) {
+                last_token.name += HASH;
+            }
+            return j;
+        }
+    }
+    
+    private int handleNewToken(String input, int i) {
+        char c = input.charAt(i);
+        
+        if (character_check.isPunctuation(c)) {
+            return processPunctuation(input, i);
+        } else if (Character.isDigit(c)) {
+            return processNumber(input, i);
+        } else if (Character.isLetter(c) || c == DOUBLE_QUOTE) {
+            return processIdentifierOrString(input, i);
+        } else if (c == SINGLE_QUOTE) {
+            return processCharacterLiteral(input, i);
+        } else if (character_check.isWhitespace(c)) {
+            return i + 1;
+        } else {
+            handleError(UNKNOWN_CHARACTER + c);
+            return i + 1;
+        }
+    }
+    
+    private int processPunctuation(String input, int i) {
+        char c = input.charAt(i);
+        
+        // Check for line comments
+        if (c == FORWARD_SLASH && i + 1 < input.length() && input.charAt(i + 1) == FORWARD_SLASH) {
+            return input.length(); // Skip rest of line
+        }
+        
+        // Check for block comment start
+        if (c == FORWARD_SLASH && i + 1 < input.length() && input.charAt(i + 1) == ASTERISK) {
+            block_comment_level++;
+            return i + 2;
+        }
+        
+        token_t token = createToken(TokenType_t.PUNCTUATION, "");
+        
+        // Check for multi-character punctuation
+        boolean found = false;
+        for (String p : MULTI_CHAR_PUNCTUATIONS) {
+            if (input.startsWith(p, i)) {
+                token.name = p;
+                tokens.add(token);
+                return i + p.length();
+            }
+        }
+        
+        // Single character punctuation
+        token.name = String.valueOf(c);
+        tokens.add(token);
+        return i + 1;
+    }
+    
+    private int processNumber(String input, int i) {
+        char c = input.charAt(i);
+        token_t token = createToken(TokenType_t.INTEGER_LITERAL, String.valueOf(c));
+        
+        // Check for non-decimal literals
+        if (c == DIGIT_ZERO && i + 1 < input.length()) {
+            char next_c = input.charAt(i + 1);
+            if (next_c == LETTER_B || next_c == LETTER_O || next_c == LETTER_X) {
+                return processNonDecimalNumber(input, i, token, next_c);
+            }
+        }
+        
+        // Process decimal number
+        return processDecimalNumber(input, i, token);
+    }
+    
+    private int processNonDecimalNumber(String input, int i, token_t token, char baseChar) {
+        token.name += baseChar;
+        int newPosition = i + 2;
+        
+        boolean hasValidDigit = false;
+        while (newPosition < input.length()) {
+            char digit = input.charAt(newPosition);
+            if (digit == UNDERSCORE) {
+                newPosition++;
                 continue;
             }
-            // Check if last_token is uncompleted.
-            if (last_token != null && !isCompleted(last_token.tokentype)) {
-                // if the character c is whitespace and last_token is in continuation escape mode, then we skip it.
-                if (character_check.isWhitespace(c) && (last_token.tokentype == TokenType_t.C_STRING_CONTINUATION_ESCAPE || last_token.tokentype == TokenType_t.STRING_CONTINUATION_ESCAPE)) {
-                    i++;
-                    continue;
-                }
-                // if the character c is not whitespace and last_token is in continuation escape mode, then we exit the continuation escape mode.
-                if (!character_check.isWhitespace(c) && (last_token.tokentype == TokenType_t.C_STRING_CONTINUATION_ESCAPE || last_token.tokentype == TokenType_t.STRING_CONTINUATION_ESCAPE)) {
-                    last_token.tokentype = (last_token.tokentype == TokenType_t.C_STRING_CONTINUATION_ESCAPE) ? TokenType_t.C_STRING_LITERAL_MID : TokenType_t.STRING_LITERAL_MID;
-                }
-                // if the character c is '\' and last_token is not "raw", then we need to escape the next character.
-                if (c == '\\' && last_token.tokentype != TokenType_t.RAW_STRING_LITERAL_MID && last_token.tokentype != TokenType_t.RAW_C_STRING_LITERAL_MID) {
-                    if (i + 1 == input.length()) {
-                        last_token.tokentype = (last_token.tokentype == TokenType_t.C_STRING_LITERAL_MID) ? TokenType_t.C_STRING_CONTINUATION_ESCAPE : TokenType_t.STRING_CONTINUATION_ESCAPE;
+            
+            boolean isValidDigit = false;
+            if (baseChar == LETTER_B) {
+                isValidDigit = (digit == DIGIT_ZERO || digit == DIGIT_ONE);
+            } else if (baseChar == LETTER_O) {
+                isValidDigit = (digit >= DIGIT_ZERO && digit <= DIGIT_SEVEN);
+            } else if (baseChar == LETTER_X) {
+                isValidDigit = Character.isDigit(digit) ||
+                              (digit >= 'a' && digit <= 'f') ||
+                              (digit >= 'A' && digit <= 'F');
+            }
+            
+            if (isValidDigit) {
+                token.name += digit;
+                hasValidDigit = true;
+                newPosition++;
+            } else {
+                break;
+            }
+        }
+        
+        if (!hasValidDigit) {
+            handleError("Invalid " +
+                       (baseChar == LETTER_B ? BINARY_TYPE :
+                        baseChar == LETTER_O ? OCTAL_TYPE : HEXADECIMAL_TYPE) +
+                       NO_VALID_DIGITS);
+        }
+        
+        return processNumberSuffix(input, newPosition, token);
+    }
+    
+    private int processDecimalNumber(String input, int i, token_t token) {
+        int newPosition = i + 1;
+        while (newPosition < input.length()) {
+            char digit = input.charAt(newPosition);
+            if (Character.isDigit(digit) || digit == UNDERSCORE) {
+                token.name += digit;
+                newPosition++;
+            } else {
+                break;
+            }
+        }
+        
+        return processNumberSuffix(input, newPosition, token);
+    }
+    
+    private int processNumberSuffix(String input, int i, token_t token) {
+        if (i < input.length() && Character.isLetter(input.charAt(i))) {
+            char first_suffix_char = input.charAt(i);
+            if (first_suffix_char != LETTER_E && first_suffix_char != Character.toUpperCase(LETTER_E)) {
+                token.name += first_suffix_char;
+                i++;
+                while (i < input.length()) {
+                    char suffix_char = input.charAt(i);
+                    if (Character.isLetterOrDigit(suffix_char) || suffix_char == UNDERSCORE) {
+                        token.name += suffix_char;
                         i++;
-                        continue;
-                    }
-                    char next_c = input.charAt(i + 1);
-                    switch (next_c) {
-                        case 'n':
-                            last_token.name += '\n';
-                            break;
-                        case 't':
-                            last_token.name += '\t';
-                            break;
-                        case 'r':
-                            last_token.name += '\r';
-                            break;
-                        case '\\':
-                            last_token.name += '\\';
-                            break;
-                        case '\'':  
-                            last_token.name += '\'';
-                            break;
-                        case '\"':
-                            last_token.name += '\"';
-                            break;
-                        case '0':
-                            last_token.name += '\0';
-                            break;
-                        case 'x':
-                            // hexadecimal escape sequence
-                            String hex = input.substring(i + 2, i + 4);
-                            last_token.name += (char) Integer.parseInt(hex, 16);
-                            i += 2;
-                            break;
-                        default:
-                            assert false: "Unknown escape sequence: \\" + next_c;
-                    }
-                    i += 2;
-                    continue;
-                }
-                // if the character c is the ending quote and last_token is not raw, then we complete the token.
-                if (c == '\"' && (last_token.tokentype == TokenType_t.STRING_LITERAL_MID || last_token.tokentype == TokenType_t.C_STRING_LITERAL_MID)) {
-                    last_token.tokentype = (last_token.tokentype == TokenType_t.C_STRING_LITERAL_MID) ? TokenType_t.C_STRING_LITERAL : TokenType_t.STRING_LITERAL;
-                    tokens.add(last_token);
-                    last_token = null;
-                    i++;
-                    continue;
-                }
-                // if the character c is the ending quote and last_token is raw, then we need to check the number of '#'s after the quote.
-                if (c == '\"' && (last_token.tokentype == TokenType_t.RAW_STRING_LITERAL_MID || last_token.tokentype == TokenType_t.RAW_C_STRING_LITERAL_MID)) {
-                    int j = i + 1;
-                    int count_raw = 0;
-                    while (j < input.length() && input.charAt(j) == '#') {
-                        count_raw++;
-                        j++;
-                    }
-                    // if the number of '#'s is equal to last_token.number_raw, then we complete the token.
-                    if (count_raw == last_token.number_raw) {
-                        last_token.tokentype = (last_token.tokentype == TokenType_t.RAW_C_STRING_LITERAL_MID) ? TokenType_t.RAW_C_STRING_LITERAL : TokenType_t.RAW_STRING_LITERAL;
-                        tokens.add(last_token);
-                        last_token = null;
-                        i = j;
-                        continue;
                     } else {
-                        // if not, we just append the character to the last_token
-                        last_token.name += c;
-                        for (int k = 0; k < count_raw; k++) {
-                            last_token.name += '#';
-                        }
-                        i = j;
-                        continue;
-                    }
-                }
-                // if not, we just append the character to the last_token
-                last_token.name += c;
-                i++;
-                continue;
-            }
-
-            // check if c is a punctuation
-            if (character_check.isPunctuation(c)) {
-                // check if it's the start of a comment
-                if (c == '/' && i + 1 < input.length() && input.charAt(i + 1) == '/') {
-                    break;
-                }
-                // if it's the start of a block comment, we need to skip until the end of the block comment
-                if (c == '/' && i + 1 < input.length() && input.charAt(i + 1) == '*') {
-                    block_comment_level++;
-                    i += 2;
-                    continue;
-                }
-                token_t token = new token_t();
-                token.tokentype = TokenType_t.PUNCTUATION;
-                String[] multi_char_punctuations = {"==", "<=", ">=", "!=", "&&", "||", "<<", ">>", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>=", "->", "=>", "::", "..", "...", "..=", "##", "<-" };
-                boolean found = false;
-                for (String p : multi_char_punctuations) {
-                    if (input.startsWith(p, i)) {
-                        token.name = p;
-                        i += p.length();
-                        found = true;
                         break;
                     }
                 }
-                if (!found) {
-                    token.name = String.valueOf(c);
-                    i++;
-                }
-                tokens.add(token);
-                continue;
-            } else if (Character.isDigit(c)) {
-                token_t token = new token_t();
-                token.tokentype = TokenType_t.INTEGER_LITERAL;
-                token.name = String.valueOf(c);
-                
-                // Check if this is a non-decimal literal (binary, octal, or hex)
-                if (c == '0' && i + 1 < input.length()) {
-                    char next_c = input.charAt(i + 1);
-                    if (next_c == 'b' || next_c == 'o' || next_c == 'x') {
-                        token.name += next_c;
-                        i += 2;
-                        
-                        // Process the digits after the prefix
-                        boolean hasValidDigit = false;
-                        while (i < input.length()) {
-                            char digit = input.charAt(i);
-                            if (digit == '_') {
-                                token.name += digit;
-                                i++;
-                                continue;
-                            }
-                            
-                            boolean isValidDigit = false;
-                            if (next_c == 'b') {
-                                isValidDigit = (digit == '0' || digit == '1');
-                            } else if (next_c == 'o') {
-                                isValidDigit = (digit >= '0' && digit <= '7');
-                            } else if (next_c == 'x') {
-                                isValidDigit = Character.isDigit(digit) ||
-                                              (digit >= 'a' && digit <= 'f') ||
-                                              (digit >= 'A' && digit <= 'F');
-                            }
-                            
-                            if (isValidDigit) {
-                                token.name += digit;
-                                hasValidDigit = true;
-                                i++;
-                            } else {
-                                break;
-                            }
-                        }
-                        
-                        if (!hasValidDigit) {
-                            assert false: "Invalid " +
-                                         (next_c == 'b' ? "binary" :
-                                          next_c == 'o' ? "octal" : "hexadecimal") +
-                                         " literal: no valid digits found";
-                        }
-                    } else {
-                        // Regular decimal literal starting with 0
-                        i++;
-                        while (i < input.length()) {
-                            char digit = input.charAt(i);
-                            if (Character.isDigit(digit) || digit == '_') {
-                                token.name += digit;
-                                i++;
-                            } else {
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    // Regular decimal literal
-                    i++;
-                    while (i < input.length()) {
-                        char digit = input.charAt(i);
-                        if (Character.isDigit(digit) || digit == '_') {
-                            token.name += digit;
-                            i++;
-                        } else {
-                            break;
-                        }
-                    }
-                }
-                
-                // Check for suffix (identifier that doesn't start with 'e' or 'E')
-                if (i < input.length() && Character.isLetter(input.charAt(i))) {
-                    char first_suffix_char = input.charAt(i);
-                    if (first_suffix_char != 'e' && first_suffix_char != 'E') {
-                        token.name += first_suffix_char;
-                        i++;
-                        while (i < input.length()) {
-                            char suffix_char = input.charAt(i);
-                            if (Character.isLetterOrDigit(suffix_char) || suffix_char == '_') {
-                                token.name += suffix_char;
-                                i++;
-                            } else {
-                                break;
-                            }
-                        }
-                    }
-                }
-                tokens.add(token);
-                continue;
-            } else if (Character.isLetter(c)) {
-                char next_c = (i + 1 < input.length()) ? input.charAt(i + 1) : '\0';
-                // check if it is the head of a literal
-                if ((c == 'r' && next_c == '#') || (c == 'c' && (next_c == '\"' || (next_c == 'r' && i + 2 < input.length() && input.charAt(i + 2) == '#')))) {
-                    // determine the type of the literal
-                    token_t token = new token_t();
-                    if (c == 'r' && next_c == '#') {
-                        // raw string literal
-                        int j = i + 1;
-                        int count_raw = 0;
-                        while (j < input.length() && input.charAt(j) == '#') {
-                            count_raw++;
-                            j++;
-                        }
-                        token.tokentype = TokenType_t.RAW_STRING_LITERAL_MID;
-                        token.number_raw = count_raw;
-                        last_token = token;
-                        i = j;
-                        assert input.charAt(i) == '\"': "Invalid raw string literal.";
-                        i++;
-                        continue;
-                    } else if (c == 'c' && next_c == '\"') {
-                        // C string literal
-                        token.tokentype = TokenType_t.C_STRING_LITERAL_MID;
-                        last_token = token;
-                        i += 2;
-                        continue;
-                    } else if (c == 'c' && next_c == 'r' && i + 2 < input.length() && input.charAt(i + 2) == '#') {
-                        // raw C string literal
-                        int j = i + 2;
-                        int count_raw = 0;
-                        while (j < input.length() && input.charAt(j) == '#') {
-                            count_raw++;
-                            j++;
-                        }
-                        token.tokentype = TokenType_t.RAW_C_STRING_LITERAL_MID;
-                        token.number_raw = count_raw;
-                        last_token = token;
-                        i = j;
-                        assert input.charAt(i) == '\"': "Invalid raw C string literal.";
-                        i++;
-                        continue;
-                    }
-                }
-                token_t token = new token_t();
-                token.tokentype = TokenType_t.IDENTIFIER_OR_KEYWORD;
-                token.name = String.valueOf(c);
-                while (next_c != '\0' && (Character.isLetterOrDigit(next_c) || next_c == '_')) {
-                    token.name += next_c;
-                    i++;
-                    next_c = (i + 1 < input.length()) ? input.charAt(i + 1) : '\0';
-                }
-                tokens.add(token);
-            } else if (c == '\'') {
-                // char literal
-                token_t token = new token_t();
-                token.tokentype = TokenType_t.CHAR_LITERAL;
-                char next_c = (i + 1 < input.length()) ? input.charAt(i + 1) : '\0';
-                if (next_c == '\0') {
-                    assert false: "Invalid char literal.";
-                }
-                // if the next character is '\', then we need to escape the next character
-                if (next_c == '\\') {
-                    i++;
-                    next_c = (i + 1 < input.length()) ? input.charAt(i + 1) : '\0';
-                    if (next_c == '\0') {
-                        assert false: "Invalid char literal.";
-                    }
-                    switch (next_c) {
-                        case 'n':
-                            token.name += '\n';
-                            break;
-                        case 't':
-                            token.name += '\t';
-                            break;
-                        case 'r':
-                            token.name += '\r';
-                            break;
-                        case '\\':
-                            token.name += '\\';
-                            break;
-                        case '\'':
-                            token.name += '\'';
-                            break;
-                        case '\"':
-                            token.name += '\"';
-                            break;
-                        case '0':
-                            token.name += '\0';
-                            break;
-                        case 'x':
-                            // hexadecimal escape sequence
-                            String hex = input.substring(i + 2, i + 4);
-                            last_token.name += (char) Integer.parseInt(hex, 16);
-                            i += 2;
-                            break;
-                        default:
-                            assert false: "Unknown escape sequence: \\" + next_c;
-                    }
-                    i++;
-                    next_c = (i + 1 < input.length()) ? input.charAt(i + 1) : '\0';
-                } else {
-                    token.name += next_c;
-                    i++;
-                    next_c = (i + 1 < input.length()) ? input.charAt(i + 1) : '\0';
-                }
-                // the next character must be the ending quote
-                if (next_c != '\'') {
-                    assert false: "Invalid char literal.";
-                }
-                i++;
-                token.name += next_c;
-                tokens.add(token);
-            } else if (c == '\"') {
-                // string literal
-                token_t token = new token_t();
-                token.tokentype = TokenType_t.STRING_LITERAL_MID;
-                last_token = token;
-            } else if (character_check.isWhitespace(c)) {
-                // do nothing
-            } else {
-                assert false: "Unknown character: " + c;
             }
+        }
+        // Add completed token to list
+        tokens.add(token);
+        return i;
+    }
+    
+    private int processIdentifierOrString(String input, int i) {
+        char c = input.charAt(i);
+        char next_c = (i + 1 < input.length()) ? input.charAt(i + 1) : '\0';
+        
+        // Check for string literals
+        if (StringLiteralProcessor.isStringStart(c, input, i)) {
+            last_token = StringLiteralProcessor.createStringToken(input, i);
+            return StringLiteralProcessor.processStringStart(input, i);
+        }
+        
+        // Handle regular string literal starting with "
+        if (c == DOUBLE_QUOTE) {
+            last_token = createToken(TokenType_t.STRING_LITERAL_MID, "");
+            return i + 1;
+        }
+        
+        // Process identifier
+        token_t token = createToken(TokenType_t.IDENTIFIER_OR_KEYWORD, String.valueOf(c));
+        while (next_c != '\0' && (Character.isLetterOrDigit(next_c) || next_c == UNDERSCORE)) {
+            token.name += next_c;
+            i++;
+            next_c = (i + 1 < input.length()) ? input.charAt(i + 1) : '\0';
+        }
+        tokens.add(token);
+        return i + 1;
+    }
+    
+    private int processCharacterLiteral(String input, int i) {
+        token_t token = createToken(TokenType_t.CHAR_LITERAL, "");
+        char next_c = (i + 1 < input.length()) ? input.charAt(i + 1) : '\0';
+        
+        if (next_c == '\0') {
+            handleError(MISSING_CONTENT);
+        }
+        
+        // Handle escape sequences
+        if (next_c == BACKSLASH) {
+            i++;
+            if (i + 1 >= input.length()) {
+                handleError(INCOMPLETE_ESCAPE);
+            }
+            int newPosition = EscapeSequenceProcessor.processEscapeInToken(token, input, i);
+            i = newPosition;
+        } else {
+            token.name += next_c;
             i++;
         }
-        // if last_token is not completed, then we append a LF to it.
-        if (last_token != null) {
-            assert !isCompleted(last_token.tokentype): "last_token should not be completed.";
-            last_token.name += "\n";
-            tokens.add(last_token);
+        
+        // Check for closing quote
+        if (i + 1 >= input.length() || input.charAt(i + 1) != SINGLE_QUOTE) {
+            handleError(MISSING_CLOSING_QUOTE);
         }
+        
+        token.name += SINGLE_QUOTE;
+        tokens.add(token);
+        return i + 2;
+    }
+    
+    private void finalizeIncompleteTokens() {
+        if (last_token != null) {
+            if (isCompleted(last_token.tokentype)) {
+                handleError(LAST_TOKEN_COMPLETED);
+            }
+            last_token.name += LINE_FEED;
+            tokens.add(last_token);
+            last_token = null;
+        }
+    }
+    
+    private token_t createToken(TokenType_t type, String value) {
+        token_t token = new token_t();
+        token.tokentype = type;
+        token.name = value;
+        return token;
+    }
+    
+    private void handleError(String message) {
+        throw new TokenizerException(message, currentLine, currentColumn);
     }
 }

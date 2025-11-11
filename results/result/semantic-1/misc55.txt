@@ -1,3 +1,272 @@
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: gcd_recursive
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: a
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: b
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ->
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: if
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: b
+Token Type: PUNCTUATION, Name: ==
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: IDENTIFIER_OR_KEYWORD, Name: a
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: else
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: IDENTIFIER_OR_KEYWORD, Name: gcd_recursive
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: b
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: a
+Token Type: PUNCTUATION, Name: %
+Token Type: IDENTIFIER_OR_KEYWORD, Name: b
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: stern_diatomic_recursive
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ->
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: if
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: ==
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: else
+Token Type: IDENTIFIER_OR_KEYWORD, Name: if
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: ==
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: else
+Token Type: IDENTIFIER_OR_KEYWORD, Name: if
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: %
+Token Type: INTEGER_LITERAL, Name: 2
+Token Type: PUNCTUATION, Name: ==
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: IDENTIFIER_OR_KEYWORD, Name: stern_diatomic_recursive
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: /
+Token Type: INTEGER_LITERAL, Name: 2
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: else
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: half
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: /
+Token Type: INTEGER_LITERAL, Name: 2
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: IDENTIFIER_OR_KEYWORD, Name: stern_diatomic_recursive
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: half
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: +
+Token Type: IDENTIFIER_OR_KEYWORD, Name: stern_diatomic_recursive
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: half
+Token Type: PUNCTUATION, Name: +
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: analyze_stern_sequence
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ->
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: analysis_result
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: while
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: <=
+Token Type: INTEGER_LITERAL, Name: 15
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: stern_val
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: stern_diatomic_recursive
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: analysis_result
+Token Type: PUNCTUATION, Name: +=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: stern_val
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: if
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: >
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: prev_stern
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: stern_diatomic_recursive
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: -
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: common_divisor
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: gcd_recursive
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: stern_val
+Token Type: PUNCTUATION, Name: ,
+Token Type: IDENTIFIER_OR_KEYWORD, Name: prev_stern
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: analysis_result
+Token Type: PUNCTUATION, Name: +=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: common_divisor
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: mut
+Token Type: IDENTIFIER_OR_KEYWORD, Name: factor
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: while
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: factor
+Token Type: PUNCTUATION, Name: <=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: stern_val
+Token Type: PUNCTUATION, Name: &&
+Token Type: IDENTIFIER_OR_KEYWORD, Name: factor
+Token Type: PUNCTUATION, Name: <=
+Token Type: INTEGER_LITERAL, Name: 5
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: if
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: stern_val
+Token Type: PUNCTUATION, Name: %
+Token Type: IDENTIFIER_OR_KEYWORD, Name: factor
+Token Type: PUNCTUATION, Name: ==
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: analysis_result
+Token Type: PUNCTUATION, Name: +=
+Token Type: IDENTIFIER_OR_KEYWORD, Name: factor
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: factor
+Token Type: PUNCTUATION, Name: +=
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: n
+Token Type: PUNCTUATION, Name: +=
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: return
+Token Type: IDENTIFIER_OR_KEYWORD, Name: analysis_result
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: main
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: result
+Token Type: PUNCTUATION, Name: :
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: =
+Token Type: IDENTIFIER_OR_KEYWORD, Name: analyze_stern_sequence
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: printInt
+Token Type: PUNCTUATION, Name: (
+Token Type: IDENTIFIER_OR_KEYWORD, Name: result
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: exit
+Token Type: PUNCTUATION, Name: (
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
 FunctionNode: isConst = false
   IdentifierNode: gcd_recursive
   ParameterNode
@@ -23,7 +292,7 @@ FunctionNode: isConst = false
             PathExprNode
               PathExprSegNode: patternType = IDENT
                 IdentifierNode: b
-            LiteralExprNode: INT = 0
+            LiteralExprNode: I32 = 0
         BlockExprNode
           ExprStmtNode
             ReturnExprNode
@@ -66,22 +335,22 @@ FunctionNode: isConst = false
             PathExprNode
               PathExprSegNode: patternType = IDENT
                 IdentifierNode: n
-            LiteralExprNode: INT = 0
+            LiteralExprNode: I32 = 0
         BlockExprNode
           ExprStmtNode
             ReturnExprNode
-              LiteralExprNode: INT = 0
+              LiteralExprNode: I32 = 0
         IfExprNode
           GroupExprNode
             CompExprNode: operator = EQ
               PathExprNode
                 PathExprSegNode: patternType = IDENT
                   IdentifierNode: n
-              LiteralExprNode: INT = 1
+              LiteralExprNode: I32 = 1
           BlockExprNode
             ExprStmtNode
               ReturnExprNode
-                LiteralExprNode: INT = 1
+                LiteralExprNode: I32 = 1
           IfExprNode
             GroupExprNode
               CompExprNode: operator = EQ
@@ -89,8 +358,8 @@ FunctionNode: isConst = false
                   PathExprNode
                     PathExprSegNode: patternType = IDENT
                       IdentifierNode: n
-                  LiteralExprNode: INT = 2
-                LiteralExprNode: INT = 0
+                  LiteralExprNode: I32 = 2
+                LiteralExprNode: I32 = 0
             BlockExprNode
               ExprStmtNode
                 ReturnExprNode
@@ -102,7 +371,7 @@ FunctionNode: isConst = false
                       PathExprNode
                         PathExprSegNode: patternType = IDENT
                           IdentifierNode: n
-                      LiteralExprNode: INT = 2
+                      LiteralExprNode: I32 = 2
             BlockExprNode
               LetStmtNode
                 IdPatNode: isMutable = false, isReference = false
@@ -114,7 +383,7 @@ FunctionNode: isConst = false
                   PathExprNode
                     PathExprSegNode: patternType = IDENT
                       IdentifierNode: n
-                  LiteralExprNode: INT = 2
+                  LiteralExprNode: I32 = 2
               ExprStmtNode
                 ReturnExprNode
                   ArithExprNode: operator = ADD
@@ -133,7 +402,7 @@ FunctionNode: isConst = false
                         PathExprNode
                           PathExprSegNode: patternType = IDENT
                             IdentifierNode: half
-                        LiteralExprNode: INT = 1
+                        LiteralExprNode: I32 = 1
 FunctionNode: isConst = false
   IdentifierNode: analyze_stern_sequence
   TypePathExprNode
@@ -146,14 +415,14 @@ FunctionNode: isConst = false
       TypePathExprNode
         PathExprSegNode: patternType = IDENT
           IdentifierNode: i32
-      LiteralExprNode: INT = 0
+      LiteralExprNode: I32 = 0
     LetStmtNode
       IdPatNode: isMutable = true, isReference = false
         IdentifierNode: n
       TypePathExprNode
         PathExprSegNode: patternType = IDENT
           IdentifierNode: i32
-      LiteralExprNode: INT = 1
+      LiteralExprNode: I32 = 1
     ExprStmtNode
       LoopExprNode
         GroupExprNode
@@ -161,7 +430,7 @@ FunctionNode: isConst = false
             PathExprNode
               PathExprSegNode: patternType = IDENT
                 IdentifierNode: n
-            LiteralExprNode: INT = 15
+            LiteralExprNode: I32 = 15
         BlockExprNode
           LetStmtNode
             IdPatNode: isMutable = false, isReference = false
@@ -177,7 +446,7 @@ FunctionNode: isConst = false
                 PathExprSegNode: patternType = IDENT
                   IdentifierNode: n
           ExprStmtNode
-            ComAssignExprNode: operator = ADD_ASSIGN
+            AssignExprNode
               PathExprNode
                 PathExprSegNode: patternType = IDENT
                   IdentifierNode: analysis_result
@@ -191,7 +460,7 @@ FunctionNode: isConst = false
                   PathExprNode
                     PathExprSegNode: patternType = IDENT
                       IdentifierNode: n
-                  LiteralExprNode: INT = 1
+                  LiteralExprNode: I32 = 1
               BlockExprNode
                 LetStmtNode
                   IdPatNode: isMutable = false, isReference = false
@@ -207,7 +476,7 @@ FunctionNode: isConst = false
                       PathExprNode
                         PathExprSegNode: patternType = IDENT
                           IdentifierNode: n
-                      LiteralExprNode: INT = 1
+                      LiteralExprNode: I32 = 1
                 LetStmtNode
                   IdPatNode: isMutable = false, isReference = false
                     IdentifierNode: common_divisor
@@ -225,7 +494,7 @@ FunctionNode: isConst = false
                       PathExprSegNode: patternType = IDENT
                         IdentifierNode: prev_stern
                 ExprStmtNode
-                  ComAssignExprNode: operator = ADD_ASSIGN
+                  AssignExprNode
                     PathExprNode
                       PathExprSegNode: patternType = IDENT
                         IdentifierNode: analysis_result
@@ -238,7 +507,7 @@ FunctionNode: isConst = false
             TypePathExprNode
               PathExprSegNode: patternType = IDENT
                 IdentifierNode: i32
-            LiteralExprNode: INT = 1
+            LiteralExprNode: I32 = 1
           ExprStmtNode
             LoopExprNode
               GroupExprNode
@@ -254,7 +523,7 @@ FunctionNode: isConst = false
                     PathExprNode
                       PathExprSegNode: patternType = IDENT
                         IdentifierNode: factor
-                    LiteralExprNode: INT = 5
+                    LiteralExprNode: I32 = 5
               BlockExprNode
                 ExprStmtNode
                   IfExprNode
@@ -267,10 +536,10 @@ FunctionNode: isConst = false
                           PathExprNode
                             PathExprSegNode: patternType = IDENT
                               IdentifierNode: factor
-                        LiteralExprNode: INT = 0
+                        LiteralExprNode: I32 = 0
                     BlockExprNode
                       ExprStmtNode
-                        ComAssignExprNode: operator = ADD_ASSIGN
+                        AssignExprNode
                           PathExprNode
                             PathExprSegNode: patternType = IDENT
                               IdentifierNode: analysis_result
@@ -278,17 +547,17 @@ FunctionNode: isConst = false
                             PathExprSegNode: patternType = IDENT
                               IdentifierNode: factor
                 ExprStmtNode
-                  ComAssignExprNode: operator = ADD_ASSIGN
+                  AssignExprNode
                     PathExprNode
                       PathExprSegNode: patternType = IDENT
                         IdentifierNode: factor
-                    LiteralExprNode: INT = 1
+                    LiteralExprNode: I32 = 1
           ExprStmtNode
-            ComAssignExprNode: operator = ADD_ASSIGN
+            AssignExprNode
               PathExprNode
                 PathExprSegNode: patternType = IDENT
                   IdentifierNode: n
-              LiteralExprNode: INT = 1
+              LiteralExprNode: I32 = 1
     ExprStmtNode
       ReturnExprNode
         PathExprNode
@@ -320,4 +589,4 @@ FunctionNode: isConst = false
         PathExprNode
           PathExprSegNode: patternType = IDENT
             IdentifierNode: exit
-        LiteralExprNode: INT = 0
+        LiteralExprNode: I32 = 0

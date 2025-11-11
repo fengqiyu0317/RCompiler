@@ -1,4 +1,456 @@
-[错误] if10.rx: 解析错误: Expected ')' at end of grouped expression
-[错误] if14.rx: 系统错误: Expected '}' at end of block expression
-[错误] loop10.rx: 解析错误: Expected '(' at start of grouped expression
-[错误] loop8.rx: 系统错误: Expected '{' at start of block expression
+编译主程序...
+javac -d target/classes -cp target/classes -encoding UTF-8 src/main/java/add.java src/main/java/ast/AST.java src/main/java/ast/ASTPrintException.java src/main/java/Main.java src/main/java/parser/BaseParser.java src/main/java/parser/ErrorReporter.java src/main/java/parser/ExpressionParser.java src/main/java/parser/Parser.java src/main/java/parser/ParserConfiguration.java src/main/java/parser/ParserException.java src/main/java/parser/PatternParser.java src/main/java/parser/StatementParser.java src/main/java/parser/TokenStream.java src/main/java/parser/TypeParser.java src/main/java/tokenizer/character_check.java src/main/java/tokenizer/EscapeSequenceProcessor.java src/main/java/tokenizer/StringLiteralProcessor.java src/main/java/tokenizer/Tokenizer.java src/main/java/tokenizer/TokenizerConstants.java src/main/java/tokenizer/TokenizerException.java src/main/java/types/literal_t.java src/main/java/types/oper_t.java src/main/java/types/patternSeg_t.java src/main/java/types/token_t.java src/main/java/utils/PrintAST.java src/main/java/utils/VisitorBase.java
+编译完成！
+编译测试程序...
+javac -d target/classes -cp target/classes -encoding UTF-8 src/test/java/BatchTestRunner.java src/test/java/ErrorTestRunner.java src/test/java/TestRunner.java
+测试编译完成！
+运行批量测试...
+java -cp target/classes -Dfile.encoding=UTF-8 BatchTestRunner
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/array1/array1.rx -> results/result/semantic-1/array1.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/array2/array2.rx -> results/result/semantic-1/array2.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/array3/array3.rx -> results/result/semantic-1/array3.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/array4/array4.rx -> results/result/semantic-1/array4.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/array5/array5.rx -> results/result/semantic-1/array5.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/array6/array6.rx -> results/result/semantic-1/array6.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/array7/array7.rx -> results/result/semantic-1/array7.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/array8/array8.rx -> results/result/semantic-1/array8.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/autoref1/autoref1.rx -> results/result/semantic-1/autoref1.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/autoref2/autoref2.rx -> results/result/semantic-1/autoref2.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/autoref3/autoref3.rx -> results/result/semantic-1/autoref3.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/autoref4/autoref4.rx -> results/result/semantic-1/autoref4.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/autoref5/autoref5.rx -> results/result/semantic-1/autoref5.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/autoref6/autoref6.rx -> results/result/semantic-1/autoref6.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/autoref7/autoref7.rx -> results/result/semantic-1/autoref7.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/autoref8/autoref8.rx -> results/result/semantic-1/autoref8.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/autoref9/autoref9.rx -> results/result/semantic-1/autoref9.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic1/basic1.rx -> results/result/semantic-1/basic1.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic10/basic10.rx -> results/result/semantic-1/basic10.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic11/basic11.rx -> results/result/semantic-1/basic11.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic12/basic12.rx -> results/result/semantic-1/basic12.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic13/basic13.rx -> results/result/semantic-1/basic13.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic14/basic14.rx -> results/result/semantic-1/basic14.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic15/basic15.rx -> results/result/semantic-1/basic15.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic16/basic16.rx -> results/result/semantic-1/basic16.txt
+[错误] basic17.rx: System error: Failed to parse statement or expression in block
+[错误] basic17.rx: java.lang.RuntimeException: Failed to parse statement or expression in block
+[错误] basic17.rx: 	at ExpressionParser.parseBlockExpression(ExpressionParser.java:606)
+[错误] basic17.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:132)
+[错误] basic17.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:94)
+[错误] basic17.rx: 	at StatementParser.parseStatement(StatementParser.java:45)
+[错误] basic17.rx: 	at Parser.parse(Parser.java:41)
+[错误] basic17.rx: 	at ReadRustFile.read_init(Main.java:34)
+[错误] basic17.rx: 	at Main.main(Main.java:9)
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic17/basic17.rx -> results/result/semantic-1/basic17.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic18/basic18.rx -> results/result/semantic-1/basic18.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic19/basic19.rx -> results/result/semantic-1/basic19.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic2/basic2.rx -> results/result/semantic-1/basic2.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic20/basic20.rx -> results/result/semantic-1/basic20.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic21/basic21.rx -> results/result/semantic-1/basic21.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic22/basic22.rx -> results/result/semantic-1/basic22.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic23/basic23.rx -> results/result/semantic-1/basic23.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic24/basic24.rx -> results/result/semantic-1/basic24.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic25/basic25.rx -> results/result/semantic-1/basic25.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic26/basic26.rx -> results/result/semantic-1/basic26.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic27/basic27.rx -> results/result/semantic-1/basic27.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic28/basic28.rx -> results/result/semantic-1/basic28.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic29/basic29.rx -> results/result/semantic-1/basic29.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic3/basic3.rx -> results/result/semantic-1/basic3.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic30/basic30.rx -> results/result/semantic-1/basic30.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic31/basic31.rx -> results/result/semantic-1/basic31.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic32/basic32.rx -> results/result/semantic-1/basic32.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic33/basic33.rx -> results/result/semantic-1/basic33.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic34/basic34.rx -> results/result/semantic-1/basic34.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic35/basic35.rx -> results/result/semantic-1/basic35.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic36/basic36.rx -> results/result/semantic-1/basic36.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic37/basic37.rx -> results/result/semantic-1/basic37.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic38/basic38.rx -> results/result/semantic-1/basic38.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic39/basic39.rx -> results/result/semantic-1/basic39.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic4/basic4.rx -> results/result/semantic-1/basic4.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic40/basic40.rx -> results/result/semantic-1/basic40.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic5/basic5.rx -> results/result/semantic-1/basic5.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic6/basic6.rx -> results/result/semantic-1/basic6.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic7/basic7.rx -> results/result/semantic-1/basic7.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic8/basic8.rx -> results/result/semantic-1/basic8.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/basic9/basic9.rx -> results/result/semantic-1/basic9.txt
+[错误] expr1.rx: Expected '}' but found 'printInt'
+[错误] expr1.rx: ParserException: Expected '}' but found 'printInt'
+[错误] expr1.rx: 	at TokenStream.consume(TokenStream.java:41)
+[错误] expr1.rx: 	at ExpressionParser.parseBlockExpression(ExpressionParser.java:615)
+[错误] expr1.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:94)
+
+[错误] expr1.rx: 	at StatementParser.parseStatement(StatementParser.java:45)
+[错误] expr1.rx: 	at Parser.parse(Parser.java:41)
+[错误] expr1.rx: 	at ReadRustFile.read_init(Main.java:34)
+[错误] expr1.rx: 	at Main.main(Main.java:9)
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr1/expr1.rx -> results/result/semantic-1/expr1.txt
+[错误] expr11.rx: System error: Failed to parse statement or expression in block
+[错误] expr11.rx: java.lang.RuntimeException: Failed to parse statement or expression in block
+[错误] expr11.rx: 	at ExpressionParser.parseBlockExpression(ExpressionParser.java:606)
+[错误] expr11.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:132)
+[错误] expr11.rx: 	at StatementParser.parseStatement(StatementParser.java:45)
+ava:94)
+[错误] expr11.rx: 	at Parser.parse(Parser.java:41)
+[错误] expr11.rx: 	at ReadRustFile.read_init(Main.java:34)
+[错误] expr11.rx: 	at Main.main(Main.java:9)
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr11/expr11.rx -> results/result/semantic-1/expr11.txt
+[错误] expr12.rx: System error: Failed to parse statement or expression in block
+[错误] expr12.rx: java.lang.RuntimeException: Failed to parse statement or expression in block
+[错误] expr12.rx: 	at ExpressionParser.parseBlockExpression(ExpressionParser.java:606)
+[错误] expr12.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:132)
+[错误] expr12.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:94)
+[错误] expr12.rx: 	at Parser.parse(Parser.java:41)
+t(StatementParser.java:45)
+[错误] expr12.rx: 	at ReadRustFile.read_init(Main.java:34)
+[错误] expr12.rx: 	at Main.main(Main.java:9)
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr12/expr12.rx -> results/result/semantic-1/expr12.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr13/expr13.rx -> results/result/semantic-1/expr13.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr14/expr14.rx -> results/result/semantic-1/expr14.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr17/expr17.rx -> results/result/semantic-1/expr17.txt
+[错误] expr18.rx: System error: unknown ExprNode
+[错误] expr18.rx: ASTPrintException: unknown ExprNode
+[错误] expr18.rx: 	at PrintAST.visit(PrintAST.java:231)
+[错误] expr18.rx: 	at PrintAST.visit(PrintAST.java:569)
+[错误] expr18.rx: 	at PrintAST.visit(PrintAST.java:559)
+[错误] expr18.rx: 	at PrintAST.visit(PrintAST.java:267)
+[错误] expr18.rx: 	at PrintAST.visit(PrintAST.java:229)
+[错误] expr18.rx: 	at PrintAST.visit(PrintAST.java:66)
+[错误] expr18.rx: 	at PrintAST.visit(PrintAST.java:31)
+[错误] expr18.rx: 	at PrintAST.visit(PrintAST.java:292)
+[错误] expr18.rx: 	at PrintAST.visit(PrintAST.java:89)
+[错误] expr18.rx: 	at PrintAST.visit(PrintAST.java:44)
+[错误] expr18.rx: 	at PrintAST.visit(PrintAST.java:35)
+[错误] expr18.rx: 	at ReadRustFile.read_init(Main.java:47)
+[错误] expr18.rx: 	at Main.main(Main.java:9)
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr18/expr18.rx -> results/result/semantic-1/expr18.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr19/expr19.rx -> results/result/semantic-1/expr19.txt
+[错误] expr23.rx: System error: unknown ExprNode
+[错误] expr23.rx: ASTPrintException: unknown ExprNode
+[错误] expr23.rx: 	at PrintAST.visit(PrintAST.java:231)
+[错误] expr23.rx: 	at PrintAST.visit(PrintAST.java:451)
+[错误] expr23.rx: 	at PrintAST.visit(PrintAST.java:390)
+[错误] expr23.rx: 	at PrintAST.visit(PrintAST.java:261)
+[错误] expr23.rx: 	at PrintAST.visit(PrintAST.java:229)
+[错误] expr23.rx: 	at PrintAST.visit(PrintAST.java:66)
+[错误] expr23.rx: 	at PrintAST.visit(PrintAST.java:31)
+[错误] expr23.rx: 	at PrintAST.visit(PrintAST.java:292)
+[错误] expr23.rx: 	at PrintAST.visit(PrintAST.java:89)
+[错误] expr23.rx: 	at PrintAST.visit(PrintAST.java:44)
+[错误] expr23.rx: 	at PrintAST.visit(PrintAST.java:35)
+[错误] expr23.rx: 	at ReadRustFile.read_init(Main.java:47)
+[错误] expr23.rx: 	at Main.main(Main.java:9)
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr23/expr23.rx -> results/result/semantic-1/expr23.txt
+[错误] expr3.rx: System error: Failed to parse statement or expression in block
+[错误] expr3.rx: java.lang.RuntimeException: Failed to parse statement or expression in block
+[错误] expr3.rx: 	at ExpressionParser.parseBlockExpression(ExpressionParser.java:609)
+[错误] expr3.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:132)
+[错误] expr3.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:94)
+[错误] expr3.rx: 	at StatementParser.parseStatement(StatementParser.java:45)
+[错误] expr3.rx: 	at Parser.parse(Parser.java:41)
+[错误] expr3.rx: 	at ReadRustFile.read_init(Main.java:34)
+[错误] expr3.rx: 	at Main.main(Main.java:9)
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr3/expr3.rx -> results/result/semantic-1/expr3.txt
+[错误] expr31.rx: System error: Failed to parse statement or expression in block
+[错误] expr31.rx: java.lang.RuntimeException: Failed to parse statement or expression in block
+[错误] expr31.rx: 	at ExpressionParser.parseBlockExpression(ExpressionParser.java:609)
+[错误] expr31.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:132)
+[错误] expr31.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:94)
+[错误] expr31.rx: 	at StatementParser.parseStatement(StatementParser.java:45)
+[错误] expr31.rx: 	at Parser.parse(Parser.java:41)
+[错误] expr31.rx: 	at ReadRustFile.read_init(Main.java:34)
+[错误] expr31.rx: 	at Main.main(Main.java:9)
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr31/expr31.rx -> results/result/semantic-1/expr31.txt
+[错误] expr32.rx: System error: Failed to parse statement or expression in block
+[错误] expr32.rx: java.lang.RuntimeException: Failed to parse statement or expression in block
+[错误] expr32.rx: 	at ExpressionParser.parseBlockExpression(ExpressionParser.java:609)
+[错误] expr32.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:132)
+[错误] expr32.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:94)
+[错误] expr32.rx: 	at StatementParser.parseStatement(StatementParser.java:45)
+[错误] expr32.rx: 	at Parser.parse(Parser.java:41)
+[错误] expr32.rx: 	at ReadRustFile.read_init(Main.java:34)
+[错误] expr32.rx: 	at Main.main(Main.java:9)
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr32/expr32.rx -> results/result/semantic-1/expr32.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr33/expr33.rx -> results/result/semantic-1/expr33.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr34/expr34.rx -> results/result/semantic-1/expr34.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr35/expr35.rx -> results/result/semantic-1/expr35.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr36/expr36.rx -> results/result/semantic-1/expr36.txt
+[错误] expr37.rx: Exception in thread "main" java.lang.ClassFormatError: Truncated class file
+[错误] expr37.rx: 	at java.base/java.lang.ClassLoader.defineClass1(Native Method)
+[错误] expr37.rx: 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1027)
+[错误] expr37.rx: 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:150)
+[错误] expr37.rx: 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:862)
+[错误] expr37.rx: 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassOnClassPathOrNull(BuiltinClassLoader.java:760)
+[错误] expr37.rx: 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:681)
+[错误] expr37.rx: 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:639)
+[错误] expr37.rx: 	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+[错误] expr37.rx: 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+[错误] expr37.rx: 	at java.base/java.lang.ClassLoader.defineClass1(Native Method)
+[错误] expr37.rx: 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1027)
+[错误] expr37.rx: 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:150)
+[错误] expr37.rx: 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:862)
+[错误] expr37.rx: 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassOnClassPathOrNull(BuiltinClassLoader.java:760)
+[错误] expr37.rx: 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:681)
+[错误] expr37.rx: 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:639)
+[错误] expr37.rx: 	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+[错误] expr37.rx: 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+[错误] expr37.rx: 	at Parser.<init>(Parser.java:20)
+[错误] expr37.rx: 	at ReadRustFile.read_init(Main.java:29)
+[错误] expr37.rx: 	at Main.main(Main.java:9)
+警告: 处理 tests/testcases/RCompiler-Testcases/semantic-1/expr37/expr37.rx 时退出码为 1
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr38/expr38.rx -> results/result/semantic-1/expr38.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr4/expr4.rx -> results/result/semantic-1/expr4.txt
+[错误] expr9.rx: Expected '}' but found 'add'
+[错误] expr9.rx: ParserException: Expected '}' but found 'add'
+[错误] expr9.rx: 	at TokenStream.consume(TokenStream.java:41)
+[错误] expr9.rx: 	at ExpressionParser.parseBlockExpression(ExpressionParser.java:615)
+[错误] expr9.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:132)
+[错误] expr9.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:94)
+[错误] expr9.rx: 	at StatementParser.parseStatement(StatementParser.java:45)
+[错误] expr9.rx: 	at Parser.parse(Parser.java:41)
+[错误] expr9.rx: 	at ReadRustFile.read_init(Main.java:34)
+[错误] expr9.rx: 	at Main.main(Main.java:9)
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/expr9/expr9.rx -> results/result/semantic-1/expr9.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/if1/if1.rx -> results/result/semantic-1/if1.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/if10/if10.rx -> results/result/semantic-1/if10.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/if11/if11.rx -> results/result/semantic-1/if11.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/if12/if12.rx -> results/result/semantic-1/if12.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/if13/if13.rx -> results/result/semantic-1/if13.txt
+[错误] if14.rx: System error: Failed to parse statement or expression in block
+[错误] if14.rx: java.lang.RuntimeException: Failed to parse statement or expression in block
+[错误] if14.rx: 	at ExpressionParser.parseBlockExpression(ExpressionParser.java:606)
+[错误] if14.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:132)
+[错误] if14.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:94)
+[错误] if14.rx: 	at StatementParser.parseStatement(StatementParser.java:45)
+[错误] if14.rx: 	at Parser.parse(Parser.java:41)
+[错误] if14.rx: 	at ReadRustFile.read_init(Main.java:34)
+[错误] if14.rx: 	at Main.main(Main.java:9)
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/if14/if14.rx -> results/result/semantic-1/if14.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/if15/if15.rx -> results/result/semantic-1/if15.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/if2/if2.rx -> results/result/semantic-1/if2.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/if3/if3.rx -> results/result/semantic-1/if3.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/if4/if4.rx -> results/result/semantic-1/if4.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/if5/if5.rx -> results/result/semantic-1/if5.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/if6/if6.rx -> results/result/semantic-1/if6.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/if7/if7.rx -> results/result/semantic-1/if7.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/if8/if8.rx -> results/result/semantic-1/if8.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/if9/if9.rx -> results/result/semantic-1/if9.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/loop1/loop1.rx -> results/result/semantic-1/loop1.txt
+[错误] loop10.rx: System error: Failed to parse statement or expression in block
+[错误] loop10.rx: java.lang.RuntimeException: Failed to parse statement or expression in block
+[错误] loop10.rx: 	at ExpressionParser.parseBlockExpression(ExpressionParser.java:606)
+[错误] loop10.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:132)
+[错误] loop10.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:94)
+[错误] loop10.rx: 	at StatementParser.parseStatement(StatementParser.java:45)
+[错误] loop10.rx: 	at Parser.parse(Parser.java:41)
+[错误] loop10.rx: 	at ReadRustFile.read_init(Main.java:34)
+[错误] loop10.rx: 	at Main.main(Main.java:9)
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/loop10/loop10.rx -> results/result/semantic-1/loop10.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/loop2/loop2.rx -> results/result/semantic-1/loop2.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/loop3/loop3.rx -> results/result/semantic-1/loop3.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/loop4/loop4.rx -> results/result/semantic-1/loop4.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/loop5/loop5.rx -> results/result/semantic-1/loop5.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/loop6/loop6.rx -> results/result/semantic-1/loop6.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/loop7/loop7.rx -> results/result/semantic-1/loop7.txt
+[错误] loop8.rx: System error: Failed to parse statement or expression in block
+[错误] loop8.rx: java.lang.RuntimeException: Failed to parse statement or expression in block
+[错误] loop8.rx: 	at ExpressionParser.parseBlockExpression(ExpressionParser.java:606)
+[错误] loop8.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:132)
+[错误] loop8.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:94)
+[错误] loop8.rx: 	at StatementParser.parseStatement(StatementParser.java:45)
+[错误] loop8.rx: 	at Parser.parse(Parser.java:41)
+[错误] loop8.rx: 	at ReadRustFile.read_init(Main.java:34)
+[错误] loop8.rx: 	at Main.main(Main.java:9)
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/loop8/loop8.rx -> results/result/semantic-1/loop8.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/loop9/loop9.rx -> results/result/semantic-1/loop9.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc1/misc1.rx -> results/result/semantic-1/misc1.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc10/misc10.rx -> results/result/semantic-1/misc10.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc11/misc11.rx -> results/result/semantic-1/misc11.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc12/misc12.rx -> results/result/semantic-1/misc12.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc13/misc13.rx -> results/result/semantic-1/misc13.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc14/misc14.rx -> results/result/semantic-1/misc14.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc15/misc15.rx -> results/result/semantic-1/misc15.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc16/misc16.rx -> results/result/semantic-1/misc16.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc17/misc17.rx -> results/result/semantic-1/misc17.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc18/misc18.rx -> results/result/semantic-1/misc18.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc19/misc19.rx -> results/result/semantic-1/misc19.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc2/misc2.rx -> results/result/semantic-1/misc2.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc20/misc20.rx -> results/result/semantic-1/misc20.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc21/misc21.rx -> results/result/semantic-1/misc21.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc22/misc22.rx -> results/result/semantic-1/misc22.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc23/misc23.rx -> results/result/semantic-1/misc23.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc24/misc24.rx -> results/result/semantic-1/misc24.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc25/misc25.rx -> results/result/semantic-1/misc25.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc26/misc26.rx -> results/result/semantic-1/misc26.txt
+[错误] misc27.rx: System error: Failed to parse statement or expression in block
+[错误] misc27.rx: java.lang.RuntimeException: Failed to parse statement or expression in block
+[错误] misc27.rx: 	at ExpressionParser.parseBlockExpression(ExpressionParser.java:606)
+[错误] misc27.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:132)
+[错误] misc27.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:94)
+[错误] misc27.rx: 	at StatementParser.parseAssoItemNode(StatementParser.java:372)
+[错误] misc27.rx: 	at StatementParser.parseImplStatement(StatementParser.java:354)
+[错误] misc27.rx: 	at StatementParser.parseStatement(StatementParser.java:60)
+[错误] misc27.rx: 	at ReadRustFile.read_init(Main.java:34)
+[错误] misc27.rx: 	at Main.main(Main.java:9)
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc27/misc27.rx -> results/result/semantic-1/misc27.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc28/misc28.rx -> results/result/semantic-1/misc28.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc29/misc29.rx -> results/result/semantic-1/misc29.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc3/misc3.rx -> results/result/semantic-1/misc3.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc30/misc30.rx -> results/result/semantic-1/misc30.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc31/misc31.rx -> results/result/semantic-1/misc31.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc32/misc32.rx -> results/result/semantic-1/misc32.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc33/misc33.rx -> results/result/semantic-1/misc33.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc34/misc34.rx -> results/result/semantic-1/misc34.txt
+[错误] misc35.rx: System error: Failed to parse statement or expression in block
+[错误] misc35.rx: java.lang.RuntimeException: Failed to parse statement or expression in block
+[错误] misc35.rx: 	at ExpressionParser.parseBlockExpression(ExpressionParser.java:606)
+[错误] misc35.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:132)
+[错误] misc35.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:94)
+[错误] misc35.rx: 	at StatementParser.parseAssoItemNode(StatementParser.java:372)
+[错误] misc35.rx: 	at StatementParser.parseImplStatement(StatementParser.java:354)
+[错误] misc35.rx: 	at StatementParser.parseStatement(StatementParser.java:60)
+[错误] misc35.rx: 	at Parser.parse(Parser.java:41)
+[错误] misc35.rx: 	at ReadRustFile.read_init(Main.java:34)
+[错误] misc35.rx: 	at Main.main(Main.java:9)
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc35/misc35.rx -> results/result/semantic-1/misc35.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc36/misc36.rx -> results/result/semantic-1/misc36.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc37/misc37.rx -> results/result/semantic-1/misc37.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc38/misc38.rx -> results/result/semantic-1/misc38.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc39/misc39.rx -> results/result/semantic-1/misc39.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc4/misc4.rx -> results/result/semantic-1/misc4.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc40/misc40.rx -> results/result/semantic-1/misc40.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc41/misc41.rx -> results/result/semantic-1/misc41.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc42/misc42.rx -> results/result/semantic-1/misc42.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc43/misc43.rx -> results/result/semantic-1/misc43.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc44/misc44.rx -> results/result/semantic-1/misc44.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc45/misc45.rx -> results/result/semantic-1/misc45.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc46/misc46.rx -> results/result/semantic-1/misc46.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc47/misc47.rx -> results/result/semantic-1/misc47.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc48/misc48.rx -> results/result/semantic-1/misc48.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc49/misc49.rx -> results/result/semantic-1/misc49.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc5/misc5.rx -> results/result/semantic-1/misc5.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc50/misc50.rx -> results/result/semantic-1/misc50.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc51/misc51.rx -> results/result/semantic-1/misc51.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc52/misc52.rx -> results/result/semantic-1/misc52.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc53/misc53.rx -> results/result/semantic-1/misc53.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc54/misc54.rx -> results/result/semantic-1/misc54.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc55/misc55.rx -> results/result/semantic-1/misc55.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc56/misc56.rx -> results/result/semantic-1/misc56.txt
+[错误] misc57.rx: System error: Failed to parse statement or expression in block
+[错误] misc57.rx: java.lang.RuntimeException: Failed to parse statement or expression in block
+[错误] misc57.rx: 	at ExpressionParser.parseBlockExpression(ExpressionParser.java:606)
+[错误] misc57.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:132)
+[错误] misc57.rx: 	at StatementParser.parseFunctionStatement(StatementParser.java:94)
+[错误] misc57.rx: 	at StatementParser.parseStatement(StatementParser.java:45)
+[错误] misc57.rx: 	at Parser.parse(Parser.java:41)
+[错误] misc57.rx: 	at ReadRustFile.read_init(Main.java:34)
+[错误] misc57.rx: 	at Main.main(Main.java:9)
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc57/misc57.rx -> results/result/semantic-1/misc57.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc58/misc58.rx -> results/result/semantic-1/misc58.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc59/misc59.rx -> results/result/semantic-1/misc59.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc6/misc6.rx -> results/result/semantic-1/misc6.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc60/misc60.rx -> results/result/semantic-1/misc60.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc62/misc62.rx -> results/result/semantic-1/misc62.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc63/misc63.rx -> results/result/semantic-1/misc63.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc64/misc64.rx -> results/result/semantic-1/misc64.txt
+[错误] misc65.rx: System error: unknown ExprNode
+[错误] misc65.rx: ASTPrintException: unknown ExprNode
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:231)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:451)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:390)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:261)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:229)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:491)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:396)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:261)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:229)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:74)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:33)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:292)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:313)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:242)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:227)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:74)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:33)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:292)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:89)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:44)
+[错误] misc65.rx: 	at PrintAST.visit(PrintAST.java:35)
+[错误] misc65.rx: 	at ReadRustFile.read_init(Main.java:47)
+[错误] misc65.rx: 	at Main.main(Main.java:9)
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc65/misc65.rx -> results/result/semantic-1/misc65.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc7/misc7.rx -> results/result/semantic-1/misc7.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc8/misc8.rx -> results/result/semantic-1/misc8.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/misc9/misc9.rx -> results/result/semantic-1/misc9.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/return1/return1.rx -> results/result/semantic-1/return1.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/return10/return10.rx -> results/result/semantic-1/return10.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/return11/return11.rx -> results/result/semantic-1/return11.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/return12/return12.rx -> results/result/semantic-1/return12.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/return13/return13.rx -> results/result/semantic-1/return13.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/return14/return14.rx -> results/result/semantic-1/return14.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/return15/return15.rx -> results/result/semantic-1/return15.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/return2/return2.rx -> results/result/semantic-1/return2.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/return3/return3.rx -> results/result/semantic-1/return3.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/return4/return4.rx -> results/result/semantic-1/return4.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/return5/return5.rx -> results/result/semantic-1/return5.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/return6/return6.rx -> results/result/semantic-1/return6.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/return7/return7.rx -> results/result/semantic-1/return7.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/return8/return8.rx -> results/result/semantic-1/return8.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/return9/return9.rx -> results/result/semantic-1/return9.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type1/type1.rx -> results/result/semantic-1/type1.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type10/type10.rx -> results/result/semantic-1/type10.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type11/type11.rx -> results/result/semantic-1/type11.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type12/type12.rx -> results/result/semantic-1/type12.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type13/type13.rx -> results/result/semantic-1/type13.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type14/type14.rx -> results/result/semantic-1/type14.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type15/type15.rx -> results/result/semantic-1/type15.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type16/type16.rx -> results/result/semantic-1/type16.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type17/type17.rx -> results/result/semantic-1/type17.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type18/type18.rx -> results/result/semantic-1/type18.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type19/type19.rx -> results/result/semantic-1/type19.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type2/type2.rx -> results/result/semantic-1/type2.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type20/type20.rx -> results/result/semantic-1/type20.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type3/type3.rx -> results/result/semantic-1/type3.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type4/type4.rx -> results/result/semantic-1/type4.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type5/type5.rx -> results/result/semantic-1/type5.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type6/type6.rx -> results/result/semantic-1/type6.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type7/type7.rx -> results/result/semantic-1/type7.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type8/type8.rx -> results/result/semantic-1/type8.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-1/type9/type9.rx -> results/result/semantic-1/type9.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive1/comprehensive1.rx -> results/result/semantic-2/comprehensive1.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive10/comprehensive10.rx -> results/result/semantic-2/comprehensive10.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive11/comprehensive11.rx -> results/result/semantic-2/comprehensive11.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive12/comprehensive12.rx -> results/result/semantic-2/comprehensive12.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive14/comprehensive14.rx -> results/result/semantic-2/comprehensive14.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive15/comprehensive15.rx -> results/result/semantic-2/comprehensive15.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive16/comprehensive16.rx -> results/result/semantic-2/comprehensive16.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive19/comprehensive19.rx -> results/result/semantic-2/comprehensive19.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive20/comprehensive20.rx -> results/result/semantic-2/comprehensive20.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive21/comprehensive21.rx -> results/result/semantic-2/comprehensive21.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive22/comprehensive22.rx -> results/result/semantic-2/comprehensive22.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive23/comprehensive23.rx -> results/result/semantic-2/comprehensive23.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive24/comprehensive24.rx -> results/result/semantic-2/comprehensive24.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive29/comprehensive29.rx -> results/result/semantic-2/comprehensive29.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive30/comprehensive30.rx -> results/result/semantic-2/comprehensive30.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive31/comprehensive31.rx -> results/result/semantic-2/comprehensive31.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive32/comprehensive32.rx -> results/result/semantic-2/comprehensive32.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive33/comprehensive33.rx -> results/result/semantic-2/comprehensive33.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive34/comprehensive34.rx -> results/result/semantic-2/comprehensive34.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive35/comprehensive35.rx -> results/result/semantic-2/comprehensive35.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive36/comprehensive36.rx -> results/result/semantic-2/comprehensive36.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive37/comprehensive37.rx -> results/result/semantic-2/comprehensive37.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive38/comprehensive38.rx -> results/result/semantic-2/comprehensive38.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive39/comprehensive39.rx -> results/result/semantic-2/comprehensive39.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive4/comprehensive4.rx -> results/result/semantic-2/comprehensive4.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive40/comprehensive40.rx -> results/result/semantic-2/comprehensive40.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive41/comprehensive41.rx -> results/result/semantic-2/comprehensive41.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive42/comprehensive42.rx -> results/result/semantic-2/comprehensive42.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive43/comprehensive43.rx -> results/result/semantic-2/comprehensive43.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive44/comprehensive44.rx -> results/result/semantic-2/comprehensive44.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive45/comprehensive45.rx -> results/result/semantic-2/comprehensive45.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive46/comprehensive46.rx -> results/result/semantic-2/comprehensive46.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive47/comprehensive47.rx -> results/result/semantic-2/comprehensive47.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive48/comprehensive48.rx -> results/result/semantic-2/comprehensive48.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive49/comprehensive49.rx -> results/result/semantic-2/comprehensive49.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive5/comprehensive5.rx -> results/result/semantic-2/comprehensive5.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive50/comprehensive50.rx -> results/result/semantic-2/comprehensive50.txt
+成功处理: tests/testcases/RCompiler-Testcases/semantic-2/comprehensive9/comprehensive9.rx -> results/result/semantic-2/comprehensive9.txt
+测试完成，结果已保存到 results/result 目录

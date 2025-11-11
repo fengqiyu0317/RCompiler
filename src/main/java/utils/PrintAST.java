@@ -1,3 +1,5 @@
+
+
 // a program that prints structure of AST
 // way to print is following:
 // for each node, first print node type
@@ -318,7 +320,10 @@ public class PrintAST extends VisitorBase {
         print(node.literalType);
         System.out.print(" = ");
         switch (node.literalType) {
-            case INT -> System.out.println(node.value_int);
+            case INT -> System.out.println(node.value_long);
+            case UINT -> System.out.println(node.value_long);
+            case USIZE -> System.out.println(node.value_long);
+            case ISIZE -> System.out.println(node.value_long);
             case BOOL -> System.out.println(node.value_bool);
             case CHAR -> System.out.println("'" + node.value_string + "'");
             case STRING -> System.out.println("\"" + node.value_string + "\"");
@@ -331,7 +336,10 @@ public class PrintAST extends VisitorBase {
             case CHAR -> System.out.print("CHAR");
             case STRING -> System.out.print("STRING");
             case CSTRING -> System.out.print("CSTRING");
-            case INT -> System.out.print("INT");
+            case INT -> System.out.print("I32");
+            case UINT -> System.out.print("U32");
+            case USIZE -> System.out.print("USIZE");
+            case ISIZE -> System.out.print("ISIZE");
             case BOOL -> System.out.print("BOOL");
             default -> {throw new ASTPrintException("unknown literal type");}
         }

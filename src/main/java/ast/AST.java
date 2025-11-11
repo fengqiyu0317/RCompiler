@@ -1,9 +1,6 @@
 // package ast;
 
 import java.util.Vector;
-// import tokenizer.literal_t;
-// import tokenizer.oper_t;
-// import tokenizer.patternSeg_t;
 // use the tokens we get, construct the AST.
 
 // ASTNode is the base class for all AST nodes.
@@ -94,6 +91,7 @@ class WildPatNode extends PatternNode {
 // <refpat> = (& | &&) (mut)? <pattern>
 class RefPatNode extends PatternNode {
     boolean isMutable;
+    boolean isDoubleReference;
     PatternNode innerPattern;
 }
 
@@ -180,12 +178,12 @@ class ExprWithoutBlockNode extends ExprNode {
     ExprNode expr;
 }
 // LiteralExprNode represents a literal expression <literalexpr>.
-// a literal has several types: char_literal, string_literal, raw_string_literal, c_string_literal, raw_c_string_literal, integer_literal, boolean_literal. These literal already exist in the token level, so we just need to store their type and value here. 
-// the literalType can be one of the following: CHAR, STRING, CSTRING, INT, BOOL.
+// a literal has several types: char_literal, string_literal, raw_string_literal, c_string_literal, raw_c_string_literal, integer_literal, boolean_literal. These literal already exist in the token level, so we just need to store their type and value here.
+// the literalType can be one of the following: CHAR, STRING, CSTRING, INT_I32, INT_U32, INT_USIZE, INT_ISIZE, BOOL.
 class LiteralExprNode extends ExprWithoutBlockNode {
     literal_t literalType;
     String value_string; // for string and char literal
-    int value_int; // for integer literal
+    long value_long; // for all integer literals (INT_I32, INT_U32, INT_USIZE, INT_ISIZE)
     boolean value_bool; // for boolean literal
 }
 

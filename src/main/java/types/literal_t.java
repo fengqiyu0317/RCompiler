@@ -4,5 +4,8 @@ public enum literal_t {
     STRING,
     CSTRING,
     INT,
+    UINT,
+    ISIZE,
+    USIZE,
     BOOL
 }

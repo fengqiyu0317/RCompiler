@@ -1,3 +1,38 @@
+Token Type: IDENTIFIER_OR_KEYWORD, Name: fn
+Token Type: IDENTIFIER_OR_KEYWORD, Name: main
+Token Type: PUNCTUATION, Name: (
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: {
+Token Type: IDENTIFIER_OR_KEYWORD, Name: let
+Token Type: IDENTIFIER_OR_KEYWORD, Name: arr
+Token Type: PUNCTUATION, Name: :
+Token Type: PUNCTUATION, Name: [
+Token Type: IDENTIFIER_OR_KEYWORD, Name: i32
+Token Type: PUNCTUATION, Name: ;
+Token Type: INTEGER_LITERAL, Name: 3
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: =
+Token Type: PUNCTUATION, Name: [
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ,
+Token Type: INTEGER_LITERAL, Name: 2
+Token Type: PUNCTUATION, Name: ,
+Token Type: INTEGER_LITERAL, Name: 3
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: arr
+Token Type: PUNCTUATION, Name: [
+Token Type: INTEGER_LITERAL, Name: 1
+Token Type: PUNCTUATION, Name: ]
+Token Type: PUNCTUATION, Name: =
+Token Type: INTEGER_LITERAL, Name: 4
+Token Type: PUNCTUATION, Name: ;
+Token Type: IDENTIFIER_OR_KEYWORD, Name: exit
+Token Type: PUNCTUATION, Name: (
+Token Type: INTEGER_LITERAL, Name: 0
+Token Type: PUNCTUATION, Name: )
+Token Type: PUNCTUATION, Name: ;
+Token Type: PUNCTUATION, Name: }
 FunctionNode: isConst = false
   IdentifierNode: main
   BlockExprNode
@@ -8,23 +43,22 @@ FunctionNode: isConst = false
         TypePathExprNode
           PathExprSegNode: patternType = IDENT
             IdentifierNode: i32
-        LiteralExprNode: INT = 3
+        LiteralExprNode: I32 = 3
       ArrayExprNode: elements
-        LiteralExprNode: INT = 1
-        LiteralExprNode: INT = 2
-        LiteralExprNode: INT = 3
+        LiteralExprNode: I32 = 1
+        LiteralExprNode: I32 = 2
+        LiteralExprNode: I32 = 3
     ExprStmtNode
-      IndexExprNode
-        PathExprNode
-          PathExprSegNode: patternType = IDENT
-            IdentifierNode: arr
-        AssignExprNode
-          ArrayExprNode: elements
-            LiteralExprNode: INT = 1
-          LiteralExprNode: INT = 4
+      AssignExprNode
+        IndexExprNode
+          PathExprNode
+            PathExprSegNode: patternType = IDENT
+              IdentifierNode: arr
+          LiteralExprNode: I32 = 1
+        LiteralExprNode: I32 = 4
     ExprStmtNode
       CallExprNode
         PathExprNode
           PathExprSegNode: patternType = IDENT
             IdentifierNode: exit
-        LiteralExprNode: INT = 0
+        LiteralExprNode: I32 = 0
