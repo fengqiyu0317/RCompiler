@@ -21,9 +21,9 @@ class ReadRustFile {
             }
         }
         // output the tokens
-        for (token_t token : tokenizer.tokens) {
-            System.out.println("Token Type: " + token.tokentype + ", Name: " + token.name);
-        }
+        // for (token_t token : tokenizer.tokens) {
+        //     System.out.println("Token Type: " + token.tokentype + ", Name: " + token.name);
+        // }
         // parse the tokens
         try {
             Parser parser = new Parser(new Vector<token_t>(tokenizer.tokens));
@@ -41,11 +41,34 @@ class ReadRustFile {
                 }
             }
             
-            // print the AST
-            PrintAST printAST = new PrintAST();
-            for (StmtNode stmt : parser.getStatements()) {
-                printAST.visit(stmt);
+            // Perform self and Self semantic checking
+            if (!parser.hasErrors()) {
+                try {
+                    SelfSemanticAnalyzer selfAnalyzer = new SelfSemanticAnalyzer();
+                    
+                    // Visit all statements to check self and Self usage
+                    for (StmtNode stmt : parser.getStatements()) {
+                        stmt.accept(selfAnalyzer);
+                    }
+                    
+                    System.out.println("Self and Self semantic checking completed successfully.");
+                    
+                } catch (SemanticException e) {
+                    System.err.println("Self/Self semantic error: " + e.getMessage());
+                    if (e.getNode() != null) {
+                        System.err.println("  at node: " + e.getNode().getClass().getSimpleName());
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error during self checking: " + e.getMessage());
+                    e.printStackTrace();
+                }
             }
+            
+            // print the AST
+            // PrintAST printAST = new PrintAST();
+            // for (StmtNode stmt : parser.getStatements()) {
+            //     stmt.accept(printAST);
+            // }
         } catch (ParserException e) {
             // Output parsing error to standard error
             System.err.println(e.getMessage());

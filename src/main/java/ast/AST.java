@@ -5,16 +5,24 @@ import java.util.Vector;
 
 // ASTNode is the base class for all AST nodes.
 abstract class ASTNode {
+    // Accept a visitor
+    public abstract void accept(VisitorBase visitor);
 }
 
 // StmtNode represents a statement <statement>.
 // The grammer for statement is:
 // <statement> = <item> | <letstmt> | <exprstmt> | ;
 class StmtNode extends ASTNode {
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // ItemNode represents an item <item>.
 // There are several kinds of items: function, struct, enum, constant, trait, impl. so <item> = <function> | <structitem> | <enumitem> | <constitem> | <traititem> | <implitem>.
 class ItemNode extends StmtNode {
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // LetStmtNode represents a let statement <letstmt>.
 // The grammer for let statement is:
@@ -23,6 +31,10 @@ class LetStmtNode extends StmtNode {
     PatternNode name;
     TypeExprNode type;
     ExprNode value; // can be null
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // ExprStmtNode represents an expression statement <exprstmt>.
@@ -30,6 +42,10 @@ class LetStmtNode extends StmtNode {
 // <exprstmt> = <exprwithblock> ;? | <exprwithoutblock> ;
 class ExprStmtNode extends StmtNode {
     ExprNode expr;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // FunctionNode represents a function item <function>.
@@ -47,6 +63,10 @@ class FunctionNode extends ItemNode {
     FunctionNode() {
         isConst = false;
     }
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // SelfParaNode represents the self parameter in a method <selfpara>.
@@ -58,6 +78,10 @@ class SelfParaNode extends ASTNode {
     boolean isMutable;
     boolean isReference;
     TypeExprNode type; // can be null
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // ParameterNode represents a parameter in a function <parameter>.
@@ -66,12 +90,19 @@ class SelfParaNode extends ASTNode {
 class ParameterNode extends ASTNode {
     PatternNode name;
     TypeExprNode type;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // PatternNode represents a pattern <pattern>.
 // The grammer for pattern is:
 // <pattern> = <idpat> | <wildpat> | <refpat>
 class PatternNode extends ASTNode {
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // IdPatNode represents an identifier pattern <idpat>.
 // The grammer for identifier pattern is:
@@ -80,11 +111,18 @@ class IdPatNode extends PatternNode {
     boolean isReference;
     boolean isMutable;
     IdentifierNode name;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // WildPatNode represents a wildcard pattern <wildpat>.
 // The grammer for wildcard pattern is:
 // <wildpat> = _
 class WildPatNode extends PatternNode {
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // RefPatNode represents a reference pattern <refpat>.
 // The grammer for reference pattern is:
@@ -93,6 +131,10 @@ class RefPatNode extends PatternNode {
     boolean isMutable;
     boolean isDoubleReference;
     PatternNode innerPattern;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // StructNode represents a struct item <structitem>.
@@ -102,6 +144,10 @@ class RefPatNode extends PatternNode {
 class StructNode extends ItemNode {
     IdentifierNode name;
     Vector<FieldNode> fields;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // FieldNode represents a field in a struct <field>.
@@ -110,6 +156,10 @@ class StructNode extends ItemNode {
 class FieldNode extends ItemNode {
     IdentifierNode name;
     TypeExprNode type;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // EnumNode represents an enum item <enumitem>.
@@ -119,6 +169,10 @@ class FieldNode extends ItemNode {
 class EnumNode extends ItemNode {
     IdentifierNode name;
     Vector<IdentifierNode> variants;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // ConstItemNode represents a constant item <constitem>.
@@ -128,6 +182,10 @@ class ConstItemNode extends ItemNode {
     IdentifierNode name;
     TypeExprNode type;
     ExprNode value; // can be null
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // TraitNode represents a trait item <traititem>.
@@ -136,6 +194,10 @@ class ConstItemNode extends ItemNode {
 class TraitNode extends ItemNode {
     IdentifierNode name;
     Vector<AssoItemNode> items;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // AssoItemNode represents an associated item <asso_item>.
@@ -144,6 +206,10 @@ class AssoItemNode extends ItemNode {
     // can be FunctionNode or ConstItemNode
     FunctionNode function;
     ConstItemNode constant;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // ImplNode represents an impl item <implitem>.
@@ -155,18 +221,28 @@ class ImplNode extends ItemNode {
     IdentifierNode trait; // can be null if it's an inherent impl
     TypeExprNode typeName;
     Vector<AssoItemNode> items;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // ExprNode represents an expression <expression>.
 // The grammer for expression is:
 // <expression> = <exprwithblock> | <exprwithoutblock>
 class ExprNode extends ASTNode {
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // ExprWithBlockNode represents an expression with block <exprwithblock>.
 // the grammer for expression with block is:
 // <exprwithblock> = <blockexpr> | <ifexpr> | <loopexpr>
 class ExprWithBlockNode extends ExprNode {
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // ExprWithoutBlockNode represents an expression without block <exprwithoutblock>.
@@ -176,6 +252,10 @@ class ExprWithBlockNode extends ExprNode {
 // <groupedexpr> = ( <expression> )
 class ExprWithoutBlockNode extends ExprNode {
     ExprNode expr;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // LiteralExprNode represents a literal expression <literalexpr>.
 // a literal has several types: char_literal, string_literal, raw_string_literal, c_string_literal, raw_c_string_literal, integer_literal, boolean_literal. These literal already exist in the token level, so we just need to store their type and value here.
@@ -185,6 +265,10 @@ class LiteralExprNode extends ExprWithoutBlockNode {
     String value_string; // for string and char literal
     long value_long; // for all integer literals (INT_I32, INT_U32, INT_USIZE, INT_ISIZE)
     boolean value_bool; // for boolean literal
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 
@@ -195,6 +279,10 @@ class LiteralExprNode extends ExprWithoutBlockNode {
 class PathExprNode extends ExprWithoutBlockNode {
     PathExprSegNode LSeg;
     PathExprSegNode RSeg; // can be null
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // PathExprSegNode represents a segment in a path expression <pathseg>.
 // the grammer for path segment is:
@@ -203,6 +291,10 @@ class PathExprNode extends ExprWithoutBlockNode {
 class PathExprSegNode extends ASTNode {
     patternSeg_t patternType;
     IdentifierNode name;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // GroupExprNode represents a grouped expression <groupedexpr>.
@@ -210,12 +302,19 @@ class PathExprSegNode extends ASTNode {
 // <groupedexpr> = ( <expression> )
 class GroupExprNode extends ExprWithoutBlockNode {
     ExprNode innerExpr;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // OperExprNode represents an operator expression <operexpr>.
 // the grammer for operator expression is:
 // <operexpr> = <borrowexpr> | <derefexpr> | <negaexpr> | <arithexpr> | <compexpr> | <lazyexpr> | <typecastexpr> | <assignexpr> | <comassignexpr>
 abstract class OperExprNode extends ExprWithoutBlockNode {
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // BorrowExprNode represents a borrow expression <borrowexpr>.
 // the grammer for borrow expression is:
@@ -224,12 +323,20 @@ class BorrowExprNode extends OperExprNode {
     boolean isMutable; // true if it's mut, false if it's not
     boolean isDoubleReference; // true if it's &&, false if it's &
     ExprNode innerExpr;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // DerefExprNode represents a dereference expression <derefexpr>.
 // the grammer for dereference expression is:
 // <derefexpr> = * <expression>
 class DerefExprNode extends OperExprNode {
     ExprNode innerExpr;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // NegaExprNode represents a negation expression <negaexpr>.
 // the grammer for negation expression is:
@@ -237,6 +344,10 @@ class DerefExprNode extends OperExprNode {
 class NegaExprNode extends OperExprNode {
     boolean isLogical; // true if it's !, false if it's -
     ExprNode innerExpr;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // ArithExprNode represents an arithmetic expression <arithexpr>.
 // the grammer for arithmetic expression is:
@@ -245,22 +356,34 @@ class ArithExprNode extends OperExprNode {
     oper_t operator;
     ExprNode left;
     ExprNode right;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // CompExprNode represents a comparison expression <compexpr>.
 // the grammer for comparison expression is:
 // <compexpr> = <expression> (== | != | > | < | >= | <=) <expression>
 class CompExprNode extends OperExprNode {
-    oper_t operator; 
-    ExprNode left; 
-    ExprNode right; 
+    oper_t operator;
+    ExprNode left;
+    ExprNode right;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // LazyExprNode represents a lazy expression <lazyexpr>.
 // the grammer for lazy expression is:
 // <lazyexpr> = <expression> (&& | ||) <expression>
 class LazyExprNode extends OperExprNode {
-    oper_t operator; 
-    ExprNode left; 
-    ExprNode right; 
+    oper_t operator;
+    ExprNode left;
+    ExprNode right;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // TypeCastExprNode represents a type cast expression <typecastexpr>.
 // the grammer for type cast expression is:
@@ -268,6 +391,10 @@ class LazyExprNode extends OperExprNode {
 class TypeCastExprNode extends OperExprNode {
     ExprNode expr;
     TypeExprNode type;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // AssignExprNode represents an assignment expression <assignexpr>.
 // the grammer for assignment expression is:
@@ -276,14 +403,22 @@ class AssignExprNode extends OperExprNode {
     oper_t operator; // always ASSIGN
     ExprNode left;
     ExprNode right;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // ComAssignExprNode represents a compound assignment expression <comassignexpr>.
 // the grammer for compound assignment expression is:
 // <comassignexpr> = <expression> (+= | -= | *= | /= | %= | &= | |= | ^= | <<= | >>=) <expression>
 class ComAssignExprNode extends OperExprNode {
-    oper_t operator; 
-    ExprNode left; 
-    ExprNode right; 
+    oper_t operator;
+    ExprNode left;
+    ExprNode right;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // the oper_t enum is defined here.
 
@@ -301,6 +436,10 @@ class ArrayExprNode extends ExprWithoutBlockNode {
     // if elements is not null, then repeatedElement and size must be null
     // if repeatedElement and size are not null, then elements must be null
     // if all of them are null, then it's an empty array
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // IndexExprNode represents an index expression <indexexpr>.
@@ -309,6 +448,10 @@ class ArrayExprNode extends ExprWithoutBlockNode {
 class IndexExprNode extends ExprWithoutBlockNode {
     ExprNode array;
     ExprNode index;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 
@@ -320,10 +463,18 @@ class IndexExprNode extends ExprWithoutBlockNode {
 class StructExprNode extends ExprWithoutBlockNode {
     PathExprSegNode structName;
     Vector<FieldValNode> fieldValues; // can be null
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 class FieldValNode extends ASTNode {
     IdentifierNode fieldName;
     ExprNode value;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // CallExprNode represents a function call expression <callexpr>.
@@ -333,6 +484,10 @@ class FieldValNode extends ASTNode {
 class CallExprNode extends ExprWithoutBlockNode {
     ExprNode function;
     Vector<ExprNode> arguments; // can be null
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // MethodCallExprNode represents a method call expression <methodcallexpr>.
@@ -343,6 +498,10 @@ class MethodCallExprNode extends ExprWithoutBlockNode {
     ExprNode receiver;
     PathExprSegNode methodName;
     Vector<ExprNode> arguments; // can be null
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // FieldExprNode represents a field access expression <fieldexpr>.
@@ -351,29 +510,47 @@ class MethodCallExprNode extends ExprWithoutBlockNode {
 class FieldExprNode extends ExprWithoutBlockNode {
     ExprNode receiver;
     IdentifierNode fieldName;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // ContinueExprNode represents a continue expression <continueexpr>.
 // the grammer for continue expression is:
 // <continueexpr> = continue
 class ContinueExprNode extends ExprWithoutBlockNode {
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // BreakExprNode represents a break expression <breakexpr>.
 // the grammer for break expression is:
 // <breakexpr> = break (<expression>)?
 class BreakExprNode extends ExprWithoutBlockNode {
     ExprNode value; // can be null
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // ReturnExprNode represents a return expression <returnexpr>.
 // the grammer for return expression is:
 // <returnexpr> = return (<expression>)?
 class ReturnExprNode extends ExprWithoutBlockNode {
     ExprNode value; // can be null
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 // UnderscoreExprNode represents an underscore expression <underscoreexpr>.
 // the grammer for underscore expression is:
 // <underscoreexpr> = _
 class UnderscoreExpr extends ExprWithoutBlockNode {
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // BlockExprNode represents a block expression <blockexpr>.
@@ -381,6 +558,10 @@ class UnderscoreExpr extends ExprWithoutBlockNode {
 // <blockexpr> = { <statements>* }
 class BlockExprNode extends ExprWithBlockNode {
     Vector<StmtNode> statements;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // IfExprNode represents an if expression <ifexpr>.
@@ -391,6 +572,10 @@ class IfExprNode extends ExprWithBlockNode {
     BlockExprNode thenBranch;
     ExprWithBlockNode elseBranch; // can be null
     IfExprNode elseifBranch; // can be null
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // LoopExprNode represents a loop expression <loopexpr>.
@@ -402,12 +587,20 @@ class LoopExprNode extends ExprWithBlockNode {
     boolean isInfinite; // true if it's an infinite loop, false if it's a conditional loop
     ExprNode condition; // can be null if it's an infinite loop
     BlockExprNode body;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // IdentifierNode represents an identifier <identifier>.
 // an identifier is just a string, so we just need to store the string here.
 class IdentifierNode extends ASTNode {
     String name;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 
@@ -415,6 +608,9 @@ class IdentifierNode extends ASTNode {
 // the grammer for type expression is:
 // <type> = <typepathexpr> | <typerefexpr> | <typearrayexpr> | <typeunitexpr>
 class TypeExprNode extends ASTNode {
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // TypePathExprNode represents a path type expression <typepathexpr>.
@@ -422,6 +618,10 @@ class TypeExprNode extends ASTNode {
 // <typepathexpr> = <pathseg>
 class TypePathExprNode extends TypeExprNode {
     PathExprSegNode path;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // TypeRefExprNode represents a reference type expression <typerefexpr>.
@@ -430,6 +630,10 @@ class TypePathExprNode extends TypeExprNode {
 class TypeRefExprNode extends TypeExprNode {
     boolean isMutable;
     TypeExprNode innerType;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // TypeArrayExprNode represents an array type expression <typearrayexpr>.
@@ -438,10 +642,17 @@ class TypeRefExprNode extends TypeExprNode {
 class TypeArrayExprNode extends TypeExprNode {
     TypeExprNode elementType;
     ExprNode size;
+    
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }
 
 // TypeUnitExprNode represents a unit type expression <typeunitexpr>.
 // the grammer for unit type expression is:
 // <typeunitexpr> = ()
 class TypeUnitExprNode extends TypeExprNode {
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
 }

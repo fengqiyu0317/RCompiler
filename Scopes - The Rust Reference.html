@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)http://127.0.0.1:3000/names/scopes.html -->
+<html lang="en" class="sidebar-visible js light" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- Book generated using mdBook -->
+        
+        <title>Scopes - The Rust Reference</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="rgb(255, 255, 255)">
+
+        <link rel="icon" href="http://127.0.0.1:3000/favicon.svg">
+        <link rel="shortcut icon" href="http://127.0.0.1:3000/favicon.png">
+        <link rel="stylesheet" href="./Scopes - The Rust Reference_files/variables.css">
+        <link rel="stylesheet" href="./Scopes - The Rust Reference_files/general.css">
+        <link rel="stylesheet" href="./Scopes - The Rust Reference_files/chrome.css">
+        <link rel="stylesheet" href="./Scopes - The Rust Reference_files/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="./Scopes - The Rust Reference_files/font-awesome.css">
+        <link rel="stylesheet" href="./Scopes - The Rust Reference_files/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="./Scopes - The Rust Reference_files/highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="./Scopes - The Rust Reference_files/tomorrow-night.css" disabled="">
+        <link rel="stylesheet" id="ayu-highlight-css" href="./Scopes - The Rust Reference_files/ayu-highlight.css" disabled="">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="./Scopes - The Rust Reference_files/reference.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="./Scopes - The Rust Reference_files/toc.js.下载"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents" aria-hidden="false">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"><ol class="chapter"><li class="chapter-item expanded affix "><a href="http://127.0.0.1:3000/introduction.html" tabindex="0">Introduction</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/notation.html" tabindex="0"><strong aria-hidden="true">1.</strong> Notation</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/undefined-behavior.html" tabindex="0"><strong aria-hidden="true">2.</strong> Undefined behavior</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/undefined-behavior/builtin.html" tabindex="0"><strong aria-hidden="true">2.1.</strong> Builtin</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/undefined-behavior/lexical-structure.html" tabindex="0"><strong aria-hidden="true">2.2.</strong> Lexical structure</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/undefined-behavior/items.html" tabindex="0"><strong aria-hidden="true">2.3.</strong> Items</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/undefined-behavior/statements.html" tabindex="0"><strong aria-hidden="true">2.4.</strong> Statements</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/undefined-behavior/expressions.html" tabindex="0"><strong aria-hidden="true">2.5.</strong> Expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/undefined-behavior/type-system.html" tabindex="0"><strong aria-hidden="true">2.6.</strong> Type System</a></li></ol></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/lexical-structure.html" tabindex="0"><strong aria-hidden="true">3.</strong> Lexical structure</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/input-format.html" tabindex="0"><strong aria-hidden="true">3.1.</strong> Input format</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/keywords.html" tabindex="0"><strong aria-hidden="true">3.2.</strong> Keywords</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/identifiers.html" tabindex="0"><strong aria-hidden="true">3.3.</strong> Identifiers</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/comments.html" tabindex="0"><strong aria-hidden="true">3.4.</strong> Comments</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/whitespace.html" tabindex="0"><strong aria-hidden="true">3.5.</strong> Whitespace</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/tokens.html" tabindex="0"><strong aria-hidden="true">3.6.</strong> Tokens</a></li></ol></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/crates-and-source-files.html" tabindex="0"><strong aria-hidden="true">4.</strong> Crates and source files</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/items.html" tabindex="0"><strong aria-hidden="true">5.</strong> Items</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/items/functions.html" tabindex="0"><strong aria-hidden="true">5.1.</strong> Functions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/items/structs.html" tabindex="0"><strong aria-hidden="true">5.2.</strong> Structs</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/items/enumerations.html" tabindex="0"><strong aria-hidden="true">5.3.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/items/constant-items.html" tabindex="0"><strong aria-hidden="true">5.4.</strong> Constant items</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/items/traits.html" tabindex="0"><strong aria-hidden="true">5.5.</strong> Traits</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/items/implementations.html" tabindex="0"><strong aria-hidden="true">5.6.</strong> Implementations</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/items/associated-items.html" tabindex="0"><strong aria-hidden="true">5.7.</strong> Associated Items</a></li></ol></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/statements-and-expressions.html" tabindex="0"><strong aria-hidden="true">6.</strong> Statements and expressions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/statements.html" tabindex="0"><strong aria-hidden="true">6.1.</strong> Statements</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions.html" tabindex="0"><strong aria-hidden="true">6.2.</strong> Expressions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/literal-expr.html" tabindex="0"><strong aria-hidden="true">6.2.1.</strong> Literal expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/path-expr.html" tabindex="0"><strong aria-hidden="true">6.2.2.</strong> Path expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/block-expr.html" tabindex="0"><strong aria-hidden="true">6.2.3.</strong> Block expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/operator-expr.html" tabindex="0"><strong aria-hidden="true">6.2.4.</strong> Operator expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/grouped-expr.html" tabindex="0"><strong aria-hidden="true">6.2.5.</strong> Grouped expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/array-expr.html" tabindex="0"><strong aria-hidden="true">6.2.6.</strong> Array and index expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/struct-expr.html" tabindex="0"><strong aria-hidden="true">6.2.7.</strong> Struct expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/call-expr.html" tabindex="0"><strong aria-hidden="true">6.2.8.</strong> Call expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/method-call-expr.html" tabindex="0"><strong aria-hidden="true">6.2.9.</strong> Method call expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/field-expr.html" tabindex="0"><strong aria-hidden="true">6.2.10.</strong> Field access expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/loop-expr.html" tabindex="0"><strong aria-hidden="true">6.2.11.</strong> Loop expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/if-expr.html" tabindex="0"><strong aria-hidden="true">6.2.12.</strong> If expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/return-expr.html" tabindex="0"><strong aria-hidden="true">6.2.13.</strong> Return expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/underscore-expr.html" tabindex="0"><strong aria-hidden="true">6.2.14.</strong> Underscore expressions</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/patterns.html" tabindex="0"><strong aria-hidden="true">7.</strong> Patterns</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/type-system.html" tabindex="0"><strong aria-hidden="true">8.</strong> Type system</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types.html" tabindex="0"><strong aria-hidden="true">8.1.</strong> Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types/boolean.html" tabindex="0"><strong aria-hidden="true">8.1.1.</strong> Boolean type</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types/numeric.html" tabindex="0"><strong aria-hidden="true">8.1.2.</strong> Numeric types</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types/textual.html" tabindex="0"><strong aria-hidden="true">8.1.3.</strong> Textual types</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types/unit.html" tabindex="0"><strong aria-hidden="true">8.1.4.</strong> Unit type</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types/array.html" tabindex="0"><strong aria-hidden="true">8.1.5.</strong> Array types</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types/struct.html" tabindex="0"><strong aria-hidden="true">8.1.6.</strong> Struct types</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types/enum.html" tabindex="0"><strong aria-hidden="true">8.1.7.</strong> Enumerated types</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types/pointer.html" tabindex="0"><strong aria-hidden="true">8.1.8.</strong> Pointer types</a></li></ol></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/dynamically-sized-types.html" tabindex="0"><strong aria-hidden="true">8.2.</strong> Dynamically Sized Types</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/type-layout.html" tabindex="0"><strong aria-hidden="true">8.3.</strong> Type layout</a></li></ol></li><li class="chapter-item expanded"><a href="http://127.0.0.1:3000/names.html" tabindex="0"><strong aria-hidden="true">9.</strong> Names</a></li><li><ol class="section"><li class="chapter-item expanded"><a href="http://127.0.0.1:3000/names/namespaces.html" tabindex="0"><strong aria-hidden="true">9.1.</strong> Namespaces</a></li><li class="chapter-item expanded"><a href="http://127.0.0.1:3000/names/scopes.html" class="active" tabindex="0"><strong aria-hidden="true">9.2.</strong> Scopes</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/names/preludes.html" tabindex="0"><strong aria-hidden="true">9.3.</strong> Preludes</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/paths.html" tabindex="0"><strong aria-hidden="true">9.4.</strong> Paths</a></li></ol></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/const_eval.html" tabindex="0"><strong aria-hidden="true">10.</strong> Constant Evaluation</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/appendices.html" tabindex="0"><strong aria-hidden="true">11.</strong> Appendices</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/grammar.html" tabindex="0"><strong aria-hidden="true">11.1.</strong> Grammar summary</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/macro-ambiguity.html" tabindex="0"><strong aria-hidden="true">11.2.</strong> Macro Follow-Set Ambiguity Formal Specification</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/influences.html" tabindex="0"><strong aria-hidden="true">11.3.</strong> Influences</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/test-summary.html" tabindex="0"><strong aria-hidden="true">11.4.</strong> Test summary</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/glossary.html" tabindex="0"><strong aria-hidden="true">11.5.</strong> Glossary</a></li></ol></li></ol></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky" style="top: 1610.33px;">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar" aria-expanded="true">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme theme-selected" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Reference</h1>
+
+                    <div class="right-buttons">
+                        <a href="http://127.0.0.1:3000/print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/reference/" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/reference/edit/master/src/names/scopes.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div class="rule" id="r-names.scopes"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes" title="names.scopes"><span>[names<wbr>.scopes]</span></a>
+</div>
+<h1 id="scopes"><a class="header" href="http://127.0.0.1:3000/names/scopes.html#scopes">Scopes</a></h1>
+<div class="rule" id="r-names.scopes.intro"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.intro" title="names.scopes.intro"><span>[names<wbr>.scopes<wbr>.intro]</span></a>
+</div>
+<p>A <em>scope</em> is the region of source text where a named <a href="http://127.0.0.1:3000/names.html">entity</a> may be referenced with that name.
+The following sections provide details on the scoping rules and behavior, which depend on the kind of entity and where it is declared.
+The process of how names are resolved to entities is described in the <a href="http://127.0.0.1:3000/names/name-resolution.html">name resolution</a> chapter.
+More information on “drop scopes” used for the purpose of running destructors may be found in the <a href="http://127.0.0.1:3000/destructors.html">destructors</a> chapter.</p>
+<div class="rule" id="r-names.scopes.items"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.items" title="names.scopes.items"><span>[names<wbr>.scopes<wbr>.items]</span></a>
+</div>
+<h2 id="item-scopes"><a class="header" href="http://127.0.0.1:3000/names/scopes.html#item-scopes">Item scopes</a></h2>
+<div class="rule" id="r-names.scopes.items.module"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.items.module" title="names.scopes.items.module"><span>[names<wbr>.scopes<wbr>.items<wbr>.module]</span></a>
+</div>
+<p>The name of an <a href="http://127.0.0.1:3000/items.html">item</a> declared directly in a module has a scope that <strong>extends from the start of the module to the end of the module</strong>. These items are also members of the module and can be referred to with a <a href="http://127.0.0.1:3000/paths.html">path</a> leading from their module.</p>
+<div class="rule" id="r-names.scopes.items.statement"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.items.statement" title="names.scopes.items.statement"><span>[names<wbr>.scopes<wbr>.items<wbr>.statement]</span></a>
+</div>
+<p>The name of an item declared as a <a href="http://127.0.0.1:3000/statements.html">statement</a> has a scope that <strong>extends from the start of the block the item statement is in until the end of the block</strong>.</p>
+<div class="rule" id="r-names.scopes.items.duplicate"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.items.duplicate" title="names.scopes.items.duplicate"><span>[names<wbr>.scopes<wbr>.items<wbr>.duplicate]</span></a>
+</div>
+<p>It is an error to introduce an item with a duplicate name of another item in the same <a href="http://127.0.0.1:3000/names/namespaces.html">namespace</a> within the same module or block.</p>
+<div class="rule" id="r-names.scopes.items.shadow-prelude"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.items.shadow-prelude" title="names.scopes.items.shadow-prelude"><span>[names<wbr>.scopes<wbr>.items<wbr>.shadow-prelude]</span></a>
+</div>
+<p>Items in a module may shadow items in a <a href="http://127.0.0.1:3000/names/scopes.html#prelude-scopes">prelude</a>.</p>
+<!-- r[names.scopes.items.nested-modules]
+Item names from outer modules are not in scope within a nested module.
+A [path] may be used to refer to an item in another module. -->
+<div class="rule" id="r-names.scopes.associated-items"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.associated-items" title="names.scopes.associated-items"><span>[names<wbr>.scopes<wbr>.associated-items]</span></a>
+</div>
+<h3 id="associated-item-scopes"><a class="header" href="http://127.0.0.1:3000/names/scopes.html#associated-item-scopes">Associated item scopes</a></h3>
+<div class="rule" id="r-names.scopes.associated-items.scope"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.associated-items.scope" title="names.scopes.associated-items.scope"><span>[names<wbr>.scopes<wbr>.associated-items<wbr>.scope]</span></a>
+</div>
+<p><a href="http://127.0.0.1:3000/items/associated-items.html">Associated items</a> are not scoped and can only be referred to by using a <a href="http://127.0.0.1:3000/paths.html">path</a> leading from the type or trait they are associated with.
+<a href="http://127.0.0.1:3000/items/associated-items.html#methods">Methods</a> can also be referred to via <a href="http://127.0.0.1:3000/expressions/call-expr.html">call expressions</a>.</p>
+<div class="rule" id="r-names.scopes.associated-items.duplicate"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.associated-items.duplicate" title="names.scopes.associated-items.duplicate"><span>[names<wbr>.scopes<wbr>.associated-items<wbr>.duplicate]</span></a>
+</div>
+<p>Similar to items within a module or block,  it is an error to introduce an item within a trait or implementation that is a duplicate of another item in the trait or impl in the same namespace.</p>
+<div class="rule" id="r-names.scopes.pattern-bindings"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.pattern-bindings" title="names.scopes.pattern-bindings"><span>[names<wbr>.scopes<wbr>.pattern-bindings]</span></a>
+</div>
+<h2 id="pattern-binding-scopes"><a class="header" href="http://127.0.0.1:3000/names/scopes.html#pattern-binding-scopes">Pattern binding scopes</a></h2>
+<p>The scope of a local variable <a href="http://127.0.0.1:3000/patterns.html">pattern</a> binding depends on where it is used:</p>
+<div class="rule" id="r-names.scopes.pattern-bindings.let"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.pattern-bindings.let" title="names.scopes.pattern-bindings.let"><span>[names<wbr>.scopes<wbr>.pattern-bindings<wbr>.let]</span></a>
+</div>
+<ul>
+<li><a href="http://127.0.0.1:3000/statements.html#let-statements"><code class="hljs">let</code> statement</a> bindings range from just after the <code class="hljs">let</code> statement until the end of the block where it is declared.</li>
+</ul>
+<div class="rule" id="r-names.scopes.pattern-bindings.parameter"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.pattern-bindings.parameter" title="names.scopes.pattern-bindings.parameter"><span>[names<wbr>.scopes<wbr>.pattern-bindings<wbr>.parameter]</span></a>
+</div>
+<ul>
+<li><a href="http://127.0.0.1:3000/items/functions.html#function-parameters">Function parameter</a> bindings are within the body of the function.</li>
+</ul>
+<div class="rule" id="r-names.scopes.pattern-bindings.let-chains"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.pattern-bindings.let-chains" title="names.scopes.pattern-bindings.let-chains"><span>[names<wbr>.scopes<wbr>.pattern-bindings<wbr>.let-chains]</span></a>
+</div>
+<ul>
+<li><a href="http://127.0.0.1:3000/expressions/if-expr.html#if-let-patterns"><code class="hljs">if let</code></a> and <a href="http://127.0.0.1:3000/expressions/loop-expr.html#while-let-patterns"><code class="hljs">while let</code></a> bindings are valid in the following conditions as well as the consequent block.</li>
+</ul>
+<div class="rule" id="r-names.scopes.pattern-bindings.match-arm"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.pattern-bindings.match-arm" title="names.scopes.pattern-bindings.match-arm"><span>[names<wbr>.scopes<wbr>.pattern-bindings<wbr>.match-arm]</span></a>
+</div>
+<ul>
+<li><a href="http://127.0.0.1:3000/expressions/match-expr.html"><code class="hljs">match</code> arms</a> bindings are within the <a href="http://127.0.0.1:3000/expressions/match-expr.html#match-guards">match guard</a> and the match arm expression.</li>
+</ul>
+<div class="rule" id="r-names.scopes.pattern-bindings.items"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.pattern-bindings.items" title="names.scopes.pattern-bindings.items"><span>[names<wbr>.scopes<wbr>.pattern-bindings<wbr>.items]</span></a>
+</div>
+<p>Local variable scopes do not extend into item declarations.</p>
+<!-- Not entirely, see https://github.com/rust-lang/rust/issues/33118 -->
+<h3 id="pattern-binding-shadowing"><a class="header" href="http://127.0.0.1:3000/names/scopes.html#pattern-binding-shadowing">Pattern binding shadowing</a></h3>
+<div class="rule" id="r-names.scopes.pattern-bindings.shadow"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.pattern-bindings.shadow" title="names.scopes.pattern-bindings.shadow"><span>[names<wbr>.scopes<wbr>.pattern-bindings<wbr>.shadow]</span></a>
+</div>
+<p>Pattern bindings are allowed to shadow any name in scope with the following exceptions which are an error:</p>
+<ul>
+<li><a href="http://127.0.0.1:3000/items/constant-items.html">Const items</a></li>
+<li>Constructors for <a href="http://127.0.0.1:3000/items/structs.html">structs</a> and <a href="http://127.0.0.1:3000/items/enumerations.html">enums</a></li>
+</ul>
+<p>The following example illustrates how local bindings can shadow item declarations:</p>
+<pre><pre class="playground"><div class="buttons"><button class="clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-play play-button" hidden="" title="Run this code" aria-label="Run this code"></button><button class="fa fa-eye" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust edition2024 hljs hide-boring"><span class="boring"><span class="hljs-meta">#![allow(unused)]</span>
+</span><span class="boring"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+</span><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">shadow_example</span></span>() {
+    <span class="hljs-comment">// Since there are no local variables in scope yet, this resolves to the function.</span>
+    foo(); <span class="hljs-comment">// prints `function`</span>
+    <span class="hljs-keyword">let</span> foo = || <span class="hljs-built_in">println!</span>(<span class="hljs-string">"closure"</span>);
+    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">foo</span></span>() { <span class="hljs-built_in">println!</span>(<span class="hljs-string">"function"</span>); }
+    <span class="hljs-comment">// This resolves to the local closure since it shadows the item.</span>
+    foo(); <span class="hljs-comment">// prints `closure`</span>
+}
+<span class="boring">}</span></code></pre></pre>
+<div class="rule" id="r-names.scopes.prelude"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.prelude" title="names.scopes.prelude"><span>[names<wbr>.scopes<wbr>.prelude]</span></a>
+</div>
+<h2 id="prelude-scopes"><a class="header" href="http://127.0.0.1:3000/names/scopes.html#prelude-scopes">Prelude scopes</a></h2>
+<div class="rule" id="r-names.scopes.prelude.intro"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.prelude.intro" title="names.scopes.prelude.intro"><span>[names<wbr>.scopes<wbr>.prelude<wbr>.intro]</span></a>
+</div>
+<p><a href="http://127.0.0.1:3000/names/preludes.html">Preludes</a> bring entities into scope of every module.
+The entities are not members of the module, but are implicitly queried during name resolution.</p>
+<div class="rule" id="r-names.scopes.prelude.layers"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.prelude.layers" title="names.scopes.prelude.layers"><span>[names<wbr>.scopes<wbr>.prelude<wbr>.layers]</span></a>
+</div>
+<p>The preludes are layered such that one shadows another if they contain entities of the same name.
+The order that preludes may shadow other preludes is the following where earlier entries may shadow later ones:</p>
+<ol>
+<li><a href="http://127.0.0.1:3000/names/preludes.html#standard-library-prelude">Standard library prelude</a></li>
+<li><a href="http://127.0.0.1:3000/names/preludes.html#language-prelude">Language prelude</a></li>
+</ol>
+<div class="rule" id="r-names.scopes.self"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.self" title="names.scopes.self"><span>[names<wbr>.scopes<wbr>.self]</span></a>
+</div>
+<h2 id="self-scope"><a class="header" href="http://127.0.0.1:3000/names/scopes.html#self-scope"><code>Self</code> scope</a></h2>
+<div class="rule" id="r-names.scopes.self.intro"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.self.intro" title="names.scopes.self.intro"><span>[names<wbr>.scopes<wbr>.self<wbr>.intro]</span></a>
+</div>
+<p>Although <a href="http://127.0.0.1:3000/paths.html#self-1"><code class="hljs">Self</code></a> is a keyword with special meaning, it interacts with name resolution in a way similar to normal names.</p>
+<div class="rule" id="r-names.scopes.self.def-scope"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.self.def-scope" title="names.scopes.self.def-scope"><span>[names<wbr>.scopes<wbr>.self<wbr>.def-scope]</span></a>
+</div>
+<p>The implicit <code class="hljs">Self</code> type in the definition of a <a href="http://127.0.0.1:3000/items/structs.html">struct</a>, <a href="http://127.0.0.1:3000/items/enumerations.html">enum</a>, <a href="http://127.0.0.1:3000/items/unions.html">union</a>, <a href="http://127.0.0.1:3000/items/traits.html">trait</a>, or <a href="http://127.0.0.1:3000/items/implementations.html">implementation</a> is treated similarly to a <a href="http://127.0.0.1:3000/names/scopes.html#generic-parameter-scopes">generic parameter</a>, and is in scope in the same way as a generic type parameter.</p>
+<div class="rule" id="r-names.scopes.self.impl-scope"><a class="rule-link" href="http://127.0.0.1:3000/names/scopes.html#r-names.scopes.self.impl-scope" title="names.scopes.self.impl-scope"><span>[names<wbr>.scopes<wbr>.self<wbr>.impl-scope]</span></a>
+</div>
+<p>The implicit <code class="hljs">Self</code> constructor in the value <a href="http://127.0.0.1:3000/names/namespaces.html">namespace</a> of an <a href="http://127.0.0.1:3000/items/implementations.html">implementation</a> is in scope within the body of the implementation (the implementation’s <a href="http://127.0.0.1:3000/items/associated-items.html">associated items</a>).</p>
+<pre><pre class="playground"><div class="buttons"><button class="clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-play play-button" hidden="" title="Run this code" aria-label="Run this code"></button><button class="fa fa-eye" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust edition2024 hljs hide-boring"><span class="boring"><span class="hljs-meta">#![allow(unused)]</span>
+</span><span class="boring"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+</span><span class="hljs-comment">// Self type within struct definition.</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Recursive</span></span> {
+    f1: <span class="hljs-built_in">Option</span>&lt;<span class="hljs-built_in">Box</span>&lt;<span class="hljs-keyword">Self</span>&gt;&gt;
+}
+
+<span class="hljs-comment">// Self value constructor within an implementation.</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ImplExample</span></span>();
+<span class="hljs-keyword">impl</span> ImplExample {
+    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">example</span></span>() -&gt; <span class="hljs-keyword">Self</span> { <span class="hljs-comment">// Self type</span>
+        <span class="hljs-keyword">Self</span>() <span class="hljs-comment">// Self value constructor</span>
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="http://127.0.0.1:3000/names/namespaces.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="http://127.0.0.1:3000/names/preludes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="http://127.0.0.1:3000/names/namespaces.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="http://127.0.0.1:3000/names/preludes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="./Scopes - The Rust Reference_files/elasticlunr.min.js.下载"></script>
+        <script src="./Scopes - The Rust Reference_files/mark.min.js.下载"></script>
+        <script src="./Scopes - The Rust Reference_files/searcher.js.下载"></script>
+
+        <script src="./Scopes - The Rust Reference_files/clipboard.min.js.下载"></script>
+        <script src="./Scopes - The Rust Reference_files/highlight.js.下载"></script>
+        <script src="./Scopes - The Rust Reference_files/book.js.下载"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="./Scopes - The Rust Reference_files/reference.js.下载"></script>
+
+
+
+    </div>
+    
+
+<script src="chrome-extension://ahgbfffhflknbbdoknekgabmiobdehkk/static/js/inject.js" type="text/javascript" async=""></script></body></html>

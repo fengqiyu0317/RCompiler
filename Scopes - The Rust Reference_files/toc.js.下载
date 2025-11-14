@@ -1,0 +1,70 @@
+// Populate the sidebar
+//
+// This is a script, and not included directly in the page, to control the total size of the book.
+// The TOC contains an entry for each page, so if each page includes a copy of the TOC,
+// the total size of the page becomes O(n**2).
+class MDBookSidebarScrollbox extends HTMLElement {
+    constructor() {
+        super();
+    }
+    connectedCallback() {
+        this.innerHTML = '<ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded "><a href="notation.html"><strong aria-hidden="true">1.</strong> Notation</a></li><li class="chapter-item expanded "><a href="undefined-behavior.html"><strong aria-hidden="true">2.</strong> Undefined behavior</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="undefined-behavior/builtin.html"><strong aria-hidden="true">2.1.</strong> Builtin</a></li><li class="chapter-item expanded "><a href="undefined-behavior/lexical-structure.html"><strong aria-hidden="true">2.2.</strong> Lexical structure</a></li><li class="chapter-item expanded "><a href="undefined-behavior/items.html"><strong aria-hidden="true">2.3.</strong> Items</a></li><li class="chapter-item expanded "><a href="undefined-behavior/statements.html"><strong aria-hidden="true">2.4.</strong> Statements</a></li><li class="chapter-item expanded "><a href="undefined-behavior/expressions.html"><strong aria-hidden="true">2.5.</strong> Expressions</a></li><li class="chapter-item expanded "><a href="undefined-behavior/type-system.html"><strong aria-hidden="true">2.6.</strong> Type System</a></li></ol></li><li class="chapter-item expanded "><a href="lexical-structure.html"><strong aria-hidden="true">3.</strong> Lexical structure</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="input-format.html"><strong aria-hidden="true">3.1.</strong> Input format</a></li><li class="chapter-item expanded "><a href="keywords.html"><strong aria-hidden="true">3.2.</strong> Keywords</a></li><li class="chapter-item expanded "><a href="identifiers.html"><strong aria-hidden="true">3.3.</strong> Identifiers</a></li><li class="chapter-item expanded "><a href="comments.html"><strong aria-hidden="true">3.4.</strong> Comments</a></li><li class="chapter-item expanded "><a href="whitespace.html"><strong aria-hidden="true">3.5.</strong> Whitespace</a></li><li class="chapter-item expanded "><a href="tokens.html"><strong aria-hidden="true">3.6.</strong> Tokens</a></li></ol></li><li class="chapter-item expanded "><a href="crates-and-source-files.html"><strong aria-hidden="true">4.</strong> Crates and source files</a></li><li class="chapter-item expanded "><a href="items.html"><strong aria-hidden="true">5.</strong> Items</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="items/functions.html"><strong aria-hidden="true">5.1.</strong> Functions</a></li><li class="chapter-item expanded "><a href="items/structs.html"><strong aria-hidden="true">5.2.</strong> Structs</a></li><li class="chapter-item expanded "><a href="items/enumerations.html"><strong aria-hidden="true">5.3.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="items/constant-items.html"><strong aria-hidden="true">5.4.</strong> Constant items</a></li><li class="chapter-item expanded "><a href="items/traits.html"><strong aria-hidden="true">5.5.</strong> Traits</a></li><li class="chapter-item expanded "><a href="items/implementations.html"><strong aria-hidden="true">5.6.</strong> Implementations</a></li><li class="chapter-item expanded "><a href="items/associated-items.html"><strong aria-hidden="true">5.7.</strong> Associated Items</a></li></ol></li><li class="chapter-item expanded "><a href="statements-and-expressions.html"><strong aria-hidden="true">6.</strong> Statements and expressions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="statements.html"><strong aria-hidden="true">6.1.</strong> Statements</a></li><li class="chapter-item expanded "><a href="expressions.html"><strong aria-hidden="true">6.2.</strong> Expressions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="expressions/literal-expr.html"><strong aria-hidden="true">6.2.1.</strong> Literal expressions</a></li><li class="chapter-item expanded "><a href="expressions/path-expr.html"><strong aria-hidden="true">6.2.2.</strong> Path expressions</a></li><li class="chapter-item expanded "><a href="expressions/block-expr.html"><strong aria-hidden="true">6.2.3.</strong> Block expressions</a></li><li class="chapter-item expanded "><a href="expressions/operator-expr.html"><strong aria-hidden="true">6.2.4.</strong> Operator expressions</a></li><li class="chapter-item expanded "><a href="expressions/grouped-expr.html"><strong aria-hidden="true">6.2.5.</strong> Grouped expressions</a></li><li class="chapter-item expanded "><a href="expressions/array-expr.html"><strong aria-hidden="true">6.2.6.</strong> Array and index expressions</a></li><li class="chapter-item expanded "><a href="expressions/struct-expr.html"><strong aria-hidden="true">6.2.7.</strong> Struct expressions</a></li><li class="chapter-item expanded "><a href="expressions/call-expr.html"><strong aria-hidden="true">6.2.8.</strong> Call expressions</a></li><li class="chapter-item expanded "><a href="expressions/method-call-expr.html"><strong aria-hidden="true">6.2.9.</strong> Method call expressions</a></li><li class="chapter-item expanded "><a href="expressions/field-expr.html"><strong aria-hidden="true">6.2.10.</strong> Field access expressions</a></li><li class="chapter-item expanded "><a href="expressions/loop-expr.html"><strong aria-hidden="true">6.2.11.</strong> Loop expressions</a></li><li class="chapter-item expanded "><a href="expressions/if-expr.html"><strong aria-hidden="true">6.2.12.</strong> If expressions</a></li><li class="chapter-item expanded "><a href="expressions/return-expr.html"><strong aria-hidden="true">6.2.13.</strong> Return expressions</a></li><li class="chapter-item expanded "><a href="expressions/underscore-expr.html"><strong aria-hidden="true">6.2.14.</strong> Underscore expressions</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="patterns.html"><strong aria-hidden="true">7.</strong> Patterns</a></li><li class="chapter-item expanded "><a href="type-system.html"><strong aria-hidden="true">8.</strong> Type system</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="types.html"><strong aria-hidden="true">8.1.</strong> Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="types/boolean.html"><strong aria-hidden="true">8.1.1.</strong> Boolean type</a></li><li class="chapter-item expanded "><a href="types/numeric.html"><strong aria-hidden="true">8.1.2.</strong> Numeric types</a></li><li class="chapter-item expanded "><a href="types/textual.html"><strong aria-hidden="true">8.1.3.</strong> Textual types</a></li><li class="chapter-item expanded "><a href="types/unit.html"><strong aria-hidden="true">8.1.4.</strong> Unit type</a></li><li class="chapter-item expanded "><a href="types/array.html"><strong aria-hidden="true">8.1.5.</strong> Array types</a></li><li class="chapter-item expanded "><a href="types/struct.html"><strong aria-hidden="true">8.1.6.</strong> Struct types</a></li><li class="chapter-item expanded "><a href="types/enum.html"><strong aria-hidden="true">8.1.7.</strong> Enumerated types</a></li><li class="chapter-item expanded "><a href="types/pointer.html"><strong aria-hidden="true">8.1.8.</strong> Pointer types</a></li></ol></li><li class="chapter-item expanded "><a href="dynamically-sized-types.html"><strong aria-hidden="true">8.2.</strong> Dynamically Sized Types</a></li><li class="chapter-item expanded "><a href="type-layout.html"><strong aria-hidden="true">8.3.</strong> Type layout</a></li></ol></li><li class="chapter-item expanded "><a href="names.html"><strong aria-hidden="true">9.</strong> Names</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="names/namespaces.html"><strong aria-hidden="true">9.1.</strong> Namespaces</a></li><li class="chapter-item expanded "><a href="names/scopes.html"><strong aria-hidden="true">9.2.</strong> Scopes</a></li><li class="chapter-item expanded "><a href="names/preludes.html"><strong aria-hidden="true">9.3.</strong> Preludes</a></li><li class="chapter-item expanded "><a href="paths.html"><strong aria-hidden="true">9.4.</strong> Paths</a></li></ol></li><li class="chapter-item expanded "><a href="const_eval.html"><strong aria-hidden="true">10.</strong> Constant Evaluation</a></li><li class="chapter-item expanded "><a href="appendices.html"><strong aria-hidden="true">11.</strong> Appendices</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="grammar.html"><strong aria-hidden="true">11.1.</strong> Grammar summary</a></li><li class="chapter-item expanded "><a href="macro-ambiguity.html"><strong aria-hidden="true">11.2.</strong> Macro Follow-Set Ambiguity Formal Specification</a></li><li class="chapter-item expanded "><a href="influences.html"><strong aria-hidden="true">11.3.</strong> Influences</a></li><li class="chapter-item expanded "><a href="test-summary.html"><strong aria-hidden="true">11.4.</strong> Test summary</a></li><li class="chapter-item expanded "><a href="glossary.html"><strong aria-hidden="true">11.5.</strong> Glossary</a></li></ol></li></ol>';
+        // Set the current, active page, and reveal it if it's hidden
+        let current_page = document.location.href.toString().split("#")[0].split("?")[0];
+        if (current_page.endsWith("/")) {
+            current_page += "index.html";
+        }
+        var links = Array.prototype.slice.call(this.querySelectorAll("a"));
+        var l = links.length;
+        for (var i = 0; i < l; ++i) {
+            var link = links[i];
+            var href = link.getAttribute("href");
+            if (href && !href.startsWith("#") && !/^(?:[a-z+]+:)?\/\//.test(href)) {
+                link.href = path_to_root + href;
+            }
+            // The "index" page is supposed to alias the first chapter in the book.
+            if (link.href === current_page || (i === 0 && path_to_root === "" && current_page.endsWith("/index.html"))) {
+                link.classList.add("active");
+                var parent = link.parentElement;
+                if (parent && parent.classList.contains("chapter-item")) {
+                    parent.classList.add("expanded");
+                }
+                while (parent) {
+                    if (parent.tagName === "LI" && parent.previousElementSibling) {
+                        if (parent.previousElementSibling.classList.contains("chapter-item")) {
+                            parent.previousElementSibling.classList.add("expanded");
+                        }
+                    }
+                    parent = parent.parentElement;
+                }
+            }
+        }
+        // Track and set sidebar scroll position
+        this.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+                sessionStorage.setItem('sidebar-scroll', this.scrollTop);
+            }
+        }, { passive: true });
+        var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+        sessionStorage.removeItem('sidebar-scroll');
+        if (sidebarScrollTop) {
+            // preserve sidebar scroll position when navigating via links within sidebar
+            this.scrollTop = sidebarScrollTop;
+        } else {
+            // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+            var activeSection = document.querySelector('#sidebar .active');
+            if (activeSection) {
+                activeSection.scrollIntoView({ block: 'center' });
+            }
+        }
+        // Toggle buttons
+        var sidebarAnchorToggles = document.querySelectorAll('#sidebar a.toggle');
+        function toggleSection(ev) {
+            ev.currentTarget.parentElement.classList.toggle('expanded');
+        }
+        Array.from(sidebarAnchorToggles).forEach(function (el) {
+            el.addEventListener('click', toggleSection);
+        });
+    }
+}
+window.customElements.define("mdbook-sidebar-scrollbox", MDBookSidebarScrollbox);

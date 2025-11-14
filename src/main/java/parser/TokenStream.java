@@ -34,11 +34,17 @@ public class TokenStream {
     }
     
     public token_t consume(String expectedTokenName) throws ParserException {
-        if (current() != null && current().name.equals(expectedTokenName)) {
-            return consume();
+        try {
+            if (current() != null && current().name.equals(expectedTokenName)) {
+                return consume();
+            }
+            throw new ParserException("Expected '" + expectedTokenName + "' but found '" +
+                                      (current() != null ? current().name : "EOF") + "'");
+        } catch (ParserException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ParserException("Error consuming expected token '" + expectedTokenName + "': " + e.getMessage());
         }
-        throw new ParserException("Expected '" + expectedTokenName + "' but found '" +
-                                  (current() != null ? current().name : "EOF") + "'");
     }
     
     public boolean isAtEnd() {
@@ -54,12 +60,18 @@ public class TokenStream {
     }
     
     public boolean matchesWithException(String tokenName) throws ParserException {
-        if (current() != null && current().name.equals(tokenName)) {
-            position++;
-            return true;
+        try {
+            if (current() != null && current().name.equals(tokenName)) {
+                position++;
+                return true;
+            }
+            throw new ParserException("Expected '" + tokenName + "' but found '" +
+                                      (current() != null ? current().name : "EOF") + "'");
+        } catch (ParserException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ParserException("Error matching token with exception '" + tokenName + "': " + e.getMessage());
         }
-        throw new ParserException("Expected '" + tokenName + "' but found '" +
-                                  (current() != null ? current().name : "EOF") + "'");
     }
     
     public boolean matches(String tokenName, String nextTokenName) {
@@ -72,56 +84,94 @@ public class TokenStream {
     }
     
     public boolean matchesWithException(String tokenName, String nextTokenName) throws ParserException {
-        if (current() != null && current().name.equals(tokenName) &&
-            peek() != null && peek().name.equals(nextTokenName)) {
-            position += 2;
-            return true;
+        try {
+            if (current() != null && current().name.equals(tokenName) &&
+                peek() != null && peek().name.equals(nextTokenName)) {
+                position += 2;
+                return true;
+            }
+            throw new ParserException("Expected '" + tokenName + " " + nextTokenName + "' but found '" +
+                                      (current() != null ? current().name : "EOF") +
+                                      (peek() != null ? " " + peek().name : "") + "'");
+        } catch (ParserException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ParserException("Error matching tokens with exception '" + tokenName + "' and '" + nextTokenName + "': " + e.getMessage());
         }
-        throw new ParserException("Expected '" + tokenName + " " + nextTokenName + "' but found '" +
-                                  (current() != null ? current().name : "EOF") +
-                                  (peek() != null ? " " + peek().name : "") + "'");
     }
     
     // Position management for backtracking
     public void pushPosition() {
-        positionStack.push(position);
+        try {
+            positionStack.push(position);
+        } catch (Exception e) {
+            throw new RuntimeException("Error pushing position: " + e.getMessage());
+        }
     }
     
     public void popPosition() {
-        if (!positionStack.isEmpty()) {
-            position = positionStack.pop();
+        try {
+            if (!positionStack.isEmpty()) {
+                position = positionStack.pop();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error popping position: " + e.getMessage());
         }
     }
     
     public void commitPosition() {
-        if (!positionStack.isEmpty()) {
-            positionStack.pop();
+        try {
+            if (!positionStack.isEmpty()) {
+                positionStack.pop();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error committing position: " + e.getMessage());
         }
     }
     
     public int getPosition() {
-        return position;
+        try {
+            return position;
+        } catch (Exception e) {
+            throw new RuntimeException("Error getting position: " + e.getMessage());
+        }
     }
     
     public void setPosition(int position) {
-        this.position = position;
+        try {
+            this.position = position;
+        } catch (Exception e) {
+            throw new RuntimeException("Error setting position: " + e.getMessage());
+        }
     }
     
     public token_t get(int index) {
-        if (index >= 0 && index < tokens.size()) {
-            return tokens.get(index);
+        try {
+            if (index >= 0 && index < tokens.size()) {
+                return tokens.get(index);
+            }
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException("Error getting token at index " + index + ": " + e.getMessage());
         }
-        return null;
     }
     
     public int size() {
-        return tokens.size();
+        try {
+            return tokens.size();
+        } catch (Exception e) {
+            throw new RuntimeException("Error getting token stream size: " + e.getMessage());
+        }
     }
     
     public boolean equals(String tokenName) {
-        if (current() != null) {
-            return current().name.equals(tokenName);
+        try {
+            if (current() != null) {
+                return current().name.equals(tokenName);
+            }
+            return false;
+        } catch (Exception e) {
+            throw new RuntimeException("Error checking if current token equals '" + tokenName + "': " + e.getMessage());
         }
-        return false;
     }
 }

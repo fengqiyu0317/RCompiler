@@ -14,13 +14,19 @@ public abstract class BaseParser {
     // Grammar: <identifier> ::= [a-zA-Z_][a-zA-Z0-9_]*
     // Common utility methods
     public IdentifierNode parseIdentifier() throws ParserException {
-        if (!config.isIdentifier(tokenStream.current())) {
-            errorReporter.reportError("Expected identifier", tokenStream.current());
-            return null; // Will not execute because an exception was thrown above
+        try {
+            if (!config.isIdentifier(tokenStream.current())) {
+                errorReporter.reportError("Expected identifier", tokenStream.current());
+                return null; // Will not execute because an exception was thrown above
+            }
+            IdentifierNode node = new IdentifierNode();
+            node.name = tokenStream.consume().name;
+            return node;
+        } catch (ParserException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ParserException("Error parsing identifier: " + e.getMessage());
         }
-        IdentifierNode node = new IdentifierNode();
-        node.name = tokenStream.consume().name;
-        return node;
     }
     
     public int getPrecedence(token_t token) {
@@ -124,109 +130,137 @@ public abstract class BaseParser {
     }
     
     public oper_t getOperator(String name) {
-        switch (name) {
-            case "+":
-                return oper_t.PLUS;
-            case "-":
-                return oper_t.MINUS;
-            case "*":
-                return oper_t.MUL;
-            case "/":
-                return oper_t.DIV;
-            case "%":
-                return oper_t.MOD;
-            case "&":
-                return oper_t.AND;
-            case "|":
-                return oper_t.OR;
-            case "^":
-                return oper_t.XOR;
-            case "<<":
-                return oper_t.SHL;
-            case ">>":
-                return oper_t.SHR;
-            case "==":
-                return oper_t.EQ;
-            case "!=":
-                return oper_t.NEQ;
-            case "<":
-                return oper_t.LT;
-            case "<=":
-                return oper_t.LTE;
-            case ">":
-                return oper_t.GT;
-            case ">=":
-                return oper_t.GTE;
-            case "&&":
-                return oper_t.LOGICAL_AND;
-            case "||":
-                return oper_t.LOGICAL_OR;
-            case "=":
-                return oper_t.ASSIGN;
-            case "+=":
-                return oper_t.PLUS_ASSIGN;
-            case "-=":
-                return oper_t.MINUS_ASSIGN;
-            case "*=":
-                return oper_t.MUL_ASSIGN;
-            case "/=":
-                return oper_t.DIV_ASSIGN;
-            case "%=":
-                return oper_t.MOD_ASSIGN;
-            case "&=":
-                return oper_t.AND_ASSIGN;
-            case "|=":
-                return oper_t.OR_ASSIGN;
-            case "^=":
-                return oper_t.XOR_ASSIGN;
-            case "<<=":
-                return oper_t.SHL_ASSIGN;
-            case ">>=":
-                return oper_t.SHR_ASSIGN;
-            default:
-                throw new ParserException("Unknown operator: " + name);
+        try {
+            switch (name) {
+                case "+":
+                    return oper_t.PLUS;
+                case "-":
+                    return oper_t.MINUS;
+                case "*":
+                    return oper_t.MUL;
+                case "/":
+                    return oper_t.DIV;
+                case "%":
+                    return oper_t.MOD;
+                case "&":
+                    return oper_t.AND;
+                case "|":
+                    return oper_t.OR;
+                case "^":
+                    return oper_t.XOR;
+                case "<<":
+                    return oper_t.SHL;
+                case ">>":
+                    return oper_t.SHR;
+                case "==":
+                    return oper_t.EQ;
+                case "!=":
+                    return oper_t.NEQ;
+                case "<":
+                    return oper_t.LT;
+                case "<=":
+                    return oper_t.LTE;
+                case ">":
+                    return oper_t.GT;
+                case ">=":
+                    return oper_t.GTE;
+                case "&&":
+                    return oper_t.LOGICAL_AND;
+                case "||":
+                    return oper_t.LOGICAL_OR;
+                case "=":
+                    return oper_t.ASSIGN;
+                case "+=":
+                    return oper_t.PLUS_ASSIGN;
+                case "-=":
+                    return oper_t.MINUS_ASSIGN;
+                case "*=":
+                    return oper_t.MUL_ASSIGN;
+                case "/=":
+                    return oper_t.DIV_ASSIGN;
+                case "%=":
+                    return oper_t.MOD_ASSIGN;
+                case "&=":
+                    return oper_t.AND_ASSIGN;
+                case "|=":
+                    return oper_t.OR_ASSIGN;
+                case "^=":
+                    return oper_t.XOR_ASSIGN;
+                case "<<=":
+                    return oper_t.SHL_ASSIGN;
+                case ">>=":
+                    return oper_t.SHR_ASSIGN;
+                default:
+                    throw new ParserException("Unknown operator: " + name);
+            }
+        } catch (ParserException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ParserException("Error getting operator: " + e.getMessage());
         }
     }
     
     protected void expect(String tokenName) throws ParserException {
-        if (!tokenStream.matches(tokenName)) {
-            errorReporter.reportError("Expected '" + tokenName + "'", tokenStream.current());
+        try {
+            if (!tokenStream.matches(tokenName)) {
+                errorReporter.reportError("Expected '" + tokenName + "'", tokenStream.current());
+            }
+        } catch (ParserException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ParserException("Error expecting token '" + tokenName + "': " + e.getMessage());
         }
     }
     
     protected void expect(String tokenName, String errorMessage) throws ParserException {
-        if (!tokenStream.matches(tokenName)) {
-            errorReporter.reportError(errorMessage, tokenStream.current());
+        try {
+            if (!tokenStream.matches(tokenName)) {
+                errorReporter.reportError(errorMessage, tokenStream.current());
+            }
+        } catch (ParserException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ParserException("Error expecting token '" + tokenName + "': " + e.getMessage());
         }
     }
     
     protected boolean checkThenConsume(String tokenName) {
-        if (tokenStream.current() != null && tokenStream.equals(tokenName)) {
-            tokenStream.consume();
-            return true;
+        try {
+            if (tokenStream.current() != null && tokenStream.equals(tokenName)) {
+                tokenStream.consume();
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
         }
-        return false;
     }
     
     // Grammar: <pathseg> ::= <identifier> | self | Self
     // Parse path segment
     public PathExprSegNode parsePathSegment() {
-        token_t token = tokenStream.current();
-        PathExprSegNode node = new PathExprSegNode();
-        
-        if (config.isIdentifier(token)) {
-            node.name = parseIdentifier();
-            node.patternType = patternSeg_t.IDENT;
-        } else if (token.name.equals("self")) {
-            tokenStream.consume("self");
-            node.patternType = patternSeg_t.SELF;
-        } else if (token.name.equals("Self")) {
-            tokenStream.consume("Self");
-            node.patternType = patternSeg_t.SELF_TYPE;
-        } else {
-            errorReporter.reportError("Expected path segment", token);
+        try {
+            token_t token = tokenStream.current();
+            PathExprSegNode node = new PathExprSegNode();
+            
+            if (config.isIdentifier(token)) {
+                node.name = parseIdentifier();
+                node.patternType = patternSeg_t.IDENT;
+            } else if (token.name.equals("self")) {
+                tokenStream.consume("self");
+                node.patternType = patternSeg_t.SELF;
+            } else if (token.name.equals("Self")) {
+                tokenStream.consume("Self");
+                node.patternType = patternSeg_t.SELF_TYPE;
+            } else {
+                errorReporter.reportError("Expected path segment", token);
+            }
+            
+            return node;
+        } catch (ParserException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ParserException("Error parsing path segment: " + e.getMessage());
         }
-        
-        return node;
     }
 }

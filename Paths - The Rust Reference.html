@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)http://127.0.0.1:3000/paths.html -->
+<html lang="en" class="sidebar-visible js light" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- Book generated using mdBook -->
+        
+        <title>Paths - The Rust Reference</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="rgb(255, 255, 255)">
+
+        <link rel="icon" href="http://127.0.0.1:3000/favicon.svg">
+        <link rel="shortcut icon" href="http://127.0.0.1:3000/favicon.png">
+        <link rel="stylesheet" href="./Paths - The Rust Reference_files/variables.css">
+        <link rel="stylesheet" href="./Paths - The Rust Reference_files/general.css">
+        <link rel="stylesheet" href="./Paths - The Rust Reference_files/chrome.css">
+        <link rel="stylesheet" href="./Paths - The Rust Reference_files/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="./Paths - The Rust Reference_files/font-awesome.css">
+        <link rel="stylesheet" href="./Paths - The Rust Reference_files/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="./Paths - The Rust Reference_files/highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="./Paths - The Rust Reference_files/tomorrow-night.css" disabled="">
+        <link rel="stylesheet" id="ayu-highlight-css" href="./Paths - The Rust Reference_files/ayu-highlight.css" disabled="">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="./Paths - The Rust Reference_files/reference.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="./Paths - The Rust Reference_files/toc.js.下载"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents" aria-hidden="false">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"><ol class="chapter"><li class="chapter-item expanded affix "><a href="http://127.0.0.1:3000/introduction.html" tabindex="0">Introduction</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/notation.html" tabindex="0"><strong aria-hidden="true">1.</strong> Notation</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/undefined-behavior.html" tabindex="0"><strong aria-hidden="true">2.</strong> Undefined behavior</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/undefined-behavior/builtin.html" tabindex="0"><strong aria-hidden="true">2.1.</strong> Builtin</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/undefined-behavior/lexical-structure.html" tabindex="0"><strong aria-hidden="true">2.2.</strong> Lexical structure</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/undefined-behavior/items.html" tabindex="0"><strong aria-hidden="true">2.3.</strong> Items</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/undefined-behavior/statements.html" tabindex="0"><strong aria-hidden="true">2.4.</strong> Statements</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/undefined-behavior/expressions.html" tabindex="0"><strong aria-hidden="true">2.5.</strong> Expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/undefined-behavior/type-system.html" tabindex="0"><strong aria-hidden="true">2.6.</strong> Type System</a></li></ol></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/lexical-structure.html" tabindex="0"><strong aria-hidden="true">3.</strong> Lexical structure</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/input-format.html" tabindex="0"><strong aria-hidden="true">3.1.</strong> Input format</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/keywords.html" tabindex="0"><strong aria-hidden="true">3.2.</strong> Keywords</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/identifiers.html" tabindex="0"><strong aria-hidden="true">3.3.</strong> Identifiers</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/comments.html" tabindex="0"><strong aria-hidden="true">3.4.</strong> Comments</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/whitespace.html" tabindex="0"><strong aria-hidden="true">3.5.</strong> Whitespace</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/tokens.html" tabindex="0"><strong aria-hidden="true">3.6.</strong> Tokens</a></li></ol></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/crates-and-source-files.html" tabindex="0"><strong aria-hidden="true">4.</strong> Crates and source files</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/items.html" tabindex="0"><strong aria-hidden="true">5.</strong> Items</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/items/functions.html" tabindex="0"><strong aria-hidden="true">5.1.</strong> Functions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/items/structs.html" tabindex="0"><strong aria-hidden="true">5.2.</strong> Structs</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/items/enumerations.html" tabindex="0"><strong aria-hidden="true">5.3.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/items/constant-items.html" tabindex="0"><strong aria-hidden="true">5.4.</strong> Constant items</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/items/traits.html" tabindex="0"><strong aria-hidden="true">5.5.</strong> Traits</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/items/implementations.html" tabindex="0"><strong aria-hidden="true">5.6.</strong> Implementations</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/items/associated-items.html" tabindex="0"><strong aria-hidden="true">5.7.</strong> Associated Items</a></li></ol></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/statements-and-expressions.html" tabindex="0"><strong aria-hidden="true">6.</strong> Statements and expressions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/statements.html" tabindex="0"><strong aria-hidden="true">6.1.</strong> Statements</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions.html" tabindex="0"><strong aria-hidden="true">6.2.</strong> Expressions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/literal-expr.html" tabindex="0"><strong aria-hidden="true">6.2.1.</strong> Literal expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/path-expr.html" tabindex="0"><strong aria-hidden="true">6.2.2.</strong> Path expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/block-expr.html" tabindex="0"><strong aria-hidden="true">6.2.3.</strong> Block expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/operator-expr.html" tabindex="0"><strong aria-hidden="true">6.2.4.</strong> Operator expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/grouped-expr.html" tabindex="0"><strong aria-hidden="true">6.2.5.</strong> Grouped expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/array-expr.html" tabindex="0"><strong aria-hidden="true">6.2.6.</strong> Array and index expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/struct-expr.html" tabindex="0"><strong aria-hidden="true">6.2.7.</strong> Struct expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/call-expr.html" tabindex="0"><strong aria-hidden="true">6.2.8.</strong> Call expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/method-call-expr.html" tabindex="0"><strong aria-hidden="true">6.2.9.</strong> Method call expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/field-expr.html" tabindex="0"><strong aria-hidden="true">6.2.10.</strong> Field access expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/loop-expr.html" tabindex="0"><strong aria-hidden="true">6.2.11.</strong> Loop expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/if-expr.html" tabindex="0"><strong aria-hidden="true">6.2.12.</strong> If expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/return-expr.html" tabindex="0"><strong aria-hidden="true">6.2.13.</strong> Return expressions</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/expressions/underscore-expr.html" tabindex="0"><strong aria-hidden="true">6.2.14.</strong> Underscore expressions</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/patterns.html" tabindex="0"><strong aria-hidden="true">7.</strong> Patterns</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/type-system.html" tabindex="0"><strong aria-hidden="true">8.</strong> Type system</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types.html" tabindex="0"><strong aria-hidden="true">8.1.</strong> Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types/boolean.html" tabindex="0"><strong aria-hidden="true">8.1.1.</strong> Boolean type</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types/numeric.html" tabindex="0"><strong aria-hidden="true">8.1.2.</strong> Numeric types</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types/textual.html" tabindex="0"><strong aria-hidden="true">8.1.3.</strong> Textual types</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types/unit.html" tabindex="0"><strong aria-hidden="true">8.1.4.</strong> Unit type</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types/array.html" tabindex="0"><strong aria-hidden="true">8.1.5.</strong> Array types</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types/struct.html" tabindex="0"><strong aria-hidden="true">8.1.6.</strong> Struct types</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types/enum.html" tabindex="0"><strong aria-hidden="true">8.1.7.</strong> Enumerated types</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/types/pointer.html" tabindex="0"><strong aria-hidden="true">8.1.8.</strong> Pointer types</a></li></ol></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/dynamically-sized-types.html" tabindex="0"><strong aria-hidden="true">8.2.</strong> Dynamically Sized Types</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/type-layout.html" tabindex="0"><strong aria-hidden="true">8.3.</strong> Type layout</a></li></ol></li><li class="chapter-item expanded"><a href="http://127.0.0.1:3000/names.html" tabindex="0"><strong aria-hidden="true">9.</strong> Names</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/names/namespaces.html" tabindex="0"><strong aria-hidden="true">9.1.</strong> Namespaces</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/names/scopes.html" tabindex="0"><strong aria-hidden="true">9.2.</strong> Scopes</a></li><li class="chapter-item expanded"><a href="http://127.0.0.1:3000/names/preludes.html" tabindex="0"><strong aria-hidden="true">9.3.</strong> Preludes</a></li><li class="chapter-item expanded"><a href="http://127.0.0.1:3000/paths.html" class="active" tabindex="0"><strong aria-hidden="true">9.4.</strong> Paths</a></li></ol></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/const_eval.html" tabindex="0"><strong aria-hidden="true">10.</strong> Constant Evaluation</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/appendices.html" tabindex="0"><strong aria-hidden="true">11.</strong> Appendices</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/grammar.html" tabindex="0"><strong aria-hidden="true">11.1.</strong> Grammar summary</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/macro-ambiguity.html" tabindex="0"><strong aria-hidden="true">11.2.</strong> Macro Follow-Set Ambiguity Formal Specification</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/influences.html" tabindex="0"><strong aria-hidden="true">11.3.</strong> Influences</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/test-summary.html" tabindex="0"><strong aria-hidden="true">11.4.</strong> Test summary</a></li><li class="chapter-item expanded "><a href="http://127.0.0.1:3000/glossary.html" tabindex="0"><strong aria-hidden="true">11.5.</strong> Glossary</a></li></ol></li></ol></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar bordered sticky" style="top: 2958.33px;">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar" aria-expanded="true">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme theme-selected" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Reference</h1>
+
+                    <div class="right-buttons">
+                        <a href="http://127.0.0.1:3000/print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/reference/" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/reference/edit/master/src/paths.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div class="rule" id="r-paths"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths" title="paths"><span>[paths]</span></a>
+</div>
+<h1 id="paths"><a class="header" href="http://127.0.0.1:3000/paths.html#paths">Paths</a></h1>
+<div class="rule" id="r-paths.intro"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.intro" title="paths.intro"><span>[paths<wbr>.intro]</span></a>
+</div>
+<p>A <em>path</em> is a sequence of one or more path segments separated by <code class="hljs">::</code> tokens.
+Paths are used to refer to <a href="http://127.0.0.1:3000/items.html">items</a> (<a href="http://127.0.0.1:3000/items/functions.html#grammar-Function">function</a>s, <a href="http://127.0.0.1:3000/items/structs.html">struct</a>s, <a href="http://127.0.0.1:3000/items/enumerations.html">enumeration</a>s, constant items and associated items) and values (including local variables and <code class="hljs">enum</code> variables).</p>
+<div class="rule" id="r-paths.expr"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.expr" title="paths.expr"><span>[paths<wbr>.expr]</span></a>
+</div>
+<h2 id="paths-in-expressions"><a class="header" href="http://127.0.0.1:3000/paths.html#paths-in-expressions">Paths in expressions</a></h2>
+<div class="rule" id="r-paths.expr.syntax"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.expr.syntax" title="paths.expr.syntax"><span>[paths<wbr>.expr<wbr>.syntax]</span></a>
+</div>
+<div class="grammar-container">
+<p><strong><sup>Syntax</sup></strong>
+<br>
+<span class="grammar-text grammar-production" id="grammar-PathInExpression" onclick="show_railroad()"><a href="http://127.0.0.1:3000/paths.html#railroad-PathInExpression">PathInExpression</a></span> → <br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="grammar-text"><a href="http://127.0.0.1:3000/paths.html#grammar-PathExprSegment">PathExprSegment</a></span> ( <span class="grammar-literal">::</span> <span class="grammar-text"><a href="http://127.0.0.1:3000/paths.html#grammar-PathExprSegment">PathExprSegment</a></span> )<sup>?</sup></p>
+<p><span class="grammar-text grammar-production" id="grammar-PathExprSegment" onclick="show_railroad()"><a href="http://127.0.0.1:3000/paths.html#railroad-PathExprSegment">PathExprSegment</a></span> → <br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="grammar-text"><a href="http://127.0.0.1:3000/paths.html#grammar-PathIdentSegment">PathIdentSegment</a></span></p>
+<p><span class="grammar-text grammar-production" id="grammar-PathIdentSegment" onclick="show_railroad()"><a href="http://127.0.0.1:3000/paths.html#railroad-PathIdentSegment">PathIdentSegment</a></span> → <br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="grammar-text"><a href="http://127.0.0.1:3000/identifiers.html#grammar-IDENTIFIER">IDENTIFIER</a></span> | <span class="grammar-literal">Self</span> | <span class="grammar-literal">self</span></p>
+<p><button class="grammar-toggle-railroad" type="button" title="Toggle railroad display" onclick="toggle_railroad()">Hide syntax diagram</button></p>
+</div>
+<div class="grammar-railroad">
+<div style="width: 454px; height: auto; max-width: 100%; max-height: 100%" class="railroad-production" id="railroad-PathInExpression"><svg class="railroad" viewBox="0 0 454 87" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect class="railroad_canvas" height="100%" width="100%"></rect>
+<g class="verticalgrid">
+<a class="link" xlink:href="paths.html#grammar-PathInExpression">
+<text class="comment" x="71" y="25">
+PathInExpression</text>
+</a>
+<g class="sequence">
+<path d=" M 10 66 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5 m 10 0 h 5"></path>
+<g class="sequence">
+<a class="link" xlink:href="paths.html#railroad-PathExprSegment">
+<g class="nonterminal">
+<rect height="22" width="140" x="35" y="55"></rect>
+<text x="105" y="71">
+PathExprSegment</text>
+</g>
+</a>
+<g class="optional">
+<path d=" M 185 66 h 24 m -24 0 a 12 12 0 0 0 12 -12 v 0 a 12 12 0 0 1 12 -12 h 186 m -90 0 l -5 -5 m 0 10 l 5 -5 m 90 0 a 12 12 0 0 1 12 12 v 0 a 12 12 0 0 0 12 12 h -24"></path>
+<g class="sequence">
+<g class="terminal">
+<rect height="22" rx="10" ry="10" width="36" x="209" y="55"></rect>
+<text x="227" y="71">
+::</text>
+</g>
+<a class="link" xlink:href="paths.html#railroad-PathExprSegment">
+<g class="nonterminal">
+<rect height="22" width="140" x="255" y="55"></rect>
+<text x="325" y="71">
+PathExprSegment</text>
+</g>
+</a>
+<path d=" M 245 66 h 10"></path>
+</g>
+</g>
+<path d=" M 175 66 h 10"></path>
+</g>
+<path d=" M 429 66 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"></path>
+<path d=" M 25 66 h 10"></path>
+<path d=" M 419 66 h 10"></path>
+</g>
+</g>
+</svg>
+</div>
+<div style="width: 218px; height: auto; max-width: 100%; max-height: 100%" class="railroad-production" id="railroad-PathExprSegment"><svg class="railroad" viewBox="0 0 218 74" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect class="railroad_canvas" height="100%" width="100%"></rect>
+<g class="verticalgrid">
+<a class="link" xlink:href="paths.html#grammar-PathExprSegment">
+<text class="comment" x="67" y="25">
+PathExprSegment</text>
+</a>
+<g class="sequence">
+<path d=" M 10 53 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5 m 10 0 h 5"></path>
+<g class="sequence">
+<a class="link" xlink:href="paths.html#railroad-PathIdentSegment">
+<g class="nonterminal">
+<rect height="22" width="148" x="35" y="42"></rect>
+<text x="109" y="58">
+PathIdentSegment</text>
+</g>
+</a>
+</g>
+<path d=" M 193 53 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"></path>
+<path d=" M 25 53 h 10"></path>
+<path d=" M 183 53 h 10"></path>
+</g>
+</g>
+</svg>
+</div>
+<div style="width: 218px; height: auto; max-width: 100%; max-height: 100%" class="railroad-production" id="railroad-PathIdentSegment"><svg class="railroad" viewBox="0 0 218 140" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect class="railroad_canvas" height="100%" width="100%"></rect>
+<g class="verticalgrid">
+<a class="link" xlink:href="paths.html#grammar-PathIdentSegment">
+<text class="comment" x="71" y="25">
+PathIdentSegment</text>
+</a>
+<g class="sequence">
+<path d=" M 10 53 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5 m 10 0 h 5"></path>
+<g class="choice">
+<path d=" M 35 53 h 24 m 100 0 h 24"></path>
+<g class="sequence">
+<a class="link" xlink:href="identifiers.html#railroad-IDENTIFIER">
+<g class="nonterminal">
+<rect height="22" width="100" x="59" y="42"></rect>
+<text x="109" y="58">
+IDENTIFIER</text>
+</g>
+</a>
+</g>
+<path d=" M 35 53 a 12 12 0 0 1 12 12 v 9 m 124 0 v -9 a 12 12 0 0 1 12 -12"></path>
+<path d=" M 47 74 v 33 m 124 0 v -33"></path>
+<path d=" M 47 74 v 0 a 12 12 0 0 0 12 12 m 52 0 h 48 a 12 12 0 0 0 12 -12 v 0"></path>
+<g class="terminal">
+<rect height="22" rx="10" ry="10" width="52" x="59" y="75"></rect>
+<text x="85" y="91">
+Self</text>
+</g>
+<path d=" M 47 107 v 0 a 12 12 0 0 0 12 12 m 52 0 h 48 a 12 12 0 0 0 12 -12 v 0"></path>
+<g class="terminal">
+<rect height="22" rx="10" ry="10" width="52" x="59" y="108"></rect>
+<text x="85" y="124">
+self</text>
+</g>
+</g>
+<path d=" M 193 53 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"></path>
+<path d=" M 25 53 h 10"></path>
+<path d=" M 183 53 h 10"></path>
+</g>
+</g>
+</svg>
+</div>
+</div>
+<p>For enumeration, the format is <code class="hljs">&lt;enum&gt;::&lt;variant&gt;</code> and for struct it is <code class="hljs">&lt;struct&gt;::&lt;item&gt;</code>.</p>
+<p>Here are some examples:</p>
+<pre><pre class="playground"><div class="buttons"><button class="clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-play play-button" hidden="" title="Run this code" aria-label="Run this code"></button><button class="fa fa-eye" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust edition2024 hljs hide-boring"><span class="boring"><span class="hljs-meta">#![allow(unused)]</span>
+</span><span class="boring"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+</span><span class="hljs-keyword">let</span> x = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">let</span> y = x; <span class="hljs-comment">// y and x are PathInExpression's</span>
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><div class="buttons"><button class="clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-play play-button" hidden="" title="Run this code" aria-label="Run this code"></button></div><code class="language-rust edition2024 hljs"><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">D</span></span> { A, B, C }
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+    <span class="hljs-keyword">let</span> x = D::A; <span class="hljs-comment">// D::A is a PathInExpression</span>
+    <span class="hljs-comment">// the compiler finds the enum `D` in the type namespace</span>
+}</code></pre></pre>
+<pre><pre class="playground"><div class="buttons"><button class="clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-play play-button" hidden="" title="Run this code" aria-label="Run this code"></button></div><code class="language-rust edition2024 hljs"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">S</span></span>;
+    <span class="hljs-keyword">impl</span> S {
+        <span class="hljs-keyword">const</span> C: <span class="hljs-built_in">isize</span> = <span class="hljs-number">42</span>;
+        <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">f</span></span>() {}
+        <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">g</span></span>(&amp;<span class="hljs-keyword">self</span>) {
+            Self::f(); <span class="hljs-comment">// Self::f is a PathInExpression</span>
+        }
+        <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">h</span></span>(&amp;<span class="hljs-keyword">self</span>) {
+            <span class="hljs-keyword">self</span>.g(); <span class="hljs-comment">// self is a PathInExpression</span>
+        }
+    }
+    S::f(); <span class="hljs-comment">// S::f is a PathInExpression</span>
+    <span class="hljs-keyword">let</span> s = S;
+    S::g(&amp;s);
+    s.h(); <span class="hljs-comment">// s is a PathInExpression</span>
+    <span class="hljs-keyword">let</span> x = S::C; <span class="hljs-comment">// S::C is a PathInExpression</span>
+}</code></pre></pre>
+<!-- r[paths.expr.intro]
+Paths in expressions allow for paths with generic arguments to be specified. They are
+used in various places in [expressions] and [patterns].
+
+<div class="alert alert-warning">
+
+> <p class="alert-title"><svg viewBox="0 0 16 16" width="18" height="18"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Warning</p>
+ >
+> Generic arguments with turbofish syntax (`::<...>`) are not supported in this specification.
+
+
+</div>
+
+<div class="rule" id="r-paths.expr.argument-order"><a class="rule-link" href="#r-paths.expr.argument-order" title="paths.expr.argument-order"><span>[paths<wbr>.expr<wbr>.argument-order]</span/></a>
+</div>
+
+
+The order of generic arguments is restricted to lifetime arguments, then type
+arguments, then const arguments, then equality constraints.
+
+<div class="rule" id="r-paths.expr.complex-const-params"><a class="rule-link" href="#r-paths.expr.complex-const-params" title="paths.expr.complex-const-params"><span>[paths<wbr>.expr<wbr>.complex-const-params]</span/></a>
+</div>
+
+
+Const arguments must be surrounded by braces unless they are a [literal], an [inferred const], or a single segment path. An [inferred const] may not be surrounded by braces.
+
+```rust
+mod m {
+    pub const C: usize = 1;
+}
+const C: usize = m::C;
+fn f<const N: usize>() -> [u8; N] { [0; N] }
+
+// Generic arguments with turbofish syntax are not supported
+```
+
+<div class="alert alert-note">
+
+> <p class="alert-title"><svg viewBox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
+ >
+> In a generic argument list, an [inferred const] is parsed as an [inferred type][InferredType] but then semantically treated as a separate kind of [const generic argument].
+
+
+</div>
+
+<div class="rule" id="r-paths.expr.impl-trait-params"><a class="rule-link" href="#r-paths.expr.impl-trait-params" title="paths.expr.impl-trait-params"><span>[paths<wbr>.expr<wbr>.impl-trait-params]</span/></a>
+</div>
+
+
+The synthetic type parameters corresponding to `impl Trait` types are implicit,
+and these cannot be explicitly specified. -->
+<div class="rule" id="r-paths.type"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.type" title="paths.type"><span>[paths<wbr>.type]</span></a>
+</div>
+<h2 id="paths-in-types"><a class="header" href="http://127.0.0.1:3000/paths.html#paths-in-types">Paths in types</a></h2>
+<div class="rule" id="r-paths.type.syntax"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.type.syntax" title="paths.type.syntax"><span>[paths<wbr>.type<wbr>.syntax]</span></a>
+</div>
+<div class="grammar-container">
+<p><strong><sup>Syntax</sup></strong>
+<br>
+<span class="grammar-text grammar-production" id="grammar-TypePath" onclick="show_railroad()"><a href="http://127.0.0.1:3000/paths.html#railroad-TypePath">TypePath</a></span> → <span class="grammar-text"><a href="http://127.0.0.1:3000/paths.html#grammar-TypePathSegment">TypePathSegment</a></span></p>
+<p><span class="grammar-text grammar-production" id="grammar-TypePathSegment" onclick="show_railroad()"><a href="http://127.0.0.1:3000/paths.html#railroad-TypePathSegment">TypePathSegment</a></span> → <span class="grammar-text"><a href="http://127.0.0.1:3000/paths.html#grammar-PathIdentSegment">PathIdentSegment</a></span></p>
+<p><button class="grammar-toggle-railroad" type="button" title="Toggle railroad display" onclick="toggle_railroad()">Hide syntax diagram</button></p>
+</div>
+<div class="grammar-railroad">
+<div style="width: 210px; height: auto; max-width: 100%; max-height: 100%" class="railroad-production" id="railroad-TypePath"><svg class="railroad" viewBox="0 0 210 74" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect class="railroad_canvas" height="100%" width="100%"></rect>
+<g class="verticalgrid">
+<a class="link" xlink:href="paths.html#grammar-TypePath">
+<text class="comment" x="43" y="25">
+TypePath</text>
+</a>
+<g class="sequence">
+<path d=" M 10 53 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5 m 10 0 h 5"></path>
+<a class="link" xlink:href="paths.html#railroad-TypePathSegment">
+<g class="nonterminal">
+<rect height="22" width="140" x="35" y="42"></rect>
+<text x="105" y="58">
+TypePathSegment</text>
+</g>
+</a>
+<path d=" M 185 53 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"></path>
+<path d=" M 25 53 h 10"></path>
+<path d=" M 175 53 h 10"></path>
+</g>
+</g>
+</svg>
+</div>
+<div style="width: 218px; height: auto; max-width: 100%; max-height: 100%" class="railroad-production" id="railroad-TypePathSegment"><svg class="railroad" viewBox="0 0 218 74" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect class="railroad_canvas" height="100%" width="100%"></rect>
+<g class="verticalgrid">
+<a class="link" xlink:href="paths.html#grammar-TypePathSegment">
+<text class="comment" x="67" y="25">
+TypePathSegment</text>
+</a>
+<g class="sequence">
+<path d=" M 10 53 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5 m 10 0 h 5"></path>
+<a class="link" xlink:href="paths.html#railroad-PathIdentSegment">
+<g class="nonterminal">
+<rect height="22" width="148" x="35" y="42"></rect>
+<text x="109" y="58">
+PathIdentSegment</text>
+</g>
+</a>
+<path d=" M 193 53 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"></path>
+<path d=" M 25 53 h 10"></path>
+<path d=" M 183 53 h 10"></path>
+</g>
+</g>
+</svg>
+</div>
+</div>
+<div class="rule" id="r-paths.type.intro"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.type.intro" title="paths.type.intro"><span>[paths<wbr>.type<wbr>.intro]</span></a>
+</div>
+<p>Type paths are used within type definitions.</p>
+<div class="rule" id="r-paths.qualifiers"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.qualifiers" title="paths.qualifiers"><span>[paths<wbr>.qualifiers]</span></a>
+</div>
+<h2 id="path-qualifiers"><a class="header" href="http://127.0.0.1:3000/paths.html#path-qualifiers">Path qualifiers</a></h2>
+<p>Paths can be denoted with various leading qualifiers to change the meaning of
+how it is resolved.</p>
+<div class="rule" id="r-paths.qualifiers.method-self"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.qualifiers.method-self" title="paths.qualifiers.method-self"><span>[paths<wbr>.qualifiers<wbr>.method-self]</span></a>
+</div>
+<h3 id="self"><a class="header" href="http://127.0.0.1:3000/paths.html#self"><code>self</code></a></h3>
+<div class="rule" id="r-paths.qualifiers.self-pat"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.qualifiers.self-pat" title="paths.qualifiers.self-pat"><span>[paths<wbr>.qualifiers<wbr>.self-pat]</span></a>
+</div>
+<p>In a method body, a path which consists of a single <code class="hljs">self</code> segment resolves to the method’s self parameter.</p>
+<pre><pre class="playground"><div class="buttons"><button class="clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-play play-button" hidden="" title="Run this code" aria-label="Run this code"></button><button class="fa fa-eye" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust edition2024 hljs hide-boring"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">S</span></span> {
+    b: <span class="hljs-built_in">bool</span>,
+}
+<span class="hljs-keyword">impl</span> S {
+    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">foo</span></span>(&amp;<span class="hljs-keyword">self</span>){}
+    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">baz</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">bool</span> {
+        <span class="hljs-keyword">self</span>.foo(); 
+        <span class="hljs-comment">// in rust, you may use `self::foo()`, but it is not supported in this specification</span>
+        <span class="hljs-keyword">self</span>.b
+    }
+}
+<span class="boring"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {}</span></code></pre></pre>
+<div class="rule" id="r-paths.qualifiers.type-self"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.qualifiers.type-self" title="paths.qualifiers.type-self"><span>[paths<wbr>.qualifiers<wbr>.type-self]</span></a>
+</div>
+<h3 id="self-1"><a class="header" href="http://127.0.0.1:3000/paths.html#self-1"><code>Self</code></a></h3>
+<div class="rule" id="r-paths.qualifiers.type-self.intro"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.qualifiers.type-self.intro" title="paths.qualifiers.type-self.intro"><span>[paths<wbr>.qualifiers<wbr>.type-self<wbr>.intro]</span></a>
+</div>
+<p><code class="hljs">Self</code>, with a capital “S”, is used to refer to the current type being implemented or defined. It may be used in the following situations:</p>
+<div class="rule" id="r-paths.qualifiers.type-self.trait"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.qualifiers.type-self.trait" title="paths.qualifiers.type-self.trait"><span>[paths<wbr>.qualifiers<wbr>.type-self<wbr>.trait]</span></a>
+</div>
+<ul>
+<li>In a <a href="http://127.0.0.1:3000/items/traits.html">trait</a> definition, it refers to the type implementing the trait.</li>
+</ul>
+<div class="rule" id="r-paths.qualifiers.type-self.impl"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.qualifiers.type-self.impl" title="paths.qualifiers.type-self.impl"><span>[paths<wbr>.qualifiers<wbr>.type-self<wbr>.impl]</span></a>
+</div>
+<ul>
+<li>In an <a href="http://127.0.0.1:3000/items/implementations.html">implementation</a>, it refers to the type being implemented.
+When implementing a tuple or unit <a href="http://127.0.0.1:3000/items/structs.html">struct</a>, it also refers to the constructor in the <a href="http://127.0.0.1:3000/names/namespaces.html">value namespace</a>.</li>
+</ul>
+<div class="rule" id="r-paths.qualifiers.type-self.type"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.qualifiers.type-self.type" title="paths.qualifiers.type-self.type"><span>[paths<wbr>.qualifiers<wbr>.type-self<wbr>.type]</span></a>
+</div>
+<ul>
+<li>In the definition of a <a href="http://127.0.0.1:3000/items/structs.html">struct</a> or an <a href="http://127.0.0.1:3000/items/enumerations.html">enumeration</a>, it refers to the type being defined.
+The definition is not allowed to be infinitely recursive (there must be an indirection).</li>
+</ul>
+<div class="rule" id="r-paths.qualifiers.type-self.scope"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.qualifiers.type-self.scope" title="paths.qualifiers.type-self.scope"><span>[paths<wbr>.qualifiers<wbr>.type-self<wbr>.scope]</span></a>
+</div>
+<p>The scope of <code class="hljs">Self</code> behaves similarly to a generic parameter; see the <a href="http://127.0.0.1:3000/names/scopes.html#self-scope"><code class="hljs">Self</code> scope</a> section for more details.</p>
+<div class="rule" id="r-paths.qualifiers.type-self.allowed-positions"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.qualifiers.type-self.allowed-positions" title="paths.qualifiers.type-self.allowed-positions"><span>[paths<wbr>.qualifiers<wbr>.type-self<wbr>.allowed-positions]</span></a>
+</div>
+<p><code class="hljs">Self</code> can only be used as the first segment, without a preceding <code class="hljs">::</code>.</p>
+<div class="rule" id="r-paths.qualifiers.type-self.no-generics"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.qualifiers.type-self.no-generics" title="paths.qualifiers.type-self.no-generics"><span>[paths<wbr>.qualifiers<wbr>.type-self<wbr>.no-generics]</span></a>
+</div>
+<p>The <code class="hljs">Self</code> path cannot include generic arguments.</p>
+<pre><pre class="playground"><div class="buttons"><button class="clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-play play-button" hidden="" title="Run this code" aria-label="Run this code"></button><button class="fa fa-eye" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust edition2024 hljs hide-boring"><span class="boring"><span class="hljs-meta">#![allow(unused)]</span>
+</span><span class="boring"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+</span><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">T</span></span> {
+    <span class="hljs-keyword">const</span> C: <span class="hljs-built_in">i32</span>;
+    <span class="hljs-comment">// `Self` will be whatever type that implements `T`.</span>
+    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">new</span></span>() -&gt; <span class="hljs-keyword">Self</span>;
+    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">f</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">i32</span>;
+}
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">S</span></span>;
+<span class="hljs-keyword">impl</span> T <span class="hljs-keyword">for</span> S {
+    <span class="hljs-keyword">const</span> C: <span class="hljs-built_in">i32</span> = <span class="hljs-number">9</span>;
+    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">new</span></span>() -&gt; <span class="hljs-keyword">Self</span> {           <span class="hljs-comment">// `Self` is the type `S`.</span>
+        S
+    }
+    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">f</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">i32</span> {
+        Self::C                  <span class="hljs-comment">// `Self::C` is the constant value `9`.</span>
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<div class="rule" id="r-paths.qualifiers.type-self.recursive"><a class="rule-link" href="http://127.0.0.1:3000/paths.html#r-paths.qualifiers.type-self.recursive" title="paths.qualifiers.type-self.recursive"><span>[paths<wbr>.qualifiers<wbr>.type-self<wbr>.recursive]</span></a>
+</div>
+<p>A struct can reference itself, as long as it is not infinitely recursive.</p>
+<pre><pre class="playground"><div class="buttons"><button class="clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-play play-button" hidden="" title="Run this code" aria-label="Run this code"></button><button class="fa fa-eye" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust edition2024 hljs hide-boring"><span class="boring"><span class="hljs-meta">#![allow(unused)]</span>
+</span><span class="boring"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+</span><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">NonEmptyList</span></span> {
+    head: <span class="hljs-built_in">usize</span>,
+    tail: <span class="hljs-built_in">Option</span>&lt;<span class="hljs-built_in">Box</span>&lt;<span class="hljs-keyword">Self</span>&gt;&gt;,
+}
+
+<span class="hljs-keyword">impl</span> NonEmptyList {
+    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">new</span></span>(head: <span class="hljs-built_in">usize</span>) -&gt; <span class="hljs-keyword">Self</span> {
+        NonEmptyList {
+            head,
+            tail: <span class="hljs-literal">None</span>,
+        }
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">append</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, value: <span class="hljs-built_in">usize</span>) {
+        <span class="hljs-keyword">match</span> <span class="hljs-keyword">self</span>.tail.as_mut() {
+            <span class="hljs-literal">Some</span>(tail) =&gt; tail.append(value),
+            <span class="hljs-literal">None</span> =&gt; <span class="hljs-keyword">self</span>.tail = <span class="hljs-literal">Some</span>(<span class="hljs-built_in">Box</span>::new(Self::new(value))),
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<!--
+<div class="rule" id="r-paths.qualifiers.crate"><a class="rule-link" href="#r-paths.qualifiers.crate" title="paths.qualifiers.crate"><span>[paths<wbr>.qualifiers<wbr>.crate]</span/></a>
+</div>
+
+
+### `crate`
+
+<div class="rule" id="r-paths.qualifiers.crate.intro"><a class="rule-link" href="#r-paths.qualifiers.crate.intro" title="paths.qualifiers.crate.intro"><span>[paths<wbr>.qualifiers<wbr>.crate<wbr>.intro]</span/></a>
+</div>
+
+
+`crate` resolves the path relative to the current crate.
+
+<div class="rule" id="r-paths.qualifiers.crate.allowed-positions"><a class="rule-link" href="#r-paths.qualifiers.crate.allowed-positions" title="paths.qualifiers.crate.allowed-positions"><span>[paths<wbr>.qualifiers<wbr>.crate<wbr>.allowed-positions]</span/></a>
+</div>
+
+
+`crate` can only be used as the first segment, without a preceding `::`.
+
+
+```rust
+const FN: i32 = 1;
+fn f() {
+    const FN: i32 = 20;
+    printlnInt(FN);
+}
+struct V;
+impl V {
+    const FN: i32 = 10;
+    fn f() {
+        printlnInt(Self::FN);
+    }
+}
+trait T{
+    const FN: i32 = 30;
+    fn f() {
+        printlnInt(Self::FN);
+    }
+}
+fn main() {
+    struct V;
+    trait T{
+        const FN: i32 = 300;
+        fn f() {
+            printlnInt(Self::FN);
+        }
+    }
+    impl crate::T for V {}
+    impl T for crate::V {}
+    const FN: i32 = 2;
+    {
+        printlnInt(FN); // 3
+        f(); // 20
+        {
+            f(); // 40
+            fn f() {
+                printlnInt(40);
+            }
+            printlnInt(FN); // 4
+            const FN: i32 = 4;
+            printlnInt(crate::FN); // 1
+            crate::f(); // 20
+            V::f(); // 30
+            crate::V::f(); // 10
+        }
+        const FN: i32 = 3;
+    }
+}
+```
+
+I suggest not implementing `crate` and letting it shadow.
+-->
+<!-- 
+<div class="rule" id="r-paths.canonical"><a class="rule-link" href="#r-paths.canonical" title="paths.canonical"><span>[paths<wbr>.canonical]</span/></a>
+</div>
+
+
+## Canonical paths
+
+<div class="rule" id="r-paths.canonical.intro"><a class="rule-link" href="#r-paths.canonical.intro" title="paths.canonical.intro"><span>[paths<wbr>.canonical<wbr>.intro]</span/></a>
+</div>
+
+
+Items defined in a module or implementation have a *canonical path* that
+corresponds to where within its crate it is defined.
+
+<div class="rule" id="r-paths.canonical.alias"><a class="rule-link" href="#r-paths.canonical.alias" title="paths.canonical.alias"><span>[paths<wbr>.canonical<wbr>.alias]</span/></a>
+</div>
+
+
+All other paths to these items are aliases.
+
+<div class="rule" id="r-paths.canonical.def"><a class="rule-link" href="#r-paths.canonical.def" title="paths.canonical.def"><span>[paths<wbr>.canonical<wbr>.def]</span/></a>
+</div>
+
+
+The canonical path is defined as a *path prefix* appended by
+the path segment the item itself defines.
+
+<div class="rule" id="r-paths.canonical.non-canonical"><a class="rule-link" href="#r-paths.canonical.non-canonical" title="paths.canonical.non-canonical"><span>[paths<wbr>.canonical<wbr>.non-canonical]</span/></a>
+</div>
+
+
+[Implementations] and [use declarations] do not have canonical paths, although
+the items that implementations define do have them. Items defined in
+block expressions do not have canonical paths. Items defined in a module that
+does not have a canonical path do not have a canonical path. Associated items
+defined in an implementation that refers to an item without a canonical path,
+e.g. as the implementing type, the trait being implemented, a type parameter or
+bound on a type parameter, do not have canonical paths.
+
+<div class="rule" id="r-paths.canonical.module-prefix"><a class="rule-link" href="#r-paths.canonical.module-prefix" title="paths.canonical.module-prefix"><span>[paths<wbr>.canonical<wbr>.module-prefix]</span/></a>
+</div>
+
+
+The path prefix for modules is the canonical path to that module.
+
+<div class="rule" id="r-paths.canonical.bare-impl-prefix"><a class="rule-link" href="#r-paths.canonical.bare-impl-prefix" title="paths.canonical.bare-impl-prefix"><span>[paths<wbr>.canonical<wbr>.bare-impl-prefix]</span/></a>
+</div>
+
+
+For bare implementations, it is the canonical path of the item being implemented
+surrounded by <span class="parenthetical">angle (`<>`)</span> brackets.
+
+<div class="rule" id="r-paths.canonical.trait-impl-prefix"><a class="rule-link" href="#r-paths.canonical.trait-impl-prefix" title="paths.canonical.trait-impl-prefix"><span>[paths<wbr>.canonical<wbr>.trait-impl-prefix]</span/></a>
+</div>
+
+
+For [trait implementations], it is the canonical path of the item being implemented
+followed by `as` followed by the canonical path to the trait all surrounded in
+<span class="parenthetical">angle (`<>`)</span> brackets.
+
+<div class="rule" id="r-paths.canonical.local-canonical-path"><a class="rule-link" href="#r-paths.canonical.local-canonical-path" title="paths.canonical.local-canonical-path"><span>[paths<wbr>.canonical<wbr>.local-canonical-path]</span/></a>
+</div>
+
+
+The canonical path is only meaningful within a given crate. There is no global
+namespace across crates; an item's canonical path merely identifies it within
+the crate.
+
+```rust
+// Comments show the canonical path of the item.
+
+mod a { // crate::a
+    pub struct Struct; // crate::a::Struct
+
+    pub trait Trait { // crate::a::Trait
+        fn f(&self); // crate::a::Trait::f
+    }
+
+    impl Trait for Struct {
+        fn f(&self) {} // <crate::a::Struct as crate::a::Trait>::f
+    }
+
+    impl Struct {
+        fn g(&self) {} // <crate::a::Struct>::g
+    }
+}
+
+mod without { // crate::without
+    fn canonicals() { // crate::without::canonicals
+        struct OtherStruct; // None
+
+        trait OtherTrait { // None
+            fn g(&self); // None
+        }
+
+        impl OtherTrait for OtherStruct {
+            fn g(&self) {} // None
+        }
+
+        impl OtherTrait for crate::a::Struct {
+            fn g(&self) {} // None
+        }
+
+        impl crate::a::Trait for OtherStruct {
+            fn f(&self) {} // None
+        }
+    }
+}
+
+# fn main() {}
+``` -->
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="http://127.0.0.1:3000/names/preludes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="http://127.0.0.1:3000/const_eval.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="http://127.0.0.1:3000/names/preludes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="http://127.0.0.1:3000/const_eval.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="./Paths - The Rust Reference_files/elasticlunr.min.js.下载"></script>
+        <script src="./Paths - The Rust Reference_files/mark.min.js.下载"></script>
+        <script src="./Paths - The Rust Reference_files/searcher.js.下载"></script>
+
+        <script src="./Paths - The Rust Reference_files/clipboard.min.js.下载"></script>
+        <script src="./Paths - The Rust Reference_files/highlight.js.下载"></script>
+        <script src="./Paths - The Rust Reference_files/book.js.下载"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="./Paths - The Rust Reference_files/reference.js.下载"></script>
+
+
+
+    </div>
+    
+
+<script src="chrome-extension://ahgbfffhflknbbdoknekgabmiobdehkk/static/js/inject.js" type="text/javascript" async=""></script></body></html>

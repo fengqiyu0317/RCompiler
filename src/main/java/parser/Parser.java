@@ -35,16 +35,29 @@ public class Parser {
     // Grammar: <program> ::= <statement>*
     // Main entry method
     public void parse() throws ParserException {
-        Vector<StmtNode> statements = new Vector<>();
-        
-        while (!tokenStream.isAtEnd()) {
-            StmtNode stmt = statementParser.parseStatement();
-            if (stmt != null) {
-                statements.add(stmt);
+        try {
+            Vector<StmtNode> statements = new Vector<>();
+            
+            while (!tokenStream.isAtEnd()) {
+                try {
+                    StmtNode stmt = statementParser.parseStatement();
+                    if (stmt != null) {
+                        statements.add(stmt);
+                    }
+                } catch (ParserException e) {
+                    System.err.println("Error parsing statement: " + e.getMessage());
+                    throw e;
+                } catch (Exception e) {
+                    throw new ParserException("Error parsing program: " + e.getMessage());
+                }
             }
+            
+            this.statements = statements;
+        } catch (ParserException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ParserException("Error parsing program: " + e.getMessage());
         }
-        
-        this.statements = statements;
     }
     
     

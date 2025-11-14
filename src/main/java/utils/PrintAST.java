@@ -61,9 +61,9 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("LetStmtNode");
         indent();
-        visit(node.name);
-        visit(node.type);
-        if (node.value != null) visit(node.value);
+        node.name.accept(this);
+        node.type.accept(this);
+        if (node.value != null) node.value.accept(this);
         dedent();
     }
     @Override
@@ -71,7 +71,7 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("ExprStmtNode");
         indent();
-        visit(node.expr);
+        node.expr.accept(this);
         dedent();
     }
     @Override
@@ -80,13 +80,13 @@ public class PrintAST extends VisitorBase {
         System.out.print("FunctionNode: ");
         System.out.println("isConst = " + node.isConst);
         indent();
-        visit(node.name);
-        if (node.selfPara != null) visit(node.selfPara);
+        node.name.accept(this);
+        if (node.selfPara != null) node.selfPara.accept(this);
         for (ParameterNode param : node.parameters) {
-            visit(param);
+            param.accept(this);
         }
-        if (node.returnType != null) visit(node.returnType);
-        if (node.body != null) visit(node.body);
+        if (node.returnType != null) node.returnType.accept(this);
+        if (node.body != null) node.body.accept(this);
         dedent();
     }
     @Override
@@ -96,7 +96,7 @@ public class PrintAST extends VisitorBase {
         System.out.print("isMutable = " + node.isMutable + ", ");
         System.out.println("isReference = " + node.isReference);
         indent();
-        if (node.type != null) visit(node.type);
+        if (node.type != null) node.type.accept(this);
         dedent();
     }
     @Override
@@ -104,8 +104,8 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("ParameterNode");
         indent();
-        visit(node.name);
-        visit(node.type);
+        node.name.accept(this);
+        node.type.accept(this);
         dedent();
     }
     @Override
@@ -128,7 +128,7 @@ public class PrintAST extends VisitorBase {
         System.out.print("isMutable = " + node.isMutable + ", ");
         System.out.println("isReference = " + node.isReference);
         indent();
-        visit(node.name);
+        node.name.accept(this);
         dedent();
     }
     @Override
@@ -142,7 +142,7 @@ public class PrintAST extends VisitorBase {
         System.out.print("RefPatNode: ");
         System.out.println("isMutable = " + node.isMutable);
         indent();
-        visit(node.innerPattern);
+        node.innerPattern.accept(this);
         dedent();
     }
     @Override
@@ -150,9 +150,9 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("StructNode");
         indent();
-        visit(node.name);
+        node.name.accept(this);
         for (FieldNode field : node.fields) {
-            visit(field);
+            field.accept(this);
         }
         dedent();
     }
@@ -161,8 +161,8 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("FieldNode");
         indent();
-        visit(node.name);
-        visit(node.type);
+        node.name.accept(this);
+        node.type.accept(this);
         dedent();
     }
     @Override
@@ -170,9 +170,9 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("EnumNode");
         indent();
-        visit(node.name);
+        node.name.accept(this);
         for (IdentifierNode variant : node.variants) {
-            visit(variant);
+            variant.accept(this);
         }
         dedent();
     }
@@ -181,9 +181,9 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("ConstItem");
         indent();
-        visit(node.name);
-        visit(node.type);
-        if (node.value != null) visit(node.value);
+        node.name.accept(this);
+        node.type.accept(this);
+        if (node.value != null) node.value.accept(this);
         dedent();
     }
     @Override
@@ -191,9 +191,9 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("TraitNode");
         indent();
-        visit(node.name);
+        node.name.accept(this);
         for (AssoItemNode item : node.items) {
-            visit(item);
+            item.accept(this);
         }
         dedent();
     }
@@ -202,10 +202,10 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("ImplNode");
         indent();
-        if (node.trait != null) visit(node.trait);
-        visit(node.typeName);
+        if (node.trait != null) node.trait.accept(this);
+        node.typeName.accept(this);
         for (AssoItemNode item : node.items) {
-            visit(item);
+            item.accept(this);
         }
         dedent();
     }
@@ -213,10 +213,10 @@ public class PrintAST extends VisitorBase {
     public void visit(AssoItemNode node) {
         // decide which specific AssoItemNode it is
         if (node.function != null) {
-            visit(node.function);
+            node.function.accept(this);
             return;
         } else {
-            visit(node.constant);
+            node.constant.accept(this);
             return;
         }
     }
@@ -248,37 +248,37 @@ public class PrintAST extends VisitorBase {
     public void visit(ExprWithoutBlockNode node) {
         // decide which specific ExprWithoutBlockNode it is
         if (node.expr != null) {
-            visit(node.expr);
+            node.expr.accept(this);
             return;
         }
         if (node instanceof LiteralExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof PathExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof GroupExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof OperExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof ArrayExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof IndexExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof StructExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof FieldExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof CallExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof MethodCallExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof ContinueExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof BreakExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof ReturnExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof UnderscoreExprNode n) {
-            visit(n);
+            n.accept(this);
         } else {
             throw new ASTPrintException("unknown ExprWithoutBlockNode");
         }
@@ -289,7 +289,7 @@ public class PrintAST extends VisitorBase {
         System.out.println("BlockExprNode");
         indent();
         for (StmtNode stmt : node.statements) {
-            visit(stmt);
+            stmt.accept(this);
         }
         dedent();
     }
@@ -298,10 +298,10 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("IfExprNode");
         indent();
-        visit(node.condition);
-        visit(node.thenBranch);
-        if (node.elseBranch != null) visit(node.elseBranch);
-        if (node.elseifBranch != null) visit(node.elseifBranch);
+        node.condition.accept(this);
+        node.thenBranch.accept(this);
+        if (node.elseBranch != null) node.elseBranch.accept(this);
+        if (node.elseifBranch != null) node.elseifBranch.accept(this);
         dedent();
     }
     @Override
@@ -309,8 +309,8 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("LoopExprNode");
         indent();
-        if (node.condition != null) visit(node.condition);
-        visit(node.body);
+        if (node.condition != null) node.condition.accept(this);
+        node.body.accept(this);
         dedent();
     }
     @Override
@@ -349,8 +349,8 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("PathExprNode");
         indent();
-        visit(node.LSeg);
-        if (node.RSeg != null) visit(node.RSeg);
+        node.LSeg.accept(this);
+        if (node.RSeg != null) node.RSeg.accept(this);
         dedent();
     }
     @Override
@@ -361,7 +361,7 @@ public class PrintAST extends VisitorBase {
         switch (node.patternType) {
             case IDENT -> {
                 System.out.println("patternType = IDENT");
-                visit(node.name);
+                node.name.accept(this);
             }
             case SELF -> System.out.println("patternType = SELF");
             case SELF_TYPE -> System.out.println("patternType = SELF_TYPE");
@@ -374,30 +374,30 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("GroupExprNode");
         indent();
-        visit(node.innerExpr);
+        node.innerExpr.accept(this);
         dedent();
     }
     @Override
     public void visit(OperExprNode node) {
         // decide which specific OperExprNode it is
         if (node instanceof BorrowExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof DerefExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof NegaExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof ArithExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof CompExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof LazyExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof AssignExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof ComAssignExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof TypeCastExprNode n) {
-            visit(n);
+            n.accept(this);
         } else {
             throw new ASTPrintException("unknown OperExprNode");
         }
@@ -409,7 +409,7 @@ public class PrintAST extends VisitorBase {
         System.out.print("isMutable = " + node.isMutable + ", ");
         System.out.println("isDouble = " + node.isDoubleReference);
         indent();
-        visit(node.innerExpr);
+        node.innerExpr.accept(this);
         dedent();
     }
     @Override
@@ -417,7 +417,7 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("DerefExprNode");
         indent();
-        visit(node.innerExpr);
+        node.innerExpr.accept(this);
         dedent();
     }
     @Override
@@ -426,7 +426,7 @@ public class PrintAST extends VisitorBase {
         System.out.print("NegaExprNode: ");
         System.out.println("isLogical = " + node.isLogical);
         indent();
-        visit(node.innerExpr);
+        node.innerExpr.accept(this);
         dedent();
     }
     @Override
@@ -447,8 +447,8 @@ public class PrintAST extends VisitorBase {
             default -> {throw new ASTPrintException("unknown arithmetic operator");}
         }
         indent();
-        visit(node.left);
-        visit(node.right);
+        node.left.accept(this);
+        node.right.accept(this);
         dedent();
     }
     @Override
@@ -465,8 +465,8 @@ public class PrintAST extends VisitorBase {
             default -> {throw new ASTPrintException("unknown comparison operator");}
         }
         indent();
-        visit(node.left);
-        visit(node.right);
+        node.left.accept(this);
+        node.right.accept(this);
         dedent();
     }
     @Override
@@ -479,8 +479,8 @@ public class PrintAST extends VisitorBase {
             default -> {throw new ASTPrintException("unknown lazy operator");}
         }
         indent();
-        visit(node.left);
-        visit(node.right);
+        node.left.accept(this);
+        node.right.accept(this);
         dedent();
     }
     @Override
@@ -488,8 +488,8 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("AssignExprNode");
         indent();
-        visit(node.left);
-        visit(node.right);
+        node.left.accept(this);
+        node.right.accept(this);
         dedent();
     }
     @Override
@@ -510,8 +510,8 @@ public class PrintAST extends VisitorBase {
             default -> {throw new ASTPrintException("unknown compound assignment operator");}
         }
         indent();
-        visit(node.left);
-        visit(node.right);
+        node.left.accept(this);
+        node.right.accept(this);
         dedent();
     }
     @Override
@@ -519,8 +519,8 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("TypeCastExprNode");
         indent();
-        visit(node.expr);
-        visit(node.type);
+        node.expr.accept(this);
+        node.type.accept(this);
         dedent();
     }
     @Override
@@ -530,12 +530,12 @@ public class PrintAST extends VisitorBase {
         indent();
         if (node.repeatedElement != null) {
             System.out.println("repeated element");
-            visit(node.repeatedElement);
-            visit(node.size);
+            node.repeatedElement.accept(this);
+            node.size.accept(this);
         } else {
             System.out.println("elements");
             for (ExprNode element : node.elements) {
-                visit(element);
+                element.accept(this);
             }
         }
         dedent();
@@ -545,8 +545,8 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("IndexExprNode");
         indent();
-        visit(node.array);
-        visit(node.index);
+        node.array.accept(this);
+        node.index.accept(this);
         dedent();
     }
     @Override
@@ -554,9 +554,9 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("StructExprNode");
         indent();
-        visit(node.structName);
+        node.structName.accept(this);
         for (FieldValNode field : node.fieldValues) {
-            visit(field);
+            field.accept(this);
         }
         dedent();
     }
@@ -565,8 +565,8 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("FieldValNode");
         indent();
-        visit(node.fieldName);
-        visit(node.value);
+        node.fieldName.accept(this);
+        node.value.accept(this);
         dedent();
     }
     @Override
@@ -574,9 +574,9 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("CallExprNode");
         indent();
-        visit(node.function);
+        node.function.accept(this);
         for (ExprNode arg : node.arguments) {
-            visit(arg);
+            arg.accept(this);
         }
         dedent();
     }
@@ -585,10 +585,10 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("MethodCallExprNode");
         indent();
-        visit(node.receiver);
-        visit(node.methodName);
+        node.receiver.accept(this);
+        node.methodName.accept(this);
         for (ExprNode arg : node.arguments) {
-            visit(arg);
+            arg.accept(this);
         }
         dedent();
     }
@@ -597,8 +597,8 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("FieldExprNode");
         indent();
-        visit(node.receiver);
-        visit(node.fieldName);
+        node.receiver.accept(this);
+        node.fieldName.accept(this);
         dedent();
     }
     @Override
@@ -611,7 +611,7 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("BreakExprNode");
         indent();
-        if (node.value != null) visit(node.value);
+        if (node.value != null) node.value.accept(this);
         dedent();
     }
     @Override
@@ -619,7 +619,7 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("ReturnExprNode");
         indent();
-        if (node.value != null) visit(node.value);
+        if (node.value != null) node.value.accept(this);
         dedent();
     }
     @Override
@@ -631,13 +631,13 @@ public class PrintAST extends VisitorBase {
     public void visit(TypeExprNode node) {
         // decide which specific TypeExprNode it is
         if (node instanceof TypePathExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof TypeRefExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof TypeArrayExprNode n) {
-            visit(n);
+            n.accept(this);
         } else if (node instanceof TypeUnitExprNode n) {
-            visit(n);
+            n.accept(this);
         } else {
             throw new ASTPrintException("unknown TypeExprNode");
         }
@@ -647,7 +647,7 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("TypePathExprNode");
         indent();
-        visit(node.path);
+        node.path.accept(this);
         dedent();
     }
     @Override
@@ -656,7 +656,7 @@ public class PrintAST extends VisitorBase {
         System.out.print("TypeRefExprNode: ");
         System.out.println("isMutable = " + node.isMutable);
         indent();
-        visit(node.innerType);
+        node.innerType.accept(this);
         dedent();
     }
     @Override
@@ -664,8 +664,8 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("TypeArrayExprNode");
         indent();
-        visit(node.elementType);
-        visit(node.size);
+        node.elementType.accept(this);
+        node.size.accept(this);
         dedent();
     }
     @Override

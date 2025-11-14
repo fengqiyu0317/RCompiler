@@ -25,61 +25,85 @@ public class PatternParser extends BaseParser {
     // Grammar: <pattern> ::= <idpat> | <wildpat> | <refpat>
     // Main pattern parsing method
     public PatternNode parsePattern() {
-        if (tokenStream.isAtEnd()) {
-            errorReporter.reportError("No more tokens to parse in pattern");
-            return null;
-        }
-        
-        token_t token = tokenStream.current();
-        
-        if (token.name.equals("&") || token.name.equals("&&")) {
-            return parseReferencePattern();
-        } else if (token.name.equals("_")) {
-            return parseWildcardPattern();
-        } else {
-            return parseIdentifierPattern();
+        try {
+            if (tokenStream.isAtEnd()) {
+                errorReporter.reportError("No more tokens to parse in pattern");
+                return null;
+            }
+            
+            token_t token = tokenStream.current();
+            
+            if (token.name.equals("&") || token.name.equals("&&")) {
+                return parseReferencePattern();
+            } else if (token.name.equals("_")) {
+                return parseWildcardPattern();
+            } else {
+                return parseIdentifierPattern();
+            }
+        } catch (ParserException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ParserException("Error parsing pattern: " + e.getMessage());
         }
     }
     
     // Grammar: <refpat> ::= (& | &&) (mut)? <pattern>
     // Parse reference pattern (& or &&)
     public RefPatNode parseReferencePattern() {
-        RefPatNode node = new RefPatNode();
-        
-        if (tokenStream.matches("&&")) {
-            node.isDoubleReference = true;
-        } else {
-            tokenStream.consume("&");
-            node.isDoubleReference = false;
+        try {
+            RefPatNode node = new RefPatNode();
+            
+            if (tokenStream.matches("&&")) {
+                node.isDoubleReference = true;
+            } else {
+                tokenStream.consume("&");
+                node.isDoubleReference = false;
+            }
+            
+            node.isMutable = tokenStream.matches("mut");
+            node.innerPattern = parsePattern();
+            
+            return node;
+        } catch (ParserException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ParserException("Error parsing reference pattern: " + e.getMessage());
         }
-        
-        node.isMutable = tokenStream.matches("mut");
-        node.innerPattern = parsePattern();
-        
-        return node;
     }
     
     // Grammar: <wildpat> ::= _
     // Parse wildcard pattern (_)
     public WildPatNode parseWildcardPattern() {
-        tokenStream.consume("_");
-        return new WildPatNode();
+        try {
+            tokenStream.consume("_");
+            return new WildPatNode();
+        } catch (ParserException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ParserException("Error parsing wildcard pattern: " + e.getMessage());
+        }
     }
     
     // Grammar: <idpat> ::= (ref)? (mut)? <identifier>
     // Parse identifier pattern
     public IdPatNode parseIdentifierPattern() {
-        IdPatNode node = new IdPatNode();
-        
-        node.isReference = tokenStream.matches("ref");
-        node.isMutable = tokenStream.matches("mut");
-        
-        if (config.isIdentifier(tokenStream.current())) {
-            node.name = parseIdentifier();
-        } else {
-            errorReporter.reportError("Expected identifier in pattern", tokenStream.current());
+        try {
+            IdPatNode node = new IdPatNode();
+            
+            node.isReference = tokenStream.matches("ref");
+            node.isMutable = tokenStream.matches("mut");
+            
+            if (config.isIdentifier(tokenStream.current())) {
+                node.name = parseIdentifier();
+            } else {
+                errorReporter.reportError("Expected identifier in pattern", tokenStream.current());
+            }
+            
+            return node;
+        } catch (ParserException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ParserException("Error parsing identifier pattern: " + e.getMessage());
         }
-        
-        return node;
     }
 }
