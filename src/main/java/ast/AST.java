@@ -231,8 +231,30 @@ class ImplNode extends ItemNode {
 // The grammer for expression is:
 // <expression> = <exprwithblock> | <exprwithoutblock>
 class ExprNode extends ASTNode {
+    // 存储该表达式节点对应的上下文
+    private Context context;
+    
+    // 存储该表达式节点的类型
+    private Type type;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public Context getContext() {
+        return context;
+    }
+    
+    public void setContext(Context context) {
+        this.context = context;
+    }
+    
+    public Type getType() {
+        return type;
+    }
+    
+    public void setType(Type type) {
+        this.type = type;
     }
 }
 
@@ -280,8 +302,19 @@ class PathExprNode extends ExprWithoutBlockNode {
     PathExprSegNode LSeg;
     PathExprSegNode RSeg; // can be null
     
+    // 存储该路径表达式对应的符号
+    private Symbol symbol;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public Symbol getSymbol() {
+        return symbol;
+    }
+    
+    public void setSymbol(Symbol symbol) {
+        this.symbol = symbol;
     }
 }
 // PathExprSegNode represents a segment in a path expression <pathseg>.
@@ -292,8 +325,19 @@ class PathExprSegNode extends ASTNode {
     patternSeg_t patternType;
     IdentifierNode name;
     
+    // 存储该路径段对应的符号
+    private Symbol symbol;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public Symbol getSymbol() {
+        return symbol;
+    }
+    
+    public void setSymbol(Symbol symbol) {
+        this.symbol = symbol;
     }
 }
 
@@ -520,8 +564,19 @@ class FieldExprNode extends ExprWithoutBlockNode {
 // the grammer for continue expression is:
 // <continueexpr> = continue
 class ContinueExprNode extends ExprWithoutBlockNode {
+    // 存储目标循环AST节点
+    private ASTNode targetNode;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public ASTNode getTargetNode() {
+        return targetNode;
+    }
+    
+    public void setTargetNode(ASTNode targetNode) {
+        this.targetNode = targetNode;
     }
 }
 // BreakExprNode represents a break expression <breakexpr>.
@@ -530,8 +585,19 @@ class ContinueExprNode extends ExprWithoutBlockNode {
 class BreakExprNode extends ExprWithoutBlockNode {
     ExprNode value; // can be null
     
+    // 存储目标循环AST节点
+    private ASTNode targetNode;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public ASTNode getTargetNode() {
+        return targetNode;
+    }
+    
+    public void setTargetNode(ASTNode targetNode) {
+        this.targetNode = targetNode;
     }
 }
 // ReturnExprNode represents a return expression <returnexpr>.
@@ -540,8 +606,19 @@ class BreakExprNode extends ExprWithoutBlockNode {
 class ReturnExprNode extends ExprWithoutBlockNode {
     ExprNode value; // can be null
     
+    // 存储目标函数AST节点
+    private ASTNode targetNode;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public ASTNode getTargetNode() {
+        return targetNode;
+    }
+    
+    public void setTargetNode(ASTNode targetNode) {
+        this.targetNode = targetNode;
     }
 }
 // UnderscoreExprNode represents an underscore expression <underscoreexpr>.
@@ -598,8 +675,27 @@ class LoopExprNode extends ExprWithBlockNode {
 class IdentifierNode extends ASTNode {
     String name;
     
+    // 存储该标识符对应的符号
+    private Symbol symbol;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public Symbol getSymbol() {
+        return symbol;
+    }
+    
+    public void setSymbol(Symbol symbol) {
+        this.symbol = symbol;
+    }
+    
+    public Context getContext() {
+        return context;
+    }
+    
+    public void setContext(Context context) {
+        this.context = context;
     }
 }
 

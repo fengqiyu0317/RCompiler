@@ -183,15 +183,15 @@ public class ExpressionParser extends BaseParser {
             if (token.tokentype == token_t.TokenType_t.INTEGER_LITERAL) {
                 // Parse integer literal with type suffix
                 String tokenValue = token.name;
-                literal_t intType = literal_t.INT; // Default type is i32
+                literal_t intType = literal_t.INT; // Default type is undetermined integer
                 String numericValue = tokenValue;
                 
                 // Check for type suffix
                 if (tokenValue.endsWith("u32")) {
-                    intType = literal_t.UINT;
+                    intType = literal_t.U32;
                     numericValue = tokenValue.substring(0, tokenValue.length() - 3);
                 } else if (tokenValue.endsWith("i32")) {
-                    intType = literal_t.INT;
+                    intType = literal_t.I32;
                     numericValue = tokenValue.substring(0, tokenValue.length() - 3);
                 } else if (tokenValue.endsWith("usize")) {
                     intType = literal_t.USIZE;

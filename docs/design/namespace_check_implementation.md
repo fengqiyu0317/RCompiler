@@ -640,6 +640,7 @@ public enum ErrorType {
     UNDECLARED_ASSOCIATED_ITEM("Undeclared associated item"),
     INVALID_ASSOCIATED_ACCESS("Invalid associated access"),
     
+    
     // Other errors
     GENERAL_SEMANTIC_ERROR("General semantic error");
     
@@ -950,6 +951,10 @@ This implementation strictly follows the namespace specifications in the Rust Re
 @Override
 public void visit(IdentifierNode node) {
     String identifierName = node.name;
+    Symbol resolvedSymbol = null;
+    
+    // 设置标识符的上下文
+    node.setContext(currentContext);
     
     switch (currentContext) {
         case TYPE_CONTEXT:
@@ -959,6 +964,8 @@ public void visit(IdentifierNode node) {
                 addError(ErrorType.UNDECLARED_TYPE_IDENTIFIER,
                         String.format("Undeclared type identifier: '%s'", identifierName),
                         node);
+            } else {
+                resolvedSymbol = typeSymbol;
             }
             break;
             
@@ -969,8 +976,11 @@ public void visit(IdentifierNode node) {
                 addError(ErrorType.UNDECLARED_VALUE_IDENTIFIER,
                         String.format("Undeclared value identifier: '%s'", identifierName),
                         node);
+            } else {
+                resolvedSymbol = valueSymbol;
             }
             break;
+            
             
         case FIELD_CONTEXT:
             // Field context requires special handling, processed in FieldExprNode
@@ -979,7 +989,11 @@ public void visit(IdentifierNode node) {
                     node);
             break;
     }
+    
+    // 记录标识符指向的符号
+    node.setSymbol(resolvedSymbol);
 }
+
 ```
 
 ### 语句节点 (StmtNode及其子类)
@@ -1000,6 +1014,8 @@ public void visit(LetStmtNode node) {
     setContext(Context.LET_PATTERN_CONTEXT);
     
     try {
+        // Set context for the identifier
+        node.name.setContext(currentContext);
         node.name.accept(this);
     } finally {
         // Restore context
@@ -1227,11 +1243,12 @@ public void visit(EnumNode node) {
             for (IdentifierNode variant : node.variants) {
                 // ENUM_VARIANT is removed from type namespace, only constructor remains in value namespace
                 
-                // Create enum variant constructor symbol
+                // Create enum variant constructor symbol with name in "enum::variant" format
+                String variantConstructorName = enumName + "::" + variant.name;
                 Symbol variantConstructorSymbol = new Symbol(
-                    variant.name,
+                    variantConstructorName,
                     SymbolKind.ENUM_VARIANT_CONSTRUCTOR,
-                    variant,
+                    node, // Point to the enum node instead of the variant node
                     currentScope.getScopeLevel(),
                     false
                 );
@@ -1452,10 +1469,16 @@ public void visit(BlockExprNode node) {
 public void visit(PathExprNode node) {
     if (node.RSeg != null) {
         // 处理双段路径（带"::"）
-        resolvePath(node);
+        Symbol resolvedSymbol = resolvePath(node);
+        // 记录路径表达式指向的符号
+        node.setSymbol(resolvedSymbol);
     } else {
         // 处理单段路径（不带"::"）- 直接递归处理子节点
         node.LSeg.accept(this);
+        // 如果左段已经解析出符号，则设置到路径表达式节点
+        if (node.LSeg.getSymbol() != null) {
+            node.setSymbol(node.LSeg.getSymbol());
+        }
     }
 }
 
@@ -1478,6 +1501,8 @@ private Symbol resolvePath(PathExprNode node) {
     
     // 处理左段的特殊情况
     Symbol baseType;
+    Symbol leftSymbol = null;
+    
     if (leftSegment.equals("self")) {
         // self不能作为关联路径的左段
         addError(ErrorType.NAMESPACE_VIOLATION,
@@ -1496,6 +1521,7 @@ private Symbol resolvePath(PathExprNode node) {
                     "Current type '" + currentTypeName + "' is not defined", node);
             return null;
         }
+        leftSymbol = baseType;
     } else {
         // 查找基础类型
         baseType = currentScope.lookupType(leftSegment);
@@ -1504,10 +1530,21 @@ private Symbol resolvePath(PathExprNode node) {
                     "Undeclared type: " + leftSegment, node);
             return null;
         }
+        leftSymbol = baseType;
     }
     
+    // 记录左段指向的符号
+    node.LSeg.setSymbol(leftSymbol);
+    
     // 解析关联项
-    return resolveAssociatedItem(baseType, rightSegment, node);
+    Symbol rightSymbol = resolveAssociatedItem(baseType, rightSegment, node);
+    
+    // 记录右段指向的符号
+    if (rightSymbol != null) {
+        node.RSeg.setSymbol(rightSymbol);
+    }
+    
+    return rightSymbol;
 }
 
 // 解析关联项的通用方法
@@ -1557,10 +1594,30 @@ private Symbol resolveAssociatedItem(Symbol baseType, String itemName, PathExprN
 public void visit(PathExprSegNode node) {
     if (node.patternType == patternSeg_t.IDENT) {
         // Regular identifier
+        // Set context for the identifier
+        node.name.setContext(currentContext);
         node.name.accept(this);
+        // 如果标识符已经解析出符号，则设置到路径段节点
+        if (node.name.getSymbol() != null) {
+            node.setSymbol(node.name.getSymbol());
+        }
+    } else if (node.patternType == patternSeg_t.SELF) {
+        // self - 查找当前类型的符号
+        if (currentTypeName != null && !currentTypeName.isEmpty()) {
+            Symbol currentTypeSymbol = currentScope.lookupType(currentTypeName);
+            if (currentTypeSymbol != null) {
+                node.setSymbol(currentTypeSymbol);
+            }
+        }
+    } else if (node.patternType == patternSeg_t.SELF_TYPE) {
+        // Self - 查找当前类型符号
+        if (currentTypeName != null && !currentTypeName.isEmpty()) {
+            Symbol selfTypeSymbol = currentScope.lookupType(currentTypeName);
+            if (selfTypeSymbol != null) {
+                node.setSymbol(selfTypeSymbol);
+            }
+        }
     }
-    // self and Self are handled elsewhere (e.g., in FunctionNode)
-    // No need to process them here
 }
 ```
 
@@ -1606,6 +1663,10 @@ public void visit(MethodCallExprNode node) {
     
     try {
         // Process method name
+        // Set context for the identifier
+        if (node.methodName.name != null) {
+            node.methodName.name.setContext(currentContext);
+        }
         node.methodName.accept(this);
         
         // Process arguments
@@ -1616,6 +1677,70 @@ public void visit(MethodCallExprNode node) {
         }
     } finally {
         // Restore context
+        setContext(previousContext);
+    }
+}
+```
+
+#### StructExprNode
+
+```java
+// Process struct expression
+@Override
+public void visit(StructExprNode node) {
+    // Set value context for struct name
+    Context previousContext = currentContext;
+    setContext(Context.VALUE_CONTEXT);
+    
+    try {
+        // Process struct name (should resolve to a struct constructor)
+        // Set context for the identifier
+        if (node.structName.name != null) {
+            node.structName.name.setContext(currentContext);
+        }
+        node.structName.accept(this);
+        
+        // Process field values
+        if (node.fieldValues != null) {
+            for (FieldValNode fieldVal : node.fieldValues) {
+                fieldVal.accept(this);
+            }
+        }
+    } finally {
+        // Restore context
+        setContext(previousContext);
+    }
+}
+```
+
+#### FieldValNode
+
+```java
+// Process field value in struct expression
+@Override
+public void visit(FieldValNode node) {
+    // Set field context for field name
+    Context previousContext = currentContext;
+    setContext(Context.FIELD_CONTEXT);
+    
+    try {
+        // Process field name
+        // Set context for the identifier
+        node.fieldName.setContext(currentContext);
+        node.fieldName.accept(this);
+    } finally {
+        // Restore context for value expression
+        setContext(previousContext);
+    }
+    
+    // Process value expression in value context
+    setContext(Context.VALUE_CONTEXT);
+    
+    try {
+        // Process value expression
+        node.value.accept(this);
+    } finally {
+        // Restore original context
         setContext(previousContext);
     }
 }
@@ -1636,6 +1761,8 @@ public void visit(FieldExprNode node) {
     
     try {
         // Process field name
+        // Set context for the identifier
+        node.fieldName.setContext(currentContext);
         node.fieldName.accept(this);
     } finally {
         // Restore context
@@ -1692,6 +1819,8 @@ public void visit(IdPatNode node) {
         }
     } else {
         // In other contexts, just process the identifier name
+        // Set context for the identifier
+        node.name.setContext(currentContext);
         node.name.accept(this);
     }
 }

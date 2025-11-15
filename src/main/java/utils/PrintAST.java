@@ -321,7 +321,7 @@ public class PrintAST extends VisitorBase {
         System.out.print(" = ");
         switch (node.literalType) {
             case INT -> System.out.println(node.value_long);
-            case UINT -> System.out.println(node.value_long);
+            case U32 -> System.out.println(node.value_long);
             case USIZE -> System.out.println(node.value_long);
             case ISIZE -> System.out.println(node.value_long);
             case BOOL -> System.out.println(node.value_bool);
@@ -337,7 +337,7 @@ public class PrintAST extends VisitorBase {
             case STRING -> System.out.print("STRING");
             case CSTRING -> System.out.print("CSTRING");
             case INT -> System.out.print("I32");
-            case UINT -> System.out.print("U32");
+            case U32 -> System.out.print("U32");
             case USIZE -> System.out.print("USIZE");
             case ISIZE -> System.out.print("ISIZE");
             case BOOL -> System.out.print("BOOL");
