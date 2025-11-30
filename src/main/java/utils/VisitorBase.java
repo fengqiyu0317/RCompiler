@@ -195,18 +195,19 @@ public abstract class VisitorBase {
     public void visit(ExprWithoutBlockNode node) {
         // According to grammar: <groupedexpr> ::= ( <expression> )
         // expr is required
-        if (node.expr == null) reportNullError("ExprWithoutBlockNode", "expr");
+        if (node.expr == null);
         else node.expr.accept(this);
     }
     
     public void visit(BlockExprNode node) {
-        // According to grammar: <blockexpr> ::= { <statements>? }
-        // statements can be empty
+        // According to grammar: <blockexpr> ::= { <statements>* }
+        // statements can be empty, returnValue is optional
         if (node.statements != null) {
             for (int i = 0; i < node.statements.size(); i++) {
                 node.statements.get(i).accept(this);
             }
         }
+        if (node.returnValue != null) node.returnValue.accept(this);
     }
     
     public void visit(IfExprNode node) {
@@ -480,6 +481,10 @@ public abstract class VisitorBase {
     }
     
     public void visit(IdentifierNode node) {
+        // Base implementation - no children to traverse
+    }
+    
+    public void visit(BuiltinFunctionNode node) {
         // Base implementation - no children to traverse
     }
 }

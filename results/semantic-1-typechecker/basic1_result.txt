@@ -1,0 +1,25 @@
+=== Symbol Debug Test ===
+Enter Rust code (Ctrl+D to finish):
+Father relationships set successfully.
+Self and Self semantic checking completed successfully.
+Namespace semantic checking completed successfully.
+
+=== Symbol Debug Output ===
+Node: Function(main)       | Type: FunctionNode              | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: main                 | Type: IdentifierNode            | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(exit)    | Type: PathExprSegNode           | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: exit                 | Type: IdentifierNode            | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+
+=== Symbol Debug Summary ===
+Total nodes visited: 5
+Nodes with symbols: 5
+Nodes without symbols: 0
+
+Node type distribution:
+  PathExprSegNode: 1
+  IdentifierNode: 2
+  FunctionNode: 1
+  PathExprNode: 1
+Type checking completed successfully.
+Constant evaluation completed successfully.

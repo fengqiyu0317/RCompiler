@@ -288,8 +288,17 @@ public class PrintAST extends VisitorBase {
         printIndent();
         System.out.println("BlockExprNode");
         indent();
-        for (StmtNode stmt : node.statements) {
-            stmt.accept(this);
+        if (node.statements != null) {
+            for (StmtNode stmt : node.statements) {
+                stmt.accept(this);
+            }
+        }
+        if (node.returnValue != null) {
+            printIndent();
+            System.out.println("ReturnValue:");
+            indent();
+            node.returnValue.accept(this);
+            dedent();
         }
         dedent();
     }

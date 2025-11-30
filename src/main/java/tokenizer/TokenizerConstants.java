@@ -1,5 +1,3 @@
-package tokenizer;
-
 public class TokenizerConstants {
     public static final String[] MULTI_CHAR_PUNCTUATIONS = {
         "<<=", ">>=", "...", "..=", "##",  // 3-character punctuations

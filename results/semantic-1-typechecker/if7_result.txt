@@ -1,0 +1,49 @@
+=== Symbol Debug Test ===
+Enter Rust code (Ctrl+D to finish):
+Father relationships set successfully.
+Self and Self semantic checking completed successfully.
+Namespace semantic checking completed successfully.
+
+=== Symbol Debug Output ===
+Node: Function(main)       | Type: FunctionNode              | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: main                 | Type: IdentifierNode            | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: ch                   | Type: IdentifierNode            | Symbol: Symbol{name='ch', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(char)    | Type: PathExprSegNode           | Symbol: Symbol{name='char', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: char                 | Type: IdentifierNode            | Symbol: Symbol{name='char', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='ch', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(ch)      | Type: PathExprSegNode           | Symbol: Symbol{name='ch', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: ch                   | Type: IdentifierNode            | Symbol: Symbol{name='ch', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='ch', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(ch)      | Type: PathExprSegNode           | Symbol: Symbol{name='ch', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: ch                   | Type: IdentifierNode            | Symbol: Symbol{name='ch', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='ch', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(ch)      | Type: PathExprSegNode           | Symbol: Symbol{name='ch', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: ch                   | Type: IdentifierNode            | Symbol: Symbol{name='ch', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='ch', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(ch)      | Type: PathExprSegNode           | Symbol: Symbol{name='ch', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: ch                   | Type: IdentifierNode            | Symbol: Symbol{name='ch', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='ch', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(ch)      | Type: PathExprSegNode           | Symbol: Symbol{name='ch', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: ch                   | Type: IdentifierNode            | Symbol: Symbol{name='ch', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: vowel                | Type: IdentifierNode            | Symbol: Symbol{name='vowel', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(bool)    | Type: PathExprSegNode           | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: bool                 | Type: IdentifierNode            | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: vowel                | Type: IdentifierNode            | Symbol: Symbol{name='vowel', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(bool)    | Type: PathExprSegNode           | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: bool                 | Type: IdentifierNode            | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(exit)    | Type: PathExprSegNode           | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: exit                 | Type: IdentifierNode            | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+
+=== Symbol Debug Summary ===
+Total nodes visited: 29
+Nodes with symbols: 29
+Nodes without symbols: 0
+
+Node type distribution:
+  PathExprSegNode: 9
+  IdentifierNode: 13
+  FunctionNode: 1
+  PathExprNode: 6
+Type checking completed successfully.
+Constant evaluation completed successfully.

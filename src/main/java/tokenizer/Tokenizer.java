@@ -1,5 +1,4 @@
 import java.util.Vector;
-import static tokenizer.TokenizerConstants.*;
 
 public class Tokenizer extends token_t {
     public Vector<token_t> tokens;
@@ -67,7 +66,7 @@ public class Tokenizer extends token_t {
     }
     
     private void updatePosition(char c) {
-        if (c == LINE_FEED) {
+        if (c == TokenizerConstants.LINE_FEED) {
             currentLine++;
             currentColumn = 0;
         } else {
@@ -77,11 +76,11 @@ public class Tokenizer extends token_t {
     
     private int handleBlockComment(String input, int i) {
         char c = input.charAt(i);
-        if (c == FORWARD_SLASH && i + 1 < input.length() && input.charAt(i + 1) == ASTERISK) {
+        if (c == TokenizerConstants.FORWARD_SLASH && i + 1 < input.length() && input.charAt(i + 1) == TokenizerConstants.ASTERISK) {
             block_comment_level++;
             return i + 2;
         }
-        if (c == ASTERISK && i + 1 < input.length() && input.charAt(i + 1) == FORWARD_SLASH) {
+        if (c == TokenizerConstants.ASTERISK && i + 1 < input.length() && input.charAt(i + 1) == TokenizerConstants.FORWARD_SLASH) {
             block_comment_level--;
             return i + 2;
         }
@@ -102,7 +101,7 @@ public class Tokenizer extends token_t {
         }
         
         // Handle escape sequences
-        if (c == BACKSLASH && last_token.tokentype != TokenType_t.RAW_STRING_LITERAL_MID && last_token.tokentype != TokenType_t.RAW_C_STRING_LITERAL_MID) {
+        if (c == TokenizerConstants.BACKSLASH && last_token.tokentype != TokenType_t.RAW_STRING_LITERAL_MID && last_token.tokentype != TokenType_t.RAW_C_STRING_LITERAL_MID) {
             if (i + 1 == input.length()) {
                 last_token.tokentype = (last_token.tokentype == TokenType_t.C_STRING_LITERAL_MID) ? TokenType_t.C_STRING_CONTINUATION_ESCAPE : TokenType_t.STRING_CONTINUATION_ESCAPE;
                 return i + 1;
@@ -112,7 +111,7 @@ public class Tokenizer extends token_t {
         }
         
         // Handle string termination
-        if (c == DOUBLE_QUOTE && (last_token.tokentype == TokenType_t.STRING_LITERAL_MID || last_token.tokentype == TokenType_t.C_STRING_LITERAL_MID)) {
+        if (c == TokenizerConstants.DOUBLE_QUOTE && (last_token.tokentype == TokenType_t.STRING_LITERAL_MID || last_token.tokentype == TokenType_t.C_STRING_LITERAL_MID)) {
             last_token.tokentype = (last_token.tokentype == TokenType_t.C_STRING_LITERAL_MID) ? TokenType_t.C_STRING_LITERAL : TokenType_t.STRING_LITERAL;
             tokens.add(last_token);
             last_token = null;
@@ -120,7 +119,7 @@ public class Tokenizer extends token_t {
         }
         
         // Handle raw string termination
-        if (c == DOUBLE_QUOTE && (last_token.tokentype == TokenType_t.RAW_STRING_LITERAL_MID || last_token.tokentype == TokenType_t.RAW_C_STRING_LITERAL_MID)) {
+        if (c == TokenizerConstants.DOUBLE_QUOTE && (last_token.tokentype == TokenType_t.RAW_STRING_LITERAL_MID || last_token.tokentype == TokenType_t.RAW_C_STRING_LITERAL_MID)) {
             return handleRawStringTermination(input, i);
         }
         
@@ -132,7 +131,7 @@ public class Tokenizer extends token_t {
     private int handleRawStringTermination(String input, int i) {
         int j = i + 1;
         int count_raw = 0;
-        while (j < input.length() && input.charAt(j) == HASH) {
+        while (j < input.length() && input.charAt(j) == TokenizerConstants.HASH) {
             count_raw++;
             j++;
         }
@@ -143,9 +142,9 @@ public class Tokenizer extends token_t {
             last_token = null;
             return j;
         } else {
-            last_token.name += DOUBLE_QUOTE;
+            last_token.name += TokenizerConstants.DOUBLE_QUOTE;
             for (int k = 0; k < count_raw; k++) {
-                last_token.name += HASH;
+                last_token.name += TokenizerConstants.HASH;
             }
             return j;
         }
@@ -158,14 +157,14 @@ public class Tokenizer extends token_t {
             return processPunctuation(input, i);
         } else if (Character.isDigit(c)) {
             return processNumber(input, i);
-        } else if (Character.isLetter(c) || c == DOUBLE_QUOTE) {
+        } else if (Character.isLetter(c) || c == TokenizerConstants.DOUBLE_QUOTE) {
             return processIdentifierOrString(input, i);
-        } else if (c == SINGLE_QUOTE) {
+        } else if (c == TokenizerConstants.SINGLE_QUOTE) {
             return processCharacterLiteral(input, i);
         } else if (character_check.isWhitespace(c)) {
             return i + 1;
         } else {
-            handleError(UNKNOWN_CHARACTER + c);
+            handleError(TokenizerConstants.UNKNOWN_CHARACTER + c);
             return i + 1;
         }
     }
@@ -174,12 +173,12 @@ public class Tokenizer extends token_t {
         char c = input.charAt(i);
         
         // Check for line comments
-        if (c == FORWARD_SLASH && i + 1 < input.length() && input.charAt(i + 1) == FORWARD_SLASH) {
+        if (c == TokenizerConstants.FORWARD_SLASH && i + 1 < input.length() && input.charAt(i + 1) == TokenizerConstants.FORWARD_SLASH) {
             return input.length(); // Skip rest of line
         }
         
         // Check for block comment start
-        if (c == FORWARD_SLASH && i + 1 < input.length() && input.charAt(i + 1) == ASTERISK) {
+        if (c == TokenizerConstants.FORWARD_SLASH && i + 1 < input.length() && input.charAt(i + 1) == TokenizerConstants.ASTERISK) {
             block_comment_level++;
             return i + 2;
         }
@@ -188,7 +187,7 @@ public class Tokenizer extends token_t {
         
         // Check for multi-character punctuation
         boolean found = false;
-        for (String p : MULTI_CHAR_PUNCTUATIONS) {
+        for (String p : TokenizerConstants.MULTI_CHAR_PUNCTUATIONS) {
             if (input.startsWith(p, i)) {
                 token.name = p;
                 tokens.add(token);
@@ -207,9 +206,9 @@ public class Tokenizer extends token_t {
         token_t token = createToken(TokenType_t.INTEGER_LITERAL, String.valueOf(c));
         
         // Check for non-decimal literals
-        if (c == DIGIT_ZERO && i + 1 < input.length()) {
+        if (c == TokenizerConstants.DIGIT_ZERO && i + 1 < input.length()) {
             char next_c = input.charAt(i + 1);
-            if (next_c == LETTER_B || next_c == LETTER_O || next_c == LETTER_X) {
+            if (next_c == TokenizerConstants.LETTER_B || next_c == TokenizerConstants.LETTER_O || next_c == TokenizerConstants.LETTER_X) {
                 return processNonDecimalNumber(input, i, token, next_c);
             }
         }
@@ -225,17 +224,17 @@ public class Tokenizer extends token_t {
         boolean hasValidDigit = false;
         while (newPosition < input.length()) {
             char digit = input.charAt(newPosition);
-            if (digit == UNDERSCORE) {
+            if (digit == TokenizerConstants.UNDERSCORE) {
                 newPosition++;
                 continue;
             }
             
             boolean isValidDigit = false;
-            if (baseChar == LETTER_B) {
-                isValidDigit = (digit == DIGIT_ZERO || digit == DIGIT_ONE);
-            } else if (baseChar == LETTER_O) {
-                isValidDigit = (digit >= DIGIT_ZERO && digit <= DIGIT_SEVEN);
-            } else if (baseChar == LETTER_X) {
+            if (baseChar == TokenizerConstants.LETTER_B) {
+                isValidDigit = (digit == TokenizerConstants.DIGIT_ZERO || digit == TokenizerConstants.DIGIT_ONE);
+            } else if (baseChar == TokenizerConstants.LETTER_O) {
+                isValidDigit = (digit >= TokenizerConstants.DIGIT_ZERO && digit <= TokenizerConstants.DIGIT_SEVEN);
+            } else if (baseChar == TokenizerConstants.LETTER_X) {
                 isValidDigit = Character.isDigit(digit) ||
                               (digit >= 'a' && digit <= 'f') ||
                               (digit >= 'A' && digit <= 'F');
@@ -252,9 +251,9 @@ public class Tokenizer extends token_t {
         
         if (!hasValidDigit) {
             handleError("Invalid " +
-                       (baseChar == LETTER_B ? BINARY_TYPE :
-                        baseChar == LETTER_O ? OCTAL_TYPE : HEXADECIMAL_TYPE) +
-                       NO_VALID_DIGITS);
+                       (baseChar == TokenizerConstants.LETTER_B ? TokenizerConstants.BINARY_TYPE :
+                        baseChar == TokenizerConstants.LETTER_O ? TokenizerConstants.OCTAL_TYPE : TokenizerConstants.HEXADECIMAL_TYPE) +
+                       TokenizerConstants.NO_VALID_DIGITS);
         }
         
         return processNumberSuffix(input, newPosition, token);
@@ -264,7 +263,7 @@ public class Tokenizer extends token_t {
         int newPosition = i + 1;
         while (newPosition < input.length()) {
             char digit = input.charAt(newPosition);
-            if (Character.isDigit(digit) || digit == UNDERSCORE) {
+            if (Character.isDigit(digit) || digit == TokenizerConstants.UNDERSCORE) {
                 token.name += digit;
                 newPosition++;
             } else {
@@ -278,12 +277,12 @@ public class Tokenizer extends token_t {
     private int processNumberSuffix(String input, int i, token_t token) {
         if (i < input.length() && Character.isLetter(input.charAt(i))) {
             char first_suffix_char = input.charAt(i);
-            if (first_suffix_char != LETTER_E && first_suffix_char != Character.toUpperCase(LETTER_E)) {
+            if (first_suffix_char != TokenizerConstants.LETTER_E && first_suffix_char != Character.toUpperCase(TokenizerConstants.LETTER_E)) {
                 token.name += first_suffix_char;
                 i++;
                 while (i < input.length()) {
                     char suffix_char = input.charAt(i);
-                    if (Character.isLetterOrDigit(suffix_char) || suffix_char == UNDERSCORE) {
+                    if (Character.isLetterOrDigit(suffix_char) || suffix_char == TokenizerConstants.UNDERSCORE) {
                         token.name += suffix_char;
                         i++;
                     } else {
@@ -308,14 +307,14 @@ public class Tokenizer extends token_t {
         }
         
         // Handle regular string literal starting with "
-        if (c == DOUBLE_QUOTE) {
+        if (c == TokenizerConstants.DOUBLE_QUOTE) {
             last_token = createToken(TokenType_t.STRING_LITERAL_MID, "");
             return i + 1;
         }
         
         // Process identifier
         token_t token = createToken(TokenType_t.IDENTIFIER_OR_KEYWORD, String.valueOf(c));
-        while (next_c != '\0' && (Character.isLetterOrDigit(next_c) || next_c == UNDERSCORE)) {
+        while (next_c != '\0' && (Character.isLetterOrDigit(next_c) || next_c == TokenizerConstants.UNDERSCORE)) {
             token.name += next_c;
             i++;
             next_c = (i + 1 < input.length()) ? input.charAt(i + 1) : '\0';
@@ -329,14 +328,14 @@ public class Tokenizer extends token_t {
         char next_c = (i + 1 < input.length()) ? input.charAt(i + 1) : '\0';
         
         if (next_c == '\0') {
-            handleError(MISSING_CONTENT);
+            handleError(TokenizerConstants.MISSING_CONTENT);
         }
         
         // Handle escape sequences
-        if (next_c == BACKSLASH) {
+        if (next_c == TokenizerConstants.BACKSLASH) {
             i++;
             if (i + 1 >= input.length()) {
-                handleError(INCOMPLETE_ESCAPE);
+                handleError(TokenizerConstants.INCOMPLETE_ESCAPE);
             }
             int newPosition = EscapeSequenceProcessor.processEscapeInToken(token, input, i);
             i = newPosition;
@@ -346,11 +345,11 @@ public class Tokenizer extends token_t {
         }
         
         // Check for closing quote
-        if (i + 1 >= input.length() || input.charAt(i + 1) != SINGLE_QUOTE) {
-            handleError(MISSING_CLOSING_QUOTE);
+        if (i + 1 >= input.length() || input.charAt(i + 1) != TokenizerConstants.SINGLE_QUOTE) {
+            handleError(TokenizerConstants.MISSING_CLOSING_QUOTE);
         }
         
-        token.name += SINGLE_QUOTE;
+        token.name += TokenizerConstants.SINGLE_QUOTE;
         tokens.add(token);
         return i + 2;
     }
@@ -358,9 +357,9 @@ public class Tokenizer extends token_t {
     private void finalizeIncompleteTokens() {
         if (last_token != null) {
             if (isCompleted(last_token.tokentype)) {
-                handleError(LAST_TOKEN_COMPLETED);
+                handleError(TokenizerConstants.LAST_TOKEN_COMPLETED);
             }
-            last_token.name += LINE_FEED;
+            last_token.name += TokenizerConstants.LINE_FEED;
             tokens.add(last_token);
             last_token = null;
         }

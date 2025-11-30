@@ -1,0 +1,13 @@
+=== Symbol Debug Test ===
+Enter Rust code (Ctrl+D to finish):
+Error parsing statement: Expected '}' but found 'add'
+Parsing error: Expected '}' but found 'add'
+ParserException: Expected '}' but found 'add'
+	at TokenStream.consume(TokenStream.java:42)
+	at ExpressionParser.parseBlockExpression(ExpressionParser.java:766)
+	at StatementParser.parseFunctionStatement(StatementParser.java:151)
+	at StatementParser.parseFunctionStatement(StatementParser.java:107)
+	at StatementParser.parseStatement(StatementParser.java:46)
+	at Parser.parse(Parser.java:43)
+	at SymbolDebugTest.processTokenizer(SymbolDebugTest.java:91)
+	at SymbolDebugTest.main(SymbolDebugTest.java:37)

@@ -288,6 +288,68 @@ fn example(f: Foo) {    // Foo在类型命名空间中查找
 - 标签命名空间
 - 更复杂的名称解析规则
 
+## 类型检查系统
+
+### 类型系统架构
+
+RCompiler现在包含完整的类型检查系统，支持Rust的类型系统特性：
+
+#### 1. 类型层次结构
+```
+Type (接口)
+├── PrimitiveType (基本类型)
+├── ReferenceType (引用类型)
+├── ArrayType (数组类型)
+├── StructType (结构体类型)
+├── FunctionType (函数类型)
+├── StructConstructorType (结构体构造函数类型)
+├── UnitType (单元类型)
+└── NeverType (永不返回类型)
+```
+
+#### 2. 类型检查功能
+- **表达式类型检查**：验证所有表达式的类型正确性
+- **函数调用检查**：验证参数数量和类型匹配
+- **字段访问检查**：验证结构体字段存在和类型
+- **控制流检查**：验证if、loop、break、continue、return的类型一致性
+- **类型推断**：支持基本类型推断和类型缓存
+
+#### 3. 错误处理
+- **TypeCheckException**：定义了详细的类型错误类型
+- **TypeErrorCollector**：收集和管理类型检查错误
+- **错误报告**：提供清晰的错误信息和位置
+
+### 集成到编译流程
+
+类型检查器已集成到主编译流程中，在命名空间分析之后执行：
+
+```java
+// 执行类型检查
+try {
+    TypeChecker typeChecker = new TypeChecker(false);
+    
+    for (StmtNode stmt : parser.getStatements()) {
+        stmt.accept(typeChecker);
+    }
+    
+    // 检查类型错误
+    if (typeChecker.hasErrors()) {
+        System.err.println("Type checking errors:");
+        typeChecker.getErrorCollector().printErrors();
+    } else {
+        System.out.println("Type checking completed successfully.");
+    }
+} catch (TypeCheckException e) {
+    System.err.println("Type checking error: " + e.getMessage());
+}
+```
+
+### 详细文档
+
+类型检查系统的详细实现请参考：[type_checking_implementation.md](type_checking_implementation.md)
+
 ## 结论
 
 本设计基于Rust Reference的命名空间规范，为RCompiler提供了全面的命名空间语义检查实现。通过分离类型、值和字段命名空间，并实现上下文感知的名称解析，可以确保编译器正确处理Rust的命名空间规则。
+
+结合新实现的类型检查系统，RCompiler现在具备了完整的语义分析能力，包括命名空间检查和类型检查，为代码提供了更强的安全保障。

@@ -1,0 +1,127 @@
+=== Symbol Debug Test ===
+Enter Rust code (Ctrl+D to finish):
+Father relationships set successfully.
+Self and Self semantic checking completed successfully.
+Namespace semantic checking completed successfully.
+
+=== Symbol Debug Output ===
+Node: Function(ackermann)  | Type: FunctionNode              | Symbol: Symbol{name='ackermann', kind=FUNCTION, scopeLevel=0}
+Node: ackermann            | Type: IdentifierNode            | Symbol: Symbol{name='ackermann', kind=FUNCTION, scopeLevel=0}
+Node: m                    | Type: IdentifierNode            | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(m)       | Type: PathExprSegNode           | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: m                    | Type: IdentifierNode            | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='ackermann', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(ackermann) | Type: PathExprSegNode           | Symbol: Symbol{name='ackermann', kind=FUNCTION, scopeLevel=0}
+Node: ackermann            | Type: IdentifierNode            | Symbol: Symbol{name='ackermann', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(m)       | Type: PathExprSegNode           | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: m                    | Type: IdentifierNode            | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='ackermann', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(ackermann) | Type: PathExprSegNode           | Symbol: Symbol{name='ackermann', kind=FUNCTION, scopeLevel=0}
+Node: ackermann            | Type: IdentifierNode            | Symbol: Symbol{name='ackermann', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(m)       | Type: PathExprSegNode           | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: m                    | Type: IdentifierNode            | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='ackermann', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(ackermann) | Type: PathExprSegNode           | Symbol: Symbol{name='ackermann', kind=FUNCTION, scopeLevel=0}
+Node: ackermann            | Type: IdentifierNode            | Symbol: Symbol{name='ackermann', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(m)       | Type: PathExprSegNode           | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: m                    | Type: IdentifierNode            | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: Function(safe_ackermann) | Type: FunctionNode              | Symbol: Symbol{name='safe_ackermann', kind=FUNCTION, scopeLevel=0}
+Node: safe_ackermann       | Type: IdentifierNode            | Symbol: Symbol{name='safe_ackermann', kind=FUNCTION, scopeLevel=0}
+Node: m                    | Type: IdentifierNode            | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: counter              | Type: IdentifierNode            | Symbol: Symbol{name='counter', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='counter', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(counter) | Type: PathExprSegNode           | Symbol: Symbol{name='counter', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: counter              | Type: IdentifierNode            | Symbol: Symbol{name='counter', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(m)       | Type: PathExprSegNode           | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: m                    | Type: IdentifierNode            | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='ackermann', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(ackermann) | Type: PathExprSegNode           | Symbol: Symbol{name='ackermann', kind=FUNCTION, scopeLevel=0}
+Node: ackermann            | Type: IdentifierNode            | Symbol: Symbol{name='ackermann', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(m)       | Type: PathExprSegNode           | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: m                    | Type: IdentifierNode            | Symbol: Symbol{name='m', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='counter', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(counter) | Type: PathExprSegNode           | Symbol: Symbol{name='counter', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: counter              | Type: IdentifierNode            | Symbol: Symbol{name='counter', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='counter', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(counter) | Type: PathExprSegNode           | Symbol: Symbol{name='counter', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: counter              | Type: IdentifierNode            | Symbol: Symbol{name='counter', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: Function(main)       | Type: FunctionNode              | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: main                 | Type: IdentifierNode            | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: m                    | Type: IdentifierNode            | Symbol: Symbol{name='m', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: result               | Type: IdentifierNode            | Symbol: Symbol{name='result', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='safe_ackermann', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(safe_ackermann) | Type: PathExprSegNode           | Symbol: Symbol{name='safe_ackermann', kind=FUNCTION, scopeLevel=0}
+Node: safe_ackermann       | Type: IdentifierNode            | Symbol: Symbol{name='safe_ackermann', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='m', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(m)       | Type: PathExprSegNode           | Symbol: Symbol{name='m', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: m                    | Type: IdentifierNode            | Symbol: Symbol{name='m', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(printInt) | Type: PathExprSegNode           | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: printInt             | Type: IdentifierNode            | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='result', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(result)  | Type: PathExprSegNode           | Symbol: Symbol{name='result', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: result               | Type: IdentifierNode            | Symbol: Symbol{name='result', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(exit)    | Type: PathExprSegNode           | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: exit                 | Type: IdentifierNode            | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+
+=== Symbol Debug Summary ===
+Total nodes visited: 106
+Nodes with symbols: 106
+Nodes without symbols: 0
+
+Node type distribution:
+  PathExprSegNode: 34
+  IdentifierNode: 45
+  FunctionNode: 3
+  PathExprNode: 24
+Type checking errors:
+  Function body type mismatch: expected i32, got () in function 'ackermann' at in function 'ackermann' 
+  Function body type mismatch: expected i32, got () in function 'safe_ackermann' at in function 'safe_ackermann' 

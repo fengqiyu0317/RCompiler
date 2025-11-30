@@ -1,0 +1,18 @@
+=== Symbol Debug Test ===
+Enter Rust code (Ctrl+D to finish):
+Father relationships set successfully.
+Error during self checking: Error: FieldValNode.value should not be null according to grammar rules
+java.lang.RuntimeException: Error: FieldValNode.value should not be null according to grammar rules
+	at VisitorBase.reportNullError(VisitorBase.java:7)
+	at VisitorBase.visit(VisitorBase.java:388)
+	at FieldValNode.accept(AST.java:679)
+	at VisitorBase.visit(VisitorBase.java:377)
+	at StructExprNode.accept(AST.java:660)
+	at VisitorBase.visit(VisitorBase.java:32)
+	at LetStmtNode.accept(AST.java:72)
+	at VisitorBase.visit(VisitorBase.java:207)
+	at BlockExprNode.accept(AST.java:808)
+	at SelfSemanticAnalyzer.visit(SelfSemanticAnalyzer.java:96)
+	at FunctionNode.accept(AST.java:108)
+	at SymbolDebugTest.processTokenizer(SymbolDebugTest.java:121)
+	at SymbolDebugTest.main(SymbolDebugTest.java:37)

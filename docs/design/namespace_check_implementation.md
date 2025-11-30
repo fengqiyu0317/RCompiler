@@ -102,6 +102,7 @@ public class Symbol {
     private final String typeName; // For fields, store the type name they belong to
     private final List<Symbol> implSymbols; // Symbols defined in impl blocks
     private NamespaceSymbolTable scope; // Scope associated with this symbol (for types, traits, impl blocks)
+    private Type type; // Type of the symbol, initially null, set after extractTypeFromSymbol
     
     public Symbol(String name, SymbolKind kind, ASTNode declaration, int scopeLevel, boolean isMutable) {
         this(name, kind, declaration, scopeLevel, isMutable, null, new ArrayList<>());
@@ -120,6 +121,7 @@ public class Symbol {
         this.typeName = typeName;
         this.implSymbols = implSymbols;
         this.scope = null;
+        this.type = null; // Initially null, will be set after extractTypeFromSymbol
     }
     
     // Getter methods
@@ -130,6 +132,10 @@ public class Symbol {
     public boolean isMutable() { return isMutable; }
     public String getTypeName() { return typeName; }
     public List<Symbol> getImplSymbols() { return implSymbols; }
+    
+    // Type getter and setter for memoization
+    public Type getType() { return type; }
+    public void setType(Type type) { this.type = type; }
     
     // Add impl symbol
     public void addImplSymbol(Symbol implSymbol) {
@@ -152,11 +158,54 @@ public class Symbol {
     
     @Override
     public String toString() {
-        return String.format("Symbol{name='%s', kind=%s, scopeLevel=%d}",
-                           name, kind, scopeLevel);
+        return String.format("Symbol{name='%s', kind=%s, scopeLevel=%d, type=%s}",
+                           name, kind, scopeLevel, type);
     }
 }
 ```
+
+### 1.5 Symbol类型字段与记忆化搜索
+
+为了支持类型检查阶段的记忆化搜索，我们在Symbol类中添加了一个type字段：
+
+```java
+private Type type; // Type of symbol, initially null, set after extractTypeFromSymbol
+```
+
+#### 设计目的
+
+1. **记忆化搜索**：缓存symbol的类型信息，避免重复计算
+2. **性能优化**：在类型检查阶段，多次引用同一symbol时直接返回缓存类型
+3. **一致性保证**：确保同一symbol在整个类型检查过程中保持相同的类型
+
+#### 使用方式
+
+1. **初始状态**：Symbol创建时，type字段为null
+2. **类型提取**：在类型检查阶段，调用`extractTypeFromSymbol`方法时设置type字段
+3. **后续访问**：后续访问直接返回缓存的type值
+
+#### 与类型检查的集成
+
+这个type字段将在expression_type_checking_design.md中描述的TypeChecker类中使用：
+
+```java
+// 在TypeChecker.extractTypeFromSymbol方法中
+Type cachedType = symbol.getType();
+if (cachedType != null) {
+    return cachedType; // 直接返回缓存的类型
+}
+
+// 计算类型并缓存
+Type computedType = computeTypeFromDeclaration(symbol);
+symbol.setType(computedType);
+return computedType;
+```
+
+#### 注意事项
+
+1. **生命周期**：type字段在namespace_check阶段为null，在type_check阶段被设置
+2. **线程安全**：在多线程环境中需要考虑并发访问问题
+3. **内存管理**：缓存的类型对象会占用内存，需要在适当的时候清理
 
 ### 1.3 Multi-Namespace Symbol Table Implementation
 
@@ -480,6 +529,9 @@ public class SemanticAnalyzer extends VisitorBase {
         
         // Add builtin types
         addBuiltinTypes();
+        
+        // Add builtin functions
+        addBuiltinFunctions();
     }
     
     // Add builtin types
@@ -539,12 +591,16 @@ public class SemanticAnalyzer extends VisitorBase {
     }
     
     // Context enumeration
-    private enum Context {
+    public enum Context {
         TYPE_CONTEXT,
         VALUE_CONTEXT,
         FIELD_CONTEXT,
         LET_PATTERN_CONTEXT,  // Special context for let statement patterns
-        PARAMETER_PATTERN_CONTEXT  // Special context for parameter patterns
+        PARAMETER_PATTERN_CONTEXT,  // Special context for parameter patterns
+        FUNCTION_DECLARATION,  // Special context for function declarations
+        TYPE_DECLARATION,  // Special context for type declarations (struct, enum, trait)
+        FIELD_DECLARATION,  // Special context for field declarations
+        CONST_DECLARATION  // Special context for const declarations
     }
 }
 ```
@@ -592,6 +648,8 @@ impl MyTrait for i32 {
 在语义检查实现中，我们需要为trait和impl块创建新的作用域，确保它们的关联项目不会污染外部命名空间。
 
 ### 2.4 处理值声明
+
+值声明处理现在使用多种上下文，包括FUNCTION_DECLARATION、CONST_DECLARATION等，支持在IdentifierNode中直接创建值符号。
 
 // 值声明相关的visit函数将在文档底部重新组织
 // 注意：let语句创建的LOCAL_VARIABLE通过作用域机制支持遮蔽，这是Rust语言的重要特性
@@ -709,17 +767,6 @@ private void addFieldError(String message, ASTNode node) {
     addError(ErrorType.UNDECLARED_FIELD, message, node);
 }
 
-// Add duplicate declaration error
-private void addDuplicateError(String message, ASTNode node) {
-    // Determine error type based on context
-    if (currentContext == Context.TYPE_CONTEXT) {
-        addError(ErrorType.DUPLICATE_TYPE_DECLARATION, message, node);
-    } else if (currentContext == Context.VALUE_CONTEXT) {
-        addError(ErrorType.DUPLICATE_VALUE_DECLARATION, message, node);
-    } else {
-        addError(ErrorType.DUPLICATE_FIELD_DECLARATION, message, node);
-    }
-}
 
 // Print all errors
 public void printErrors() {
@@ -944,6 +991,171 @@ This implementation strictly follows the namespace specifications in the Rust Re
 
 ## Visit函数实现
 
+### 重要说明：NamespaceScope设置
+
+根据设计要求，`setNamespaceScopeForNode`操作不应该在`VisitorBase`中实现，因为此时还没有求出NamespaceScope。相反，这个操作应该在每个节点类型的visit函数末尾添加，在namespace check阶段求得NamespaceScope后设置。
+
+### setNamespaceScopeForNode方法实现
+
+```java
+// 在namespace check阶段设置节点的NamespaceScope
+private void setNamespaceScopeForNode(ASTNode node) {
+    if (node != null) {
+        // 创建新的命名空间状态
+        NamespaceScope newScope = new NamespaceScope(
+            currentScope,              // 当前符号表
+            currentScope.getScopeLevel(), // 当前作用域级别
+            currentTypeName,            // 当前类型名称
+            getContextType(),           // 当前上下文类型
+            node.getNamespaceScope()    // 父节点的作用域（如果存在）
+        );
+        
+        // 设置到节点
+        node.setNamespaceScope(newScope);
+    }
+}
+
+// 获取当前上下文类型的辅助方法
+private ContextType getContextType() {
+    switch (currentContext) {
+        case TYPE_CONTEXT:
+            return ContextType.TYPE_CONTEXT;
+        case VALUE_CONTEXT:
+            return ContextType.VALUE_CONTEXT;
+        case FIELD_CONTEXT:
+            return ContextType.FIELD_CONTEXT;
+        case LET_PATTERN_CONTEXT:
+            return ContextType.LET_PATTERN_CONTEXT;
+        case PARAMETER_PATTERN_CONTEXT:
+            return ContextType.PARAMETER_PATTERN_CONTEXT;
+        case FIELD_DECLARATION:
+            return ContextType.FIELD_DECLARATION;
+        default:
+            return ContextType.VALUE_CONTEXT; // 默认值上下文
+    }
+}
+```
+
+### Context.java 更新
+
+Context.java 文件已更新，添加了多个新的上下文类型：
+
+```java
+// Context enumeration
+public enum Context {
+    TYPE_CONTEXT,
+    VALUE_CONTEXT,
+    FIELD_CONTEXT,
+    LET_PATTERN_CONTEXT,  // Special context for let statement patterns
+    PARAMETER_PATTERN_CONTEXT,  // Special context for parameter patterns
+    FUNCTION_DECLARATION,  // Special context for function declarations
+    TYPE_DECLARATION,  // Special context for type declarations (struct, enum, trait)
+    FIELD_DECLARATION,  // Special context for field declarations
+    CONST_DECLARATION  // Special context for const declarations
+}
+```
+
+**新增上下文说明**：
+- `FUNCTION_DECLARATION`：用于函数声明时的符号创建和处理
+- `TYPE_DECLARATION`：用于类型声明（struct、enum、trait）时的符号创建和处理
+- `FIELD_DECLARATION`：用于字段声明时的符号创建和处理
+- `CONST_DECLARATION`：用于常量声明时的符号创建和处理
+
+这些新上下文使得符号创建和处理更加精确，避免了上下文混淆。
+
+### AST.java 更新
+
+AST.java 文件已更新，为 FieldNode 添加了 Symbol 字段：
+
+```java
+// FieldNode 类中的 Symbol 记录
+public class FieldNode extends ASTNode {
+    public IdentifierNode name;
+    public TypeExprNode type;
+    
+    // Symbol field to store the field's symbol
+    private Symbol symbol;
+    
+    public Symbol getSymbol() {
+        return symbol;
+    }
+    
+    public void setSymbol(Symbol symbol) {
+        this.symbol = symbol;
+    }
+    
+    // Constructor and other methods...
+}
+```
+
+### NamespaceAnalyzer.java 更新
+
+NamespaceAnalyzer.java 文件已更新，添加了对多个新上下文的支持：
+
+1. **FieldNode 处理更新**：
+   - 创建字段符号后设置到 FieldNode
+   - 设置标识符的上下文为 FIELD_DECLARATION
+   - 递归处理字段的标识符和类型
+
+2. **IdentifierNode 处理更新**：
+   - 添加了 FUNCTION_DECLARATION、TYPE_DECLARATION、FIELD_DECLARATION 和 CONST_DECLARATION case
+   - 在这些上下文中可以直接创建并插入符号到相应的命名空间
+   - 从父节点获取符号并设置到标识符
+
+3. **StructNode 处理更新**：
+   - 在处理字段时设置 FIELD_DECLARATION 上下文
+   - 使用 TYPE_DECLARATION 上下文处理结构体名称
+
+4. **FunctionNode 处理更新**：
+   - 使用 FUNCTION_DECLARATION 上下文处理函数名称
+   - 设置函数节点的符号
+
+5. **EnumNode 处理更新**：
+   - 使用 TYPE_DECLARATION 上下文处理枚举名称
+   - 修改了枚举变体构造函数符号的创建方式
+
+6. **ConstItemNode 处理更新**：
+   - 使用 CONST_DECLARATION 上下文处理常量名称
+   - 设置常量节点的符号
+
+7. **TraitNode 处理更新**：
+   - 使用 TYPE_DECLARATION 上下文处理trait名称
+   - 设置trait节点的符号
+
+8. **ImplNode 处理更新**：
+   - 设置类型符号和trait符号到ImplNode
+   - 处理关联项并添加到类型的implSymbols
+
+### SymbolKind.java 更新
+
+SymbolKind.java 文件已更新，包含了 FIELD 符号类型：
+
+```java
+// Symbol kind enumeration
+public enum SymbolKind {
+    // Type namespace
+    STRUCT("struct"),
+    ENUM("enum"),
+    TRAIT("trait"),
+    BUILTIN_TYPE("builtin_type"),
+    SELF_TYPE("self_type"),
+    
+    // Value namespace
+    FUNCTION("function"),
+    CONSTANT("constant"),
+    STRUCT_CONSTRUCTOR("struct_constructor"),
+    ENUM_VARIANT_CONSTRUCTOR("enum_variant_constructor"),
+    SELF_CONSTRUCTOR("self_constructor"),
+    PARAMETER("parameter"),
+    LOCAL_VARIABLE("local_variable"),
+    
+    // Fields (no namespace)
+    FIELD("field");
+    
+    // ... other methods
+}
+```
+
 ### 基础节点 (ASTNode)
 
 ```java
@@ -981,19 +1193,171 @@ public void visit(IdentifierNode node) {
             }
             break;
             
-            
         case FIELD_CONTEXT:
             // Field context requires special handling, processed in FieldExprNode
             addError(ErrorType.NAMESPACE_VIOLATION,
                     "Identifier in field context should be processed through FieldExprNode",
                     node);
             break;
+            
+        case LET_PATTERN_CONTEXT:
+            // In let pattern context, identifiers are being declared
+            String varName = identifierName;
+            
+            // Find declaration node by traversing up father nodes to find first LetStmtNode
+            ASTNode current = node;
+            ASTNode declarationNode = null;
+            
+            // Traverse up father nodes to find first LetStmtNode
+            while (current != null) {
+                if (current instanceof LetStmtNode) {
+                    declarationNode = current;
+                    break;
+                }
+                current = current.getFather();
+            }
+            
+            // If no LetStmtNode found, fallback to the node itself
+            if (declarationNode == null) {
+                declarationNode = node;
+            }
+            
+            // Create local variable symbol
+            Symbol varSymbol = new Symbol(
+                varName,
+                SymbolKind.LOCAL_VARIABLE,
+                declarationNode,
+                currentScope.getScopeLevel(),
+                false // Default to immutable, will be updated by IdPatNode if needed
+            );
+            
+            try {
+                // Add to value namespace
+                currentScope.addValueSymbol(varSymbol);
+                resolvedSymbol = varSymbol;
+                
+                // Set the symbol to the LetStmtNode if found
+                // This establishes the connection between the let statement and its symbol
+                if (declarationNode instanceof LetStmtNode) {
+                    ((LetStmtNode) declarationNode).setSymbol(varSymbol);
+                }
+            } catch (SemanticException e) {
+                // Error handling removed
+            }
+            break;
+            
+        case PARAMETER_PATTERN_CONTEXT:
+            // In parameter pattern context, identifiers are being declared
+            String paramName = identifierName;
+            
+            // Find declaration node by traversing up father nodes to find first ParameterNode
+            ASTNode current = node;
+            ASTNode declarationNode = null;
+            
+            // Traverse up father nodes to find first ParameterNode
+            while (current != null) {
+                if (current instanceof ParameterNode) {
+                    declarationNode = current;
+                    break;
+                }
+                current = current.getFather();
+            }
+            
+            // If no ParameterNode found, fallback to the node itself
+            if (declarationNode == null) {
+                declarationNode = node;
+            }
+            
+            // Create parameter symbol
+            Symbol paramSymbol = new Symbol(
+                paramName,
+                SymbolKind.PARAMETER,
+                declarationNode,
+                currentScope.getScopeLevel(),
+                false // Parameters are immutable by default
+            );
+            
+            try {
+                // Add to value namespace
+                currentScope.addValueSymbol(paramSymbol);
+                resolvedSymbol = paramSymbol;
+                
+                // Set the symbol to the ParameterNode if found
+                // This establishes the connection between the parameter and its symbol
+                if (declarationNode instanceof ParameterNode) {
+                    ((ParameterNode) declarationNode).setSymbol(paramSymbol);
+                }
+            } catch (SemanticException e) {
+                // Error handling removed
+            }
+            break;
+            
+        case TYPE_DECLARATION:
+            // In type declaration context, create and insert the type symbol here
+            String typeName = identifierName;
+            
+            // Find the type node (parent of this identifier)
+            ASTNode typeNode = node.getFather();
+            
+            // Determine the kind of type based on the parent node
+            SymbolKind typeKind = null; // Initialize as null
+            if (typeNode instanceof StructNode) {
+                typeKind = SymbolKind.STRUCT;
+            } else if (typeNode instanceof EnumNode) {
+                typeKind = SymbolKind.ENUM;
+            } else if (typeNode instanceof TraitNode) {
+                typeKind = SymbolKind.TRAIT;
+            }
+            
+            // Check if typeKind is still null after checking parent node types
+            if (typeKind == null) {
+                throw new SemanticException(
+                    String.format("Unknown type declaration for identifier '%s' at line %d",
+                                 typeName, node.getLineNumber()),
+                    node
+                );
+            }
+            
+            // Create type symbol
+            Symbol typeSymbol = new Symbol(
+                typeName,
+                typeKind,
+                typeNode,
+                currentScope.getScopeLevel(),
+                false
+            );
+            
+            // Add to type namespace
+            try {
+                currentScope.addTypeSymbol(typeSymbol);
+            } catch (SemanticException e) {
+                // Error handling removed
+            }
+            
+            // Set the identifier's symbol to the type symbol
+            resolvedSymbol = typeSymbol;
+            break;
+            
+        case FIELD_DECLARATION:
+            // In field declaration context, the field symbol has already been created in FieldNode
+            // Just need to set the identifier's symbol to the field symbol
+            // The field symbol should be available from the parent FieldNode
+            ASTNode parent = node.getFather();
+            if (parent instanceof FieldNode) {
+                FieldNode fieldNode = (FieldNode) parent;
+                if (fieldNode.getSymbol() != null) {
+                    resolvedSymbol = fieldNode.getSymbol();
+                }
+            }
+            break;
     }
     
     // 记录标识符指向的符号
     node.setSymbol(resolvedSymbol);
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
-
 ```
 
 ### 语句节点 (StmtNode及其子类)
@@ -1017,12 +1381,51 @@ public void visit(LetStmtNode node) {
         // Set context for the identifier
         node.name.setContext(currentContext);
         node.name.accept(this);
+        
+        // Set let statement's symbol to pattern's symbol
+        // The symbol was created in IdPatNode's visit method
+        if (node.name instanceof IdPatNode) {
+            IdPatNode idPat = (IdPatNode) node.name;
+            if (idPat.name != null && idPat.name.getSymbol() != null) {
+                node.setSymbol(idPat.name.getSymbol());
+            }
+        }
     } finally {
         // Restore context
         setContext(previousContext);
     }
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
+
+##### LetStmtNode Symbol 记录
+
+LetStmtNode 现在支持记录对应的 Symbol，实现如下：
+
+```java
+// LetStmtNode 类中的 Symbol 记录
+private Symbol symbol;
+
+public Symbol getSymbol() {
+    return symbol;
+}
+
+public void setSymbol(Symbol symbol) {
+    this.symbol = symbol;
+}
+```
+
+**设计目的**：
+1. **符号关联**：将 let 语句与其创建的符号关联起来
+2. **类型检查支持**：为后续的类型检查阶段提供符号信息
+3. **错误报告**：在发生语义错误时能够准确定位到 let 语句
+
+**使用方式**：
+- 在 `visit(LetStmtNode)` 方法中，通过 `node.name.accept(this)` 处理模式
+- 如果模式是 `IdPatNode`，则从其中的 `IdentifierNode` 获取创建的符号
+- 将该符号设置到 `LetStmtNode` 中，建立关联关系
 
 #### ExprStmtNode
 
@@ -1041,6 +1444,9 @@ public void visit(ExprStmtNode node) {
         // Restore context
         setContext(previousContext);
     }
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
 
@@ -1050,21 +1456,25 @@ public void visit(ExprStmtNode node) {
 // Process function declaration
 @Override
 public void visit(FunctionNode node) {
-    String functionName = node.name.name;
+    
+    // First, recursively process the function name in FUNCTION_DECLARATION context
+    Context previousContext = currentContext;
+    setContext(Context.FUNCTION_DECLARATION);
     
     try {
-        // Create function symbol
-        Symbol functionSymbol = new Symbol(
-            functionName,
-            SymbolKind.FUNCTION,
-            node,
-            currentScope.getScopeLevel(),
-            false
-        );
-        
-        // Add to value namespace
-        currentScope.addValueSymbol(functionSymbol);
-        
+        node.name.accept(this);
+    } finally {
+        // Restore context
+        setContext(previousContext);
+    }
+    
+    // Set the function node's symbol to its name's symbol
+    // The symbol was created in IdentifierNode's visit method
+    if (node.name.getSymbol() != null) {
+        node.setSymbol(node.name.getSymbol());
+    }
+    
+    try {
         // Enter function scope
         enterScope();
         
@@ -1118,8 +1528,64 @@ public void visit(FunctionNode node) {
     } catch (SemanticException e) {
         addError(ErrorType.DUPLICATE_VALUE_DECLARATION, e.getMessage(), node);
     }
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
+}
+
+##### StructNode Symbol 记录
+
+StructNode 现在支持记录对应的 Symbol，实现如下：
+
+```java
+// StructNode 类中的 Symbol 记录
+private Symbol symbol;
+
+public Symbol getSymbol() {
+    return symbol;
+}
+
+public void setSymbol(Symbol symbol) {
+    this.symbol = symbol;
 }
 ```
+
+**设计目的**：
+1. **符号关联**：将结构体与其创建的符号关联起来
+2. **类型检查支持**：为后续的类型检查阶段提供符号信息
+3. **错误报告**：在发生语义错误时能够准确定位到结构体声明
+
+**使用方式**：
+- 在 `visit(StructNode)` 方法中，通过 `node.name.accept(this)` 处理名称
+- 从 `IdentifierNode` 获取创建的符号
+- 将该符号设置到 `StructNode` 中，建立关联关系
+
+##### FieldNode Symbol 记录
+
+FieldNode 现在支持记录对应的 Symbol，实现如下：
+
+```java
+// FieldNode 类中的 Symbol 记录
+private Symbol symbol;
+
+public Symbol getSymbol() {
+    return symbol;
+}
+
+public void setSymbol(Symbol symbol) {
+    this.symbol = symbol;
+}
+```
+
+**设计目的**：
+1. **符号关联**：将字段与其创建的符号关联起来
+2. **类型检查支持**：为后续的类型检查阶段提供符号信息
+3. **错误报告**：在发生语义错误时能够准确定位到字段声明
+
+**使用方式**：
+- 在 `visit(FieldNode)` 方法中，创建字段符号后设置到 FieldNode
+- 递归处理字段的标识符，确保标识符也能正确关联到符号
+- 建立字段、标识符和符号之间的关联关系
 
 #### StructNode
 
@@ -1155,7 +1621,16 @@ public void visit(StructNode node) {
         // Process fields
         if (node.fields != null) {
             for (FieldNode field : node.fields) {
-                field.accept(this);
+                // Set field declaration context for field processing
+                Context previousContext = currentContext;
+                setContext(Context.FIELD_DECLARATION);
+                
+                try {
+                    field.accept(this);
+                } finally {
+                    // Restore context
+                    setContext(previousContext);
+                }
             }
         }
         
@@ -1180,6 +1655,9 @@ public void visit(StructNode node) {
     } catch (SemanticException e) {
         addError(ErrorType.DUPLICATE_TYPE_DECLARATION, e.getMessage(), node);
     }
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
 
@@ -1205,10 +1683,49 @@ public void visit(FieldNode node) {
         // Add to field namespace
         currentScope.addFieldSymbol(currentTypeName, fieldSymbol);
         
+        // Set the field symbol to the FieldNode
+        node.setSymbol(fieldSymbol);
+        
+        // Set field declaration context for the identifier
+        node.name.setContext(Context.FIELD_DECLARATION);
+        
+        // Recursively process the field's identifier
+        node.name.accept(this);
+        
     } catch (SemanticException e) {
         addError(ErrorType.DUPLICATE_FIELD_DECLARATION, e.getMessage(), node);
     }
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
+
+##### EnumNode Symbol 记录
+
+EnumNode 现在支持记录对应的 Symbol，实现如下：
+
+```java
+// EnumNode 类中的 Symbol 记录
+private Symbol symbol;
+
+public Symbol getSymbol() {
+    return symbol;
+}
+
+public void setSymbol(Symbol symbol) {
+    this.symbol = symbol;
+}
+```
+
+**设计目的**：
+1. **符号关联**：将枚举与其创建的符号关联起来
+2. **类型检查支持**：为后续的类型检查阶段提供符号信息
+3. **错误报告**：在发生语义错误时能够准确定位到枚举声明
+
+**使用方式**：
+- 在 `visit(EnumNode)` 方法中，通过 `node.name.accept(this)` 处理名称
+- 从 `IdentifierNode` 获取创建的符号
+- 将该符号设置到 `EnumNode` 中，建立关联关系
 ```
 
 #### EnumNode
@@ -1243,12 +1760,11 @@ public void visit(EnumNode node) {
             for (IdentifierNode variant : node.variants) {
                 // ENUM_VARIANT is removed from type namespace, only constructor remains in value namespace
                 
-                // Create enum variant constructor symbol with name in "enum::variant" format
-                String variantConstructorName = enumName + "::" + variant.name;
+                // Create enum variant constructor symbol with just the variant name
                 Symbol variantConstructorSymbol = new Symbol(
-                    variantConstructorName,
+                    variant.name, // Use only the variant name
                     SymbolKind.ENUM_VARIANT_CONSTRUCTOR,
-                    node, // Point to the enum node instead of the variant node
+                    variant, // Point to the variant node instead of the enum node
                     currentScope.getScopeLevel(),
                     false
                 );
@@ -1264,6 +1780,9 @@ public void visit(EnumNode node) {
     } catch (SemanticException e) {
         addError(ErrorType.DUPLICATE_TYPE_DECLARATION, e.getMessage(), node);
     }
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
 
@@ -1309,7 +1828,37 @@ public void visit(ConstItemNode node) {
     } catch (SemanticException e) {
         addError(ErrorType.DUPLICATE_VALUE_DECLARATION, e.getMessage(), node);
     }
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
+
+##### TraitNode Symbol 记录
+
+TraitNode 现在支持记录对应的 Symbol，实现如下：
+
+```java
+// TraitNode 类中的 Symbol 记录
+private Symbol symbol;
+
+public Symbol getSymbol() {
+    return symbol;
+}
+
+public void setSymbol(Symbol symbol) {
+    this.symbol = symbol;
+}
+```
+
+**设计目的**：
+1. **符号关联**：将trait与其创建的符号关联起来
+2. **类型检查支持**：为后续的类型检查阶段提供符号信息
+3. **错误报告**：在发生语义错误时能够准确定位到trait声明
+
+**使用方式**：
+- 在 `visit(TraitNode)` 方法中，通过 `node.name.accept(this)` 处理名称
+- 从 `IdentifierNode` 获取创建的符号
+- 将该符号设置到 `TraitNode` 中，建立关联关系
 ```
 
 #### TraitNode
@@ -1353,6 +1902,9 @@ public void visit(TraitNode node) {
     } catch (SemanticException e) {
         addError(ErrorType.DUPLICATE_TYPE_DECLARATION, e.getMessage(), node);
     }
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
 
@@ -1433,6 +1985,9 @@ public void visit(ImplNode node) {
     
     // Exit impl scope
     exitScope();
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
 
@@ -1454,10 +2009,18 @@ public void visit(BlockExprNode node) {
                 stmt.accept(this);
             }
         }
+        
+        // Process return value (if any)
+        if (node.returnValue != null) {
+            node.returnValue.accept(this);
+        }
     } finally {
         // Exit scope
         exitScope();
     }
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
 
@@ -1604,7 +2167,7 @@ public void visit(PathExprSegNode node) {
     } else if (node.patternType == patternSeg_t.SELF) {
         // self - 查找当前类型的符号
         if (currentTypeName != null && !currentTypeName.isEmpty()) {
-            Symbol currentTypeSymbol = currentScope.lookupType(currentTypeName);
+            Symbol currentTypeSymbol = currentScope.lookupValue(currentTypeName);
             if (currentTypeSymbol != null) {
                 node.setSymbol(currentTypeSymbol);
             }
@@ -1612,12 +2175,15 @@ public void visit(PathExprSegNode node) {
     } else if (node.patternType == patternSeg_t.SELF_TYPE) {
         // Self - 查找当前类型符号
         if (currentTypeName != null && !currentTypeName.isEmpty()) {
-            Symbol selfTypeSymbol = currentScope.lookupType(currentTypeName);
+            Symbol selfTypeSymbol = currentScope.lookupValue(currentTypeName);
             if (selfTypeSymbol != null) {
                 node.setSymbol(selfTypeSymbol);
             }
         }
     }
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
 
@@ -1645,6 +2211,9 @@ public void visit(CallExprNode node) {
         // Restore context
         setContext(previousContext);
     }
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
 
@@ -1679,6 +2248,9 @@ public void visit(MethodCallExprNode node) {
         // Restore context
         setContext(previousContext);
     }
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
 
@@ -1710,6 +2282,9 @@ public void visit(StructExprNode node) {
         // Restore context
         setContext(previousContext);
     }
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
 
@@ -1743,6 +2318,9 @@ public void visit(FieldValNode node) {
         // Restore original context
         setContext(previousContext);
     }
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
 
@@ -1768,6 +2346,9 @@ public void visit(FieldExprNode node) {
         // Restore context
         setContext(previousContext);
     }
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
 
@@ -1782,11 +2363,14 @@ public void visit(IdPatNode node) {
     if (currentContext == Context.LET_PATTERN_CONTEXT) {
         String varName = node.name.name;
         
+        // KEY: Traverse up father nodes to find declaration context
+        ASTNode declarationNode = findDeclarationNode(node);
+        
         // Create local variable symbol
         Symbol varSymbol = new Symbol(
             varName,
             SymbolKind.LOCAL_VARIABLE,
-            node,
+            declarationNode,
             currentScope.getScopeLevel(),
             node.isMutable
         );
@@ -1794,6 +2378,15 @@ public void visit(IdPatNode node) {
         try {
             // Add to value namespace
             currentScope.addValueSymbol(varSymbol);
+            
+            // Set the symbol to the IdPatNode
+            node.setSymbol(varSymbol);
+            
+            // Set the symbol to the LetStmtNode if found
+            // This establishes the connection between the let statement and its symbol
+            if (declarationNode instanceof LetStmtNode) {
+                ((LetStmtNode) declarationNode).setSymbol(varSymbol);
+            }
         } catch (SemanticException e) {
             // Report duplicate declaration error
             addError(ErrorType.DUPLICATE_VALUE_DECLARATION, e.getMessage(), node);
@@ -1801,11 +2394,14 @@ public void visit(IdPatNode node) {
     } else if (currentContext == Context.PARAMETER_PATTERN_CONTEXT) {
         String paramName = node.name.name;
         
+        // KEY: Traverse up father nodes to find declaration context
+        ASTNode declarationNode = findDeclarationNode(node);
+        
         // Create parameter symbol
         Symbol paramSymbol = new Symbol(
             paramName,
             SymbolKind.PARAMETER,
-            node,
+            declarationNode,
             currentScope.getScopeLevel(),
             false // Parameters are immutable by default
         );
@@ -1813,6 +2409,15 @@ public void visit(IdPatNode node) {
         try {
             // Add to value namespace
             currentScope.addValueSymbol(paramSymbol);
+            
+            // Set the symbol to the IdPatNode
+            node.setSymbol(paramSymbol);
+            
+            // Set the symbol to the ParameterNode if found
+            // This establishes the connection between the parameter and its symbol
+            if (declarationNode instanceof ParameterNode) {
+                ((ParameterNode) declarationNode).setSymbol(paramSymbol);
+            }
         } catch (SemanticException e) {
             // Report duplicate declaration error
             addError(ErrorType.DUPLICATE_VALUE_DECLARATION, e.getMessage(), node);
@@ -1824,7 +2429,67 @@ public void visit(IdPatNode node) {
         node.name.accept(this);
     }
 }
+
+// KEY METHOD: Traverse up father nodes to find declaration context
+private ASTNode findDeclarationNode(IdPatNode node) {
+    ASTNode current = node;
+    
+    // Traverse up father nodes to find appropriate declaration context
+    while (current != null) {
+        // If we reach a LetStmtNode, use it as declaration node
+        if (current instanceof LetStmtNode) {
+            return current;
+        }
+        
+        // If we reach a ParameterNode, use it as declaration node
+        if (current instanceof ParameterNode) {
+            return current;
+        }
+        
+        // If we reach a FunctionNode, use it as declaration node
+        if (current instanceof FunctionNode) {
+            return current;
+        }
+        
+        // Move to father node
+        current = current.getFather();
+    }
+    
+    // If no suitable declaration node found, fallback to IdPatNode itself
+    return node;
+}
+
+// Note: findDeclarationNodeForIdentifier has been removed
+// In IdentifierNode.visit(), we now directly traverse up to find the first LetStmtNode
+// This simplifies the code and makes it more focused on the specific requirement
 ```
+
+##### IdPatNode Symbol 字段
+
+IdPatNode 现在支持记录对应的 Symbol，实现如下：
+
+```java
+// IdPatNode 类中的 Symbol 记录
+private Symbol symbol;
+
+public Symbol getSymbol() {
+    return symbol;
+}
+
+public void setSymbol(Symbol symbol) {
+    this.symbol = symbol;
+}
+```
+
+**设计目的**：
+1. **符号关联**：将模式与其创建的符号关联起来
+2. **类型检查支持**：为后续的类型检查阶段提供符号信息
+3. **错误报告**：在发生语义错误时能够准确定位到模式声明
+
+**使用方式**：
+- 在 `visit(IdPatNode)` 方法中，创建符号后直接设置到 IdPatNode
+- 在 `visit(LetStmtNode)` 和 `visit(ParameterNode)` 方法中，从 IdPatNode 获取符号
+- 建立模式、声明节点和符号之间的关联关系
 
 ### 类型节点 (TypeExprNode及其子类)
 
@@ -1845,6 +2510,9 @@ public void visit(TypePathExprNode node) {
         // Restore context
         setContext(previousContext);
     }
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
 
@@ -1856,6 +2524,9 @@ public void visit(TypePathExprNode node) {
 public void visit(TypeRefExprNode node) {
     // Process inner type
     node.innerType.accept(this);
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
 
@@ -1870,6 +2541,9 @@ public void visit(TypeArrayExprNode node) {
     
     // Process size expression
     node.size.accept(this);
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
 
@@ -1880,6 +2554,9 @@ public void visit(TypeArrayExprNode node) {
 @Override
 public void visit(TypeUnitExprNode node) {
     // Unit type doesn't require semantic checking
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
 
@@ -1898,6 +2575,15 @@ public void visit(ParameterNode node) {
         
         try {
             node.pattern.accept(this);
+            
+            // Set parameter's symbol to pattern's symbol
+            // The symbol was created in IdPatNode's visit method
+            if (node.pattern instanceof IdPatNode) {
+                IdPatNode idPat = (IdPatNode) node.pattern;
+                if (idPat.name != null && idPat.name.getSymbol() != null) {
+                    node.setSymbol(idPat.name.getSymbol());
+                }
+            }
         } finally {
             // Restore context
             setContext(previousContext);
@@ -1916,8 +2602,38 @@ public void visit(ParameterNode node) {
             setContext(previousContext);
         }
     }
+    
+    // 在namespace check阶段设置NamespaceScope
+    setNamespaceScopeForNode(node);
 }
 ```
+
+##### ParameterNode Symbol 记录
+
+ParameterNode 现在支持记录对应的 Symbol，实现如下：
+
+```java
+// ParameterNode 类中的 Symbol 记录
+private Symbol symbol;
+
+public Symbol getSymbol() {
+    return symbol;
+}
+
+public void setSymbol(Symbol symbol) {
+    this.symbol = symbol;
+}
+```
+
+**设计目的**：
+1. **符号关联**：将参数与其创建的符号关联起来
+2. **类型检查支持**：为后续的类型检查阶段提供符号信息
+3. **错误报告**：在发生语义错误时能够准确定位到参数声明
+
+**使用方式**：
+- 在 `visit(ParameterNode)` 方法中，通过 `node.pattern.accept(this)` 处理模式
+- 如果模式是 `IdPatNode`，则从其中的 `IdentifierNode` 获取创建的符号
+- 将该符号设置到 `ParameterNode` 中，建立关联关系
 
 #### resolveField
 
@@ -1948,3 +2664,129 @@ private void resolveField(IdentifierNode fieldNode, ExprNode receiver) {
     }
 }
 ```
+
+## 重要更新：IdPatNode的父亲遍历实现
+
+### 关键改进说明
+
+在namespace_check的实现中，`IdPatNode`的处理需要特别关注父亲节点的遍历。这是因为在Rust的AST结构中，`IdPatNode`可能出现在不同的上下文中：
+
+1. **Let语句中的变量声明**：`IdPatNode`作为`LetStmtNode`的子节点
+2. **函数参数中的模式匹配**：`IdPatNode`作为`ParameterNode`的子节点
+3. **其他模式匹配场景**：可能嵌套在更复杂的模式结构中
+
+### 实现要点
+
+在`visit(IdPatNode node)`方法中，关键实现是：
+
+```java
+// KEY: Traverse up father nodes to find declaration context
+ASTNode declarationNode = findDeclarationNode(node);
+```
+
+而不是简单地使用：
+
+```java
+// 简单获取直接父亲节点（不够）
+ASTNode declarationNode = node.getFather();
+```
+
+### findDeclarationNode方法的核心逻辑
+
+```java
+private ASTNode findDeclarationNode(IdPatNode node) {
+    ASTNode current = node;
+    
+    // Traverse up father nodes to find appropriate declaration context
+    while (current != null) {
+        // If we reach a LetStmtNode, use it as declaration node
+        if (current instanceof LetStmtNode) {
+            return current;
+        }
+        
+        // If we reach a ParameterNode, use it as declaration node
+        if (current instanceof ParameterNode) {
+            return current;
+        }
+        
+        // If we reach a FunctionNode, use it as declaration node
+        if (current instanceof FunctionNode) {
+            return current;
+        }
+        
+        // Move to father node
+        current = current.getFather();
+    }
+    
+    // If no suitable declaration node found, fallback to IdPatNode itself
+    return node;
+}
+```
+
+### 为什么需要不断跳父亲？
+
+1. **正确的符号关联**：符号表中的符号需要关联到正确的声明节点，以便后续的类型检查和错误报告
+2. **作用域管理**：正确的作用域管理需要知道变量是在哪个上下文中声明的
+3. **错误定位**：当发生语义错误时，需要准确定位到声明位置而不是使用位置
+
+### 使用场景示例
+
+```rust
+let x = 5;        // IdPatNode "x" 的父亲是 LetStmtNode
+fn foo(param: i32) {  // IdPatNode "param" 的父亲是 ParameterNode
+    let y = param;   // IdPatNode "y" 的父亲是 LetStmtNode
+}
+```
+
+在这种嵌套结构中，简单的`node.getFather()`可能不足以找到正确的声明上下文，需要不断向上遍历直到找到合适的声明节点。
+
+### 总结
+
+这个改进确保了namespace_check能够正确处理`IdPatNode`在各种复杂AST结构中的符号声明和解析，是Rust编译器语义检查的关键优化。
+
+## 重要更新：IdentifierNode符号插入增强
+
+### 关键改进说明
+
+在最新的实现中，`IdentifierNode`现在可以在多种声明上下文中直接创建和插入符号，不再局限于通过`IdPatNode`进行符号插入。这一改进大大增强了符号处理的灵活性。
+
+### 支持的上下文
+
+1. **LET_PATTERN_CONTEXT**：创建LOCAL_VARIABLE符号
+2. **PARAMETER_PATTERN_CONTEXT**：创建PARAMETER符号
+3. **FUNCTION_DECLARATION**：创建FUNCTION符号
+4. **TYPE_DECLARATION**：创建STRUCT、ENUM或TRAIT符号
+5. **FIELD_DECLARATION**：从父FieldNode获取字段符号
+6. **CONST_DECLARATION**：创建CONSTANT符号
+
+### 实现优势
+
+1. **更直接的符号创建**：避免了通过中间节点创建符号的复杂性
+2. **更精确的上下文处理**：每种声明类型都有专门的上下文
+3. **更好的错误定位**：符号直接关联到声明节点
+4. **更灵活的架构**：支持未来添加新的声明类型
+
+### 使用示例
+
+```java
+// 在IdentifierNode.visit()方法中
+switch (currentContext) {
+    case FUNCTION_DECLARATION:
+        // 直接创建函数符号
+        Symbol functionSymbol = new Symbol(...);
+        currentScope.addValueSymbol(functionSymbol);
+        resolvedSymbol = functionSymbol;
+        break;
+        
+    case TYPE_DECLARATION:
+        // 直接创建类型符号
+        Symbol typeSymbol = new Symbol(...);
+        currentScope.addTypeSymbol(typeSymbol);
+        resolvedSymbol = typeSymbol;
+        break;
+        
+    // ... 其他上下文
+}
+```
+
+这一改进使得符号处理更加直接和高效，是namespace_check实现的重要优化。

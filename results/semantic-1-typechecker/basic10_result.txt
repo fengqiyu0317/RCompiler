@@ -1,0 +1,176 @@
+=== Symbol Debug Test ===
+Enter Rust code (Ctrl+D to finish):
+Father relationships set successfully.
+Self and Self semantic checking completed successfully.
+Namespace semantic checking completed successfully.
+
+=== Symbol Debug Output ===
+Node: Function(main)       | Type: FunctionNode              | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: main                 | Type: IdentifierNode            | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: bag                  | Type: IdentifierNode            | Symbol: Symbol{name='bag', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(Bag)     | Type: PathExprSegNode           | Symbol: Symbol{name='Bag', kind=STRUCT, scopeLevel=0}
+Node: Bag                  | Type: IdentifierNode            | Symbol: Symbol{name='Bag', kind=STRUCT, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='Bag', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(Bag)     | Type: PathExprSegNode           | Symbol: Symbol{name='Bag', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: Bag                  | Type: IdentifierNode            | Symbol: Symbol{name='Bag', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(new)     | Type: PathExprSegNode           | Symbol: null
+Node: new                  | Type: IdentifierNode            | Symbol: null
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='bag', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(bag)     | Type: PathExprSegNode           | Symbol: Symbol{name='bag', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: bag                  | Type: IdentifierNode            | Symbol: Symbol{name='bag', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(insert)  | Type: PathExprSegNode           | Symbol: null
+Node: insert               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: check                | Type: IdentifierNode            | Symbol: Symbol{name='check', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(bool)    | Type: PathExprSegNode           | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: bool                 | Type: IdentifierNode            | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='bag', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(bag)     | Type: PathExprSegNode           | Symbol: Symbol{name='bag', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: bag                  | Type: IdentifierNode            | Symbol: Symbol{name='bag', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(contains) | Type: PathExprSegNode           | Symbol: null
+Node: contains             | Type: IdentifierNode            | Symbol: null
+Node: dummy                | Type: IdentifierNode            | Symbol: Symbol{name='dummy', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(bool)    | Type: PathExprSegNode           | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: bool                 | Type: IdentifierNode            | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='check', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(check)   | Type: PathExprSegNode           | Symbol: Symbol{name='check', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: check                | Type: IdentifierNode            | Symbol: Symbol{name='check', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(exit)    | Type: PathExprSegNode           | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: exit                 | Type: IdentifierNode            | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: Trait(Storage)       | Type: TraitNode                 | Symbol: Symbol{name='Storage', kind=TRAIT, scopeLevel=0}
+Node: Storage              | Type: IdentifierNode            | Symbol: Symbol{name='Storage', kind=TRAIT, scopeLevel=0}
+Node: Function(insert)     | Type: FunctionNode              | Symbol: Symbol{name='insert', kind=FUNCTION, scopeLevel=1}
+Node: insert               | Type: IdentifierNode            | Symbol: Symbol{name='insert', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: value                | Type: IdentifierNode            | Symbol: Symbol{name='value', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Function(contains)   | Type: FunctionNode              | Symbol: Symbol{name='contains', kind=FUNCTION, scopeLevel=1}
+Node: contains             | Type: IdentifierNode            | Symbol: Symbol{name='contains', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: value                | Type: IdentifierNode            | Symbol: Symbol{name='value', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExprSeg(bool)    | Type: PathExprSegNode           | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: bool                 | Type: IdentifierNode            | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Function(size)       | Type: FunctionNode              | Symbol: Symbol{name='size', kind=FUNCTION, scopeLevel=1}
+Node: size                 | Type: IdentifierNode            | Symbol: Symbol{name='size', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Struct(Bag)          | Type: StructNode                | Symbol: Symbol{name='Bag', kind=STRUCT, scopeLevel=0}
+Node: Bag                  | Type: IdentifierNode            | Symbol: Symbol{name='Bag', kind=STRUCT, scopeLevel=0}
+Node: Field(items)         | Type: FieldNode                 | Symbol: Symbol{name='items', kind=FIELD, scopeLevel=0}
+Node: items                | Type: IdentifierNode            | Symbol: Symbol{name='items', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Field(count)         | Type: FieldNode                 | Symbol: Symbol{name='count', kind=FIELD, scopeLevel=0}
+Node: count                | Type: IdentifierNode            | Symbol: Symbol{name='count', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Impl(for TypePathExprNode@66a29884) | Type: ImplNode                  | TypeSymbol: Symbol{name='Bag', kind=STRUCT, scopeLevel=0} | TraitSymbol: null                          
+Node: PathExprSeg(Bag)     | Type: PathExprSegNode           | Symbol: Symbol{name='Bag', kind=STRUCT, scopeLevel=0}
+Node: Bag                  | Type: IdentifierNode            | Symbol: Symbol{name='Bag', kind=STRUCT, scopeLevel=0}
+Node: Function(new)        | Type: FunctionNode              | Symbol: Symbol{name='new', kind=FUNCTION, scopeLevel=1}
+Node: new                  | Type: IdentifierNode            | Symbol: Symbol{name='new', kind=FUNCTION, scopeLevel=1}
+Node: PathExprSeg(SELF_TYPE) | Type: PathExprSegNode           | Symbol: Symbol{name='Bag', kind=STRUCT, scopeLevel=0}
+Node: StructExpr           | Type: StructExprNode            | Symbol: Symbol{name='Bag', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(Bag)     | Type: PathExprSegNode           | Symbol: Symbol{name='Bag', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: Bag                  | Type: IdentifierNode            | Symbol: Symbol{name='Bag', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: FieldVal(items)      | Type: FieldValNode              | Symbol: Symbol{name='items', kind=FIELD, scopeLevel=0}
+Node: items                | Type: IdentifierNode            | Symbol: Symbol{name='items', kind=FIELD, scopeLevel=0}
+Node: FieldVal(count)      | Type: FieldValNode              | Symbol: Symbol{name='count', kind=FIELD, scopeLevel=0}
+Node: count                | Type: IdentifierNode            | Symbol: Symbol{name='count', kind=FIELD, scopeLevel=0}
+Node: Impl(for TypePathExprNode@4769b07b)(trait Storage) | Type: ImplNode                  | TypeSymbol: Symbol{name='Bag', kind=STRUCT, scopeLevel=0} | TraitSymbol: Symbol{name='Storage', kind=TRAIT, scopeLevel=0}
+Node: PathExprSeg(Bag)     | Type: PathExprSegNode           | Symbol: Symbol{name='Bag', kind=STRUCT, scopeLevel=0}
+Node: Bag                  | Type: IdentifierNode            | Symbol: Symbol{name='Bag', kind=STRUCT, scopeLevel=0}
+Node: Storage              | Type: IdentifierNode            | Symbol: Symbol{name='Storage', kind=TRAIT, scopeLevel=0}
+Node: Function(insert)     | Type: FunctionNode              | Symbol: Symbol{name='insert', kind=FUNCTION, scopeLevel=1}
+Node: insert               | Type: IdentifierNode            | Symbol: Symbol{name='insert', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: value                | Type: IdentifierNode            | Symbol: Symbol{name='value', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: items                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: count                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='value', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(value)   | Type: PathExprSegNode           | Symbol: Symbol{name='value', kind=PARAMETER, scopeLevel=2}
+Node: value                | Type: IdentifierNode            | Symbol: Symbol{name='value', kind=PARAMETER, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: count                | Type: IdentifierNode            | Symbol: null
+Node: Function(contains)   | Type: FunctionNode              | Symbol: Symbol{name='contains', kind=FUNCTION, scopeLevel=1}
+Node: contains             | Type: IdentifierNode            | Symbol: Symbol{name='contains', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: value                | Type: IdentifierNode            | Symbol: Symbol{name='value', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExprSeg(bool)    | Type: PathExprSegNode           | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: bool                 | Type: IdentifierNode            | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: idx                  | Type: IdentifierNode            | Symbol: Symbol{name='idx', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: items                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='idx', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(idx)     | Type: PathExprSegNode           | Symbol: Symbol{name='idx', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: idx                  | Type: IdentifierNode            | Symbol: Symbol{name='idx', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='value', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(value)   | Type: PathExprSegNode           | Symbol: Symbol{name='value', kind=PARAMETER, scopeLevel=2}
+Node: value                | Type: IdentifierNode            | Symbol: Symbol{name='value', kind=PARAMETER, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='idx', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(idx)     | Type: PathExprSegNode           | Symbol: Symbol{name='idx', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: idx                  | Type: IdentifierNode            | Symbol: Symbol{name='idx', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='idx', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(idx)     | Type: PathExprSegNode           | Symbol: Symbol{name='idx', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: idx                  | Type: IdentifierNode            | Symbol: Symbol{name='idx', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: count                | Type: IdentifierNode            | Symbol: null
+
+=== Symbol Debug Summary ===
+Total nodes visited: 142
+Nodes with symbols: 129
+Nodes without symbols: 13
+
+Node type distribution:
+  ImplNode: 2
+  FieldNode: 2
+  StructExprNode: 1
+  PathExprSegNode: 40
+  IdentifierNode: 62
+  FunctionNode: 7
+  FieldValNode: 2
+  PathExprNode: 19
+  TraitNode: 1
+  SelfParaNode: 5
+  StructNode: 1
+Type checking errors:
+  class StructConstructorType cannot be cast to class StructType (StructConstructorType and StructType are in unnamed module of loader 'app')
+  Called expression is not a function: StructConstructor<Bag>
+  Expression type is null for CallExprNode('Bag') at in function 'main' 
+  Unable to determine receiver type for method
+  Unable to determine receiver type for method
+  Unable to determine receiver type for method
+  Type path expression is missing path or name
+  Cannot find common type because second type is null at in function 'new' (Self: Bag) 

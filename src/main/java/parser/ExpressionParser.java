@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 import java.util.Vector;
 
 public class ExpressionParser extends BaseParser {
@@ -44,7 +45,7 @@ public class ExpressionParser extends BaseParser {
                 ExprNode left = parsePrimary();
                 
                 while (!tokenStream.isAtEnd() &&
-                       precedence < getPrecedence(tokenStream.current()) &&
+                       precedence < getPrecedence(tokenStream.current(), false) && // Use binary context
                        !isExpressionEndToken(tokenStream.current()) &&
                        config.isOperatorToken(tokenStream.current().name)) {
                     token_t token = tokenStream.current();
@@ -106,7 +107,7 @@ public class ExpressionParser extends BaseParser {
     // Parse infix expressions
     private ExprNode parseInfixExpression(ExprNode left, token_t operator) {
         try {
-            int precedence = getPrecedence(operator);
+            int precedence = getPrecedence(operator, false); // Use binary context for infix operators
             
             if (config.isArithmeticOperator(operator.name)) {
                 tokenStream.consume(); // Consume the operator
@@ -290,16 +291,16 @@ public class ExpressionParser extends BaseParser {
         token_t token = tokenStream.current(); // Consume the token now
         
         if (token.name.equals("&") || token.name.equals("&&")) {
-            int precedence = getPrecedence(token);
+            int precedence = getPrecedence(token, true); // Use unary context
             tokenStream.consume(); // Consume '&' or '&&'
             return parseBorrowExpression(token.name.equals("&&"), precedence);
         } else if (token.name.equals("*")) {
             tokenStream.consume(); // Consume '*'
-            int precedence = getPrecedence(token);
+            int precedence = getPrecedence(token, true); // Use unary context for dereference
             return parseDerefExpression(precedence);
         } else if (token.name.equals("-") || token.name.equals("!")) {
             tokenStream.consume(); // Consume '-' or '!'
-            int precedence = getPrecedence(token);
+            int precedence = getPrecedence(token, true); // Use unary context
             return parseNegationExpression(token.name.equals("!"), precedence);
         }
         
@@ -680,9 +681,11 @@ public class ExpressionParser extends BaseParser {
             if (isWhileLoop) {
                 // It's a while loop, so there should be a condition
                 node.condition = parseGroupExpression();
+                node.isInfinite = false;
             } else {
                 // It's a loop, so no condition
                 node.condition = null;
+                node.isInfinite = true;
             }
             
             node.body = parseBlockExpression();
@@ -709,6 +712,7 @@ public class ExpressionParser extends BaseParser {
                 // Check for empty block
                 if (tokenStream.equals("}")) {
                     node.statements = statements;
+                    node.returnValue = null;
                     tokenStream.consume("}");
                     return node;
                 }
@@ -738,10 +742,8 @@ public class ExpressionParser extends BaseParser {
                     try {
                         ExprNode expr = parseExpressionWithoutBlock();
                         if (expr != null) {
-                            // Wrap the expression in an expression statement
-                            ExprStmtNode exprStmt = new ExprStmtNode();
-                            exprStmt.expr = expr;
-                            statements.add(exprStmt);
+                            // Store the expression as the return value of the block
+                            node.returnValue = expr;
                             hasExpression = true;
                             break;
                         } else {
@@ -754,6 +756,9 @@ public class ExpressionParser extends BaseParser {
                 }
                 
                 node.statements = statements;
+                if (!hasExpression) {
+                    node.returnValue = null;
+                }
             } else {
                 errorReporter.reportError("StatementParser not available for block expression", tokenStream.current());
             }

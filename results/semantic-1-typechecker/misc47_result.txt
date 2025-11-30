@@ -1,0 +1,139 @@
+=== Symbol Debug Test ===
+Enter Rust code (Ctrl+D to finish):
+Father relationships set successfully.
+Self and Self semantic checking completed successfully.
+Namespace semantic checking completed successfully.
+
+=== Symbol Debug Output ===
+Node: Function(collatz_recursive) | Type: FunctionNode              | Symbol: Symbol{name='collatz_recursive', kind=FUNCTION, scopeLevel=0}
+Node: collatz_recursive    | Type: IdentifierNode            | Symbol: Symbol{name='collatz_recursive', kind=FUNCTION, scopeLevel=0}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: depth                | Type: IdentifierNode            | Symbol: Symbol{name='depth', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='depth', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(depth)   | Type: PathExprSegNode           | Symbol: Symbol{name='depth', kind=PARAMETER, scopeLevel=1}
+Node: depth                | Type: IdentifierNode            | Symbol: Symbol{name='depth', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='collatz_recursive', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(collatz_recursive) | Type: PathExprSegNode           | Symbol: Symbol{name='collatz_recursive', kind=FUNCTION, scopeLevel=0}
+Node: collatz_recursive    | Type: IdentifierNode            | Symbol: Symbol{name='collatz_recursive', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='depth', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(depth)   | Type: PathExprSegNode           | Symbol: Symbol{name='depth', kind=PARAMETER, scopeLevel=1}
+Node: depth                | Type: IdentifierNode            | Symbol: Symbol{name='depth', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='collatz_recursive', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(collatz_recursive) | Type: PathExprSegNode           | Symbol: Symbol{name='collatz_recursive', kind=FUNCTION, scopeLevel=0}
+Node: collatz_recursive    | Type: IdentifierNode            | Symbol: Symbol{name='collatz_recursive', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='depth', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(depth)   | Type: PathExprSegNode           | Symbol: Symbol{name='depth', kind=PARAMETER, scopeLevel=1}
+Node: depth                | Type: IdentifierNode            | Symbol: Symbol{name='depth', kind=PARAMETER, scopeLevel=1}
+Node: Function(find_max_collatz_length) | Type: FunctionNode              | Symbol: Symbol{name='find_max_collatz_length', kind=FUNCTION, scopeLevel=0}
+Node: find_max_collatz_length | Type: IdentifierNode            | Symbol: Symbol{name='find_max_collatz_length', kind=FUNCTION, scopeLevel=0}
+Node: start                | Type: IdentifierNode            | Symbol: Symbol{name='start', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: end                  | Type: IdentifierNode            | Symbol: Symbol{name='end', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: max_length           | Type: IdentifierNode            | Symbol: Symbol{name='max_length', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: current              | Type: IdentifierNode            | Symbol: Symbol{name='current', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='start', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(start)   | Type: PathExprSegNode           | Symbol: Symbol{name='start', kind=PARAMETER, scopeLevel=1}
+Node: start                | Type: IdentifierNode            | Symbol: Symbol{name='start', kind=PARAMETER, scopeLevel=1}
+Node: length               | Type: IdentifierNode            | Symbol: Symbol{name='length', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='collatz_recursive', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(collatz_recursive) | Type: PathExprSegNode           | Symbol: Symbol{name='collatz_recursive', kind=FUNCTION, scopeLevel=0}
+Node: collatz_recursive    | Type: IdentifierNode            | Symbol: Symbol{name='collatz_recursive', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='current', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(current) | Type: PathExprSegNode           | Symbol: Symbol{name='current', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: current              | Type: IdentifierNode            | Symbol: Symbol{name='current', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='length', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(length)  | Type: PathExprSegNode           | Symbol: Symbol{name='length', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: length               | Type: IdentifierNode            | Symbol: Symbol{name='length', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='max_length', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(max_length) | Type: PathExprSegNode           | Symbol: Symbol{name='max_length', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: max_length           | Type: IdentifierNode            | Symbol: Symbol{name='max_length', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='max_length', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(max_length) | Type: PathExprSegNode           | Symbol: Symbol{name='max_length', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: max_length           | Type: IdentifierNode            | Symbol: Symbol{name='max_length', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='length', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(length)  | Type: PathExprSegNode           | Symbol: Symbol{name='length', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: length               | Type: IdentifierNode            | Symbol: Symbol{name='length', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='current', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(current) | Type: PathExprSegNode           | Symbol: Symbol{name='current', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: current              | Type: IdentifierNode            | Symbol: Symbol{name='current', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='current', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(current) | Type: PathExprSegNode           | Symbol: Symbol{name='current', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: current              | Type: IdentifierNode            | Symbol: Symbol{name='current', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='end', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(end)     | Type: PathExprSegNode           | Symbol: Symbol{name='end', kind=PARAMETER, scopeLevel=1}
+Node: end                  | Type: IdentifierNode            | Symbol: Symbol{name='end', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='max_length', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(max_length) | Type: PathExprSegNode           | Symbol: Symbol{name='max_length', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: max_length           | Type: IdentifierNode            | Symbol: Symbol{name='max_length', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: Function(main)       | Type: FunctionNode              | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: main                 | Type: IdentifierNode            | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: start                | Type: IdentifierNode            | Symbol: Symbol{name='start', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: end                  | Type: IdentifierNode            | Symbol: Symbol{name='end', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: result               | Type: IdentifierNode            | Symbol: Symbol{name='result', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='find_max_collatz_length', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(find_max_collatz_length) | Type: PathExprSegNode           | Symbol: Symbol{name='find_max_collatz_length', kind=FUNCTION, scopeLevel=0}
+Node: find_max_collatz_length | Type: IdentifierNode            | Symbol: Symbol{name='find_max_collatz_length', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='start', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(start)   | Type: PathExprSegNode           | Symbol: Symbol{name='start', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: start                | Type: IdentifierNode            | Symbol: Symbol{name='start', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='end', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(end)     | Type: PathExprSegNode           | Symbol: Symbol{name='end', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: end                  | Type: IdentifierNode            | Symbol: Symbol{name='end', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(printInt) | Type: PathExprSegNode           | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: printInt             | Type: IdentifierNode            | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='result', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(result)  | Type: PathExprSegNode           | Symbol: Symbol{name='result', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: result               | Type: IdentifierNode            | Symbol: Symbol{name='result', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(exit)    | Type: PathExprSegNode           | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: exit                 | Type: IdentifierNode            | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+
+=== Symbol Debug Summary ===
+Total nodes visited: 118
+Nodes with symbols: 118
+Nodes without symbols: 0
+
+Node type distribution:
+  PathExprSegNode: 38
+  IdentifierNode: 51
+  FunctionNode: 3
+  PathExprNode: 26
+Type checking errors:
+  Function body type mismatch: expected i32, got () in function 'collatz_recursive' at in function 'collatz_recursive' 
+  Function body type mismatch: expected i32, got () in function 'find_max_collatz_length' at in function 'find_max_collatz_length' 

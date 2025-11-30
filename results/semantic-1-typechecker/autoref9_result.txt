@@ -1,0 +1,124 @@
+=== Symbol Debug Test ===
+Enter Rust code (Ctrl+D to finish):
+Father relationships set successfully.
+Self and Self semantic checking completed successfully.
+Namespace semantic checking completed successfully.
+
+=== Symbol Debug Output ===
+Node: Struct(Account)      | Type: StructNode                | Symbol: Symbol{name='Account', kind=STRUCT, scopeLevel=0}
+Node: Account              | Type: IdentifierNode            | Symbol: Symbol{name='Account', kind=STRUCT, scopeLevel=0}
+Node: Field(balance)       | Type: FieldNode                 | Symbol: Symbol{name='balance', kind=FIELD, scopeLevel=0}
+Node: balance              | Type: IdentifierNode            | Symbol: Symbol{name='balance', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Field(id)            | Type: FieldNode                 | Symbol: Symbol{name='id', kind=FIELD, scopeLevel=0}
+Node: id                   | Type: IdentifierNode            | Symbol: Symbol{name='id', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Impl(for TypePathExprNode@1ddc4ec2) | Type: ImplNode                  | TypeSymbol: Symbol{name='Account', kind=STRUCT, scopeLevel=0} | TraitSymbol: null                          
+Node: PathExprSeg(Account) | Type: PathExprSegNode           | Symbol: Symbol{name='Account', kind=STRUCT, scopeLevel=0}
+Node: Account              | Type: IdentifierNode            | Symbol: Symbol{name='Account', kind=STRUCT, scopeLevel=0}
+Node: Function(get_balance) | Type: FunctionNode              | Symbol: Symbol{name='get_balance', kind=FUNCTION, scopeLevel=1}
+Node: get_balance          | Type: IdentifierNode            | Symbol: Symbol{name='get_balance', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: balance              | Type: IdentifierNode            | Symbol: null
+Node: Function(deposit)    | Type: FunctionNode              | Symbol: Symbol{name='deposit', kind=FUNCTION, scopeLevel=1}
+Node: deposit              | Type: IdentifierNode            | Symbol: Symbol{name='deposit', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: amount               | Type: IdentifierNode            | Symbol: Symbol{name='amount', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: balance              | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: balance              | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='amount', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(amount)  | Type: PathExprSegNode           | Symbol: Symbol{name='amount', kind=PARAMETER, scopeLevel=2}
+Node: amount               | Type: IdentifierNode            | Symbol: Symbol{name='amount', kind=PARAMETER, scopeLevel=2}
+Node: Function(get_id)     | Type: FunctionNode              | Symbol: Symbol{name='get_id', kind=FUNCTION, scopeLevel=1}
+Node: get_id               | Type: IdentifierNode            | Symbol: Symbol{name='get_id', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: id                   | Type: IdentifierNode            | Symbol: null
+Node: Function(main)       | Type: FunctionNode              | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: main                 | Type: IdentifierNode            | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: account              | Type: IdentifierNode            | Symbol: Symbol{name='account', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(Account) | Type: PathExprSegNode           | Symbol: Symbol{name='Account', kind=STRUCT, scopeLevel=0}
+Node: Account              | Type: IdentifierNode            | Symbol: Symbol{name='Account', kind=STRUCT, scopeLevel=0}
+Node: StructExpr           | Type: StructExprNode            | Symbol: Symbol{name='Account', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(Account) | Type: PathExprSegNode           | Symbol: Symbol{name='Account', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: Account              | Type: IdentifierNode            | Symbol: Symbol{name='Account', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: FieldVal(balance)    | Type: FieldValNode              | Symbol: Symbol{name='balance', kind=FIELD, scopeLevel=0}
+Node: balance              | Type: IdentifierNode            | Symbol: Symbol{name='balance', kind=FIELD, scopeLevel=0}
+Node: FieldVal(id)         | Type: FieldValNode              | Symbol: Symbol{name='id', kind=FIELD, scopeLevel=0}
+Node: id                   | Type: IdentifierNode            | Symbol: Symbol{name='id', kind=FIELD, scopeLevel=0}
+Node: initial_balance      | Type: IdentifierNode            | Symbol: Symbol{name='initial_balance', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='account', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(account) | Type: PathExprSegNode           | Symbol: Symbol{name='account', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: account              | Type: IdentifierNode            | Symbol: Symbol{name='account', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(get_balance) | Type: PathExprSegNode           | Symbol: null
+Node: get_balance          | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='account', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(account) | Type: PathExprSegNode           | Symbol: Symbol{name='account', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: account              | Type: IdentifierNode            | Symbol: Symbol{name='account', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(deposit) | Type: PathExprSegNode           | Symbol: null
+Node: deposit              | Type: IdentifierNode            | Symbol: null
+Node: new_balance          | Type: IdentifierNode            | Symbol: Symbol{name='new_balance', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='account', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(account) | Type: PathExprSegNode           | Symbol: Symbol{name='account', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: account              | Type: IdentifierNode            | Symbol: Symbol{name='account', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(get_balance) | Type: PathExprSegNode           | Symbol: null
+Node: get_balance          | Type: IdentifierNode            | Symbol: null
+Node: account_id           | Type: IdentifierNode            | Symbol: Symbol{name='account_id', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='account', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(account) | Type: PathExprSegNode           | Symbol: Symbol{name='account', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: account              | Type: IdentifierNode            | Symbol: Symbol{name='account', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(get_id)  | Type: PathExprSegNode           | Symbol: null
+Node: get_id               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(printInt) | Type: PathExprSegNode           | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: printInt             | Type: IdentifierNode            | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='new_balance', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(new_balance) | Type: PathExprSegNode           | Symbol: Symbol{name='new_balance', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: new_balance          | Type: IdentifierNode            | Symbol: Symbol{name='new_balance', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='account_id', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(account_id) | Type: PathExprSegNode           | Symbol: Symbol{name='account_id', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: account_id           | Type: IdentifierNode            | Symbol: Symbol{name='account_id', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(exit)    | Type: PathExprSegNode           | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: exit                 | Type: IdentifierNode            | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+
+=== Symbol Debug Summary ===
+Total nodes visited: 97
+Nodes with symbols: 84
+Nodes without symbols: 13
+
+Node type distribution:
+  ImplNode: 1
+  FieldNode: 2
+  StructExprNode: 1
+  PathExprSegNode: 28
+  IdentifierNode: 42
+  FunctionNode: 4
+  FieldValNode: 2
+  PathExprNode: 13
+  SelfParaNode: 3
+  StructNode: 1
+Type checking errors:
+  Function body type mismatch: expected i32, got () in function 'get_balance' at in function 'get_balance' (Self: &Account) 
+  Function body type mismatch: expected i32, got () in function 'get_id' at in function 'get_id' (Self: &Account) 

@@ -295,44 +295,6 @@ public class NeverType implements Type {
 }
 ```
 
-### 2. 类型环境
-
-```java
-// 类型环境，用于存储变量和Expression的类型信息
-public class TypeEnvironment {
-    private final Map<String, Type> variableTypes;
-    private final TypeEnvironment parent;
-    
-    public TypeEnvironment(TypeEnvironment parent) {
-        this.variableTypes = new HashMap<>();
-        this.parent = parent;
-    }
-    
-    public void setVariableType(String name, Type type) {
-        variableTypes.put(name, type);
-    }
-    
-    public Type getVariableType(String name) {
-        Type type = variableTypes.get(name);
-        if (type == null && parent != null) {
-            return parent.getVariableType(name);
-        }
-        return type;
-    }
-    
-    public Type get(String name) {
-        return getVariableType(name);
-    }
-    
-    public TypeEnvironment getParent() {
-        return parent;
-    }
-    
-    // 其他方法...
-}
-
-```
-
 ## 类型检查器设计
 
 ### 1. 类型检查器基础结构
@@ -341,7 +303,6 @@ public class TypeEnvironment {
 import java.util.function.Supplier;
 
 public class TypeChecker extends VisitorBase {
-    private TypeEnvironment currentTypeEnv;
     private final TypeErrorCollector errorCollector;
     private boolean throwOnError;
     private Type currentType; // 表示Self指代的类型
@@ -382,7 +343,6 @@ public class TypeChecker extends VisitorBase {
     }
     
     public TypeChecker(boolean throwOnError) {
-        this.currentTypeEnv = new TypeEnvironment(null);
         this.errorCollector = new TypeErrorCollector();
         this.throwOnError = throwOnError;
         this.currentType = null;
@@ -401,16 +361,6 @@ public class TypeChecker extends VisitorBase {
     // 设置表达式节点的类型
     private void setType(ExprNode expr, Type type) {
         expr.setType(type);
-    }
-    
-    // 进入新作用域
-    private void enterScope() {
-        currentTypeEnv = new TypeEnvironment(currentTypeEnv);
-    }
-    
-    // 退出当前作用域
-    private void exitScope() {
-        currentTypeEnv = currentTypeEnv.getParent();
     }
     
     // 抛出类型错误
@@ -456,14 +406,8 @@ public class TypeChecker extends VisitorBase {
                expr instanceof DerefExprNode;
     }
     
-    // 获取当前self的类型（在方法中）
+    // 获取当前Self的类型（在方法中）和Self构造器类型（在impl块中）
     private Type getCurrentSelfType() throws TypeCheckException {
-        // 返回当前Self指代的类型
-        return currentType;
-    }
-    
-    // 获取当前Self的类型构造器（在impl块中）
-    private Type getCurrentSelfConstructorType() throws TypeCheckException {
         // 返回当前Self指代的类型
         return currentType;
     }
@@ -536,6 +480,7 @@ public class TypeChecker extends VisitorBase {
     }
     
     // 从符号中提取类型（只处理value_namespace中的符号）
+    // 使用记忆化搜索：如果symbol的type字段不为空，直接返回
     private Type extractTypeFromSymbol(Symbol symbol) throws TypeCheckException {
         if (symbol == null) {
             throw new TypeCheckException(
@@ -545,13 +490,10 @@ public class TypeChecker extends VisitorBase {
             );
         }
         
-        // 检查符号是否属于value_namespace
-        if (symbol.getNamespace() != Namespace.VALUE) {
-            throw new TypeCheckException(
-                TypeCheckException.Type.INVALID_TYPE_EXTRACTION,
-                "Cannot extract type from symbol in non-value namespace: " + symbol.getKind(),
-                symbol.getDeclaration()
-            );
+        // 记忆化搜索：如果type已经设置，直接返回
+        Type cachedType = symbol.getType();
+        if (cachedType != null) {
+            return cachedType;
         }
         
         // 获取符号的声明节点
@@ -580,7 +522,9 @@ public class TypeChecker extends VisitorBase {
                                      extractTypeFromTypeNode(funcNode.returnType) :
                                      new UnitType();
                     
-                    return new FunctionType(paramTypes, returnType, isMethod);
+                    FunctionType functionType = new FunctionType(paramTypes, returnType, isMethod);
+                    setSymbolType(symbol, functionType);
+                    return functionType;
                 }
                 break;
                 
@@ -601,7 +545,9 @@ public class TypeChecker extends VisitorBase {
                     }
                     
                     StructType structType = new StructType(symbol.getName(), fields, symbol);
-                    return new StructConstructorType(structType);
+                    StructConstructorType constructorType = new StructConstructorType(structType);
+                    setSymbolType(symbol, constructorType);
+                    return constructorType;
                 }
                 break;
                 
@@ -623,7 +569,9 @@ public class TypeChecker extends VisitorBase {
                     // 直接使用enumNode的名称作为枚举名称
                     String enumName = enumNode.name.name;
                     
-                    return new EnumType(enumName, variants, symbol);
+                    EnumType enumType = new EnumType(enumName, variants, symbol);
+                    setSymbolType(symbol, enumType);
+                    return enumType;
                 }
                 throw new TypeCheckException(TypeCheckException.Type.INVALID_TYPE_EXTRACTION,
                                            "Cannot determine enum type for variant: " + symbol.getName(),
@@ -631,14 +579,18 @@ public class TypeChecker extends VisitorBase {
                 
             case SELF_CONSTRUCTOR:
                 // Self构造函数返回当前类型
-                return getCurrentSelfConstructorType();
+                Type selfType = getCurrentSelfType();
+                setSymbolType(symbol, selfType);
+                return selfType;
                 
             case CONSTANT:
                 // 常量类型：从常量声明中提取类型信息
                 if (declaration instanceof ConstItemNode) {
                     ConstItemNode constNode = (ConstItemNode) declaration;
                     if (constNode.type != null) {
-                        return extractTypeFromTypeNode(constNode.type);
+                        Type constType = extractTypeFromTypeNode(constNode.type);
+                        setSymbolType(symbol, constType);
+                        return constType;
                     }
                     // 如果没有显式类型，尝试从值推断
                     if (constNode.value != null) {
@@ -652,33 +604,25 @@ public class TypeChecker extends VisitorBase {
                 break;
                 
             case PARAMETER:
-                // 参数类型：从当前类型环境中查找
-                String paramName = symbol.getName();
-                Type paramType = currentTypeEnv.get(paramName);
-                if (paramType != null) {
-                    return paramType;
-                }
-                // 如果在类型环境中找不到，尝试从参数声明中提取类型信息
+                // 参数类型：从参数声明中提取类型信息
                 if (declaration instanceof ParameterNode) {
                     ParameterNode paramNode = (ParameterNode) declaration;
                     if (paramNode.type != null) {
-                        return extractTypeFromTypeNode(paramNode.type);
+                        Type paramType = extractTypeFromTypeNode(paramNode.type);
+                        setSymbolType(symbol, paramType);
+                        return paramType;
                     }
                 }
                 break;
                 
             case LOCAL_VARIABLE:
-                // 局部变量类型：从当前类型环境中查找
-                String varName = symbol.getName();
-                Type varType = currentTypeEnv.get(varName);
-                if (varType != null) {
-                    return varType;
-                }
-                // 如果在类型环境中找不到，尝试从let语句中提取类型信息
+                // 局部变量类型：从let语句中提取类型信息
                 if (declaration instanceof LetStmtNode) {
                     LetStmtNode letNode = (LetStmtNode) declaration;
                     if (letNode.type != null) {
-                        return extractTypeFromTypeNode(letNode.type);
+                        Type varType = extractTypeFromTypeNode(letNode.type);
+                        setSymbolType(symbol, varType);
+                        return varType;
                     }
                     // 如果没有显式类型，尝试从值推断
                     if (letNode.value != null) {
@@ -706,164 +650,103 @@ public class TypeChecker extends VisitorBase {
         );
     }
     
-    // 辅助方法：从类型节点中提取类型
-    private Type extractTypeFromTypeNode(TypeExprNode typeNode) throws TypeCheckException {
-        if (typeNode == null) {
-            throw new TypeCheckException(
-                TypeCheckException.Type.NULL_TYPE_NODE,
-                "Cannot extract type from null type node",
-                null
-            );
+    // 辅助方法：设置符号的类型（用于记忆化搜索）
+    private void setSymbolType(Symbol symbol, Type type) {
+        if (symbol != null) {
+            symbol.setType(type);
         }
-        
-        // 根据类型节点的具体类型进行提取
-        if (typeNode instanceof TypePathExprNode) {
-            TypePathExprNode pathExpr = (TypePathExprNode) typeNode;
-            // 从路径表达式中提取类型
-            return extractTypeFromPathExpression(pathExpr.path);
-        } else if (typeNode instanceof TypeRefExprNode) {
-            TypeRefExprNode refExpr = (TypeRefExprNode) typeNode;
-            Type innerType = extractTypeFromTypeNode(refExpr.innerType);
-            return new ReferenceType(innerType, refExpr.isMutable);
-        } else if (typeNode instanceof TypeArrayExprNode) {
-            TypeArrayExprNode arrayExpr = (TypeArrayExprNode) typeNode;
-            Type elementType = extractTypeFromTypeNode(arrayExpr.elementType);
-            // 数组大小需要从表达式中计算
-            long size = evaluateArraySize(arrayExpr.size);
-            return new ArrayType(elementType, size);
-        } else if (typeNode instanceof TypeUnitExprNode) {
-            return UnitType.INSTANCE;
-        }
-        
-        throw new TypeCheckException(
-            TypeCheckException.Type.UNSUPPORTED_TYPE_NODE,
-            "Unsupported type node: " + typeNode.getClass().getSimpleName(),
-            typeNode
-        );
     }
     
-    // 辅助方法：从路径表达式中提取类型（只处理单段路径）
-    private Type extractTypeFromPathExpression(PathExprNode pathExpr) throws TypeCheckException {
-        // 只处理单段路径（不带"::"）
-        if (pathExpr.RSeg == null) {
-            // 递归处理LSeg内部的IdentifierNode
-            pathExpr.LSeg.accept(this);
-            return getType(pathExpr.LSeg);
-        }
-        
-        // 多段路径不在此处处理，抛出错误
-        throw new TypeCheckException(
-            TypeCheckException.Type.MULTI_SEGMENT_PATH_NOT_SUPPORTED,
-            "Multi-segment paths are not supported in this context",
-            pathExpr
-        );
-    }
-    
-    // 辅助方法：计算数组大小
-    private long evaluateArraySize(ExprNode sizeExpr) throws TypeCheckException {
-        // 在实际实现中，需要计算数组大小表达式的值
-        // 这里简化处理，返回0
-        return 0;
-    }
-    
-    // 辅助方法：获取字段类型
-    private Type getFieldType(Type receiverType, String fieldName) throws TypeCheckException {
-        if (receiverType instanceof StructType) {
-            StructType structType = (StructType) receiverType;
-            return structType.getFields().get(fieldName);
-        }
-        
-        // 其他类型可能有字段，这里简化处理
-        return null;
-    }
-    
-    // 辅助方法：检查是否为数字/整数类型
-    // 在当前类型系统中，所有数字类型都是整数类型
-    private boolean isNumericType(Type type) {
-        return type instanceof PrimitiveType &&
-               (((PrimitiveType)type).getKind() == PrimitiveType.PrimitiveKind.INT ||
-                ((PrimitiveType)type).getKind() == PrimitiveType.PrimitiveKind.I32 ||
-                ((PrimitiveType)type).getKind() == PrimitiveType.PrimitiveKind.U32 ||
-                ((PrimitiveType)type).getKind() == PrimitiveType.PrimitiveKind.USIZE ||
-                ((PrimitiveType)type).getKind() == PrimitiveType.PrimitiveKind.ISIZE);
-    }
-    
-    // 辅助方法：检查比较是否有效
-    private boolean isValidComparison(Type leftType, Type rightType, oper_t operator) {
-        // 检查两个类型是否都是数值类型（包括INT）
-        boolean leftIsNumeric = isNumericType(leftType);
-        boolean rightIsNumeric = isNumericType(rightType);
-        
-        // 两个类型都必须是数值类型
-        if (!leftIsNumeric || !rightIsNumeric) {
-            return false;
-        }
-        
-        // 使用isSameIntegerType检查类型是否相同
-        return isSameIntegerType(leftType, rightType);
-    }
-    
-    // 辅助方法：检查两个整型类型是否相同（考虑INT类型）
-    private boolean isSameIntegerType(Type type1, Type type2) {
-        // 如果两个类型完全相同，返回true
+    /**
+     * 查找两个类型的共同类型
+     * 用于类型推断，例如在if表达式、数组元素类型统一等场景
+     *
+     * 规则：
+     * 1. 如果两个类型相同，直接返回该类型
+     * 2. 如果两个都是整型，那么看看其中是否有int，如果有就可以和别的整型兼容
+     * 3. 其他情况返回null
+     *
+     * @param type1 第一个类型
+     * @param type2 第二个类型
+     * @return 共同类型，如果不存在则返回null
+     */
+    private Type findCommonType(Type type1, Type type2) {
+        // 如果两个类型相同，直接返回
         if (type1.equals(type2)) {
-            return true;
+            return type1;
         }
         
-        // 如果两个都是数值类型，检查是否是INT类型与其他数值类型的组合
+        // 如果两个都是整型，那么看看其中是否有int，如果有就可以和别的整型兼容
         if (type1 instanceof PrimitiveType && type2 instanceof PrimitiveType) {
             PrimitiveType.PrimitiveKind kind1 = ((PrimitiveType)type1).getKind();
             PrimitiveType.PrimitiveKind kind2 = ((PrimitiveType)type2).getKind();
             
-            // 如果其中一个是INT，另一个是其他数值类型，则认为相同
-            if ((kind1 == PrimitiveType.PrimitiveKind.INT && isNumericType(type2)) ||
-                (kind2 == PrimitiveType.PrimitiveKind.INT && isNumericType(type1))) {
-                return true;
+            // 检查是否为整型
+            if (isNumericType(type1) && isNumericType(type2)) {
+                // 如果其中一个是未确定的整型(INT)，返回另一个类型
+                if (kind1 == PrimitiveType.PrimitiveKind.INT) {
+                    return type2;
+                }
+                if (kind2 == PrimitiveType.PrimitiveKind.INT) {
+                    return type1;
+                }
             }
         }
         
-        return false;
-    }
-    
-    // 辅助方法：检查赋值是否合法
-    private boolean isValidAssignment(Type leftType, Type rightType) {
-        // 使用isSameIntegerType检查类型是否相同
-        return isSameIntegerType(leftType, rightType);
-    }
-    
-    // 辅助方法：检查复合赋值是否合法
-    private boolean isValidCompoundAssignment(Type leftType, Type rightType, oper_t operator) {
-        // 对于移位运算，两个操作数都必须是数值类型
-        if (operator == oper_t.SHIFT_LEFT_ASSIGN || operator == oper_t.SHIFT_RIGHT_ASSIGN) {
-            return isNumericType(leftType) && isNumericType(rightType);
-        }
-        
-        // 对于其他复合赋值运算，使用isSameIntegerType检查类型是否相同且是数值类型
-        return isSameIntegerType(leftType, rightType) && isNumericType(leftType);
-    }
-    
-    // 辅助方法：查找共同类型
-    private Type findCommonType(Type type1, Type type2) {
-        // 简化实现：相同类型返回该类型，否则返回null
-        if (type1.equals(type2)) {
-            return type1;
-        }
+        // 其他情况返回null
         return null;
     }
     
-    // 辅助方法：检查转换是否有效
-    private boolean isValidCast(Type fromType, Type toType) {
-        // 简化实现：所有转换都有效
-        return true;
+    /**
+     * 检查类型是否为数值类型（整型）
+     *
+     * @param type 要检查的类型
+     * @return 如果是数值类型返回true，否则返回false
+     */
+    private boolean isNumericType(Type type) {
+        if (type instanceof PrimitiveType) {
+            PrimitiveType.PrimitiveKind kind = ((PrimitiveType)type).getKind();
+            return kind == PrimitiveType.PrimitiveKind.INT ||
+                   kind == PrimitiveType.PrimitiveKind.I32 ||
+                   kind == PrimitiveType.PrimitiveKind.U32 ||
+                   kind == PrimitiveType.PrimitiveKind.USIZE ||
+                   kind == PrimitiveType.PrimitiveKind.ISIZE;
+        }
+        return false;
     }
     
-    // 辅助方法：解析类型
-    private Type resolveType(TypeExprNode typeNode) throws TypeCheckException {
+    /**
+     * 从类型节点中提取类型信息
+     *
+     * @param typeNode 类型节点
+     * @return 类型信息
+     */
+    private Type extractTypeFromTypeNode(ASTNode typeNode) throws TypeCheckException {
+        // 这里应该根据实际的类型节点结构来提取类型信息
+        // 简化实现，实际需要根据具体的AST节点类型来实现
+        if (typeNode == null) {
+            throw new TypeCheckException(
+                TypeCheckException.Type.NULL_TYPE_NODE,
+                "Type node is null",
+                typeNode
+            );
+        }
+        
+        // 简化实现，返回一个默认的整型
+        // 实际实现需要根据typeNode的具体类型来解析
+        return new PrimitiveType(PrimitiveType.PrimitiveKind.INT);
+    }
+    
+    /**
+     * 解析类型
+     *
+     * @param typeNode 类型节点
+     * @return 解析后的类型
+     */
+    private Type resolveType(ASTNode typeNode) throws TypeCheckException {
+        // 简化实现，直接调用extractTypeFromTypeNode
         return extractTypeFromTypeNode(typeNode);
     }
-    
-    // 其他辅助方法...
-}
 ```
 
 ### 2. Expression Type Checking Methods
@@ -956,63 +839,20 @@ public void visit(ArithExprNode node) throws TypeCheckException {
         return; // 不会执行，因为throwOnError默认为true时会抛出异常
     }
     
-    // 根据运算符确定结果类型
-    Type resultType = inferArithmeticResultType(leftType, rightType, node.operator);
+    // 使用findCommonType判断合并是否合法
+    Type resultType = findCommonType(leftType, rightType);
     
-    if (resultType == null) {
-        throwTypeError(TypeCheckException.Type.INVALID_ARITHMETIC_OPERATION,
-                      String.format("Invalid arithmetic operation: %s %s %s",
-                                   leftType, node.operator, rightType),
-                      node);
-        return; // 不会执行，因为throwOnError默认为true时会抛出异常
-    }
-    
-    setType(node, resultType);
-}
-
-// 推断算术运算结果类型
-private Type inferArithmeticResultType(Type leftType, Type rightType, oper_t operator) {
-    // 移位运算特殊处理：右操作数可以是任何整数类型，会被隐式转换为左操作数类型
-    if (operator == oper_t.SHIFT_LEFT || operator == oper_t.SHIFT_RIGHT) {
-        if (isNumericType(leftType) && isNumericType(rightType)) {
-            // 如果左操作数是未确定的整型，则推断为右操作数的类型
-            if (leftType instanceof PrimitiveType &&
-                ((PrimitiveType)leftType).getKind() == PrimitiveType.PrimitiveKind.INT) {
-                return rightType;
-            }
-            return leftType;
-        }
-        return null;
-    }
-    
-    // 处理未确定的整型类型推断
-    if (leftType instanceof PrimitiveType && rightType instanceof PrimitiveType) {
-        PrimitiveType.PrimitiveKind leftKind = ((PrimitiveType)leftType).getKind();
-        PrimitiveType.PrimitiveKind rightKind = ((PrimitiveType)rightType).getKind();
-        
-        // 如果两个操作数都是未确定的整型，保持未确定状态
-        if (leftKind == PrimitiveType.PrimitiveKind.INT && rightKind == PrimitiveType.PrimitiveKind.INT) {
-            return leftType; // 返回INT类型
-        }
-        
-        // 如果左操作数是未确定的整型，推断为右操作数的类型
-        if (leftKind == PrimitiveType.PrimitiveKind.INT && isNumericType(rightType)) {
-            return rightType;
-        }
-        
-        // 如果右操作数是未确定的整型，推断为左操作数的类型
-        if (rightKind == PrimitiveType.PrimitiveKind.INT && isNumericType(leftType)) {
-            return leftType;
-        }
-    }
-    
-    // 其他算术和位运算：要求操作数类型完全相同
-    if (leftType.equals(rightType) && isNumericType(leftType)) {
-        return leftType;
+    // 检查是否为整型
+    if (resultType != null && isNumericType(resultType)) {
+        setType(node, resultType);
+        return;
     }
     
     // 类型不匹配，不支持自动类型提升
-    return null;
+    throwTypeError(TypeCheckException.Type.INVALID_ARITHMETIC_OPERATION,
+                  String.format("Invalid arithmetic operation: %s %s %s",
+                               leftType, node.operator, rightType),
+                  node);
 }
 ```
 
@@ -1036,18 +876,21 @@ public void visit(CompExprNode node) throws TypeCheckException {
         return; // 不会执行，因为throwOnError默认为true时会抛出异常
     }
     
-    // 检查比较操作是否有效
-    boolean isValid = isValidComparison(leftType, rightType, node.operator);
+    // 使用findCommonType判断合并是否合法
+    Type commonType = findCommonType(leftType, rightType);
     
-    if (!isValid) {
-        throwTypeError(TypeCheckException.Type.INVALID_COMPARISON,
-                      String.format("Invalid comparison: %s %s %s",
-                                   leftType, node.operator, rightType),
-                      node);
+    // 检查是否为整型
+    if (commonType != null && isNumericType(commonType)) {
+        // 比较Expression总是返回bool类型
+        setType(node, new PrimitiveType(PrimitiveType.PrimitiveKind.BOOL));
+        return;
     }
     
-    // 比较Expression总是返回bool类型
-    setType(node, new PrimitiveType(PrimitiveType.PrimitiveKind.BOOL));
+    // 类型不匹配，不支持比较操作
+    throwTypeError(TypeCheckException.Type.INVALID_COMPARISON,
+                  String.format("Invalid comparison: %s %s %s",
+                               leftType, node.operator, rightType),
+                  node);
 }
 ```
 
@@ -1110,17 +953,21 @@ public void visit(AssignExprNode node) throws TypeCheckException {
         return; // 不会执行，因为throwOnError默认为true时会抛出异常
     }
     
-    // 检查类型是否匹配
-    if (!isValidAssignment(leftType, rightType)) {
-        throwTypeError(TypeCheckException.Type.TYPE_MISMATCH,
-                      String.format("Type mismatch in assignment: %s = %s", leftType, rightType),
-                      node);
+    // 使用findCommonType判断合并是否合法
+    Type commonType = findCommonType(leftType, rightType);
+    
+    // 检查是否为整型
+    if (commonType != null && isNumericType(commonType)) {
+        // 赋值Expression的类型是单元类型
+        setType(node, UnitType.INSTANCE);
+        return;
     }
     
-    // 赋值Expression的类型是单元类型
-    setType(node, UnitType.INSTANCE);
+    // 类型不匹配，不支持赋值操作
+    throwTypeError(TypeCheckException.Type.TYPE_MISMATCH,
+                  String.format("Type mismatch in assignment: %s = %s", leftType, rightType),
+                  node);
 }
-
 ```
 
 #### 2.7 ComAssignExprNode
@@ -1150,19 +997,22 @@ public void visit(ComAssignExprNode node) throws TypeCheckException {
         return; // 不会执行，因为throwOnError默认为true时会抛出异常
     }
     
-    // 检查复合赋值是否合法
-    if (!isValidCompoundAssignment(leftType, rightType, node.operator)) {
-        throwTypeError(TypeCheckException.Type.INVALID_COMPOUND_ASSIGNMENT,
-                      String.format("Invalid compound assignment: %s %s %s",
-                                   leftType, node.operator, rightType),
-                      node);
-        return; // 不会执行，因为throwOnError默认为true时会抛出异常
+    // 使用findCommonType判断合并是否合法
+    Type commonType = findCommonType(leftType, rightType);
+    
+    // 检查是否为整型
+    if (commonType != null && isNumericType(commonType)) {
+        // 复合赋值Expression的类型是单元类型
+        setType(node, UnitType.INSTANCE);
+        return;
     }
     
-    // 复合赋值Expression的类型是单元类型
-    setType(node, UnitType.INSTANCE);
+    // 类型不匹配，不支持复合赋值操作
+    throwTypeError(TypeCheckException.Type.INVALID_COMPOUND_ASSIGNMENT,
+                  String.format("Invalid compound assignment: %s %s %s",
+                               leftType, node.operator, rightType),
+                  node);
 }
-
 ```
 
 #### 2.8 CallExprNode
@@ -1222,7 +1072,7 @@ public void visit(CallExprNode node) throws TypeCheckException {
 }
 ```
 
-#### 2.8 MethodCallExprNode
+#### 2.9 MethodCallExprNode
 
 ```java
 @Override
@@ -1285,33 +1135,46 @@ public void visit(MethodCallExprNode node) throws TypeCheckException {
 }
 ```
 
-#### 2.9 FieldExprNode
+#### 2.10 FieldExprNode
 
 ```java
 @Override
 public void visit(FieldExprNode node) throws TypeCheckException {
-    // 首先检查接收器的类型
+    // 首先通过递归调用找到receiver的类型
     node.receiver.accept(this);
     
     Type receiverType = getType(node.receiver);
     
-    // 检查字段是否存在
-    String fieldName = node.fieldName.name;
-    Type fieldType = getFieldType(receiverType, fieldName);
+    // 检查receiver是否是struct constructor类型
+    if (!(receiverType instanceof StructConstructorType)) {
+        throwTypeError(TypeCheckException.Type.NOT_A_STRUCT_CONSTRUCTOR,
+                      String.format("Field access on non-struct type: %s", receiverType),
+                      node.receiver);
+        return; // 不会执行，因为throwOnError默认为true时会抛出异常
+    }
     
-    if (fieldType == null) {
+    // 从StructConstructorType中获取StructType
+    StructConstructorType constructorType = (StructConstructorType) receiverType;
+    StructType structType = constructorType.getStructType();
+    
+    // 检查字段是否在struct的字段列表中
+    String fieldName = node.fieldName.name;
+    Map<String, Type> fields = structType.getFields();
+    
+    if (!fields.containsKey(fieldName)) {
         throwTypeError(TypeCheckException.Type.FIELD_NOT_FOUND,
-                      String.format("Field '%s' not found in type %s", fieldName, receiverType),
+                      String.format("Field '%s' not found in struct '%s'", fieldName, structType.getName()),
                       node.fieldName);
         return; // 不会执行，因为throwOnError默认为true时会抛出异常
     }
     
     // 字段访问的类型是字段的类型
+    Type fieldType = fields.get(fieldName);
     setType(node, fieldType);
 }
 ```
 
-#### 2.10 IndexExprNode
+#### 2.11 IndexExprNode
 
 ```java
 @Override
@@ -1353,7 +1216,7 @@ public void visit(IndexExprNode node) throws TypeCheckException {
 }
 ```
 
-#### 2.11 GroupExprNode
+#### 2.12 GroupExprNode
 
 ```java
 @Override
@@ -1367,7 +1230,7 @@ public void visit(GroupExprNode node) throws TypeCheckException {
 }
 ```
 
-#### 2.12 BorrowExprNode
+#### 2.13 BorrowExprNode
 
 ```java
 @Override
@@ -1389,7 +1252,7 @@ public void visit(BorrowExprNode node) throws TypeCheckException {
 }
 ```
 
-#### 2.13 DerefExprNode
+#### 2.14 DerefExprNode
 
 ```java
 @Override
@@ -1413,7 +1276,17 @@ public void visit(DerefExprNode node) throws TypeCheckException {
 }
 ```
 
-#### 2.14 TypeCastExprNode
+#### 2.15 TypeCastExprNode
+
+根据Rust Reference中的"Type cast expressions"部分，类型转换表达式使用`as`操作符将左侧表达式的值转换为右侧指定的类型。
+
+在RCompiler中，`TypeCastExprNode`的`node.type`只能是四种确定性整型中的一种，其余的全都不合法。这四种确定性整型分别是：
+- `I32` - 32位有符号整数
+- `U32` - 32位无符号整数
+- `USIZE` - 与指针大小相同的无符号整数
+- `ISIZE` - 与指针大小相同的有符号整数
+
+注意：根据AST定义，`node.type`是`TypeExprNode`类型。对于类型转换表达式，它必须是`TypePathExprNode`类型，其`path`字段必须是上述四种整型名称之一。
 
 ```java
 @Override
@@ -1423,10 +1296,48 @@ public void visit(TypeCastExprNode node) throws TypeCheckException {
     
     Type exprType = getType(node.expr);
     
-    // 解析目标类型
-    Type targetType = resolveType(node.type);
+    // 验证node.type是否为TypePathExprNode
+    if (!(node.type instanceof TypePathExprNode)) {
+        throwTypeError(TypeCheckException.Type.INVALID_CAST_TARGET,
+                      "Cast target must be a type path",
+                      node.type);
+    }
     
-    // 检查转换是否有效
+    TypePathExprNode typePathExpr = (TypePathExprNode) node.type;
+    PathExprSegNode pathSeg = typePathExpr.path;
+    
+    // 验证pathSeg是否为IdentifierNode
+    if (!(pathSeg.name instanceof IdentifierNode)) {
+        throwTypeError(TypeCheckException.Type.INVALID_CAST_TARGET,
+                      "Cast target must be a simple identifier",
+                      node.type);
+    }
+    
+    String typeName = pathSeg.name.name;
+    
+    // 检查类型名称是否为四种确定性整型之一
+    Type targetType;
+    switch (typeName) {
+        case "i32":
+            targetType = new PrimitiveType(PrimitiveType.PrimitiveKind.I32);
+            break;
+        case "u32":
+            targetType = new PrimitiveType(PrimitiveType.PrimitiveKind.U32);
+            break;
+        case "usize":
+            targetType = new PrimitiveType(PrimitiveType.PrimitiveKind.USIZE);
+            break;
+        case "isize":
+            targetType = new PrimitiveType(PrimitiveType.PrimitiveKind.ISIZE);
+            break;
+        default:
+            throwTypeError(TypeCheckException.Type.INVALID_CAST_TARGET,
+                          String.format("Invalid cast target type: %s. Only i32, u32, usize, and isize are allowed", typeName),
+                          node.type);
+            return; // 不会执行，因为throwOnError默认为true时会抛出异常
+    }
+    
+    // 根据Rust类型转换规则验证转换是否有效
     if (!isValidCast(exprType, targetType)) {
         throwTypeError(TypeCheckException.Type.INVALID_CAST,
                       String.format("Invalid cast from %s to %s", exprType, targetType),
@@ -1436,9 +1347,44 @@ public void visit(TypeCastExprNode node) throws TypeCheckException {
     // 类型转换Expression的类型是目标类型
     setType(node, targetType);
 }
+
+/**
+ * 检查类型转换是否有效，根据Rust Reference中的类型转换规则
+ *
+ * @param fromType 源类型
+ * @param toType 目标类型
+ * @return 如果转换有效返回true，否则返回false
+ */
+private boolean isValidCast(Type fromType, Type toType) {
+    // 1. 数值类型之间的转换
+    if (isNumericType(fromType) && isNumericType(toType)) {
+        return true; // 所有数值类型之间可以相互转换
+    }
+    
+    // 2. bool/char到整型的转换
+    if ((isPrimitiveType(fromType, PrimitiveType.PrimitiveKind.BOOL) ||
+         isPrimitiveType(fromType, PrimitiveType.PrimitiveKind.CHAR)) &&
+        isNumericType(toType)) {
+        return true;
+    }
+    
+    // 5. 其他情况暂不支持
+    return false;
+}
+
+/**
+ * 检查类型是否为指定的原始类型
+ */
+private boolean isPrimitiveType(Type type, PrimitiveType.PrimitiveKind kind) {
+    if (type instanceof PrimitiveType) {
+        PrimitiveType.PrimitiveType primitiveType = (PrimitiveType) type;
+        return primitiveType.getKind() == kind;
+    }
+    return false;
+}
 ```
 
-#### 2.15 ArrayExprNode
+#### 2.16 ArrayExprNode
 
 ```java
 @Override
@@ -1485,10 +1431,18 @@ public void visit(ArrayExprNode node) throws TypeCheckException {
         Type elementType = getType(node.repeatedElement);
         Type sizeType = getType(node.size);
         
-        // 检查大小是否是整数类型
-        if (!isNumericType(sizeType)) {
+        // 检查大小是否是usize或int类型
+        if (!(sizeType instanceof PrimitiveType)) {
             throwTypeError(TypeCheckException.Type.INVALID_ARRAY_SIZE,
-                          String.format("Array size must be integer, got %s", sizeType),
+                          String.format("Array size must be usize or integer, got %s", sizeType),
+                          node.size);
+        }
+        
+        PrimitiveType.PrimitiveKind sizeKind = ((PrimitiveType)sizeType).getKind();
+        if (sizeKind != PrimitiveType.PrimitiveKind.USIZE &&
+            sizeKind != PrimitiveType.PrimitiveKind.INT) {
+            throwTypeError(TypeCheckException.Type.INVALID_ARRAY_SIZE,
+                          String.format("Array size must be usize or integer, got %s", sizeType),
                           node.size);
         }
         
@@ -1513,7 +1467,7 @@ public void visit(ArrayExprNode node) throws TypeCheckException {
 }
 ```
 
-#### 2.16 StructExprNode
+#### 2.17 StructExprNode
 
 ```java
 @Override
@@ -1583,42 +1537,32 @@ public void visit(StructExprNode node) throws TypeCheckException {
 }
 ```
 
-#### 2.17 BlockExprNode
+#### 2.18 BlockExprNode
 
 ```java
 @Override
 public void visit(BlockExprNode node) throws TypeCheckException {
-    // 进入新作用域
-    enterScope();
-    
-    try {
-        // 处理块中的语句
-        if (node.statements != null) {
-            for (StmtNode stmt : node.statements) {
-                stmt.accept(this);
-            }
+    // 处理块中的语句
+    if (node.statements != null) {
+        for (StmtNode stmt : node.statements) {
+            stmt.accept(this);
         }
-        
-        // 块Expression的类型是最后一个Expression的类型，如果没有Expression则是单元类型
-        Type blockType = UnitType.INSTANCE;
-        
-        if (node.statements != null && !node.statements.isEmpty()) {
-            StmtNode lastStmt = node.statements.get(node.statements.size() - 1);
-            if (lastStmt instanceof ExprStmtNode) {
-                ExprStmtNode exprStmt = (ExprStmtNode) lastStmt;
-                blockType = getType(exprStmt.expr);
-            }
-        }
-        
-        setType(node, blockType);
-    } finally {
-        // 退出作用域
-        exitScope();
     }
+    
+    // 块Expression的类型是returnValue的类型，如果没有returnValue则是单元类型
+    Type blockType = UnitType.INSTANCE;
+    
+    if (node.returnValue != null) {
+        // 如果有显式的返回值表达式，使用其类型
+        node.returnValue.accept(this);
+        blockType = getType(node.returnValue);
+    } 
+    
+    setType(node, blockType);
 }
 ```
 
-#### 2.18 ImplNode
+#### 2.19 ImplNode
 
 ```java
 @Override
@@ -1641,18 +1585,12 @@ public void visit(ImplNode node) throws TypeCheckException {
             node.trait.accept(this);
         }
         
-        // 进入impl作用域
-        enterScope();
-        
         // 处理关联项
         if (node.items != null) {
             for (AssoItemNode item : node.items) {
                 item.accept(this);
             }
         }
-        
-        // 退出impl作用域
-        exitScope();
     } finally {
         // 恢复之前的currentType
         setCurrentType(previousCurrentType);
@@ -1662,7 +1600,7 @@ public void visit(ImplNode node) throws TypeCheckException {
 }
 ```
 
-#### 2.19 LetStmtNode
+#### 2.20 LetStmtNode
 
 ```java
 @Override
@@ -1681,7 +1619,7 @@ public void visit(LetStmtNode node) throws TypeCheckException {
         varType = extractTypeFromTypeNode(node.type);
         
         // 如果有值，检查值的类型是否与显式类型匹配
-        if (valueType != null && !isSameIntegerType(varType, valueType)) {
+        if (valueType != null && findCommonType(varType, valueType) == null) {
             throwTypeError(TypeCheckException.Type.TYPE_MISMATCH,
                           String.format("Type mismatch in let binding: expected %s, got %s",
                                        varType, valueType),
@@ -1697,12 +1635,8 @@ public void visit(LetStmtNode node) throws TypeCheckException {
                       node);
     }
     
-    // 将变量类型添加到当前类型环境中
-    if (node.pattern instanceof IdPatNode) {
-        IdPatNode idPat = (IdPatNode) node.pattern;
-        String varName = idPat.name.name;
-        currentTypeEnv.setVariableType(varName, varType);
-    } else {
+    // 不再需要将变量类型添加到类型环境中
+    if (!(node.pattern instanceof IdPatNode)) {
         // 复杂模式暂不支持
         throwTypeError(TypeCheckException.Type.UNSUPPORTED_PATTERN,
                       "Complex patterns in let statements are not supported",
@@ -1713,7 +1647,7 @@ public void visit(LetStmtNode node) throws TypeCheckException {
 }
 ```
 
-#### 2.20 FunctionNode
+#### 2.21 FunctionNode
 
 ```java
 @Override
@@ -1737,28 +1671,15 @@ public void visit(FunctionNode node) throws TypeCheckException {
             }
         }
         
-        // 进入函数作用域
-        enterScope();
-        
         // 处理self参数（如果有的话）
         if (node.selfPara != null) {
             node.selfPara.accept(this);
-            // 将self参数添加到类型环境中
-            if (node.selfPara.type != null) {
-                Type selfType = extractTypeFromTypeNode(node.selfPara.type);
-                currentTypeEnv.setVariableType("self", selfType);
-            }
         }
         
         // 处理参数
         if (node.parameters != null) {
             for (ParameterNode param : node.parameters) {
                 param.accept(this);
-                // 将参数添加到类型环境中
-                if (param.type != null) {
-                    Type paramType = extractTypeFromTypeNode(param.type);
-                    currentTypeEnv.setVariableType(param.name.name, paramType);
-                }
             }
         }
         
@@ -1772,8 +1693,6 @@ public void visit(FunctionNode node) throws TypeCheckException {
             node.body.accept(this);
         }
         
-        // 退出函数作用域
-        exitScope();
         
         // FunctionNode不是ExprNode，不需要设置类型
     } finally {
@@ -1785,7 +1704,7 @@ public void visit(FunctionNode node) throws TypeCheckException {
 }
 ```
 
-#### 2.20 IfExprNode
+#### 2.22 IfExprNode
 
 ```java
 @Override
@@ -1836,7 +1755,7 @@ public void visit(IfExprNode node) throws TypeCheckException {
 }
 ```
 
-#### 2.21 LoopExprNode
+#### 2.23 LoopExprNode
 
 ```java
 @Override
@@ -1911,7 +1830,7 @@ public void visit(LoopExprNode node) throws TypeCheckException {
 }
 ```
 
-#### 2.22 其他表达式
+#### 2.24 其他表达式
 
 ```java
 @Override
@@ -1993,7 +1912,7 @@ public void visit(ReturnExprNode node) throws TypeCheckException {
         Type actualReturnType = getType(node.value);
         
         // 检查返回类型是否匹配
-        if (!isSameIntegerType(expectedReturnType, actualReturnType)) {
+        if (findCommonType(expectedReturnType, actualReturnType) == null) {
             throwTypeError(TypeCheckException.Type.RETURN_TYPE_MISMATCH,
                           String.format("Return type mismatch: expected %s, got %s",
                                        expectedReturnType, actualReturnType),
@@ -2021,7 +1940,7 @@ public void visit(UnderscoreExprNode node) throws TypeCheckException {
 }
 ```
 
-#### 2.23 PathExprNode
+#### 2.25 PathExprNode
 
 ```java
 @Override
@@ -2043,7 +1962,7 @@ public void visit(PathExprNode node) throws TypeCheckException {
 }
 ```
 
-#### 2.24 PathExprSegNode
+#### 2.26 PathExprSegNode
 
 ```java
 @Override
@@ -2088,6 +2007,7 @@ public class TypeCheckException extends Exception {
         INVALID_INDEX_TYPE,
         NOT_A_REFERENCE,
         INVALID_CAST,
+        INVALID_CAST_TARGET,
         ARRAY_ELEMENT_TYPE_MISMATCH,
         INVALID_ARRAY_SIZE,
         NOT_A_STRUCT,

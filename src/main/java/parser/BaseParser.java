@@ -30,6 +30,11 @@ public abstract class BaseParser {
     }
     
     public int getPrecedence(token_t token) {
+        // Default to binary operator precedence for backward compatibility
+        return getPrecedence(token, false);
+    }
+    
+    public int getPrecedence(token_t token, boolean isUnary) {
         // Based on Rust Reference operator precedence table
         // Highest precedence (210): Struct expressions - path followed by {
         if (token.name.equals("{")) {
@@ -55,11 +60,11 @@ public abstract class BaseParser {
         
         // Unary operators: -, !, *, borrow (&, &mut) (160)
         // These are handled separately in parsing as prefix operators
-        if (token.name.equals("-") || token.name.equals("!") || token.name.equals("*") ||
-            token.name.equals("&")) {
-            // Note: Need context to determine if * is dereference or multiplication
-            // and if - is unary or binary. This is handled in the parser.
-            return 160;
+        if (isUnary) {
+            if (token.name.equals("-") || token.name.equals("!") || token.name.equals("*") ||
+                token.name.equals("&")) {
+                return 160;
+            }
         }
         
         // Type cast: as (150)
@@ -68,12 +73,12 @@ public abstract class BaseParser {
         }
         
         // Multiplicative operators: *, /, % (140)
-        if (token.name.equals("*") || token.name.equals("/") || token.name.equals("%")) {
+        if (!isUnary && (token.name.equals("*") || token.name.equals("/") || token.name.equals("%"))) {
             return 140;
         }
         
         // Additive operators: +, - (130)
-        if (token.name.equals("+") || token.name.equals("-")) {
+        if (!isUnary && (token.name.equals("+") || token.name.equals("-"))) {
             return 130;
         }
         
@@ -83,7 +88,7 @@ public abstract class BaseParser {
         }
         
         // Bitwise AND: & (110)
-        if (token.name.equals("&")) {
+        if (!isUnary && token.name.equals("&")) {
             return 110;
         }
         

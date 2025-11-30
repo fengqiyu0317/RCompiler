@@ -1,0 +1,130 @@
+=== Symbol Debug Test ===
+Enter Rust code (Ctrl+D to finish):
+Father relationships set successfully.
+Self and Self semantic checking completed successfully.
+Namespace semantic checking completed successfully.
+
+=== Symbol Debug Output ===
+Node: Struct(Rectangle)    | Type: StructNode                | Symbol: Symbol{name='Rectangle', kind=STRUCT, scopeLevel=0}
+Node: Rectangle            | Type: IdentifierNode            | Symbol: Symbol{name='Rectangle', kind=STRUCT, scopeLevel=0}
+Node: Field(width)         | Type: FieldNode                 | Symbol: Symbol{name='width', kind=FIELD, scopeLevel=0}
+Node: width                | Type: IdentifierNode            | Symbol: Symbol{name='width', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Field(height)        | Type: FieldNode                 | Symbol: Symbol{name='height', kind=FIELD, scopeLevel=0}
+Node: height               | Type: IdentifierNode            | Symbol: Symbol{name='height', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Struct(Circle)       | Type: StructNode                | Symbol: Symbol{name='Circle', kind=STRUCT, scopeLevel=0}
+Node: Circle               | Type: IdentifierNode            | Symbol: Symbol{name='Circle', kind=STRUCT, scopeLevel=0}
+Node: Field(radius)        | Type: FieldNode                 | Symbol: Symbol{name='radius', kind=FIELD, scopeLevel=0}
+Node: radius               | Type: IdentifierNode            | Symbol: Symbol{name='radius', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Function(calculate_rectangle_area) | Type: FunctionNode              | Symbol: Symbol{name='calculate_rectangle_area', kind=FUNCTION, scopeLevel=0}
+Node: calculate_rectangle_area | Type: IdentifierNode            | Symbol: Symbol{name='calculate_rectangle_area', kind=FUNCTION, scopeLevel=0}
+Node: rect                 | Type: IdentifierNode            | Symbol: Symbol{name='rect', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(Rectangle) | Type: PathExprSegNode           | Symbol: Symbol{name='Rectangle', kind=STRUCT, scopeLevel=0}
+Node: Rectangle            | Type: IdentifierNode            | Symbol: Symbol{name='Rectangle', kind=STRUCT, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='rect', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(rect)    | Type: PathExprSegNode           | Symbol: Symbol{name='rect', kind=PARAMETER, scopeLevel=1}
+Node: rect                 | Type: IdentifierNode            | Symbol: Symbol{name='rect', kind=PARAMETER, scopeLevel=1}
+Node: width                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='rect', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(rect)    | Type: PathExprSegNode           | Symbol: Symbol{name='rect', kind=PARAMETER, scopeLevel=1}
+Node: rect                 | Type: IdentifierNode            | Symbol: Symbol{name='rect', kind=PARAMETER, scopeLevel=1}
+Node: height               | Type: IdentifierNode            | Symbol: null
+Node: Function(calculate_circle_area) | Type: FunctionNode              | Symbol: Symbol{name='calculate_circle_area', kind=FUNCTION, scopeLevel=0}
+Node: calculate_circle_area | Type: IdentifierNode            | Symbol: Symbol{name='calculate_circle_area', kind=FUNCTION, scopeLevel=0}
+Node: circle               | Type: IdentifierNode            | Symbol: Symbol{name='circle', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(Circle)  | Type: PathExprSegNode           | Symbol: Symbol{name='Circle', kind=STRUCT, scopeLevel=0}
+Node: Circle               | Type: IdentifierNode            | Symbol: Symbol{name='Circle', kind=STRUCT, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: pi                   | Type: IdentifierNode            | Symbol: Symbol{name='pi', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='pi', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(pi)      | Type: PathExprSegNode           | Symbol: Symbol{name='pi', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: pi                   | Type: IdentifierNode            | Symbol: Symbol{name='pi', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='circle', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(circle)  | Type: PathExprSegNode           | Symbol: Symbol{name='circle', kind=PARAMETER, scopeLevel=1}
+Node: circle               | Type: IdentifierNode            | Symbol: Symbol{name='circle', kind=PARAMETER, scopeLevel=1}
+Node: radius               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='circle', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(circle)  | Type: PathExprSegNode           | Symbol: Symbol{name='circle', kind=PARAMETER, scopeLevel=1}
+Node: circle               | Type: IdentifierNode            | Symbol: Symbol{name='circle', kind=PARAMETER, scopeLevel=1}
+Node: radius               | Type: IdentifierNode            | Symbol: null
+Node: Function(main)       | Type: FunctionNode              | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: main                 | Type: IdentifierNode            | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: rect                 | Type: IdentifierNode            | Symbol: Symbol{name='rect', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(Rectangle) | Type: PathExprSegNode           | Symbol: Symbol{name='Rectangle', kind=STRUCT, scopeLevel=0}
+Node: Rectangle            | Type: IdentifierNode            | Symbol: Symbol{name='Rectangle', kind=STRUCT, scopeLevel=0}
+Node: StructExpr           | Type: StructExprNode            | Symbol: Symbol{name='Rectangle', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(Rectangle) | Type: PathExprSegNode           | Symbol: Symbol{name='Rectangle', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: Rectangle            | Type: IdentifierNode            | Symbol: Symbol{name='Rectangle', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: FieldVal(width)      | Type: FieldValNode              | Symbol: Symbol{name='width', kind=FIELD, scopeLevel=0}
+Node: width                | Type: IdentifierNode            | Symbol: Symbol{name='width', kind=FIELD, scopeLevel=0}
+Node: FieldVal(height)     | Type: FieldValNode              | Symbol: Symbol{name='height', kind=FIELD, scopeLevel=0}
+Node: height               | Type: IdentifierNode            | Symbol: Symbol{name='height', kind=FIELD, scopeLevel=0}
+Node: circle               | Type: IdentifierNode            | Symbol: Symbol{name='circle', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(Circle)  | Type: PathExprSegNode           | Symbol: Symbol{name='Circle', kind=STRUCT, scopeLevel=0}
+Node: Circle               | Type: IdentifierNode            | Symbol: Symbol{name='Circle', kind=STRUCT, scopeLevel=0}
+Node: StructExpr           | Type: StructExprNode            | Symbol: Symbol{name='Circle', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(Circle)  | Type: PathExprSegNode           | Symbol: Symbol{name='Circle', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: Circle               | Type: IdentifierNode            | Symbol: Symbol{name='Circle', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: FieldVal(radius)     | Type: FieldValNode              | Symbol: Symbol{name='radius', kind=FIELD, scopeLevel=0}
+Node: radius               | Type: IdentifierNode            | Symbol: Symbol{name='radius', kind=FIELD, scopeLevel=0}
+Node: rect_area            | Type: IdentifierNode            | Symbol: Symbol{name='rect_area', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='calculate_rectangle_area', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(calculate_rectangle_area) | Type: PathExprSegNode           | Symbol: Symbol{name='calculate_rectangle_area', kind=FUNCTION, scopeLevel=0}
+Node: calculate_rectangle_area | Type: IdentifierNode            | Symbol: Symbol{name='calculate_rectangle_area', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='rect', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(rect)    | Type: PathExprSegNode           | Symbol: Symbol{name='rect', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: rect                 | Type: IdentifierNode            | Symbol: Symbol{name='rect', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: circle_area          | Type: IdentifierNode            | Symbol: Symbol{name='circle_area', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='calculate_circle_area', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(calculate_circle_area) | Type: PathExprSegNode           | Symbol: Symbol{name='calculate_circle_area', kind=FUNCTION, scopeLevel=0}
+Node: calculate_circle_area | Type: IdentifierNode            | Symbol: Symbol{name='calculate_circle_area', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='circle', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(circle)  | Type: PathExprSegNode           | Symbol: Symbol{name='circle', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: circle               | Type: IdentifierNode            | Symbol: Symbol{name='circle', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: invalid_access       | Type: IdentifierNode            | Symbol: Symbol{name='invalid_access', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='circle', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(circle)  | Type: PathExprSegNode           | Symbol: Symbol{name='circle', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: circle               | Type: IdentifierNode            | Symbol: Symbol{name='circle', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: width                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(printInt) | Type: PathExprSegNode           | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: printInt             | Type: IdentifierNode            | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(exit)    | Type: PathExprSegNode           | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: exit                 | Type: IdentifierNode            | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+
+=== Symbol Debug Summary ===
+Total nodes visited: 103
+Nodes with symbols: 98
+Nodes without symbols: 5
+
+Node type distribution:
+  FieldNode: 3
+  StructExprNode: 2
+  PathExprSegNode: 27
+  IdentifierNode: 51
+  FunctionNode: 3
+  FieldValNode: 3
+  PathExprNode: 12
+  StructNode: 2
+Type checking errors:
+  Function body type mismatch: expected i32, got () in function 'calculate_rectangle_area' at in function 'calculate_rectangle_area' 
+  Function body type mismatch: expected i32, got () in function 'calculate_circle_area' at in function 'calculate_circle_area' 
+  Field 'width' not found in struct Circle
+  Expression type is null for FieldExprNode at in function 'main' 

@@ -1,0 +1,12 @@
+=== Symbol Debug Test ===
+Enter Rust code (Ctrl+D to finish):
+Error parsing statement: Failed to parse statement or expression in block: Expected '(' but found 'x'
+Parsing error: Failed to parse statement or expression in block: Expected '(' but found 'x'
+ParserException: Failed to parse statement or expression in block: Expected '(' but found 'x'
+	at ExpressionParser.parseBlockExpression(ExpressionParser.java:754)
+	at StatementParser.parseFunctionStatement(StatementParser.java:151)
+	at StatementParser.parseFunctionStatement(StatementParser.java:107)
+	at StatementParser.parseStatement(StatementParser.java:46)
+	at Parser.parse(Parser.java:43)
+	at SymbolDebugTest.processTokenizer(SymbolDebugTest.java:91)
+	at SymbolDebugTest.main(SymbolDebugTest.java:37)

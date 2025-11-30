@@ -1,0 +1,1029 @@
+=== Symbol Debug Test ===
+Enter Rust code (Ctrl+D to finish):
+Father relationships set successfully.
+Self and Self semantic checking completed successfully.
+Namespace semantic checking completed successfully.
+
+=== Symbol Debug Output ===
+Node: Struct(UnionFind)    | Type: StructNode                | Symbol: Symbol{name='UnionFind', kind=STRUCT, scopeLevel=0}
+Node: UnionFind            | Type: IdentifierNode            | Symbol: Symbol{name='UnionFind', kind=STRUCT, scopeLevel=0}
+Node: Field(parent)        | Type: FieldNode                 | Symbol: Symbol{name='parent', kind=FIELD, scopeLevel=0}
+Node: parent               | Type: IdentifierNode            | Symbol: Symbol{name='parent', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Field(rank)          | Type: FieldNode                 | Symbol: Symbol{name='rank', kind=FIELD, scopeLevel=0}
+Node: rank                 | Type: IdentifierNode            | Symbol: Symbol{name='rank', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Field(size)          | Type: FieldNode                 | Symbol: Symbol{name='size', kind=FIELD, scopeLevel=0}
+Node: size                 | Type: IdentifierNode            | Symbol: Symbol{name='size', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Field(component_count) | Type: FieldNode                 | Symbol: Symbol{name='component_count', kind=FIELD, scopeLevel=0}
+Node: component_count      | Type: IdentifierNode            | Symbol: Symbol{name='component_count', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Impl(for TypePathExprNode@17a7cec2) | Type: ImplNode                  | TypeSymbol: Symbol{name='UnionFind', kind=STRUCT, scopeLevel=0} | TraitSymbol: null                          
+Node: PathExprSeg(UnionFind) | Type: PathExprSegNode           | Symbol: Symbol{name='UnionFind', kind=STRUCT, scopeLevel=0}
+Node: UnionFind            | Type: IdentifierNode            | Symbol: Symbol{name='UnionFind', kind=STRUCT, scopeLevel=0}
+Node: Function(new)        | Type: FunctionNode              | Symbol: Symbol{name='new', kind=FUNCTION, scopeLevel=1}
+Node: new                  | Type: IdentifierNode            | Symbol: Symbol{name='new', kind=FUNCTION, scopeLevel=1}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExprSeg(UnionFind) | Type: PathExprSegNode           | Symbol: Symbol{name='UnionFind', kind=STRUCT, scopeLevel=0}
+Node: UnionFind            | Type: IdentifierNode            | Symbol: Symbol{name='UnionFind', kind=STRUCT, scopeLevel=0}
+Node: uf                   | Type: IdentifierNode            | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(UnionFind) | Type: PathExprSegNode           | Symbol: Symbol{name='UnionFind', kind=STRUCT, scopeLevel=0}
+Node: UnionFind            | Type: IdentifierNode            | Symbol: Symbol{name='UnionFind', kind=STRUCT, scopeLevel=0}
+Node: StructExpr           | Type: StructExprNode            | Symbol: Symbol{name='UnionFind', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(UnionFind) | Type: PathExprSegNode           | Symbol: Symbol{name='UnionFind', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: UnionFind            | Type: IdentifierNode            | Symbol: Symbol{name='UnionFind', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: FieldVal(parent)     | Type: FieldValNode              | Symbol: Symbol{name='parent', kind=FIELD, scopeLevel=0}
+Node: parent               | Type: IdentifierNode            | Symbol: Symbol{name='parent', kind=FIELD, scopeLevel=0}
+Node: FieldVal(rank)       | Type: FieldValNode              | Symbol: Symbol{name='rank', kind=FIELD, scopeLevel=0}
+Node: rank                 | Type: IdentifierNode            | Symbol: Symbol{name='rank', kind=FIELD, scopeLevel=0}
+Node: FieldVal(size)       | Type: FieldValNode              | Symbol: Symbol{name='size', kind=FIELD, scopeLevel=0}
+Node: size                 | Type: IdentifierNode            | Symbol: Symbol{name='size', kind=FIELD, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=2}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=2}
+Node: FieldVal(component_count) | Type: FieldValNode              | Symbol: Symbol{name='component_count', kind=FIELD, scopeLevel=0}
+Node: component_count      | Type: IdentifierNode            | Symbol: Symbol{name='component_count', kind=FIELD, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=2}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=2}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(uf)      | Type: PathExprSegNode           | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: uf                   | Type: IdentifierNode            | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: parent               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(uf)      | Type: PathExprSegNode           | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: uf                   | Type: IdentifierNode            | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: rank                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=2}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=PARAMETER, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(uf)      | Type: PathExprSegNode           | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: uf                   | Type: IdentifierNode            | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: Function(find)       | Type: FunctionNode              | Symbol: Symbol{name='find', kind=FUNCTION, scopeLevel=1}
+Node: find                 | Type: IdentifierNode            | Symbol: Symbol{name='find', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(x)       | Type: PathExprSegNode           | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(x)       | Type: PathExprSegNode           | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: size                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: parent               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(x)       | Type: PathExprSegNode           | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(x)       | Type: PathExprSegNode           | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: parent               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(x)       | Type: PathExprSegNode           | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(find)    | Type: PathExprSegNode           | Symbol: null
+Node: find                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: parent               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(x)       | Type: PathExprSegNode           | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: parent               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(x)       | Type: PathExprSegNode           | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Function(union)      | Type: FunctionNode              | Symbol: Symbol{name='union', kind=FUNCTION, scopeLevel=1}
+Node: union                | Type: IdentifierNode            | Symbol: Symbol{name='union', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: y                    | Type: IdentifierNode            | Symbol: Symbol{name='y', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExprSeg(bool)    | Type: PathExprSegNode           | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: bool                 | Type: IdentifierNode            | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: root_x               | Type: IdentifierNode            | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(find)    | Type: PathExprSegNode           | Symbol: null
+Node: find                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(x)       | Type: PathExprSegNode           | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: root_y               | Type: IdentifierNode            | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(find)    | Type: PathExprSegNode           | Symbol: null
+Node: find                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='y', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(y)       | Type: PathExprSegNode           | Symbol: Symbol{name='y', kind=PARAMETER, scopeLevel=2}
+Node: y                    | Type: IdentifierNode            | Symbol: Symbol{name='y', kind=PARAMETER, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_x)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_x               | Type: IdentifierNode            | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_y)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_y               | Type: IdentifierNode            | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_x)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_x               | Type: IdentifierNode            | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_y)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_y               | Type: IdentifierNode            | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: rank                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_x)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_x               | Type: IdentifierNode            | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: rank                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_y)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_y               | Type: IdentifierNode            | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: parent               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_x)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_x               | Type: IdentifierNode            | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_y)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_y               | Type: IdentifierNode            | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: rank                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_x)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_x               | Type: IdentifierNode            | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: rank                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_y)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_y               | Type: IdentifierNode            | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: parent               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_y)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_y               | Type: IdentifierNode            | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_x)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_x               | Type: IdentifierNode            | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: parent               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_y)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_y               | Type: IdentifierNode            | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_x)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_x               | Type: IdentifierNode            | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: rank                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_x)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_x               | Type: IdentifierNode            | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: component_count      | Type: IdentifierNode            | Symbol: null
+Node: Function(is_connected) | Type: FunctionNode              | Symbol: Symbol{name='is_connected', kind=FUNCTION, scopeLevel=1}
+Node: is_connected         | Type: IdentifierNode            | Symbol: Symbol{name='is_connected', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: y                    | Type: IdentifierNode            | Symbol: Symbol{name='y', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExprSeg(bool)    | Type: PathExprSegNode           | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: bool                 | Type: IdentifierNode            | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: root_x               | Type: IdentifierNode            | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(find)    | Type: PathExprSegNode           | Symbol: null
+Node: find                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(x)       | Type: PathExprSegNode           | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: root_y               | Type: IdentifierNode            | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(find)    | Type: PathExprSegNode           | Symbol: null
+Node: find                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='y', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(y)       | Type: PathExprSegNode           | Symbol: Symbol{name='y', kind=PARAMETER, scopeLevel=2}
+Node: y                    | Type: IdentifierNode            | Symbol: Symbol{name='y', kind=PARAMETER, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_x)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_x               | Type: IdentifierNode            | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_y)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_y               | Type: IdentifierNode            | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_x)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_x               | Type: IdentifierNode            | Symbol: Symbol{name='root_x', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root_y)  | Type: PathExprSegNode           | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root_y               | Type: IdentifierNode            | Symbol: Symbol{name='root_y', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: Function(get_component_count) | Type: FunctionNode              | Symbol: Symbol{name='get_component_count', kind=FUNCTION, scopeLevel=1}
+Node: get_component_count  | Type: IdentifierNode            | Symbol: Symbol{name='get_component_count', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: component_count      | Type: IdentifierNode            | Symbol: null
+Node: Function(get_component_size) | Type: FunctionNode              | Symbol: Symbol{name='get_component_size', kind=FUNCTION, scopeLevel=1}
+Node: get_component_size   | Type: IdentifierNode            | Symbol: Symbol{name='get_component_size', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: root                 | Type: IdentifierNode            | Symbol: Symbol{name='root', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(find)    | Type: PathExprSegNode           | Symbol: null
+Node: find                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(x)       | Type: PathExprSegNode           | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=PARAMETER, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root)    | Type: PathExprSegNode           | Symbol: Symbol{name='root', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root                 | Type: IdentifierNode            | Symbol: Symbol{name='root', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: size                 | Type: IdentifierNode            | Symbol: Symbol{name='size', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(find)    | Type: PathExprSegNode           | Symbol: null
+Node: find                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(root)    | Type: PathExprSegNode           | Symbol: Symbol{name='root', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: root                 | Type: IdentifierNode            | Symbol: Symbol{name='root', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='size', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(size)    | Type: PathExprSegNode           | Symbol: Symbol{name='size', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: size                 | Type: IdentifierNode            | Symbol: Symbol{name='size', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: size                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='size', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(size)    | Type: PathExprSegNode           | Symbol: Symbol{name='size', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: size                 | Type: IdentifierNode            | Symbol: Symbol{name='size', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: Function(print_components) | Type: FunctionNode              | Symbol: Symbol{name='print_components', kind=FUNCTION, scopeLevel=1}
+Node: print_components     | Type: IdentifierNode            | Symbol: Symbol{name='print_components', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: root                 | Type: IdentifierNode            | Symbol: Symbol{name='root', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(find)    | Type: PathExprSegNode           | Symbol: null
+Node: find                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(printInt) | Type: PathExprSegNode           | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: printInt             | Type: IdentifierNode            | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(root)    | Type: PathExprSegNode           | Symbol: Symbol{name='root', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: root                 | Type: IdentifierNode            | Symbol: Symbol{name='root', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: size                 | Type: IdentifierNode            | Symbol: null
+Node: Function(is_graph_connected) | Type: FunctionNode              | Symbol: Symbol{name='is_graph_connected', kind=FUNCTION, scopeLevel=1}
+Node: is_graph_connected   | Type: IdentifierNode            | Symbol: Symbol{name='is_graph_connected', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(bool)    | Type: PathExprSegNode           | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: bool                 | Type: IdentifierNode            | Symbol: Symbol{name='bool', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: component_count      | Type: IdentifierNode            | Symbol: null
+Node: Function(edges_to_connect) | Type: FunctionNode              | Symbol: Symbol{name='edges_to_connect', kind=FUNCTION, scopeLevel=1}
+Node: edges_to_connect     | Type: IdentifierNode            | Symbol: Symbol{name='edges_to_connect', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: component_count      | Type: IdentifierNode            | Symbol: null
+Node: Struct(Edge)         | Type: StructNode                | Symbol: Symbol{name='Edge', kind=STRUCT, scopeLevel=0}
+Node: Edge                 | Type: IdentifierNode            | Symbol: Symbol{name='Edge', kind=STRUCT, scopeLevel=0}
+Node: Field(src)           | Type: FieldNode                 | Symbol: Symbol{name='src', kind=FIELD, scopeLevel=0}
+Node: src                  | Type: IdentifierNode            | Symbol: Symbol{name='src', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Field(dest)          | Type: FieldNode                 | Symbol: Symbol{name='dest', kind=FIELD, scopeLevel=0}
+Node: dest                 | Type: IdentifierNode            | Symbol: Symbol{name='dest', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Field(weight)        | Type: FieldNode                 | Symbol: Symbol{name='weight', kind=FIELD, scopeLevel=0}
+Node: weight               | Type: IdentifierNode            | Symbol: Symbol{name='weight', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Struct(KruskalMST)   | Type: StructNode                | Symbol: Symbol{name='KruskalMST', kind=STRUCT, scopeLevel=0}
+Node: KruskalMST           | Type: IdentifierNode            | Symbol: Symbol{name='KruskalMST', kind=STRUCT, scopeLevel=0}
+Node: Field(edges)         | Type: FieldNode                 | Symbol: Symbol{name='edges', kind=FIELD, scopeLevel=0}
+Node: edges                | Type: IdentifierNode            | Symbol: Symbol{name='edges', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(Edge)    | Type: PathExprSegNode           | Symbol: Symbol{name='Edge', kind=STRUCT, scopeLevel=0}
+Node: Edge                 | Type: IdentifierNode            | Symbol: Symbol{name='Edge', kind=STRUCT, scopeLevel=0}
+Node: Field(edge_count)    | Type: FieldNode                 | Symbol: Symbol{name='edge_count', kind=FIELD, scopeLevel=0}
+Node: edge_count           | Type: IdentifierNode            | Symbol: Symbol{name='edge_count', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Field(vertex_count)  | Type: FieldNode                 | Symbol: Symbol{name='vertex_count', kind=FIELD, scopeLevel=0}
+Node: vertex_count         | Type: IdentifierNode            | Symbol: Symbol{name='vertex_count', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Impl(for TypePathExprNode@65b3120a) | Type: ImplNode                  | TypeSymbol: Symbol{name='Edge', kind=STRUCT, scopeLevel=0} | TraitSymbol: null                          
+Node: PathExprSeg(Edge)    | Type: PathExprSegNode           | Symbol: Symbol{name='Edge', kind=STRUCT, scopeLevel=0}
+Node: Edge                 | Type: IdentifierNode            | Symbol: Symbol{name='Edge', kind=STRUCT, scopeLevel=0}
+Node: Function(new)        | Type: FunctionNode              | Symbol: Symbol{name='new', kind=FUNCTION, scopeLevel=1}
+Node: new                  | Type: IdentifierNode            | Symbol: Symbol{name='new', kind=FUNCTION, scopeLevel=1}
+Node: src                  | Type: IdentifierNode            | Symbol: Symbol{name='src', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: dest                 | Type: IdentifierNode            | Symbol: Symbol{name='dest', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: weight               | Type: IdentifierNode            | Symbol: Symbol{name='weight', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExprSeg(Edge)    | Type: PathExprSegNode           | Symbol: Symbol{name='Edge', kind=STRUCT, scopeLevel=0}
+Node: Edge                 | Type: IdentifierNode            | Symbol: Symbol{name='Edge', kind=STRUCT, scopeLevel=0}
+Node: StructExpr           | Type: StructExprNode            | Symbol: Symbol{name='Edge', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(Edge)    | Type: PathExprSegNode           | Symbol: Symbol{name='Edge', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: Edge                 | Type: IdentifierNode            | Symbol: Symbol{name='Edge', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: FieldVal(src)        | Type: FieldValNode              | Symbol: Symbol{name='src', kind=FIELD, scopeLevel=0}
+Node: src                  | Type: IdentifierNode            | Symbol: Symbol{name='src', kind=FIELD, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='src', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(src)     | Type: PathExprSegNode           | Symbol: Symbol{name='src', kind=PARAMETER, scopeLevel=2}
+Node: src                  | Type: IdentifierNode            | Symbol: Symbol{name='src', kind=PARAMETER, scopeLevel=2}
+Node: FieldVal(dest)       | Type: FieldValNode              | Symbol: Symbol{name='dest', kind=FIELD, scopeLevel=0}
+Node: dest                 | Type: IdentifierNode            | Symbol: Symbol{name='dest', kind=FIELD, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='dest', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(dest)    | Type: PathExprSegNode           | Symbol: Symbol{name='dest', kind=PARAMETER, scopeLevel=2}
+Node: dest                 | Type: IdentifierNode            | Symbol: Symbol{name='dest', kind=PARAMETER, scopeLevel=2}
+Node: FieldVal(weight)     | Type: FieldValNode              | Symbol: Symbol{name='weight', kind=FIELD, scopeLevel=0}
+Node: weight               | Type: IdentifierNode            | Symbol: Symbol{name='weight', kind=FIELD, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='weight', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(weight)  | Type: PathExprSegNode           | Symbol: Symbol{name='weight', kind=PARAMETER, scopeLevel=2}
+Node: weight               | Type: IdentifierNode            | Symbol: Symbol{name='weight', kind=PARAMETER, scopeLevel=2}
+Node: Impl(for TypePathExprNode@6f539caf) | Type: ImplNode                  | TypeSymbol: Symbol{name='KruskalMST', kind=STRUCT, scopeLevel=0} | TraitSymbol: null                          
+Node: PathExprSeg(KruskalMST) | Type: PathExprSegNode           | Symbol: Symbol{name='KruskalMST', kind=STRUCT, scopeLevel=0}
+Node: KruskalMST           | Type: IdentifierNode            | Symbol: Symbol{name='KruskalMST', kind=STRUCT, scopeLevel=0}
+Node: Function(new)        | Type: FunctionNode              | Symbol: Symbol{name='new', kind=FUNCTION, scopeLevel=1}
+Node: new                  | Type: IdentifierNode            | Symbol: Symbol{name='new', kind=FUNCTION, scopeLevel=1}
+Node: vertices             | Type: IdentifierNode            | Symbol: Symbol{name='vertices', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExprSeg(KruskalMST) | Type: PathExprSegNode           | Symbol: Symbol{name='KruskalMST', kind=STRUCT, scopeLevel=0}
+Node: KruskalMST           | Type: IdentifierNode            | Symbol: Symbol{name='KruskalMST', kind=STRUCT, scopeLevel=0}
+Node: StructExpr           | Type: StructExprNode            | Symbol: Symbol{name='KruskalMST', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(KruskalMST) | Type: PathExprSegNode           | Symbol: Symbol{name='KruskalMST', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: KruskalMST           | Type: IdentifierNode            | Symbol: Symbol{name='KruskalMST', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: FieldVal(edges)      | Type: FieldValNode              | Symbol: Symbol{name='edges', kind=FIELD, scopeLevel=0}
+Node: edges                | Type: IdentifierNode            | Symbol: Symbol{name='edges', kind=FIELD, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='Edge', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(Edge)    | Type: PathExprSegNode           | Symbol: Symbol{name='Edge', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: Edge                 | Type: IdentifierNode            | Symbol: Symbol{name='Edge', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(new)     | Type: PathExprSegNode           | Symbol: null
+Node: new                  | Type: IdentifierNode            | Symbol: null
+Node: FieldVal(edge_count) | Type: FieldValNode              | Symbol: Symbol{name='edge_count', kind=FIELD, scopeLevel=0}
+Node: edge_count           | Type: IdentifierNode            | Symbol: Symbol{name='edge_count', kind=FIELD, scopeLevel=0}
+Node: FieldVal(vertex_count) | Type: FieldValNode              | Symbol: Symbol{name='vertex_count', kind=FIELD, scopeLevel=0}
+Node: vertex_count         | Type: IdentifierNode            | Symbol: Symbol{name='vertex_count', kind=FIELD, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='vertices', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(vertices) | Type: PathExprSegNode           | Symbol: Symbol{name='vertices', kind=PARAMETER, scopeLevel=2}
+Node: vertices             | Type: IdentifierNode            | Symbol: Symbol{name='vertices', kind=PARAMETER, scopeLevel=2}
+Node: Function(add_edge)   | Type: FunctionNode              | Symbol: Symbol{name='add_edge', kind=FUNCTION, scopeLevel=1}
+Node: add_edge             | Type: IdentifierNode            | Symbol: Symbol{name='add_edge', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: src                  | Type: IdentifierNode            | Symbol: Symbol{name='src', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: dest                 | Type: IdentifierNode            | Symbol: Symbol{name='dest', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: weight               | Type: IdentifierNode            | Symbol: Symbol{name='weight', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edge_count           | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edges                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edge_count           | Type: IdentifierNode            | Symbol: null
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='Edge', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(Edge)    | Type: PathExprSegNode           | Symbol: Symbol{name='Edge', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: Edge                 | Type: IdentifierNode            | Symbol: Symbol{name='Edge', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(new)     | Type: PathExprSegNode           | Symbol: null
+Node: new                  | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='src', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(src)     | Type: PathExprSegNode           | Symbol: Symbol{name='src', kind=PARAMETER, scopeLevel=2}
+Node: src                  | Type: IdentifierNode            | Symbol: Symbol{name='src', kind=PARAMETER, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='dest', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(dest)    | Type: PathExprSegNode           | Symbol: Symbol{name='dest', kind=PARAMETER, scopeLevel=2}
+Node: dest                 | Type: IdentifierNode            | Symbol: Symbol{name='dest', kind=PARAMETER, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='weight', kind=PARAMETER, scopeLevel=2}
+Node: PathExprSeg(weight)  | Type: PathExprSegNode           | Symbol: Symbol{name='weight', kind=PARAMETER, scopeLevel=2}
+Node: weight               | Type: IdentifierNode            | Symbol: Symbol{name='weight', kind=PARAMETER, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edge_count           | Type: IdentifierNode            | Symbol: null
+Node: Function(sort_edges) | Type: FunctionNode              | Symbol: Symbol{name='sort_edges', kind=FUNCTION, scopeLevel=1}
+Node: sort_edges           | Type: IdentifierNode            | Symbol: Symbol{name='sort_edges', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: j                    | Type: IdentifierNode            | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edges                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(j)       | Type: PathExprSegNode           | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: j                    | Type: IdentifierNode            | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: weight               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edges                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(j)       | Type: PathExprSegNode           | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: j                    | Type: IdentifierNode            | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: weight               | Type: IdentifierNode            | Symbol: null
+Node: temp_src             | Type: IdentifierNode            | Symbol: Symbol{name='temp_src', kind=LOCAL_VARIABLE, scopeLevel=6}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edges                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(j)       | Type: PathExprSegNode           | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: j                    | Type: IdentifierNode            | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: src                  | Type: IdentifierNode            | Symbol: null
+Node: temp_dest            | Type: IdentifierNode            | Symbol: Symbol{name='temp_dest', kind=LOCAL_VARIABLE, scopeLevel=6}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edges                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(j)       | Type: PathExprSegNode           | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: j                    | Type: IdentifierNode            | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: dest                 | Type: IdentifierNode            | Symbol: null
+Node: temp_weight          | Type: IdentifierNode            | Symbol: Symbol{name='temp_weight', kind=LOCAL_VARIABLE, scopeLevel=6}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edges                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(j)       | Type: PathExprSegNode           | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: j                    | Type: IdentifierNode            | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: weight               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edges                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(j)       | Type: PathExprSegNode           | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: j                    | Type: IdentifierNode            | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: src                  | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edges                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(j)       | Type: PathExprSegNode           | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: j                    | Type: IdentifierNode            | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: src                  | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edges                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(j)       | Type: PathExprSegNode           | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: j                    | Type: IdentifierNode            | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: dest                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edges                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(j)       | Type: PathExprSegNode           | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: j                    | Type: IdentifierNode            | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: dest                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edges                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(j)       | Type: PathExprSegNode           | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: j                    | Type: IdentifierNode            | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: weight               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edges                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(j)       | Type: PathExprSegNode           | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: j                    | Type: IdentifierNode            | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: weight               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edges                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(j)       | Type: PathExprSegNode           | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: j                    | Type: IdentifierNode            | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: src                  | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='temp_src', kind=LOCAL_VARIABLE, scopeLevel=6}
+Node: PathExprSeg(temp_src) | Type: PathExprSegNode           | Symbol: Symbol{name='temp_src', kind=LOCAL_VARIABLE, scopeLevel=6}
+Node: temp_src             | Type: IdentifierNode            | Symbol: Symbol{name='temp_src', kind=LOCAL_VARIABLE, scopeLevel=6}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edges                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(j)       | Type: PathExprSegNode           | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: j                    | Type: IdentifierNode            | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: dest                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='temp_dest', kind=LOCAL_VARIABLE, scopeLevel=6}
+Node: PathExprSeg(temp_dest) | Type: PathExprSegNode           | Symbol: Symbol{name='temp_dest', kind=LOCAL_VARIABLE, scopeLevel=6}
+Node: temp_dest            | Type: IdentifierNode            | Symbol: Symbol{name='temp_dest', kind=LOCAL_VARIABLE, scopeLevel=6}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edges                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(j)       | Type: PathExprSegNode           | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: j                    | Type: IdentifierNode            | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: weight               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='temp_weight', kind=LOCAL_VARIABLE, scopeLevel=6}
+Node: PathExprSeg(temp_weight) | Type: PathExprSegNode           | Symbol: Symbol{name='temp_weight', kind=LOCAL_VARIABLE, scopeLevel=6}
+Node: temp_weight          | Type: IdentifierNode            | Symbol: Symbol{name='temp_weight', kind=LOCAL_VARIABLE, scopeLevel=6}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(j)       | Type: PathExprSegNode           | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: j                    | Type: IdentifierNode            | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(j)       | Type: PathExprSegNode           | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: j                    | Type: IdentifierNode            | Symbol: Symbol{name='j', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edge_count           | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edge_count           | Type: IdentifierNode            | Symbol: null
+Node: Function(find_mst)   | Type: FunctionNode              | Symbol: Symbol{name='find_mst', kind=FUNCTION, scopeLevel=1}
+Node: find_mst             | Type: IdentifierNode            | Symbol: Symbol{name='find_mst', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(sort_edges) | Type: PathExprSegNode           | Symbol: null
+Node: sort_edges           | Type: IdentifierNode            | Symbol: null
+Node: uf                   | Type: IdentifierNode            | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(UnionFind) | Type: PathExprSegNode           | Symbol: Symbol{name='UnionFind', kind=STRUCT, scopeLevel=0}
+Node: UnionFind            | Type: IdentifierNode            | Symbol: Symbol{name='UnionFind', kind=STRUCT, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='UnionFind', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(UnionFind) | Type: PathExprSegNode           | Symbol: Symbol{name='UnionFind', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: UnionFind            | Type: IdentifierNode            | Symbol: Symbol{name='UnionFind', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(new)     | Type: PathExprSegNode           | Symbol: null
+Node: new                  | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: vertex_count         | Type: IdentifierNode            | Symbol: null
+Node: mst_weight           | Type: IdentifierNode            | Symbol: Symbol{name='mst_weight', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: edges_added          | Type: IdentifierNode            | Symbol: Symbol{name='edges_added', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: edge                 | Type: IdentifierNode            | Symbol: Symbol{name='edge', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(Edge)    | Type: PathExprSegNode           | Symbol: Symbol{name='Edge', kind=STRUCT, scopeLevel=0}
+Node: Edge                 | Type: IdentifierNode            | Symbol: Symbol{name='Edge', kind=STRUCT, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edges                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(uf)      | Type: PathExprSegNode           | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: uf                   | Type: IdentifierNode            | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(is_connected) | Type: PathExprSegNode           | Symbol: null
+Node: is_connected         | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='edge', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(edge)    | Type: PathExprSegNode           | Symbol: Symbol{name='edge', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: edge                 | Type: IdentifierNode            | Symbol: Symbol{name='edge', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: src                  | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='edge', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(edge)    | Type: PathExprSegNode           | Symbol: Symbol{name='edge', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: edge                 | Type: IdentifierNode            | Symbol: Symbol{name='edge', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: dest                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(uf)      | Type: PathExprSegNode           | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: uf                   | Type: IdentifierNode            | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(union)   | Type: PathExprSegNode           | Symbol: null
+Node: union                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='edge', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(edge)    | Type: PathExprSegNode           | Symbol: Symbol{name='edge', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: edge                 | Type: IdentifierNode            | Symbol: Symbol{name='edge', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: src                  | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='edge', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(edge)    | Type: PathExprSegNode           | Symbol: Symbol{name='edge', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: edge                 | Type: IdentifierNode            | Symbol: Symbol{name='edge', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: dest                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='mst_weight', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(mst_weight) | Type: PathExprSegNode           | Symbol: Symbol{name='mst_weight', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: mst_weight           | Type: IdentifierNode            | Symbol: Symbol{name='mst_weight', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='edge', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(edge)    | Type: PathExprSegNode           | Symbol: Symbol{name='edge', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: edge                 | Type: IdentifierNode            | Symbol: Symbol{name='edge', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: weight               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='edges_added', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(edges_added) | Type: PathExprSegNode           | Symbol: Symbol{name='edges_added', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: edges_added          | Type: IdentifierNode            | Symbol: Symbol{name='edges_added', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: edge_count           | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='edges_added', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(edges_added) | Type: PathExprSegNode           | Symbol: Symbol{name='edges_added', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: edges_added          | Type: IdentifierNode            | Symbol: Symbol{name='edges_added', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: vertex_count         | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='mst_weight', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(mst_weight) | Type: PathExprSegNode           | Symbol: Symbol{name='mst_weight', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: mst_weight           | Type: IdentifierNode            | Symbol: Symbol{name='mst_weight', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: Function(main)       | Type: FunctionNode              | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: main                 | Type: IdentifierNode            | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(getInt)  | Type: PathExprSegNode           | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: getInt               | Type: IdentifierNode            | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: uf                   | Type: IdentifierNode            | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(UnionFind) | Type: PathExprSegNode           | Symbol: Symbol{name='UnionFind', kind=STRUCT, scopeLevel=0}
+Node: UnionFind            | Type: IdentifierNode            | Symbol: Symbol{name='UnionFind', kind=STRUCT, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='UnionFind', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(UnionFind) | Type: PathExprSegNode           | Symbol: Symbol{name='UnionFind', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: UnionFind            | Type: IdentifierNode            | Symbol: Symbol{name='UnionFind', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(new)     | Type: PathExprSegNode           | Symbol: null
+Node: new                  | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(n)       | Type: PathExprSegNode           | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: operations           | Type: IdentifierNode            | Symbol: Symbol{name='operations', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(getInt)  | Type: PathExprSegNode           | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: getInt               | Type: IdentifierNode            | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: operation            | Type: IdentifierNode            | Symbol: Symbol{name='operation', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(getInt)  | Type: PathExprSegNode           | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: getInt               | Type: IdentifierNode            | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='operation', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(operation) | Type: PathExprSegNode           | Symbol: Symbol{name='operation', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: operation            | Type: IdentifierNode            | Symbol: Symbol{name='operation', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(getInt)  | Type: PathExprSegNode           | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: getInt               | Type: IdentifierNode            | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: y                    | Type: IdentifierNode            | Symbol: Symbol{name='y', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(getInt)  | Type: PathExprSegNode           | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: getInt               | Type: IdentifierNode            | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(uf)      | Type: PathExprSegNode           | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: uf                   | Type: IdentifierNode            | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(union)   | Type: PathExprSegNode           | Symbol: null
+Node: union                | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='x', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(x)       | Type: PathExprSegNode           | Symbol: Symbol{name='x', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='y', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(y)       | Type: PathExprSegNode           | Symbol: Symbol{name='y', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: y                    | Type: IdentifierNode            | Symbol: Symbol{name='y', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='operation', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(operation) | Type: PathExprSegNode           | Symbol: Symbol{name='operation', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: operation            | Type: IdentifierNode            | Symbol: Symbol{name='operation', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(getInt)  | Type: PathExprSegNode           | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: getInt               | Type: IdentifierNode            | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: root                 | Type: IdentifierNode            | Symbol: Symbol{name='root', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(uf)      | Type: PathExprSegNode           | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: uf                   | Type: IdentifierNode            | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(find)    | Type: PathExprSegNode           | Symbol: null
+Node: find                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='x', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(x)       | Type: PathExprSegNode           | Symbol: Symbol{name='x', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(printInt) | Type: PathExprSegNode           | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: printInt             | Type: IdentifierNode            | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='root', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(root)    | Type: PathExprSegNode           | Symbol: Symbol{name='root', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: root                 | Type: IdentifierNode            | Symbol: Symbol{name='root', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='operation', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(operation) | Type: PathExprSegNode           | Symbol: Symbol{name='operation', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: operation            | Type: IdentifierNode            | Symbol: Symbol{name='operation', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(getInt)  | Type: PathExprSegNode           | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: getInt               | Type: IdentifierNode            | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: y                    | Type: IdentifierNode            | Symbol: Symbol{name='y', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(getInt)  | Type: PathExprSegNode           | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: getInt               | Type: IdentifierNode            | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(uf)      | Type: PathExprSegNode           | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: uf                   | Type: IdentifierNode            | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(is_connected) | Type: PathExprSegNode           | Symbol: null
+Node: is_connected         | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='x', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(x)       | Type: PathExprSegNode           | Symbol: Symbol{name='x', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='y', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(y)       | Type: PathExprSegNode           | Symbol: Symbol{name='y', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: y                    | Type: IdentifierNode            | Symbol: Symbol{name='y', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(printInt) | Type: PathExprSegNode           | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: printInt             | Type: IdentifierNode            | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(printInt) | Type: PathExprSegNode           | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: printInt             | Type: IdentifierNode            | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='operation', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(operation) | Type: PathExprSegNode           | Symbol: Symbol{name='operation', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: operation            | Type: IdentifierNode            | Symbol: Symbol{name='operation', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: count                | Type: IdentifierNode            | Symbol: Symbol{name='count', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(uf)      | Type: PathExprSegNode           | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: uf                   | Type: IdentifierNode            | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(get_component_count) | Type: PathExprSegNode           | Symbol: null
+Node: get_component_count  | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(printInt) | Type: PathExprSegNode           | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: printInt             | Type: IdentifierNode            | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='count', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(count)   | Type: PathExprSegNode           | Symbol: Symbol{name='count', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: count                | Type: IdentifierNode            | Symbol: Symbol{name='count', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='operation', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(operation) | Type: PathExprSegNode           | Symbol: Symbol{name='operation', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: operation            | Type: IdentifierNode            | Symbol: Symbol{name='operation', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(getInt)  | Type: PathExprSegNode           | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: getInt               | Type: IdentifierNode            | Symbol: Symbol{name='getInt', kind=FUNCTION, scopeLevel=0}
+Node: size                 | Type: IdentifierNode            | Symbol: Symbol{name='size', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(uf)      | Type: PathExprSegNode           | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: uf                   | Type: IdentifierNode            | Symbol: Symbol{name='uf', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(get_component_size) | Type: PathExprSegNode           | Symbol: null
+Node: get_component_size   | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='x', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(x)       | Type: PathExprSegNode           | Symbol: Symbol{name='x', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(printInt) | Type: PathExprSegNode           | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: printInt             | Type: IdentifierNode            | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='size', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(size)    | Type: PathExprSegNode           | Symbol: Symbol{name='size', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: size                 | Type: IdentifierNode            | Symbol: Symbol{name='size', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='operations', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(operations) | Type: PathExprSegNode           | Symbol: Symbol{name='operations', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: operations           | Type: IdentifierNode            | Symbol: Symbol{name='operations', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(exit)    | Type: PathExprSegNode           | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: exit                 | Type: IdentifierNode            | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+
+=== Symbol Debug Summary ===
+Total nodes visited: 979
+Nodes with symbols: 872
+Nodes without symbols: 107
+
+Node type distribution:
+  ImplNode: 3
+  FieldNode: 10
+  StructExprNode: 3
+  PathExprSegNode: 317
+  IdentifierNode: 416
+  FunctionNode: 15
+  FieldValNode: 10
+  PathExprNode: 191
+  SelfParaNode: 11
+  StructNode: 3
+Type checking errors:
+  Function body type mismatch: expected UnionFind, got () in function 'new' at in function 'new' (Self: UnionFind) 
+  Function body type mismatch: expected i32, got () in function 'find' at in function 'find' (Self: &mut UnionFind) 
+  Function body type mismatch: expected bool, got () in function 'union' at in function 'union' (Self: &mut UnionFind) 
+  Function body type mismatch: expected bool, got () in function 'is_connected' at in function 'is_connected' (Self: &mut UnionFind) 
+  Function body type mismatch: expected i32, got () in function 'get_component_count' at in function 'get_component_count' (Self: &UnionFind) 
+  Function body type mismatch: expected i32, got () in function 'get_component_size' at in function 'get_component_size' (Self: &mut UnionFind) 
+  Function body type mismatch: expected bool, got () in function 'is_graph_connected' at in function 'is_graph_connected' (Self: &UnionFind) 
+  Function body type mismatch: expected i32, got () in function 'edges_to_connect' at in function 'edges_to_connect' (Self: &UnionFind) 
+  class StructConstructorType cannot be cast to class StructType (StructConstructorType and StructType are in unnamed module of loader 'app')
+  Called expression is not a function: StructConstructor<Edge>
+  Expression type is null for CallExprNode('Edge') at in function 'new' (Self: KruskalMST) 
+  Expression type is null for ArrayExprNode at in function 'new' (Self: KruskalMST) 
+  Expression type is null for StructExprNode at in function 'new' (Self: KruskalMST) 
+  Expression type is null for BlockExprNode at in function 'new' (Self: KruskalMST) 
+  class StructConstructorType cannot be cast to class StructType (StructConstructorType and StructType are in unnamed module of loader 'app')
+  Called expression is not a function: StructConstructor<Edge>
+  Expression type is null for CallExprNode('Edge') at in function 'add_edge' (Self: &mut KruskalMST) 
+  Expression type is null for BlockExprNode at in function 'add_edge' (Self: &mut KruskalMST) 
+  class StructConstructorType cannot be cast to class StructType (StructConstructorType and StructType are in unnamed module of loader 'app')
+  Called expression is not a function: StructConstructor<UnionFind>
+  Expression type is null for CallExprNode('UnionFind') at in function 'find_mst' (Self: &mut KruskalMST) 
+  Function body type mismatch: expected i32, got () in function 'find_mst' at in function 'find_mst' (Self: &mut KruskalMST) 
+  class StructConstructorType cannot be cast to class StructType (StructConstructorType and StructType are in unnamed module of loader 'app')
+  Called expression is not a function: StructConstructor<UnionFind>
+  Expression type is null for CallExprNode('UnionFind') at in function 'main' 

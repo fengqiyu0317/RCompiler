@@ -1,5 +1,5 @@
-import java.util.Vector;
 import java.util.Stack;
+import java.util.Vector;
 
 public class TokenStream {
     private final Vector<token_t> tokens;

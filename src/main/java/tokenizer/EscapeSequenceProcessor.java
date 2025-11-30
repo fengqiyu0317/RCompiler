@@ -1,58 +1,56 @@
-import static tokenizer.TokenizerConstants.*;
-
 public class EscapeSequenceProcessor {
     
     public static int processEscapeInToken(token_t token, String input, int position) {
         char escapeChar = input.charAt(position + 1);
         switch (escapeChar) {
-            case LETTER_N:
-                token.name += LINE_FEED;
+            case TokenizerConstants.LETTER_N:
+                token.name += TokenizerConstants.LINE_FEED;
                 break;
-            case LETTER_T:
-                token.name += TAB;
+            case TokenizerConstants.LETTER_T:
+                token.name += TokenizerConstants.TAB;
                 break;
-            case LETTER_R:
-                token.name += CARRIAGE_RETURN;
+            case TokenizerConstants.LETTER_R:
+                token.name += TokenizerConstants.CARRIAGE_RETURN;
                 break;
-            case BACKSLASH:
-                token.name += BACKSLASH;
+            case TokenizerConstants.BACKSLASH:
+                token.name += TokenizerConstants.BACKSLASH;
                 break;
-            case SINGLE_QUOTE:
-                token.name += SINGLE_QUOTE;
+            case TokenizerConstants.SINGLE_QUOTE:
+                token.name += TokenizerConstants.SINGLE_QUOTE;
                 break;
-            case DOUBLE_QUOTE:
-                token.name += DOUBLE_QUOTE;
+            case TokenizerConstants.DOUBLE_QUOTE:
+                token.name += TokenizerConstants.DOUBLE_QUOTE;
                 break;
-            case DIGIT_ZERO:
-                token.name += NULL;
+            case TokenizerConstants.DIGIT_ZERO:
+                token.name += TokenizerConstants.NULL;
                 break;
-            case LETTER_X:
+            case TokenizerConstants.LETTER_X:
                 // hexadecimal escape sequence
                 if (position + 3 >= input.length()) {
-                    throw new TokenizerException(INCOMPLETE_HEX_ESCAPE);
+                    throw new TokenizerException(TokenizerConstants.INCOMPLETE_HEX_ESCAPE);
                 }
                 String hex = input.substring(position + 2, position + 4);
                 try {
                     token.name += (char) Integer.parseInt(hex, 16);
                 } catch (NumberFormatException e) {
-                    throw new TokenizerException(INVALID_HEX_ESCAPE + hex);
+                    throw new TokenizerException(TokenizerConstants.INVALID_HEX_ESCAPE + hex);
                 }
                 return position + 3; // Skip x and two hex digits
             default:
-                throw new TokenizerException(UNKNOWN_ESCAPE_SEQUENCE + escapeChar);
+                throw new TokenizerException(TokenizerConstants.UNKNOWN_ESCAPE_SEQUENCE + escapeChar);
         }
         return position + 1; // Skip the escape character
     }
     
     private static char processHexEscape(String input, int position) {
         if (position + 3 >= input.length()) {
-            throw new TokenizerException(INCOMPLETE_HEX_ESCAPE);
+            throw new TokenizerException(TokenizerConstants.INCOMPLETE_HEX_ESCAPE);
         }
         String hex = input.substring(position + 2, position + 4);
         try {
             return (char) Integer.parseInt(hex, 16);
         } catch (NumberFormatException e) {
-            throw new TokenizerException(INVALID_HEX_ESCAPE + hex);
+            throw new TokenizerException(TokenizerConstants.INVALID_HEX_ESCAPE + hex);
         }
     }
 }

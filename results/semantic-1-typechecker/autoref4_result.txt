@@ -1,0 +1,76 @@
+=== Symbol Debug Test ===
+Enter Rust code (Ctrl+D to finish):
+Father relationships set successfully.
+Self and Self semantic checking completed successfully.
+Namespace semantic checking completed successfully.
+
+=== Symbol Debug Output ===
+Node: Struct(Calculator)   | Type: StructNode                | Symbol: Symbol{name='Calculator', kind=STRUCT, scopeLevel=0}
+Node: Calculator           | Type: IdentifierNode            | Symbol: Symbol{name='Calculator', kind=STRUCT, scopeLevel=0}
+Node: Field(result)        | Type: FieldNode                 | Symbol: Symbol{name='result', kind=FIELD, scopeLevel=0}
+Node: result               | Type: IdentifierNode            | Symbol: Symbol{name='result', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Impl(for TypePathExprNode@9807454) | Type: ImplNode                  | TypeSymbol: Symbol{name='Calculator', kind=STRUCT, scopeLevel=0} | TraitSymbol: null                          
+Node: PathExprSeg(Calculator) | Type: PathExprSegNode           | Symbol: Symbol{name='Calculator', kind=STRUCT, scopeLevel=0}
+Node: Calculator           | Type: IdentifierNode            | Symbol: Symbol{name='Calculator', kind=STRUCT, scopeLevel=0}
+Node: Function(get_result) | Type: FunctionNode              | Symbol: Symbol{name='get_result', kind=FUNCTION, scopeLevel=1}
+Node: get_result           | Type: IdentifierNode            | Symbol: Symbol{name='get_result', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: result               | Type: IdentifierNode            | Symbol: null
+Node: Function(main)       | Type: FunctionNode              | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: main                 | Type: IdentifierNode            | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: calc                 | Type: IdentifierNode            | Symbol: Symbol{name='calc', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(Calculator) | Type: PathExprSegNode           | Symbol: Symbol{name='Calculator', kind=STRUCT, scopeLevel=0}
+Node: Calculator           | Type: IdentifierNode            | Symbol: Symbol{name='Calculator', kind=STRUCT, scopeLevel=0}
+Node: StructExpr           | Type: StructExprNode            | Symbol: Symbol{name='Calculator', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(Calculator) | Type: PathExprSegNode           | Symbol: Symbol{name='Calculator', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: Calculator           | Type: IdentifierNode            | Symbol: Symbol{name='Calculator', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: FieldVal(result)     | Type: FieldValNode              | Symbol: Symbol{name='result', kind=FIELD, scopeLevel=0}
+Node: result               | Type: IdentifierNode            | Symbol: Symbol{name='result', kind=FIELD, scopeLevel=0}
+Node: calc_ref             | Type: IdentifierNode            | Symbol: Symbol{name='calc_ref', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(Calculator) | Type: PathExprSegNode           | Symbol: Symbol{name='Calculator', kind=STRUCT, scopeLevel=0}
+Node: Calculator           | Type: IdentifierNode            | Symbol: Symbol{name='Calculator', kind=STRUCT, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='calc', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(calc)    | Type: PathExprSegNode           | Symbol: Symbol{name='calc', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: calc                 | Type: IdentifierNode            | Symbol: Symbol{name='calc', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: value                | Type: IdentifierNode            | Symbol: Symbol{name='value', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='calc_ref', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(calc_ref) | Type: PathExprSegNode           | Symbol: Symbol{name='calc_ref', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: calc_ref             | Type: IdentifierNode            | Symbol: Symbol{name='calc_ref', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(get_result) | Type: PathExprSegNode           | Symbol: null
+Node: get_result           | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(printInt) | Type: PathExprSegNode           | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: printInt             | Type: IdentifierNode            | Symbol: Symbol{name='printInt', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='value', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(value)   | Type: PathExprSegNode           | Symbol: Symbol{name='value', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: value                | Type: IdentifierNode            | Symbol: Symbol{name='value', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(exit)    | Type: PathExprSegNode           | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: exit                 | Type: IdentifierNode            | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+
+=== Symbol Debug Summary ===
+Total nodes visited: 50
+Nodes with symbols: 46
+Nodes without symbols: 4
+
+Node type distribution:
+  ImplNode: 1
+  FieldNode: 1
+  StructExprNode: 1
+  PathExprSegNode: 14
+  IdentifierNode: 22
+  FunctionNode: 2
+  FieldValNode: 1
+  PathExprNode: 6
+  SelfParaNode: 1
+  StructNode: 1
+Type checking errors:
+  Function body type mismatch: expected i32, got () in function 'get_result' at in function 'get_result' (Self: &Calculator) 

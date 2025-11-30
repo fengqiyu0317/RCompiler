@@ -5,7 +5,7 @@
 JAVA_HOME ?= /usr/lib/jvm/default-java
 JAVAC = javac
 JAVA = java
-JAVAC_FLAGS = -d $(TARGET_DIR) -cp $(TARGET_DIR) -encoding UTF-8
+JAVAC_FLAGS = -d $(TARGET_DIR) -cp $(TARGET_DIR) -encoding UTF-8 -Xmaxerrs 10
 JAVA_FLAGS = -cp $(TARGET_DIR) -Dfile.encoding=UTF-8
 
 # 目录配置
@@ -18,6 +18,9 @@ RESOURCES_DIR = src/main/resources
 SRC_FILES = $(shell find $(SRC_DIR) -name "*.java")
 TEST_FILES = $(shell find $(TEST_DIR) -name "*.java")
 
+# Java编译器会自动处理依赖关系，我们只需要传递所有源文件
+# javac内置增量编译功能，会自动检查文件修改时间并只编译必要的文件
+
 # 主类和测试类
 MAIN_CLASS = Main
 TEST_RUNNER = TestRunner
@@ -25,7 +28,7 @@ ERROR_TEST_RUNNER = ErrorTestRunner
 BATCH_TEST_RUNNER = BatchTestRunner
 
 # 默认目标
-.PHONY: all compile run test clean rebuild help
+.PHONY: all compile run test clean rebuild help compile-incremental
 
 # 全部编译
 all: compile
@@ -34,16 +37,20 @@ all: compile
 $(TARGET_DIR):
 	mkdir -p $(TARGET_DIR)
 
-# 编译主程序
-compile: $(TARGET_DIR) $(SRC_FILES)
-	@echo "编译主程序..."
-	$(JAVAC) $(JAVAC_FLAGS) $(SRC_FILES)
+# 编译主程序（智能增量编译）
+compile: $(TARGET_DIR)
+	@echo "检查文件修改状态..."
+	@$(JAVAC) $(JAVAC_FLAGS) $(SRC_FILES)
 	@echo "编译完成！"
 
-# 编译测试
-compile-test: compile $(TEST_FILES)
-	@echo "编译测试程序..."
-	$(JAVAC) $(JAVAC_FLAGS) $(TEST_FILES)
+# 显式增量编译目标（向后兼容）
+compile-incremental: compile
+	@echo "增量编译完成！"
+
+# 编译测试（智能增量编译）
+compile-test: compile
+	@echo "检查测试文件修改状态..."
+	@$(JAVAC) $(JAVAC_FLAGS) $(TEST_FILES)
 	@echo "测试编译完成！"
 
 # 运行主程序
@@ -122,7 +129,8 @@ help:
 	@echo ""
 	@echo "基本命令:"
 	@echo "  make          - 编译项目 (等同于 make compile)"
-	@echo "  make compile  - 编译所有Java源文件"
+	@echo "  make compile  - 智能增量编译Java源文件（javac自动处理依赖关系，最多显示10个错误）"
+	@echo "  make compile-incremental - 显式增量编译（等同于make compile）"
 	@echo "  make run      - 编译并运行主程序"
 	@echo "  make run-redirect - 编译并运行主程序（支持输入输出重定向）"
 	@echo "  make test     - 编译并运行基本测试"

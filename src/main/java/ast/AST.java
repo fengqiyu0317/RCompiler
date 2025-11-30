@@ -1,12 +1,48 @@
-// package ast;
-
 import java.util.Vector;
+
 // use the tokens we get, construct the AST.
 
 // ASTNode is the base class for all AST nodes.
 abstract class ASTNode {
+    // Father node in the AST tree
+    protected ASTNode father;
+    
+    // Line and column information for error reporting
+    protected int line = -1;
+    protected int column = -1;
+    
     // Accept a visitor
     public abstract void accept(VisitorBase visitor);
+    
+    // Get father node
+    public ASTNode getFather() {
+        return father;
+    }
+    
+    // Set father node
+    public void setFather(ASTNode father) {
+        this.father = father;
+    }
+    
+    // Get line number
+    public int getLine() {
+        return line;
+    }
+    
+    // Set line number
+    public void setLine(int line) {
+        this.line = line;
+    }
+    
+    // Get column number
+    public int getColumn() {
+        return column;
+    }
+    
+    // Set column number
+    public void setColumn(int column) {
+        this.column = column;
+    }
 }
 
 // StmtNode represents a statement <statement>.
@@ -59,6 +95,10 @@ class FunctionNode extends ItemNode {
     BlockExprNode body; // can be null if it's a function declaration
     TypeExprNode returnType; // can be null
     SelfParaNode selfPara; // can be null
+    
+    // 存储该函数对应的符号
+    private Symbol symbol;
+    
     // set isConst to false initially
     FunctionNode() {
         isConst = false;
@@ -66,6 +106,14 @@ class FunctionNode extends ItemNode {
     
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public Symbol getSymbol() {
+        return symbol;
+    }
+    
+    public void setSymbol(Symbol symbol) {
+        this.symbol = symbol;
     }
 }
 
@@ -79,8 +127,19 @@ class SelfParaNode extends ASTNode {
     boolean isReference;
     TypeExprNode type; // can be null
     
+    // 存储该self参数对应的符号
+    private Symbol symbol;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public Symbol getSymbol() {
+        return symbol;
+    }
+    
+    public void setSymbol(Symbol symbol) {
+        this.symbol = symbol;
     }
 }
 
@@ -145,8 +204,30 @@ class StructNode extends ItemNode {
     IdentifierNode name;
     Vector<FieldNode> fields;
     
+    // 存储该结构体对应的符号
+    private Symbol symbol;
+    
+    // 存储该结构体的构造函数符号
+    private Symbol constructorSymbol;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public Symbol getSymbol() {
+        return symbol;
+    }
+    
+    public void setSymbol(Symbol symbol) {
+        this.symbol = symbol;
+    }
+    
+    public Symbol getConstructorSymbol() {
+        return constructorSymbol;
+    }
+    
+    public void setConstructorSymbol(Symbol constructorSymbol) {
+        this.constructorSymbol = constructorSymbol;
     }
 }
 
@@ -157,8 +238,19 @@ class FieldNode extends ItemNode {
     IdentifierNode name;
     TypeExprNode type;
     
+    // 存储该字段节点对应的符号
+    private Symbol symbol;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public Symbol getSymbol() {
+        return symbol;
+    }
+    
+    public void setSymbol(Symbol symbol) {
+        this.symbol = symbol;
     }
 }
 
@@ -170,8 +262,19 @@ class EnumNode extends ItemNode {
     IdentifierNode name;
     Vector<IdentifierNode> variants;
     
+    // 存储该枚举对应的符号
+    private Symbol symbol;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public Symbol getSymbol() {
+        return symbol;
+    }
+    
+    public void setSymbol(Symbol symbol) {
+        this.symbol = symbol;
     }
 }
 
@@ -183,8 +286,19 @@ class ConstItemNode extends ItemNode {
     TypeExprNode type;
     ExprNode value; // can be null
     
+    // 存储该常量对应的符号
+    private Symbol symbol;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public Symbol getSymbol() {
+        return symbol;
+    }
+    
+    public void setSymbol(Symbol symbol) {
+        this.symbol = symbol;
     }
 }
 
@@ -195,8 +309,19 @@ class TraitNode extends ItemNode {
     IdentifierNode name;
     Vector<AssoItemNode> items;
     
+    // 存储该trait对应的符号
+    private Symbol symbol;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public Symbol getSymbol() {
+        return symbol;
+    }
+    
+    public void setSymbol(Symbol symbol) {
+        this.symbol = symbol;
     }
 }
 
@@ -222,8 +347,28 @@ class ImplNode extends ItemNode {
     TypeExprNode typeName;
     Vector<AssoItemNode> items;
     
+    // 存储该impl节点对应的trait符号和type符号
+    private Symbol traitSymbol;
+    private Symbol typeSymbol;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public Symbol getTraitSymbol() {
+        return traitSymbol;
+    }
+    
+    public void setTraitSymbol(Symbol traitSymbol) {
+        this.traitSymbol = traitSymbol;
+    }
+    
+    public Symbol getTypeSymbol() {
+        return typeSymbol;
+    }
+    
+    public void setTypeSymbol(Symbol typeSymbol) {
+        this.typeSymbol = typeSymbol;
     }
 }
 
@@ -508,16 +653,38 @@ class StructExprNode extends ExprWithoutBlockNode {
     PathExprSegNode structName;
     Vector<FieldValNode> fieldValues; // can be null
     
+    // 存储该结构体表达式对应的符号
+    private Symbol symbol;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public Symbol getSymbol() {
+        return symbol;
+    }
+    
+    public void setSymbol(Symbol symbol) {
+        this.symbol = symbol;
     }
 }
 class FieldValNode extends ASTNode {
     IdentifierNode fieldName;
     ExprNode value;
     
+    // 存储该字段值节点对应的符号
+    private Symbol symbol;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public Symbol getSymbol() {
+        return symbol;
+    }
+    
+    public void setSymbol(Symbol symbol) {
+        this.symbol = symbol;
     }
 }
 
@@ -624,7 +791,7 @@ class ReturnExprNode extends ExprWithoutBlockNode {
 // UnderscoreExprNode represents an underscore expression <underscoreexpr>.
 // the grammer for underscore expression is:
 // <underscoreexpr> = _
-class UnderscoreExpr extends ExprWithoutBlockNode {
+class UnderscoreExprNode extends ExprWithoutBlockNode {
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
     }
@@ -635,6 +802,7 @@ class UnderscoreExpr extends ExprWithoutBlockNode {
 // <blockexpr> = { <statements>* }
 class BlockExprNode extends ExprWithBlockNode {
     Vector<StmtNode> statements;
+    ExprNode returnValue; // 表示块表达式的返回值
     
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
@@ -689,14 +857,6 @@ class IdentifierNode extends ASTNode {
     public void setSymbol(Symbol symbol) {
         this.symbol = symbol;
     }
-    
-    public Context getContext() {
-        return context;
-    }
-    
-    public void setContext(Context context) {
-        this.context = context;
-    }
 }
 
 
@@ -750,5 +910,294 @@ class TypeArrayExprNode extends TypeExprNode {
 class TypeUnitExprNode extends TypeExprNode {
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+}
+
+// BuiltinFunctionNode represents a builtin function or method.
+// This node is used for builtin functions like print, println, etc.
+// and builtin methods like to_string, as_str, len, etc.
+// It inherits from FunctionNode to maintain consistency with regular functions.
+class BuiltinFunctionNode extends FunctionNode {
+    
+    // Enum to distinguish between builtin functions and methods
+    public enum BuiltinType {
+        FUNCTION,
+        METHOD
+    }
+    
+    private BuiltinType builtinType;
+    
+    public BuiltinFunctionNode(String name) {
+        this(name, BuiltinType.FUNCTION);
+    }
+    
+    public BuiltinFunctionNode(String name, BuiltinType type) {
+        // Set the name using the parent class field
+        this.name = new IdentifierNode();
+        this.name.name = name;
+        
+        // Store the builtin type
+        this.builtinType = type;
+        
+        // Builtin functions are always const
+        this.isConst = true;
+        
+        // Initialize with default values
+        this.parameters = new Vector<>();
+        this.body = null;
+        this.returnType = null;
+        this.selfPara = null;
+        
+        // Configure the specific builtin function or method
+        configureBuiltinFunction(name, type);
+    }
+    
+    private void configureBuiltinFunction(String name, BuiltinType type) {
+        if (type == BuiltinType.FUNCTION) {
+            switch (name) {
+                case "print":
+                    configurePrint();
+                    break;
+                case "println":
+                    configurePrintln();
+                    break;
+                case "printInt":
+                    configurePrintInt();
+                    break;
+                case "printlnInt":
+                    configurePrintlnInt();
+                    break;
+                case "getString":
+                    configureGetString();
+                    break;
+                case "getInt":
+                    configureGetInt();
+                    break;
+                case "exit":
+                    configureExit();
+                    break;
+                default:
+                    // Unknown builtin function, keep default values
+                    break;
+            }
+        } else if (type == BuiltinType.METHOD) {
+            switch (name) {
+                case "to_string":
+                    configureToString();
+                    break;
+                case "as_str":
+                    configureAsStr();
+                    break;
+                case "as_mut_str":
+                    configureAsMutStr();
+                    break;
+                case "len":
+                    configureLen();
+                    break;
+                case "append":
+                    configureAppend();
+                    break;
+                default:
+                    // Unknown builtin method, keep default values
+                    break;
+            }
+        }
+    }
+    
+    private void configurePrint() {
+        // print(s: &str) -> ()
+        ParameterNode param = new ParameterNode();
+        param.name = new IdPatNode();
+        ((IdPatNode) param.name).name = new IdentifierNode();
+        ((IdPatNode) param.name).name.name = "s";
+        
+        param.type = new TypeRefExprNode();
+        ((TypeRefExprNode) param.type).isMutable = false;
+        ((TypeRefExprNode) param.type).innerType = new TypePathExprNode();
+        ((TypeRefExprNode) param.type).innerType = new TypePathExprNode();
+        ((TypePathExprNode) ((TypeRefExprNode) param.type).innerType).path = new PathExprSegNode();
+        ((TypePathExprNode) ((TypeRefExprNode) param.type).innerType).path.patternType = patternSeg_t.IDENT;
+        ((TypePathExprNode) ((TypeRefExprNode) param.type).innerType).path.name = new IdentifierNode();
+        ((TypePathExprNode) ((TypeRefExprNode) param.type).innerType).path.name.name = "str";
+        
+        this.parameters.add(param);
+        
+        // Return type is ()
+        this.returnType = new TypeUnitExprNode();
+    }
+    
+    private void configurePrintln() {
+        // println(s: &str) -> ()
+        configurePrint(); // Same as print
+    }
+    
+    private void configurePrintInt() {
+        // printInt(n: i32) -> ()
+        ParameterNode param = new ParameterNode();
+        param.name = new IdPatNode();
+        ((IdPatNode) param.name).name = new IdentifierNode();
+        ((IdPatNode) param.name).name.name = "n";
+        
+        param.type = new TypePathExprNode();
+        ((TypePathExprNode) param.type).path = new PathExprSegNode();
+        ((TypePathExprNode) param.type).path.patternType = patternSeg_t.IDENT;
+        ((TypePathExprNode) param.type).path.name = new IdentifierNode();
+        ((TypePathExprNode) param.type).path.name.name = "i32";
+        
+        this.parameters.add(param);
+        
+        // Return type is ()
+        this.returnType = new TypeUnitExprNode();
+    }
+    
+    private void configurePrintlnInt() {
+        // printlnInt(n: i32) -> ()
+        configurePrintInt(); // Same as printInt
+    }
+    
+    private void configureGetString() {
+        // getString() -> String
+        // No parameters
+        
+        // Return type is String
+        this.returnType = new TypePathExprNode();
+        ((TypePathExprNode) this.returnType).path = new PathExprSegNode();
+        ((TypePathExprNode) this.returnType).path.patternType = patternSeg_t.IDENT;
+        ((TypePathExprNode) this.returnType).path.name = new IdentifierNode();
+        ((TypePathExprNode) this.returnType).path.name.name = "String";
+    }
+    
+    private void configureGetInt() {
+        // getInt() -> i32
+        // No parameters
+        
+        // Return type is i32
+        this.returnType = new TypePathExprNode();
+        ((TypePathExprNode) this.returnType).path = new PathExprSegNode();
+        ((TypePathExprNode) this.returnType).path.patternType = patternSeg_t.IDENT;
+        ((TypePathExprNode) this.returnType).path.name = new IdentifierNode();
+        ((TypePathExprNode) this.returnType).path.name.name = "i32";
+    }
+    
+    private void configureExit() {
+        // exit(code: i32) -> ()
+        ParameterNode param = new ParameterNode();
+        param.name = new IdPatNode();
+        ((IdPatNode) param.name).name = new IdentifierNode();
+        ((IdPatNode) param.name).name.name = "code";
+        
+        param.type = new TypePathExprNode();
+        ((TypePathExprNode) param.type).path = new PathExprSegNode();
+        ((TypePathExprNode) param.type).path.patternType = patternSeg_t.IDENT;
+        ((TypePathExprNode) param.type).path.name = new IdentifierNode();
+        ((TypePathExprNode) param.type).path.name.name = "i32";
+        
+        this.parameters.add(param);
+        
+        // Return type is ()
+        this.returnType = new TypeUnitExprNode();
+    }
+    
+    public String getName() {
+        return name.name;
+    }
+    
+    public BuiltinType getBuiltinType() {
+        return builtinType;
+    }
+    
+    // Configuration methods for builtin methods
+    
+    public void configureToString() {
+        // to_string(&self) -> String
+        configureSelfParameter(false, false);
+        
+        // Return type is String
+        this.returnType = new TypePathExprNode();
+        ((TypePathExprNode) this.returnType).path = new PathExprSegNode();
+        ((TypePathExprNode) this.returnType).path.patternType = patternSeg_t.IDENT;
+        ((TypePathExprNode) this.returnType).path.name = new IdentifierNode();
+        ((TypePathExprNode) this.returnType).path.name.name = "String";
+    }
+    
+    public void configureAsStr() {
+        // as_str(&self) -> &str
+        configureSelfParameter(false, false);
+        
+        // Return type is &str
+        this.returnType = new TypeRefExprNode();
+        ((TypeRefExprNode) this.returnType).isMutable = false;
+        ((TypeRefExprNode) this.returnType).innerType = new TypePathExprNode();
+        ((TypePathExprNode) ((TypeRefExprNode) this.returnType).innerType).path = new PathExprSegNode();
+        ((TypePathExprNode) ((TypeRefExprNode) this.returnType).innerType).path.patternType = patternSeg_t.IDENT;
+        ((TypePathExprNode) ((TypeRefExprNode) this.returnType).innerType).path.name = new IdentifierNode();
+        ((TypePathExprNode) ((TypeRefExprNode) this.returnType).innerType).path.name.name = "str";
+    }
+    
+    public void configureAsMutStr() {
+        // as_mut_str(&mut self) -> &mut str
+        configureSelfParameter(true, false);
+        
+        // Return type is &mut str
+        this.returnType = new TypeRefExprNode();
+        ((TypeRefExprNode) this.returnType).isMutable = true;
+        ((TypeRefExprNode) this.returnType).innerType = new TypePathExprNode();
+        ((TypePathExprNode) ((TypeRefExprNode) this.returnType).innerType).path = new PathExprSegNode();
+        ((TypePathExprNode) ((TypeRefExprNode) this.returnType).innerType).path.patternType = patternSeg_t.IDENT;
+        ((TypePathExprNode) ((TypeRefExprNode) this.returnType).innerType).path.name = new IdentifierNode();
+        ((TypePathExprNode) ((TypeRefExprNode) this.returnType).innerType).path.name.name = "str";
+    }
+    
+    public void configureLen() {
+        // len(&self) -> usize
+        configureSelfParameter(false, false);
+        
+        // Return type is usize
+        this.returnType = new TypePathExprNode();
+        ((TypePathExprNode) this.returnType).path = new PathExprSegNode();
+        ((TypePathExprNode) this.returnType).path.patternType = patternSeg_t.IDENT;
+        ((TypePathExprNode) this.returnType).path.name = new IdentifierNode();
+        ((TypePathExprNode) this.returnType).path.name.name = "usize";
+    }
+    
+    public void configureAppend() {
+        // append(&mut self, s: &str) -> ()
+        configureSelfParameter(true, false);
+        
+        // Add second parameter: s: &str
+        ParameterNode param = new ParameterNode();
+        param.name = new IdPatNode();
+        ((IdPatNode) param.name).name = new IdentifierNode();
+        ((IdPatNode) param.name).name.name = "s";
+        
+        param.type = new TypeRefExprNode();
+        ((TypeRefExprNode) param.type).isMutable = false;
+        ((TypeRefExprNode) param.type).innerType = new TypePathExprNode();
+        ((TypePathExprNode) ((TypeRefExprNode) param.type).innerType).path = new PathExprSegNode();
+        ((TypePathExprNode) ((TypeRefExprNode) param.type).innerType).path.patternType = patternSeg_t.IDENT;
+        ((TypePathExprNode) ((TypeRefExprNode) param.type).innerType).path.name = new IdentifierNode();
+        ((TypePathExprNode) ((TypeRefExprNode) param.type).innerType).path.name.name = "str";
+        
+        this.parameters.add(param);
+        
+        // Return type is ()
+        this.returnType = new TypeUnitExprNode();
+    }
+    
+    // Helper method to configure self parameter for methods
+    private void configureSelfParameter(boolean isMutable, boolean isValue) {
+        this.selfPara = new SelfParaNode();
+        this.selfPara.isMutable = isMutable;
+        this.selfPara.isReference = !isValue;
+        
+        if (isValue) {
+            // self: Self
+            this.selfPara.type = new TypePathExprNode();
+            ((TypePathExprNode) this.selfPara.type).path = new PathExprSegNode();
+            ((TypePathExprNode) this.selfPara.type).path.patternType = patternSeg_t.SELF_TYPE;
+        } else {
+            // No explicit type needed for &self or &mut self
+            this.selfPara.type = null;
+        }
     }
 }
