@@ -141,7 +141,16 @@ public class SymbolDebugTest {
                 namespaceAnalyzer.initializeGlobalScope();
                 
                 // Perform two-phase analysis using the analyze method
-                namespaceAnalyzer.analyze(parser.getStatements());
+                // Convert Vector<ASTNode> to Vector<StmtNode> for analyze method
+                Vector<StmtNode> statements = new Vector<>();
+                for (ASTNode node : parser.getStatements()) {
+                    if (node instanceof StmtNode) {
+                        statements.add((StmtNode) node);
+                    } else {
+                        System.err.println("Warning: Skipping non-statement node: " + node.getClass().getSimpleName());
+                    }
+                }
+                namespaceAnalyzer.analyze(statements);
                 
                 System.out.println("Namespace semantic checking completed successfully.");
                 
@@ -186,9 +195,9 @@ public class SymbolDebugTest {
                 }
                 
                 // Check for constant evaluation errors
-                if (typeChecker.constantEvaluator.hasErrors()) {
+                if (typeChecker.hasConstantEvaluationErrors()) {
                     System.err.println("Constant evaluation errors:");
-                    typeChecker.constantEvaluator.getErrorCollector().printErrors();
+                    typeChecker.getConstantEvaluationErrorCollector().printErrors();
                     System.exit(1);
                 } else {
                     System.out.println("Constant evaluation completed successfully.");

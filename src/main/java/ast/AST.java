@@ -1,5 +1,4 @@
 import java.util.Vector;
-
 // use the tokens we get, construct the AST.
 
 // ASTNode is the base class for all AST nodes.
@@ -45,22 +44,15 @@ abstract class ASTNode {
     }
 }
 
+class StmtNode extends ASTNode {
+    public void accept(VisitorBase visitor) {
+        visitor.visit(this);
+    }
+}
+
 // ItemNode represents an item <item>.
 // There are several kinds of items: function, struct, enum, constant, trait, impl. so <item> = <function> | <structitem> | <enumitem> | <constitem> | <traititem> | <implitem>.
-class ItemNode extends ASTNode {
-    private Type type; // Type information for the statement
-
-    public Type getType() {
-        if (type == null) {
-            // throw semantic error
-            throw new SemanticError("Type information is not set for ItemNode at line " + line + ", column " + column);
-        }
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
+class ItemNode extends StmtNode {
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
     }
@@ -68,16 +60,7 @@ class ItemNode extends ASTNode {
 // LetStmtNode represents a let statement <letstmt>.
 // The grammer for let statement is:
 // <letstmt> = let <pattern> : <type> (= <expression>)? ;
-class LetStmtNode extends ASTNode {
-    private Type type; // Type information for the statement
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
+class LetStmtNode extends StmtNode {
     PatternNode name;
     TypeExprNode type;
     ExprNode value; // can be null
@@ -90,16 +73,7 @@ class LetStmtNode extends ASTNode {
 // ExprStmtNode represents an expression statement <exprstmt>.
 // The grammer for expression statement is:
 // <exprstmt> = <exprwithblock> ;? | <exprwithoutblock> ;
-class ExprStmtNode extends ASTNode {
-    private Type type; // Type information for the statement
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
+class ExprStmtNode extends StmtNode {
     ExprNode expr;
     boolean hasSemicolon; // 记录是否有分号
     
@@ -419,6 +393,9 @@ class ExprNode extends ASTNode {
     }
     
     public Type getType() {
+        if (type == null) {
+            throw new RuntimeException("Type of expression node is not set yet.");
+        }
         return type;
     }
     
@@ -825,7 +802,7 @@ class UnderscoreExprNode extends ExprWithoutBlockNode {
 // the grammer for block expression is:
 // <blockexpr> = { <statements>* }
 class BlockExprNode extends ExprWithBlockNode {
-    Vector<ASTNode> statements;
+    Vector<StmtNode> statements;
     ExprNode returnValue; // 表示块表达式的返回值
     
     public void accept(VisitorBase visitor) {
@@ -1017,9 +994,6 @@ class BuiltinFunctionNode extends FunctionNode {
                     break;
                 case "len":
                     configureLen();
-                    break;
-                case "append":
-                    configureAppend();
                     break;
                 default:
                     // Unknown builtin method, keep default values

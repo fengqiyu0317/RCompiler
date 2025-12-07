@@ -73,9 +73,9 @@ Node: PathExprSeg(AVLTree) | Type: PathExprSegNode           | Symbol: Symbol{na
 Node: AVLTree              | Type: IdentifierNode            | Symbol: Symbol{name='AVLTree', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
 Node: FieldVal(nodes)      | Type: FieldValNode              | Symbol: Symbol{name='nodes', kind=FIELD, scopeLevel=0}
 Node: nodes                | Type: IdentifierNode            | Symbol: Symbol{name='nodes', kind=FIELD, scopeLevel=0}
-Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='AVLNode', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: PathExprSeg(AVLNode) | Type: PathExprSegNode           | Symbol: Symbol{name='AVLNode', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: AVLNode              | Type: IdentifierNode            | Symbol: Symbol{name='AVLNode', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='AVLNode', kind=STRUCT, scopeLevel=0}
+Node: PathExprSeg(AVLNode) | Type: PathExprSegNode           | Symbol: Symbol{name='AVLNode', kind=STRUCT, scopeLevel=0}
+Node: AVLNode              | Type: IdentifierNode            | Symbol: Symbol{name='AVLNode', kind=STRUCT, scopeLevel=0}
 Node: PathExprSeg(new)     | Type: PathExprSegNode           | Symbol: null
 Node: new                  | Type: IdentifierNode            | Symbol: null
 Node: FieldVal(root)       | Type: FieldValNode              | Symbol: Symbol{name='root', kind=FIELD, scopeLevel=0}
@@ -107,9 +107,9 @@ Node: PathExprSeg(index)   | Type: PathExprSegNode           | Symbol: Symbol{na
 Node: index                | Type: IdentifierNode            | Symbol: Symbol{name='index', kind=LOCAL_VARIABLE, scopeLevel=3}
 Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
 Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
-Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='AVLNode', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: PathExprSeg(AVLNode) | Type: PathExprSegNode           | Symbol: Symbol{name='AVLNode', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: AVLNode              | Type: IdentifierNode            | Symbol: Symbol{name='AVLNode', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='AVLNode', kind=STRUCT, scopeLevel=0}
+Node: PathExprSeg(AVLNode) | Type: PathExprSegNode           | Symbol: Symbol{name='AVLNode', kind=STRUCT, scopeLevel=0}
+Node: AVLNode              | Type: IdentifierNode            | Symbol: Symbol{name='AVLNode', kind=STRUCT, scopeLevel=0}
 Node: PathExprSeg(new)     | Type: PathExprSegNode           | Symbol: null
 Node: new                  | Type: IdentifierNode            | Symbol: null
 Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='value', kind=PARAMETER, scopeLevel=2}
@@ -853,9 +853,9 @@ Node: main                 | Type: IdentifierNode            | Symbol: Symbol{na
 Node: avl                  | Type: IdentifierNode            | Symbol: Symbol{name='avl', kind=LOCAL_VARIABLE, scopeLevel=2}
 Node: PathExprSeg(AVLTree) | Type: PathExprSegNode           | Symbol: Symbol{name='AVLTree', kind=STRUCT, scopeLevel=0}
 Node: AVLTree              | Type: IdentifierNode            | Symbol: Symbol{name='AVLTree', kind=STRUCT, scopeLevel=0}
-Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='AVLTree', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: PathExprSeg(AVLTree) | Type: PathExprSegNode           | Symbol: Symbol{name='AVLTree', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: AVLTree              | Type: IdentifierNode            | Symbol: Symbol{name='AVLTree', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='AVLTree', kind=STRUCT, scopeLevel=0}
+Node: PathExprSeg(AVLTree) | Type: PathExprSegNode           | Symbol: Symbol{name='AVLTree', kind=STRUCT, scopeLevel=0}
+Node: AVLTree              | Type: IdentifierNode            | Symbol: Symbol{name='AVLTree', kind=STRUCT, scopeLevel=0}
 Node: PathExprSeg(new)     | Type: PathExprSegNode           | Symbol: null
 Node: new                  | Type: IdentifierNode            | Symbol: null
 Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
@@ -967,16 +967,5 @@ Node type distribution:
   PathExprNode: 189
   SelfParaNode: 13
   StructNode: 2
-Type checking errors:
-  If branches and else branch have incompatible types: () and !
-  If branches and else branch have incompatible types: () and !
-  Expression type is null for IfExprNode at in function 'insert_recursive' (Self: &mut AVLTree) 
-  If branches and else branch have incompatible types: () and !
-  If branches and else branch have incompatible types: () and !
-  Expression type is null for IfExprNode at in function 'insert_recursive' (Self: &mut AVLTree) 
-  If branches and else branch have incompatible types: () and !
-  If branches and else branch have incompatible types: () and !
-  Expression type is null for IfExprNode at in function 'insert_recursive' (Self: &mut AVLTree) 
-  If branches and else branch have incompatible types: () and !
-  If branches and else branch have incompatible types: () and !
-  Expression type is null for IfExprNode at in function 'insert_recursive' (Self: &mut AVLTree) 
+Type checking completed successfully.
+Constant evaluation completed successfully.

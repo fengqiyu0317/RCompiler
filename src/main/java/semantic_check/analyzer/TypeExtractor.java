@@ -11,6 +11,7 @@ public class TypeExtractor {
     private final boolean throwOnError;
     private final ConstantEvaluator constantEvaluator;
     private VisitorBase expressionTypeChecker;
+    private TypeChecker typeChecker;
     
     public TypeExtractor(TypeErrorCollector errorCollector, boolean throwOnError, ConstantEvaluator constantEvaluator) {
         this.errorCollector = errorCollector;
@@ -21,6 +22,10 @@ public class TypeExtractor {
     
     public void setExpressionTypeChecker(VisitorBase expressionTypeChecker) {
         this.expressionTypeChecker = expressionTypeChecker;
+    }
+    
+    public void setTypeChecker(TypeChecker typeChecker) {
+        this.typeChecker = typeChecker;
     }
     
     /**
@@ -52,7 +57,7 @@ public class TypeExtractor {
                     break;
                     
                 case ENUM_VARIANT_CONSTRUCTOR:
-                    resultType = extractEnumConstructorType(symbol, declaration);
+                    resultType = extractEnumType(symbol, declaration);
                     break;
                     
                 case CONSTANT:
@@ -355,10 +360,29 @@ public class TypeExtractor {
      * Extract enum type
      */
     private Type extractEnumType(Symbol symbol, ASTNode declaration) {
+        while (declaration instanceof IdentifierNode) {
+            // The declaration is the variant identifier, we need to find the parent EnumNode
+            ASTNode parent = declaration.getFather();
+            if (parent instanceof EnumNode) {
+                declaration = parent;
+                break;
+            }
+            declaration = parent;
+        }
         if (declaration instanceof EnumNode) {
             EnumNode enumDeclNode = (EnumNode) declaration;
             // Create enum type with variants
             EnumType enumType = new EnumType(symbol.getName(), symbol);
+            
+            // Add all variants to the enum type
+            if (enumDeclNode.variants != null) {
+                for (IdentifierNode variantNode : enumDeclNode.variants) {
+                    // For now, we're adding variants without any associated types
+                    // In the future, if variants can have associated data, this would need to be extended
+                    enumType.addVariant(variantNode.name);
+                }
+            }
+            
             setSymbolType(symbol, enumType);
             return enumType;
         }
@@ -373,6 +397,40 @@ public class TypeExtractor {
             TraitNode traitNode = (TraitNode) declaration;
             // Create trait type
             TraitType traitType = new TraitType(symbol.getName(), symbol);
+            
+            // Add all methods and constants to the trait type
+            if (traitNode.items != null) {
+                for (AssoItemNode itemNode : traitNode.items) {
+                    if (itemNode.function != null) {
+                        // Extract function type for the method
+                        FunctionNode funcNode = itemNode.function;
+                        Symbol funcSymbol = funcNode.getSymbol();
+                        
+                        if (funcSymbol != null) {
+                            // Extract the function type
+                            Type funcType = extractFunctionType(funcSymbol, funcNode);
+                            if (funcType instanceof FunctionType) {
+                                // Add the method to the trait
+                                traitType.addMethod(funcNode.name.name, (FunctionType) funcType);
+                            }
+                        }
+                    } else if (itemNode.constant != null) {
+                        // Extract constant type
+                        ConstItemNode constNode = itemNode.constant;
+                        Symbol constSymbol = constNode.getSymbol();
+                        
+                        if (constSymbol != null) {
+                            // Extract the constant type
+                            Type constType = extractConstantType(constSymbol, constNode);
+                            if (constType != null) {
+                                // Add the constant to the trait
+                                traitType.addConstant(constNode.name.name, constType);
+                            }
+                        }
+                    }
+                }
+            }
+            
             setSymbolType(symbol, traitType);
             return traitType;
         }
@@ -397,6 +455,8 @@ public class TypeExtractor {
                 return PrimitiveType.getBoolType();
             case "str":
                 return PrimitiveType.getStrType();
+            case "String":
+                return PrimitiveType.getStringType();
             case "char":
                 return PrimitiveType.getCharType();
             default:
@@ -408,18 +468,23 @@ public class TypeExtractor {
      * Extract Self type
      */
     private Type extractSelfType(Symbol symbol) {
-        // Self type: use current Self type from context
-        // This will be handled by the TypeChecker class
-        throw new RuntimeException("Self type extraction requires context from TypeChecker");
+        // shouldn't be called directly, Self type is context-dependent
+        throw new RuntimeException("Self type extraction should be context-dependent");
     }
     
     /**
      * Extract Self constructor type
      */
     private Type extractSelfConstructorType(Symbol symbol) {
-        // Self constructor: returns Self type
-        // This will be handled by the TypeChecker class
-        throw new RuntimeException("Self constructor type extraction requires context from TypeChecker");
+        if (typeChecker == null) {
+            throw new RuntimeException("TypeChecker not set in TypeExtractor");
+        }
+        Type selfType = typeChecker.getCurrentSelfType();
+        if (selfType == null) {
+            throw new RuntimeException("No current Self type available");
+        }
+        // Self constructor returns the Self type
+        return selfType;
     }
     
     /**
@@ -458,6 +523,7 @@ public class TypeExtractor {
                 case "isize": return PrimitiveType.getIsizeType();
                 case "bool": return PrimitiveType.getBoolType();
                 case "str": return PrimitiveType.getStrType();
+                case "String": return PrimitiveType.getStringType();
                 case "char": return PrimitiveType.getCharType();
             }
             
@@ -469,9 +535,6 @@ public class TypeExtractor {
                     "Unresolved type: " + typeName
                 );
             }
-            
-            // Ensure that symbol is set back to the path
-            pathExpr.path.setSymbol(symbol);
             
             // Extract type from symbol
             return extractTypeFromSymbol(symbol);
@@ -530,8 +593,25 @@ public class TypeExtractor {
             
             if (arrayExpr.size != null) {
                 // First, type-check the size expression
-                // This will be handled by the TypeChecker class
-                // For now, we'll just evaluate it using the constant evaluator
+                if (typeChecker != null && expressionTypeChecker != null) {
+                    // Use the expression type checker to properly type-check the size expression
+                    arrayExpr.size.accept(expressionTypeChecker);
+                    
+                    // Verify that the size expression has a valid numeric type
+                    Type sizeType = arrayExpr.size.getType();
+                    if (sizeType == null) {
+                        throw new RuntimeException(
+                            "Array size expression type is null"
+                        );
+                    }
+                    
+                    // Check if the type is a valid integer type for array size
+                    if (!isIntegerType(sizeType)) {
+                        throw new RuntimeException(
+                            "Array size must be an integer type, got: " + sizeType
+                        );
+                    }
+                }
                 
                 // Now evaluate the size expression using the constant evaluator
                 ConstantValue sizeValue = constantEvaluator.evaluate(arrayExpr.size);
@@ -568,5 +648,25 @@ public class TypeExtractor {
                 return null;
             }
         }
+    }
+    
+    /**
+     * Check if a type is a valid integer type for array size
+     */
+    private boolean isIntegerType(Type type) {
+        if (type instanceof PrimitiveType) {
+            PrimitiveType primType = (PrimitiveType) type;
+            switch (primType.getKind()) {
+                case I32:
+                case U32:
+                case USIZE:
+                case ISIZE:
+                case INT:  // Include undetermined integer type for type inference
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        return false;
     }
 }

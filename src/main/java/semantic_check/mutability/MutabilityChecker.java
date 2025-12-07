@@ -350,8 +350,7 @@ public class MutabilityChecker extends VisitorBase {
             }
         }
         
-        return expr instanceof PathExprNode ||
-               expr instanceof FieldExprNode ||
+        return expr instanceof FieldExprNode ||
                expr instanceof IndexExprNode ||
                expr instanceof DerefExprNode;
     }

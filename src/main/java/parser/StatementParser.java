@@ -29,7 +29,7 @@ public class StatementParser extends BaseParser {
     
     // Grammar: <statement> ::= <item> | <letstmt> | <exprstmt> | ;
     // Main statement parsing method
-    public ASTNode parseStatement() throws ParserException {
+    public StmtNode parseStatement() throws ParserException {
         try {
             // Handle empty statement
             if (tokenStream.matches(";")) {

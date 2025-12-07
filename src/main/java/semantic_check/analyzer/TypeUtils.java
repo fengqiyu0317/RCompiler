@@ -59,7 +59,8 @@ public class TypeUtils {
     public static boolean isStringOrStrType(Type type) {
         if (type instanceof PrimitiveType) {
             PrimitiveType.PrimitiveKind kind = ((PrimitiveType)type).getKind();
-            return kind == PrimitiveType.PrimitiveKind.STR;
+            return kind == PrimitiveType.PrimitiveKind.STR ||
+                   kind == PrimitiveType.PrimitiveKind.STRING;
         }
         return false;
     }
@@ -78,7 +79,8 @@ public class TypeUtils {
         if (type instanceof PrimitiveType) {
             PrimitiveType.PrimitiveKind kind = ((PrimitiveType)type).getKind();
             return kind == PrimitiveType.PrimitiveKind.U32 ||
-                   kind == PrimitiveType.PrimitiveKind.USIZE;
+                   kind == PrimitiveType.PrimitiveKind.USIZE ||
+                     kind == PrimitiveType.PrimitiveKind.INT;
         }
         return false;
     }
@@ -228,5 +230,12 @@ public class TypeUtils {
      */
     public static boolean isShiftCompoundAssignment(oper_t operator) {
         return operator == oper_t.SHL_ASSIGN || operator == oper_t.SHR_ASSIGN;
+    }
+
+    public static boolean isRelationalOperator(oper_t operator) {
+        return operator == oper_t.LT ||
+               operator == oper_t.LTE ||
+               operator == oper_t.GT ||
+               operator == oper_t.GTE;
     }
 }

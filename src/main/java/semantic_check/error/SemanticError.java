@@ -1,6 +1,6 @@
 // Semantic error class
 
-public class SemanticError {
+public class SemanticError extends RuntimeException {
     private final ErrorType type;
     private final String message;
     private final ASTNode node;

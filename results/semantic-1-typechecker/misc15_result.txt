@@ -57,9 +57,9 @@ Node: PathExprSeg(HashTable) | Type: PathExprSegNode           | Symbol: Symbol{
 Node: HashTable            | Type: IdentifierNode            | Symbol: Symbol{name='HashTable', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
 Node: FieldVal(entries)    | Type: FieldValNode              | Symbol: Symbol{name='entries', kind=FIELD, scopeLevel=0}
 Node: entries              | Type: IdentifierNode            | Symbol: Symbol{name='entries', kind=FIELD, scopeLevel=0}
-Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='HashEntry', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: PathExprSeg(HashEntry) | Type: PathExprSegNode           | Symbol: Symbol{name='HashEntry', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: HashEntry            | Type: IdentifierNode            | Symbol: Symbol{name='HashEntry', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='HashEntry', kind=STRUCT, scopeLevel=0}
+Node: PathExprSeg(HashEntry) | Type: PathExprSegNode           | Symbol: Symbol{name='HashEntry', kind=STRUCT, scopeLevel=0}
+Node: HashEntry            | Type: IdentifierNode            | Symbol: Symbol{name='HashEntry', kind=STRUCT, scopeLevel=0}
 Node: PathExprSeg(new)     | Type: PathExprSegNode           | Symbol: null
 Node: new                  | Type: IdentifierNode            | Symbol: null
 Node: FieldVal(size)       | Type: FieldValNode              | Symbol: Symbol{name='size', kind=FIELD, scopeLevel=0}
@@ -275,9 +275,9 @@ Node: main                 | Type: IdentifierNode            | Symbol: Symbol{na
 Node: hash_table           | Type: IdentifierNode            | Symbol: Symbol{name='hash_table', kind=LOCAL_VARIABLE, scopeLevel=2}
 Node: PathExprSeg(HashTable) | Type: PathExprSegNode           | Symbol: Symbol{name='HashTable', kind=STRUCT, scopeLevel=0}
 Node: HashTable            | Type: IdentifierNode            | Symbol: Symbol{name='HashTable', kind=STRUCT, scopeLevel=0}
-Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='HashTable', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: PathExprSeg(HashTable) | Type: PathExprSegNode           | Symbol: Symbol{name='HashTable', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: HashTable            | Type: IdentifierNode            | Symbol: Symbol{name='HashTable', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='HashTable', kind=STRUCT, scopeLevel=0}
+Node: PathExprSeg(HashTable) | Type: PathExprSegNode           | Symbol: Symbol{name='HashTable', kind=STRUCT, scopeLevel=0}
+Node: HashTable            | Type: IdentifierNode            | Symbol: Symbol{name='HashTable', kind=STRUCT, scopeLevel=0}
 Node: PathExprSeg(new)     | Type: PathExprSegNode           | Symbol: null
 Node: new                  | Type: IdentifierNode            | Symbol: null
 Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
@@ -376,6 +376,5 @@ Node type distribution:
   PathExprNode: 65
   SelfParaNode: 3
   StructNode: 2
-Type checking errors:
-  Function body type mismatch: expected bool, got AmbiguousBlock(! | ()) in function 'insert' at in function 'insert' (Self: &mut HashTable) 
-  Function body type mismatch: expected i32, got AmbiguousBlock(! | ()) in function 'get' at in function 'get' (Self: &HashTable) 
+Type checking completed successfully.
+Constant evaluation completed successfully.

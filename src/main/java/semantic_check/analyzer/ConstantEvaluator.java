@@ -112,6 +112,8 @@ public class ConstantEvaluator extends VisitorBase {
                 value = new ConstantValue(node.value_string, PrimitiveType.getCharType());
                 break;
             case STRING:
+                value = new ConstantValue(node.value_string, PrimitiveType.getStringType());
+                break;
             case CSTRING:
                 value = new ConstantValue(node.value_string, PrimitiveType.getStrType());
                 break;
@@ -442,6 +444,7 @@ public class ConstantEvaluator extends VisitorBase {
                 case "isize": return PrimitiveType.getIsizeType();
                 case "bool": return PrimitiveType.getBoolType();
                 case "str": return PrimitiveType.getStrType();
+                case "String": return PrimitiveType.getStringType();
                 case "char": return PrimitiveType.getCharType();
             }
         }

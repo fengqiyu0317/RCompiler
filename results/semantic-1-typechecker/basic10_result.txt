@@ -10,9 +10,9 @@ Node: main                 | Type: IdentifierNode            | Symbol: Symbol{na
 Node: bag                  | Type: IdentifierNode            | Symbol: Symbol{name='bag', kind=LOCAL_VARIABLE, scopeLevel=2}
 Node: PathExprSeg(Bag)     | Type: PathExprSegNode           | Symbol: Symbol{name='Bag', kind=STRUCT, scopeLevel=0}
 Node: Bag                  | Type: IdentifierNode            | Symbol: Symbol{name='Bag', kind=STRUCT, scopeLevel=0}
-Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='Bag', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: PathExprSeg(Bag)     | Type: PathExprSegNode           | Symbol: Symbol{name='Bag', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: Bag                  | Type: IdentifierNode            | Symbol: Symbol{name='Bag', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='Bag', kind=STRUCT, scopeLevel=0}
+Node: PathExprSeg(Bag)     | Type: PathExprSegNode           | Symbol: Symbol{name='Bag', kind=STRUCT, scopeLevel=0}
+Node: Bag                  | Type: IdentifierNode            | Symbol: Symbol{name='Bag', kind=STRUCT, scopeLevel=0}
 Node: PathExprSeg(new)     | Type: PathExprSegNode           | Symbol: null
 Node: new                  | Type: IdentifierNode            | Symbol: null
 Node: n                    | Type: IdentifierNode            | Symbol: Symbol{name='n', kind=LOCAL_VARIABLE, scopeLevel=2}
@@ -167,10 +167,7 @@ Node type distribution:
   StructNode: 1
 Type checking errors:
   Type path expression is missing path or name
-  Expression type is null for CallExprNode('Bag') at in function 'main' 
-  Expression type is null for CallExprNode('Bag') at in function 'main' 
-  Unable to determine receiver type for method
-  Unable to determine receiver type for method
-  Unable to determine receiver type for method
+  Type of expression node is not set yet.
   Type path expression is missing path or name
-  Cannot find common type because second type is null at in function 'new' (Self: Bag) 
+  Function body type mismatch: expected null, got Bag in function 'new'
+  Missing implementation of trait method 'size' for type 'Bag' from trait 'Storage'

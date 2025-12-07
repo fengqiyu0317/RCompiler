@@ -21,8 +21,7 @@ public class BuiltinMethodResolver {
             isValidMethod = methodName.equals("to_string") ||
                          methodName.equals("as_str") ||
                          methodName.equals("as_mut_str") ||
-                         methodName.equals("len") ||
-                         methodName.equals("append");
+                         methodName.equals("len");
         }
         // Check array methods
         else if (TypeUtils.isArrayType(receiverType)) {
@@ -53,9 +52,6 @@ public class BuiltinMethodResolver {
                 break;
             case "len":
                 builtinNode.configureLen();
-                break;
-            case "append":
-                builtinNode.configureAppend();
                 break;
             default:
                 return null; // Unknown builtin method
@@ -93,7 +89,7 @@ public class BuiltinMethodResolver {
      */
     public static String[] getAllBuiltinMethods(Type receiverType) {
         if (TypeUtils.isStringOrStrType(receiverType)) {
-            return new String[]{"to_string", "as_str", "as_mut_str", "len", "append"};
+            return new String[]{"to_string", "as_str", "as_mut_str", "len"};
         } else if (TypeUtils.isArrayType(receiverType)) {
             return new String[]{"len"};
         } else if (TypeUtils.isU32OrUsizeType(receiverType)) {

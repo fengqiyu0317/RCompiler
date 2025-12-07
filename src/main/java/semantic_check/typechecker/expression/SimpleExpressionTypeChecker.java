@@ -2,7 +2,14 @@
  * 简单表达式类型检查器
  * 处理字面量、路径表达式、分组表达式、下划线表达式等
  */
-public class SimpleExpressionTypeChecker extends BaseExpressionTypeChecker {
+public class SimpleExpressionTypeChecker extends VisitorBase {
+    protected final TypeErrorCollector errorCollector;
+    protected final boolean throwOnError;
+    protected final TypeExtractor typeExtractor;
+    protected final ConstantEvaluator constantEvaluator;
+    protected final ExpressionTypeContext context;
+    protected final TypeChecker mainExpressionChecker;
+    protected MutabilityChecker mutabilityChecker;
     
     public SimpleExpressionTypeChecker(
         TypeErrorCollector errorCollector,
@@ -10,9 +17,199 @@ public class SimpleExpressionTypeChecker extends BaseExpressionTypeChecker {
         TypeExtractor typeExtractor,
         ConstantEvaluator constantEvaluator,
         ExpressionTypeContext context,
-        TypeCheckerRefactored mainExpressionChecker
+        TypeChecker mainExpressionChecker
     ) {
-        super(errorCollector, throwOnError, typeExtractor, constantEvaluator, context, mainExpressionChecker);
+        this.errorCollector = errorCollector;
+        this.throwOnError = throwOnError;
+        this.typeExtractor = typeExtractor;
+        this.constantEvaluator = constantEvaluator;
+        this.context = context;
+        this.mainExpressionChecker = mainExpressionChecker;
+        this.mutabilityChecker = new MutabilityChecker(errorCollector, throwOnError);
+    }
+    
+    /**
+     * Get expression node's type with null check and error reporting
+     */
+    protected Type getType(ExprNode expr) {
+        if (expr == null) {
+            throw new RuntimeException(
+                "Cannot get type from null expression at " + getCurrentContext()
+            );
+        }
+        Type type = expr.getType();
+        if (type == null) {
+            throw new RuntimeException(
+                "Expression type is null for " + getNodeDescription(expr) + " at " + getCurrentContext()
+            );
+        }
+        return type;
+    }
+    
+    /**
+     * Set expression node's type
+     */
+    protected void setType(ExprNode expr, Type type) {
+        expr.setType(type);
+    }
+    
+    /**
+     * 确保符号的类型已设置（如果是PathExprNode）
+     */
+    protected void ensureSymbolType(ExprNode expr) {
+        if (expr instanceof PathExprNode) {
+            PathExprNode pathExpr = (PathExprNode) expr;
+            if (pathExpr.getSymbol() != null && pathExpr.getSymbol().getType() == null) {
+                typeExtractor.extractTypeFromSymbol(pathExpr.getSymbol());
+            }
+        }
+    }
+    
+    /**
+     * Get node description for error reporting
+     */
+    protected String getNodeDescription(ASTNode node) {
+        if (node == null) {
+            return "null node";
+        }
+        
+        String className = node.getClass().getSimpleName();
+        
+        // 尝试根据节点类型获取更具体的信息
+        if (node instanceof PathExprNode) {
+            PathExprNode pathExpr = (PathExprNode) node;
+            String name = pathExpr.LSeg != null && pathExpr.LSeg.name != null ?
+                         pathExpr.LSeg.name.name : "unknown";
+            return "PathExprNode('" + name + "')";
+        } else if (node instanceof LiteralExprNode) {
+            LiteralExprNode literal = (LiteralExprNode) node;
+            String valueStr = "";
+            switch (literal.literalType) {
+                case STRING:
+                case CSTRING:
+                case CHAR:
+                    valueStr = literal.value_string;
+                    break;
+                case I32:
+                case U32:
+                case USIZE:
+                case ISIZE:
+                case INT:
+                    valueStr = String.valueOf(literal.value_long);
+                    break;
+                case BOOL:
+                    valueStr = String.valueOf(literal.value_bool);
+                    break;
+                default:
+                    valueStr = "unknown";
+                    break;
+            }
+            return "LiteralExprNode(" + valueStr + ")";
+        } else if (node instanceof ArithExprNode) {
+            ArithExprNode arith = (ArithExprNode) node;
+            return "ArithExprNode(" + arith.operator + ")";
+        } else if (node instanceof CompExprNode) {
+            CompExprNode comp = (CompExprNode) node;
+            return "CompExprNode(" + comp.operator + ")";
+        } else if (node instanceof CallExprNode) {
+            CallExprNode call = (CallExprNode) node;
+            String funcName = call.function instanceof PathExprNode ?
+                           ((PathExprNode)call.function).LSeg.name.name : "unknown";
+            return "CallExprNode('" + funcName + "')";
+        } else if (node instanceof IdentifierNode) {
+            IdentifierNode id = (IdentifierNode) node;
+            return "IdentifierNode('" + id.name + "')";
+        }
+        
+        return className;
+    }
+    
+    /**
+     * Get current context for error reporting
+     */
+    protected String getCurrentContext() {
+        StringBuilder contextDescription = new StringBuilder(); // Renamed variable to avoid conflict with the field
+
+        // 添加函数上下文（如果可用）
+        if (this.context.getCurrentFunction() != null) { // Fixed: Use `this.context` to refer to the field
+            FunctionNode funcNode = this.context.getCurrentFunction();
+            if (funcNode.name != null) {
+                contextDescription.append("in function '").append(funcNode.name.name).append("' ");
+            }
+        }
+
+        // 添加当前Self类型（如果可用）
+        if (this.context.getCurrentSelfType() != null) { // Fixed: Use `this.context` to refer to the field
+            contextDescription.append("(Self: ").append(this.context.getCurrentSelfType()).append(") ");
+        }
+
+        return contextDescription.toString();
+    }
+    
+    /**
+     * Report error
+     */
+    protected void reportError(String message) {
+        RuntimeException error = new RuntimeException(message);
+        if (throwOnError) {
+            throw error;
+        } else {
+            errorCollector.addError(error.getMessage());
+        }
+    }
+    
+    /**
+     * Handle exception
+     */
+    protected void handleError(RuntimeException e) {
+        if (throwOnError) {
+            throw e;
+        } else {
+            errorCollector.addError(e.getMessage());
+        }
+    }
+    
+    /**
+     * Check if expression is assignable (left value)
+     */
+    protected boolean isAssignable(ExprNode expr) {
+        // 在Rust中，这四种类型的表达式可以是左值：
+        // 1. PathExprNode - 路径表达式（变量、字段等）
+        // 2. FieldExprNode - 字段访问表达式
+        // 3. IndexExprNode - 索引访问表达式
+        // 4. DerefExprNode - 解引用表达式
+        return expr instanceof PathExprNode ||
+               expr instanceof FieldExprNode ||
+               expr instanceof IndexExprNode ||
+               expr instanceof DerefExprNode;
+    }
+    
+    /**
+     * 检查可变访问
+     */
+    protected void checkMutableAccess(ExprNode expr) {
+        if (mutabilityChecker != null) {
+            mutabilityChecker.checkMutability(expr);
+        }
+    }
+    
+    /**
+     * 检查可变赋值
+     */
+    protected void checkMutableAssignment(ExprNode target, ExprNode value) {
+        if (mutabilityChecker != null) {
+            mutabilityChecker.checkMutability(target);
+            if (value != null) {
+                mutabilityChecker.checkMutability(value);
+            }
+        }
+    }
+    
+    /**
+     * 设置mutability检查器
+     */
+    public void setMutabilityChecker(MutabilityChecker mutabilityChecker) {
+        this.mutabilityChecker = mutabilityChecker;
     }
     
     /**
@@ -64,7 +261,7 @@ public class SimpleExpressionTypeChecker extends BaseExpressionTypeChecker {
                 literalType = PrimitiveType.getCharType();
                 break;
             case STRING:
-                literalType = PrimitiveType.getStrType();
+                literalType = PrimitiveType.getStringType();
                 break;
             case CSTRING:
                 literalType = PrimitiveType.getStrType(); // 暂时视为字符串
@@ -96,9 +293,6 @@ public class SimpleExpressionTypeChecker extends BaseExpressionTypeChecker {
             // 从符号提取类型
             Type type = typeExtractor.extractTypeFromSymbol(symbol);
             setType(node, type);
-            
-            // 确保符号设置回节点
-            node.setSymbol(symbol);
         
             // 处理RSeg（如果存在）
             if (node.RSeg != null) {
@@ -109,22 +303,16 @@ public class SimpleExpressionTypeChecker extends BaseExpressionTypeChecker {
                     // 这通常在访问字段、方法或关联项时发生
                     if (node.getSymbol() != null) {
                         Symbol lSegSymbol = node.getSymbol();
-                        // 确保LSeg符号设置回LSeg
-                        if (node.LSeg != null) {
-                            node.LSeg.setSymbol(lSegSymbol);
-                        }
                         Type lSegType = typeExtractor.extractTypeFromSymbol(lSegSymbol);
                         
                         // 如果LSeg是结构体构造函数类型，RSeg可能是字段或实现的函数
-                        if (lSegType instanceof StructConstructorType) {
-                            StructConstructorType structConstructorType = (StructConstructorType) lSegType;
-                            StructType structType = structConstructorType.getStructType();
+                        if (lSegType instanceof StructType) {
+                            StructType structType = (StructType) lSegType;
                             handleStructRSeg(node, structType);
                         }
                         // 如果LSeg是枚举构造函数类型，RSeg可能是变体或impl项
-                        else if (lSegType instanceof EnumConstructorType) {
-                            EnumConstructorType enumConstructorType = (EnumConstructorType) lSegType;
-                            EnumType enumType = enumConstructorType.getEnumType();
+                        else if (lSegType instanceof EnumType) {
+                            EnumType enumType = (EnumType) lSegType;
                             handleEnumRSeg(node, enumType);
                         }
                         // 如果LSeg是trait类型，RSeg可能是关联项
@@ -204,12 +392,34 @@ public class SimpleExpressionTypeChecker extends BaseExpressionTypeChecker {
         
         // 首先检查它是否是变体
         if (enumType.hasVariant(rSegName)) {
-            // 为变体创建符号
-            Symbol variantSymbol = new Symbol(rSegName, SymbolKind.ENUM_VARIANT_CONSTRUCTOR, null, 0, false);
-            node.RSeg.setSymbol(variantSymbol);
-            // 变体的类型是包装枚举类型的EnumConstructorType
-            EnumConstructorType enumConstructorType = new EnumConstructorType(enumType);
-            variantSymbol.setType(enumConstructorType);
+            // 改进：通过LSeg符号找到枚举AST节点，然后找到对应的变体符号
+            Symbol enumSymbol = enumType.getEnumSymbol();
+
+            if (enumSymbol == null) {
+                throw new RuntimeException(
+                    "Unresolved symbol for enum: " + enumType.getName()
+                );
+            }
+            
+            EnumNode enumNode = (EnumNode) enumSymbol.getDeclaration();
+            
+            for (IdentifierNode variantNode : enumNode.variants) {
+                if (variantNode.name.equals(rSegName)) {
+                    // 使用变体AST节点的符号
+                    Symbol variantSymbol = variantNode.getSymbol();
+                    if (variantSymbol == null) {
+                        throw new RuntimeException(
+                            "Unresolved symbol for enum variant: " + rSegName
+                        );
+                    }
+                    
+                    variantSymbol.setType(enumType); // 变体的类型是枚举类型
+                    
+                    // 将符号设置到RSeg
+                    node.RSeg.setSymbol(variantSymbol);
+                    break;
+                }
+            }
         } else {
             // 如果不是变体，在枚举的impl项中查找
             Symbol enumSymbol = enumType.getEnumSymbol();
@@ -255,26 +465,26 @@ public class SimpleExpressionTypeChecker extends BaseExpressionTypeChecker {
             return;
         }
         
-        // 检查它是否是方法
-        if (traitType.hasMethod(itemName)) {
-            FunctionType methodType = traitType.getMethodType(itemName);
-            Symbol methodSymbol = new Symbol(itemName, SymbolKind.FUNCTION, null, 0, false);
-            node.RSeg.setSymbol(methodSymbol);
-            methodSymbol.setType(methodType);
+        // 从trait的impl符号中查找关联项
+        Symbol traitSymbol = traitType.getTraitSymbol();
+        if (traitSymbol != null) {
+            // 遍历impl符号以查找匹配名称的函数或常量
+            for (Symbol implSymbol : traitSymbol.getImplSymbols()) {
+                if ((implSymbol.getKind() == SymbolKind.FUNCTION ||
+                        implSymbol.getKind() == SymbolKind.CONSTANT) &&
+                    implSymbol.getName().equals(itemName)) {
+                    // 找到关联项，将其用作RSeg符号
+                    node.RSeg.setSymbol(implSymbol);
+                    return;
+                }
+            }
         }
-        // 检查它是否是常量
-        else if (traitType.hasConstant(itemName)) {
-            Type constantType = traitType.getConstantType(itemName);
-            Symbol constantSymbol = new Symbol(itemName, SymbolKind.CONSTANT, null, 0, false);
-            node.RSeg.setSymbol(constantSymbol);
-            constantSymbol.setType(constantType);
-        }
-        else {
-            RuntimeException error = new RuntimeException(
-                "Associated item '" + itemName + "' not found in trait " + traitType.getName()
-            );
-            handleError(error);
-        }
+        
+        // 如果我们在impl符号中没有找到它，报告错误
+        RuntimeException error = new RuntimeException(
+            "Associated item '" + itemName + "' not found in trait " + traitType.getName()
+        );
+        handleError(error);
     }
     
     /**
@@ -296,9 +506,6 @@ public class SimpleExpressionTypeChecker extends BaseExpressionTypeChecker {
             Type type = typeExtractor.extractTypeFromSymbol(symbol);
             // 注意：PathExprSegNode没有setType方法，所以我们只将它存储在符号中
             symbol.setType(type);
-            
-            // 确保符号设置回节点
-            node.setSymbol(symbol);
         } catch (RuntimeException e) {
             handleError(e);
         }
@@ -310,9 +517,9 @@ public class SimpleExpressionTypeChecker extends BaseExpressionTypeChecker {
     public void visit(GroupExprNode node) {
         try {
             if (node.innerExpr != null) {
-                // 使用递归访问确保使用正确的类型检查器
-                visitExpression(node.innerExpr);
-                Type innerType = getTypeWithoutNullCheck(node.innerExpr);
+                // 使用TypeChecker进行调用
+                node.innerExpr.accept(mainExpressionChecker);
+                Type innerType = node.innerExpr.getType();
                 setType(node, innerType);
             } else {
                 RuntimeException error = new RuntimeException(

@@ -10,9 +10,9 @@ Node: main                 | Type: IdentifierNode            | Symbol: Symbol{na
 Node: stack                | Type: IdentifierNode            | Symbol: Symbol{name='stack', kind=LOCAL_VARIABLE, scopeLevel=2}
 Node: PathExprSeg(Stack)   | Type: PathExprSegNode           | Symbol: Symbol{name='Stack', kind=STRUCT, scopeLevel=0}
 Node: Stack                | Type: IdentifierNode            | Symbol: Symbol{name='Stack', kind=STRUCT, scopeLevel=0}
-Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='Stack', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: PathExprSeg(Stack)   | Type: PathExprSegNode           | Symbol: Symbol{name='Stack', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: Stack                | Type: IdentifierNode            | Symbol: Symbol{name='Stack', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='Stack', kind=STRUCT, scopeLevel=0}
+Node: PathExprSeg(Stack)   | Type: PathExprSegNode           | Symbol: Symbol{name='Stack', kind=STRUCT, scopeLevel=0}
+Node: Stack                | Type: IdentifierNode            | Symbol: Symbol{name='Stack', kind=STRUCT, scopeLevel=0}
 Node: PathExprSeg(new)     | Type: PathExprSegNode           | Symbol: null
 Node: new                  | Type: IdentifierNode            | Symbol: null
 Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
@@ -145,26 +145,12 @@ Node type distribution:
   StructNode: 1
 Type checking errors:
   Type path expression is missing path or name
-  Expression type is null for CallExprNode('Stack') at in function 'main' 
+  Type of expression node is not set yet.
   Method 'empty' not found for type Stack
-  Expression type is null for MethodCallExprNode at 
-  Expression type is null for NegaExprNode at 
-  Expression type is null for GroupExprNode at 
-  Method 'empty' not found for type Stack
-  Expression type is null for MethodCallExprNode at 
-  Expression type is null for NegaExprNode at 
-  Expression type is null for GroupExprNode at 
-  Expression type is null for CallExprNode('Stack') at 
-  Method 'empty' not found for type Stack
-  Expression type is null for MethodCallExprNode at 
-  Expression type is null for NegaExprNode at 
-  Expression type is null for GroupExprNode at 
-  Method 'empty' not found for type Stack
-  Expression type is null for MethodCallExprNode at 
-  Expression type is null for NegaExprNode at 
-  Expression type is null for GroupExprNode at 
-  Unable to determine receiver type for method
-  Unable to determine receiver type for method
-  Unable to determine receiver type for method
+  Type of expression node is not set yet.
+  Type of expression node is not set yet.
+  Type of expression node is not set yet.
+  Type of expression node is not set yet.
   Type path expression is missing path or name
-  Cannot find common type because second type is null at in function 'new' (Self: Stack) 
+  Function body type mismatch: expected null, got Stack in function 'new'
+  Missing implementation of trait method 'empty' for type 'Stack' from trait 'Container'

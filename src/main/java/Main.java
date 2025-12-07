@@ -96,9 +96,9 @@ class ReadRustFile {
                 }
                 
                 // Check for constant evaluation errors
-                if (typeChecker.constantEvaluator.hasErrors()) {
+                if (typeChecker.hasConstantEvaluationErrors()) {
                     System.err.println("Constant evaluation errors:");
-                    typeChecker.constantEvaluator.getErrorCollector().printErrors();
+                    typeChecker.getConstantEvaluationErrorCollector().printErrors();
                 } else {
                     System.out.println("Constant evaluation completed successfully.");
                 }

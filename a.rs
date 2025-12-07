@@ -1,39 +1,20 @@
-fn foo() -> i32 {
-    // let x: () = {
-    //     if (2 + 2 == 4) {
-    //         1
-    //     } else {
-    //         2
-    //     }
-    // };
-    // let y = if (2 + 2 == 4) {
-    //     return 1;
-    //     const Y: i32 = 5;
-    // } else {
-    //     2
-    // };
-    // let x: i32 = 4;
-    return 3;
+struct S {
+    a: i32,
+    b: i32,
 }
 
-trait Bar {
-    fn baz(&self) -> i32;
-    fn qux(&self) -> i32;
-}
-
-struct MyStruct;
-
-impl Bar for MyStruct {
-    fn baz(&self) -> i32 {
+trait T {
+    fn foo() -> i32 {
         42
     }
-    
-    fn qux(&self) -> i32 {
-        24
-    }
+}
+
+impl T for S {
 }
 
 fn main() {
+    let s = S { a: 1, b: 2 };
+    s.a = 3;
     // if (2 + 2 == 4) {
     //     1
     // } else {

@@ -11,6 +11,10 @@ public abstract class VisitorBase {
     public void visit(ASTNode node) {
         // Base implementation - no children to traverse
     }
+
+    public void visit(StmtNode node) {
+        // Base implementation - no children to traverse
+    }
     
     
     public void visit(ItemNode node) {

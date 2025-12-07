@@ -48,7 +48,8 @@ public class SymbolAdder extends VisitorBase {
         addBuiltinType("isize");
         addBuiltinType("bool");
         addBuiltinType("char");
-        addBuiltinType("str");  // String slice type
+        addBuiltinType("str");   // String slice type
+        addBuiltinType("String"); // Heap-allocated string type
     }
     
     private void addBuiltinType(String typeName) {

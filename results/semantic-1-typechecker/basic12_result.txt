@@ -2,5 +2,212 @@
 Enter Rust code (Ctrl+D to finish):
 Father relationships set successfully.
 Self and Self semantic checking completed successfully.
-Semantic error during namespace checking: Value 'Suit' not found
-  at node: IdentifierNode
+Namespace semantic checking completed successfully.
+
+=== Symbol Debug Output ===
+Node: Function(main)       | Type: FunctionNode              | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: main                 | Type: IdentifierNode            | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: deck                 | Type: IdentifierNode            | Symbol: Symbol{name='deck', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(Deck)    | Type: PathExprSegNode           | Symbol: Symbol{name='Deck', kind=STRUCT, scopeLevel=0}
+Node: Deck                 | Type: IdentifierNode            | Symbol: Symbol{name='Deck', kind=STRUCT, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='Deck', kind=STRUCT, scopeLevel=0}
+Node: PathExprSeg(Deck)    | Type: PathExprSegNode           | Symbol: Symbol{name='Deck', kind=STRUCT, scopeLevel=0}
+Node: Deck                 | Type: IdentifierNode            | Symbol: Symbol{name='Deck', kind=STRUCT, scopeLevel=0}
+Node: PathExprSeg(new)     | Type: PathExprSegNode           | Symbol: null
+Node: new                  | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='deck', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(deck)    | Type: PathExprSegNode           | Symbol: Symbol{name='deck', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: deck                 | Type: IdentifierNode            | Symbol: Symbol{name='deck', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(shuffle) | Type: PathExprSegNode           | Symbol: null
+Node: shuffle              | Type: IdentifierNode            | Symbol: null
+Node: top                  | Type: IdentifierNode            | Symbol: Symbol{name='top', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(Card)    | Type: PathExprSegNode           | Symbol: Symbol{name='Card', kind=STRUCT, scopeLevel=0}
+Node: Card                 | Type: IdentifierNode            | Symbol: Symbol{name='Card', kind=STRUCT, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='deck', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(deck)    | Type: PathExprSegNode           | Symbol: Symbol{name='deck', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: deck                 | Type: IdentifierNode            | Symbol: Symbol{name='deck', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(draw)    | Type: PathExprSegNode           | Symbol: null
+Node: draw                 | Type: IdentifierNode            | Symbol: null
+Node: sink                 | Type: IdentifierNode            | Symbol: Symbol{name='sink', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(Card)    | Type: PathExprSegNode           | Symbol: Symbol{name='Card', kind=STRUCT, scopeLevel=0}
+Node: Card                 | Type: IdentifierNode            | Symbol: Symbol{name='Card', kind=STRUCT, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='top', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(top)     | Type: PathExprSegNode           | Symbol: Symbol{name='top', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: top                  | Type: IdentifierNode            | Symbol: Symbol{name='top', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(exit)    | Type: PathExprSegNode           | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: exit                 | Type: IdentifierNode            | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: Enum(Suit)           | Type: EnumNode                  | Symbol: Symbol{name='Suit', kind=ENUM, scopeLevel=0}
+Node: Suit                 | Type: IdentifierNode            | Symbol: Symbol{name='Suit', kind=ENUM, scopeLevel=0}
+Node: Heart                | Type: IdentifierNode            | Symbol: Symbol{name='Heart', kind=ENUM_VARIANT_CONSTRUCTOR, scopeLevel=1}
+Node: Diamond              | Type: IdentifierNode            | Symbol: Symbol{name='Diamond', kind=ENUM_VARIANT_CONSTRUCTOR, scopeLevel=1}
+Node: Club                 | Type: IdentifierNode            | Symbol: Symbol{name='Club', kind=ENUM_VARIANT_CONSTRUCTOR, scopeLevel=1}
+Node: Spade                | Type: IdentifierNode            | Symbol: Symbol{name='Spade', kind=ENUM_VARIANT_CONSTRUCTOR, scopeLevel=1}
+Node: Struct(Card)         | Type: StructNode                | Symbol: Symbol{name='Card', kind=STRUCT, scopeLevel=0}
+Node: Card                 | Type: IdentifierNode            | Symbol: Symbol{name='Card', kind=STRUCT, scopeLevel=0}
+Node: Field(v)             | Type: FieldNode                 | Symbol: Symbol{name='v', kind=FIELD, scopeLevel=0}
+Node: v                    | Type: IdentifierNode            | Symbol: Symbol{name='v', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Field(s)             | Type: FieldNode                 | Symbol: Symbol{name='s', kind=FIELD, scopeLevel=0}
+Node: s                    | Type: IdentifierNode            | Symbol: Symbol{name='s', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(Suit)    | Type: PathExprSegNode           | Symbol: Symbol{name='Suit', kind=ENUM, scopeLevel=0}
+Node: Suit                 | Type: IdentifierNode            | Symbol: Symbol{name='Suit', kind=ENUM, scopeLevel=0}
+Node: Struct(Deck)         | Type: StructNode                | Symbol: Symbol{name='Deck', kind=STRUCT, scopeLevel=0}
+Node: Deck                 | Type: IdentifierNode            | Symbol: Symbol{name='Deck', kind=STRUCT, scopeLevel=0}
+Node: Field(pile)          | Type: FieldNode                 | Symbol: Symbol{name='pile', kind=FIELD, scopeLevel=0}
+Node: pile                 | Type: IdentifierNode            | Symbol: Symbol{name='pile', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(Card)    | Type: PathExprSegNode           | Symbol: Symbol{name='Card', kind=STRUCT, scopeLevel=0}
+Node: Card                 | Type: IdentifierNode            | Symbol: Symbol{name='Card', kind=STRUCT, scopeLevel=0}
+Node: Field(idx)           | Type: FieldNode                 | Symbol: Symbol{name='idx', kind=FIELD, scopeLevel=0}
+Node: idx                  | Type: IdentifierNode            | Symbol: Symbol{name='idx', kind=FIELD, scopeLevel=0}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: Impl(for TypePathExprNode@cc34f4d) | Type: ImplNode                  | TypeSymbol: Symbol{name='Deck', kind=STRUCT, scopeLevel=0} | TraitSymbol: null                          
+Node: PathExprSeg(Deck)    | Type: PathExprSegNode           | Symbol: Symbol{name='Deck', kind=STRUCT, scopeLevel=0}
+Node: Deck                 | Type: IdentifierNode            | Symbol: Symbol{name='Deck', kind=STRUCT, scopeLevel=0}
+Node: Function(new)        | Type: FunctionNode              | Symbol: Symbol{name='new', kind=FUNCTION, scopeLevel=1}
+Node: new                  | Type: IdentifierNode            | Symbol: Symbol{name='new', kind=FUNCTION, scopeLevel=1}
+Node: PathExprSeg(SELF_TYPE) | Type: PathExprSegNode           | Symbol: Symbol{name='Deck', kind=STRUCT, scopeLevel=0}
+Node: template             | Type: IdentifierNode            | Symbol: Symbol{name='template', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(Card)    | Type: PathExprSegNode           | Symbol: Symbol{name='Card', kind=STRUCT, scopeLevel=0}
+Node: Card                 | Type: IdentifierNode            | Symbol: Symbol{name='Card', kind=STRUCT, scopeLevel=0}
+Node: StructExpr           | Type: StructExprNode            | Symbol: Symbol{name='Card', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(Card)    | Type: PathExprSegNode           | Symbol: Symbol{name='Card', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: Card                 | Type: IdentifierNode            | Symbol: Symbol{name='Card', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: FieldVal(v)          | Type: FieldValNode              | Symbol: Symbol{name='v', kind=FIELD, scopeLevel=0}
+Node: v                    | Type: IdentifierNode            | Symbol: Symbol{name='v', kind=FIELD, scopeLevel=0}
+Node: FieldVal(s)          | Type: FieldValNode              | Symbol: Symbol{name='s', kind=FIELD, scopeLevel=0}
+Node: s                    | Type: IdentifierNode            | Symbol: Symbol{name='s', kind=FIELD, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='Suit', kind=ENUM, scopeLevel=0}
+Node: PathExprSeg(Suit)    | Type: PathExprSegNode           | Symbol: Symbol{name='Suit', kind=ENUM, scopeLevel=0}
+Node: Suit                 | Type: IdentifierNode            | Symbol: Symbol{name='Suit', kind=ENUM, scopeLevel=0}
+Node: PathExprSeg(Heart)   | Type: PathExprSegNode           | Symbol: null
+Node: Heart                | Type: IdentifierNode            | Symbol: null
+Node: StructExpr           | Type: StructExprNode            | Symbol: Symbol{name='Deck', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExprSeg(Deck)    | Type: PathExprSegNode           | Symbol: Symbol{name='Deck', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: Deck                 | Type: IdentifierNode            | Symbol: Symbol{name='Deck', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: FieldVal(pile)       | Type: FieldValNode              | Symbol: Symbol{name='pile', kind=FIELD, scopeLevel=0}
+Node: pile                 | Type: IdentifierNode            | Symbol: Symbol{name='pile', kind=FIELD, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='template', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(template) | Type: PathExprSegNode           | Symbol: Symbol{name='template', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: template             | Type: IdentifierNode            | Symbol: Symbol{name='template', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: FieldVal(idx)        | Type: FieldValNode              | Symbol: Symbol{name='idx', kind=FIELD, scopeLevel=0}
+Node: idx                  | Type: IdentifierNode            | Symbol: Symbol{name='idx', kind=FIELD, scopeLevel=0}
+Node: Function(shuffle)    | Type: FunctionNode              | Symbol: Symbol{name='shuffle', kind=FUNCTION, scopeLevel=1}
+Node: shuffle              | Type: IdentifierNode            | Symbol: Symbol{name='shuffle', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: idx                  | Type: IdentifierNode            | Symbol: null
+Node: swap                 | Type: IdentifierNode            | Symbol: Symbol{name='swap', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: idx                  | Type: IdentifierNode            | Symbol: null
+Node: temp                 | Type: IdentifierNode            | Symbol: Symbol{name='temp', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(Card)    | Type: PathExprSegNode           | Symbol: Symbol{name='Card', kind=STRUCT, scopeLevel=0}
+Node: Card                 | Type: IdentifierNode            | Symbol: Symbol{name='Card', kind=STRUCT, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: pile                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: idx                  | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: pile                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: idx                  | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: pile                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='swap', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(swap)    | Type: PathExprSegNode           | Symbol: Symbol{name='swap', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: swap                 | Type: IdentifierNode            | Symbol: Symbol{name='swap', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: pile                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='swap', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(swap)    | Type: PathExprSegNode           | Symbol: Symbol{name='swap', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: swap                 | Type: IdentifierNode            | Symbol: Symbol{name='swap', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='temp', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExprSeg(temp)    | Type: PathExprSegNode           | Symbol: Symbol{name='temp', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: temp                 | Type: IdentifierNode            | Symbol: Symbol{name='temp', kind=LOCAL_VARIABLE, scopeLevel=4}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: idx                  | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: idx                  | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: idx                  | Type: IdentifierNode            | Symbol: null
+Node: Function(draw)       | Type: FunctionNode              | Symbol: Symbol{name='draw', kind=FUNCTION, scopeLevel=1}
+Node: draw                 | Type: IdentifierNode            | Symbol: Symbol{name='draw', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(Card)    | Type: PathExprSegNode           | Symbol: Symbol{name='Card', kind=STRUCT, scopeLevel=0}
+Node: Card                 | Type: IdentifierNode            | Symbol: Symbol{name='Card', kind=STRUCT, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: idx                  | Type: IdentifierNode            | Symbol: null
+Node: card                 | Type: IdentifierNode            | Symbol: Symbol{name='card', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(Card)    | Type: PathExprSegNode           | Symbol: Symbol{name='Card', kind=STRUCT, scopeLevel=0}
+Node: Card                 | Type: IdentifierNode            | Symbol: Symbol{name='Card', kind=STRUCT, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: pile                 | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: idx                  | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: PathExprSeg(SELF)    | Type: PathExprSegNode           | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: idx                  | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='card', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(card)    | Type: PathExprSegNode           | Symbol: Symbol{name='card', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: card                 | Type: IdentifierNode            | Symbol: Symbol{name='card', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: Trait(Randomize)     | Type: TraitNode                 | Symbol: Symbol{name='Randomize', kind=TRAIT, scopeLevel=0}
+Node: Randomize            | Type: IdentifierNode            | Symbol: Symbol{name='Randomize', kind=TRAIT, scopeLevel=0}
+Node: Function(shuffle)    | Type: FunctionNode              | Symbol: Symbol{name='shuffle', kind=FUNCTION, scopeLevel=1}
+Node: shuffle              | Type: IdentifierNode            | Symbol: Symbol{name='shuffle', kind=FUNCTION, scopeLevel=1}
+Node: SelfPara             | Type: SelfParaNode              | Symbol: Symbol{name='self', kind=SELF_CONSTRUCTOR, scopeLevel=2}
+Node: Impl(for TypePathExprNode@17a7cec2)(trait Randomize) | Type: ImplNode                  | TypeSymbol: Symbol{name='Deck', kind=STRUCT, scopeLevel=0} | TraitSymbol: Symbol{name='Randomize', kind=TRAIT, scopeLevel=0}
+Node: PathExprSeg(Deck)    | Type: PathExprSegNode           | Symbol: Symbol{name='Deck', kind=STRUCT, scopeLevel=0}
+Node: Deck                 | Type: IdentifierNode            | Symbol: Symbol{name='Deck', kind=STRUCT, scopeLevel=0}
+Node: Randomize            | Type: IdentifierNode            | Symbol: Symbol{name='Randomize', kind=TRAIT, scopeLevel=0}
+Node: Const(COUNT)         | Type: ConstItemNode             | Symbol: Symbol{name='COUNT', kind=CONSTANT, scopeLevel=0}
+Node: COUNT                | Type: IdentifierNode            | Symbol: Symbol{name='COUNT', kind=CONSTANT, scopeLevel=0}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+
+=== Symbol Debug Summary ===
+Total nodes visited: 176
+Nodes with symbols: 151
+Nodes without symbols: 25
+
+Node type distribution:
+  FieldNode: 4
+  ConstItemNode: 1
+  PathExprSegNode: 48
+  IdentifierNode: 77
+  FunctionNode: 5
+  EnumNode: 1
+  FieldValNode: 4
+  ImplNode: 2
+  StructExprNode: 2
+  PathExprNode: 26
+  TraitNode: 1
+  SelfParaNode: 3
+  StructNode: 2
+Type checking errors:
+  Type path expression is missing path or name
+  Type of expression node is not set yet.
+  Type path expression is missing path or name
+  Function body type mismatch: expected null, got Deck in function 'new'
+  Return value type mismatch: expected Card, got int
+  Type of expression node is not set yet.
+  Type of expression node is not set yet.
+  Missing implementation of trait method 'shuffle' for type 'Deck' from trait 'Randomize'
+  Cannot assign String to constant of type i32

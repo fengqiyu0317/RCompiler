@@ -2,7 +2,14 @@
  * 复杂表达式类型检查器
  * 处理函数调用、方法调用、字段访问、索引访问、借用、解引用、类型转换等
  */
-public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
+public class ComplexExpressionTypeChecker extends VisitorBase {
+    protected final TypeErrorCollector errorCollector;
+    protected final boolean throwOnError;
+    protected final TypeExtractor typeExtractor;
+    protected final ConstantEvaluator constantEvaluator;
+    protected final ExpressionTypeContext context;
+    protected final TypeChecker mainExpressionChecker;
+    protected MutabilityChecker mutabilityChecker;
     
     public ComplexExpressionTypeChecker(
         TypeErrorCollector errorCollector,
@@ -10,9 +17,199 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
         TypeExtractor typeExtractor,
         ConstantEvaluator constantEvaluator,
         ExpressionTypeContext context,
-        TypeCheckerRefactored mainExpressionChecker
+        TypeChecker mainExpressionChecker
     ) {
-        super(errorCollector, throwOnError, typeExtractor, constantEvaluator, context, mainExpressionChecker);
+        this.errorCollector = errorCollector;
+        this.throwOnError = throwOnError;
+        this.typeExtractor = typeExtractor;
+        this.constantEvaluator = constantEvaluator;
+        this.context = context;
+        this.mainExpressionChecker = mainExpressionChecker;
+        this.mutabilityChecker = new MutabilityChecker(errorCollector, throwOnError);
+    }
+    
+    /**
+     * Get expression node's type with null check and error reporting
+     */
+    protected Type getType(ExprNode expr) {
+        if (expr == null) {
+            throw new RuntimeException(
+                "Cannot get type from null expression at " + getCurrentContext()
+            );
+        }
+        Type type = expr.getType();
+        if (type == null) {
+            throw new RuntimeException(
+                "Expression type is null for " + getNodeDescription(expr) + " at " + getCurrentContext()
+            );
+        }
+        return type;
+    }
+    
+    /**
+     * Set expression node's type
+     */
+    protected void setType(ExprNode expr, Type type) {
+        expr.setType(type);
+    }
+    
+    /**
+     * 确保符号的类型已设置（如果是PathExprNode）
+     */
+    protected void ensureSymbolType(ExprNode expr) {
+        if (expr instanceof PathExprNode) {
+            PathExprNode pathExpr = (PathExprNode) expr;
+            if (pathExpr.getSymbol() != null && pathExpr.getSymbol().getType() == null) {
+                typeExtractor.extractTypeFromSymbol(pathExpr.getSymbol());
+            }
+        }
+    }
+    
+    /**
+     * Get node description for error reporting
+     */
+    protected String getNodeDescription(ASTNode node) {
+        if (node == null) {
+            return "null node";
+        }
+        
+        String className = node.getClass().getSimpleName();
+        
+        // 尝试根据节点类型获取更具体的信息
+        if (node instanceof PathExprNode) {
+            PathExprNode pathExpr = (PathExprNode) node;
+            String name = pathExpr.LSeg != null && pathExpr.LSeg.name != null ?
+                         pathExpr.LSeg.name.name : "unknown";
+            return "PathExprNode('" + name + "')";
+        } else if (node instanceof LiteralExprNode) {
+            LiteralExprNode literal = (LiteralExprNode) node;
+            String valueStr = "";
+            switch (literal.literalType) {
+                case STRING:
+                case CSTRING:
+                case CHAR:
+                    valueStr = literal.value_string;
+                    break;
+                case I32:
+                case U32:
+                case USIZE:
+                case ISIZE:
+                case INT:
+                    valueStr = String.valueOf(literal.value_long);
+                    break;
+                case BOOL:
+                    valueStr = String.valueOf(literal.value_bool);
+                    break;
+                default:
+                    valueStr = "unknown";
+                    break;
+            }
+            return "LiteralExprNode(" + valueStr + ")";
+        } else if (node instanceof ArithExprNode) {
+            ArithExprNode arith = (ArithExprNode) node;
+            return "ArithExprNode(" + arith.operator + ")";
+        } else if (node instanceof CompExprNode) {
+            CompExprNode comp = (CompExprNode) node;
+            return "CompExprNode(" + comp.operator + ")";
+        } else if (node instanceof CallExprNode) {
+            CallExprNode call = (CallExprNode) node;
+            String funcName = call.function instanceof PathExprNode ?
+                           ((PathExprNode)call.function).LSeg.name.name : "unknown";
+            return "CallExprNode('" + funcName + "')";
+        } else if (node instanceof IdentifierNode) {
+            IdentifierNode id = (IdentifierNode) node;
+            return "IdentifierNode('" + id.name + "')";
+        }
+        
+        return className;
+    }
+    
+    /**
+     * Get current context for error reporting
+     */
+    protected String getCurrentContext() {
+        StringBuilder contextDescription = new StringBuilder(); // Renamed variable to avoid conflict with the field
+
+        // 添加函数上下文（如果可用）
+        if (this.context.getCurrentFunction() != null) { // Fixed: Use `this.context` to refer to the field
+            FunctionNode funcNode = this.context.getCurrentFunction();
+            if (funcNode.name != null) {
+                contextDescription.append("in function '").append(funcNode.name.name).append("' ");
+            }
+        }
+
+        // 添加当前Self类型（如果可用）
+        if (this.context.getCurrentSelfType() != null) { // Fixed: Use `this.context` to refer to the field
+            contextDescription.append("(Self: ").append(this.context.getCurrentSelfType()).append(") ");
+        }
+
+        return contextDescription.toString();
+    }
+    
+    /**
+     * Report error
+     */
+    protected void reportError(String message) {
+        RuntimeException error = new RuntimeException(message);
+        if (throwOnError) {
+            throw error;
+        } else {
+            errorCollector.addError(error.getMessage());
+        }
+    }
+    
+    /**
+     * Handle exception
+     */
+    protected void handleError(RuntimeException e) {
+        if (throwOnError) {
+            throw e;
+        } else {
+            errorCollector.addError(e.getMessage());
+        }
+    }
+    
+    /**
+     * Check if expression is assignable (left value)
+     */
+    protected boolean isAssignable(ExprNode expr) {
+        // 在Rust中，这四种类型的表达式可以是左值：
+        // 1. PathExprNode - 路径表达式（变量、字段等）
+        // 2. FieldExprNode - 字段访问表达式
+        // 3. IndexExprNode - 索引访问表达式
+        // 4. DerefExprNode - 解引用表达式
+        return expr instanceof PathExprNode ||
+               expr instanceof FieldExprNode ||
+               expr instanceof IndexExprNode ||
+               expr instanceof DerefExprNode;
+    }
+    
+    /**
+     * 检查可变访问
+     */
+    protected void checkMutableAccess(ExprNode expr) {
+        if (mutabilityChecker != null) {
+            mutabilityChecker.checkMutability(expr);
+        }
+    }
+    
+    /**
+     * 检查可变赋值
+     */
+    protected void checkMutableAssignment(ExprNode target, ExprNode value) {
+        if (mutabilityChecker != null) {
+            mutabilityChecker.checkMutability(target);
+            if (value != null) {
+                mutabilityChecker.checkMutability(value);
+            }
+        }
+    }
+    
+    /**
+     * 设置mutability检查器
+     */
+    public void setMutabilityChecker(MutabilityChecker mutabilityChecker) {
+        this.mutabilityChecker = mutabilityChecker;
     }
     
     /**
@@ -45,12 +242,9 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
                 return;
             }
             
-            // 访问函数表达式，使用递归调用确保使用正确的类型检查器
-            visitExpression(node.function);
-            Type functionType = getTypeWithoutNullCheck(node.function);
-            
-            // 确保函数的符号已设置（如果是PathExprNode）
-            ensureSymbolType(node.function);
+            // 访问函数表达式，使用TypeChecker进行调用
+            node.function.accept(mainExpressionChecker);
+            Type functionType = node.function.getType();
             
             // 检查函数类型是否为函数类型
             if (!(functionType instanceof FunctionType)) {
@@ -73,17 +267,14 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
             if (node.arguments != null) {
                 for (int i = 0; i < node.arguments.size(); i++) {
                     ExprNode arg = node.arguments.get(i);
-                    visitExpression(arg);
-                    Type argType = getTypeWithoutNullCheck(arg);
+                    arg.accept(mainExpressionChecker);
+                    Type argType = arg.getType();
                     Type expectedType = funcType.getParameterTypes().get(i);
                     
-                    if (argType == null || expectedType == null || !TypeUtils.isTypeCompatible(argType, expectedType)) {
-                        // 尝试查找公共类型
-                        Type commonType = TypeUtils.findCommonType(argType, expectedType);
-                        if (commonType == null || !TypeUtils.isTypeCompatible(commonType, expectedType)) {
-                            reportError("Argument " + (i + 1) + " type mismatch: expected " + expectedType + ", got " + argType + " at " + getCurrentContext());
-                            return;
-                        }
+                    if (!TypeUtils.isTypeCompatible(argType, expectedType)) {
+                        throw new RuntimeException(
+                            "Argument " + (i + 1) + " type mismatch: expected " + expectedType + ", got " + argType + " at " + getCurrentContext()
+                        );
                     }
                 }
             }
@@ -105,9 +296,9 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
                 return;
             }
             
-            // 访问接收者表达式，使用递归调用确保使用正确的类型检查器
-            visitExpression(node.receiver);
-            Type receiverType = getTypeWithoutNullCheck(node.receiver);
+            // 访问接收者表达式，使用TypeChecker进行调用
+            node.receiver.accept(mainExpressionChecker);
+            Type receiverType = node.receiver.getType();
             
             // 自动解引用接收者（如果是引用类型）
             Type dereferencedType = receiverType;
@@ -141,15 +332,6 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
                     }
                 }
             }
-            // 检查解引用的接收者类型是否为trait类型
-            else if (dereferencedType instanceof TraitType) {
-                TraitType traitType = (TraitType) dereferencedType;
-                if (traitType.hasMethod(methodName)) {
-                    FunctionType methodType = traitType.getMethodType(methodName);
-                    methodSymbol = new Symbol(methodName, SymbolKind.FUNCTION, null, 0, false);
-                    methodSymbol.setType(methodType);
-                }
-            }
             // 检查解引用的接收者类型是否为String或str类型并查找内置方法
             else if (TypeUtils.isStringOrStrType(dereferencedType)) {
                 // 查找内置方法
@@ -173,11 +355,6 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
             
             // 在methodName节点上设置方法符号以供将来参考
             node.methodName.setSymbol(methodSymbol);
-            
-            // 确保符号的类型已设置
-            if (methodSymbol.getType() == null) {
-                typeExtractor.extractTypeFromSymbol(methodSymbol);
-            }
             
             // 提取方法类型
             Type methodType = typeExtractor.extractTypeFromSymbol(methodSymbol);
@@ -209,17 +386,14 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
             if (node.arguments != null) {
                 for (int i = 0; i < node.arguments.size(); i++) {
                     ExprNode arg = node.arguments.get(i);
-                    visitExpression(arg);
-                    Type argType = getTypeWithoutNullCheck(arg);
+                    arg.accept(mainExpressionChecker);
+                    Type argType = arg.getType();
                     Type expectedType = funcType.getParameterTypes().get(i);
                     
-                    if (argType == null || expectedType == null || !TypeUtils.isTypeCompatible(argType, expectedType)) {
-                        // 尝试查找公共类型
-                        Type commonType = TypeUtils.findCommonType(argType, expectedType);
-                        if (commonType == null || !TypeUtils.isTypeCompatible(commonType, expectedType)) {
-                            reportError("Argument " + (i + 1) + " type mismatch: expected " + expectedType + ", got " + argType + " at " + getCurrentContext());
-                            return;
-                        }
+                    if (!TypeUtils.isTypeCompatible(argType, expectedType)) {
+                        throw new RuntimeException(
+                            "Argument " + (i + 1) + " type mismatch: expected " + expectedType + ", got " + argType + " at " + getCurrentContext()
+                        );
                     }
                 }
             }
@@ -241,9 +415,9 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
                 return;
             }
             
-            // 访问接收者表达式，使用递归调用确保使用正确的类型检查器
-            visitExpression(node.receiver);
-            Type receiverType = getTypeWithoutNullCheck(node.receiver);
+            // 访问接收者表达式，使用TypeChecker进行调用
+            node.receiver.accept(mainExpressionChecker);
+            Type receiverType = node.receiver.getType();
             
             // 自动解引用接收者（如果是引用类型）
             Type dereferencedType = receiverType;
@@ -288,19 +462,13 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
                 return;
             }
             
-            // 访问数组表达式，使用递归调用确保使用正确的类型检查器
-            visitExpression(node.array);
-            Type arrayType = getTypeWithoutNullCheck(node.array);
+            // 访问数组表达式，使用TypeChecker进行调用
+            node.array.accept(mainExpressionChecker);
+            Type arrayType = node.array.getType();
             
-            // 确保数组的符号已设置（如果是PathExprNode）
-            ensureSymbolType(node.array);
-            
-            // 访问索引表达式，使用递归调用确保使用正确的类型检查器
-            visitExpression(node.index);
-            Type indexType = getTypeWithoutNullCheck(node.index);
-            
-            // 确保索引的符号已设置（如果是PathExprNode）
-            ensureSymbolType(node.index);
+            // 访问索引表达式，使用TypeChecker进行调用
+            node.index.accept(mainExpressionChecker);
+            Type indexType = node.index.getType();
             
             // 自动解引用数组类型（如果是引用类型）
             Type dereferencedArrayType = arrayType;
@@ -338,12 +506,9 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
                 return;
             }
             
-            // 访问内部表达式，使用递归调用确保使用正确的类型检查器
-            visitExpression(node.innerExpr);
-            Type innerType = getTypeWithoutNullCheck(node.innerExpr);
-            
-            // 确保内部表达式的符号已设置（如果是PathExprNode）
-            ensureSymbolType(node.innerExpr);
+            // 访问内部表达式，使用TypeChecker进行调用
+            node.innerExpr.accept(mainExpressionChecker);
+            Type innerType = node.innerExpr.getType();
             
             // 使用嵌套引用而不是isDoubleReference标志创建引用类型
             Type refType = new ReferenceType(innerType, node.isMutable);
@@ -369,12 +534,9 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
                 return;
             }
             
-            // 访问内部表达式，使用递归调用确保使用正确的类型检查器
-            visitExpression(node.innerExpr);
-            Type innerType = getTypeWithoutNullCheck(node.innerExpr);
-            
-            // 确保内部表达式的符号已设置（如果是PathExprNode）
-            ensureSymbolType(node.innerExpr);
+            // 访问内部表达式，使用TypeChecker进行调用
+            node.innerExpr.accept(mainExpressionChecker);
+            Type innerType = node.innerExpr.getType();
             
             // 检查内部类型是否为引用类型
             if (!(innerType instanceof ReferenceType)) {
@@ -400,12 +562,9 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
                 return;
             }
             
-            // 访问表达式，使用递归调用确保使用正确的类型检查器
-            visitExpression(node.expr);
-            Type exprType = getTypeWithoutNullCheck(node.expr);
-            
-            // 确保表达式的符号已设置（如果是PathExprNode）
-            ensureSymbolType(node.expr);
+            // 访问表达式，使用TypeChecker进行调用
+            node.expr.accept(mainExpressionChecker);
+            Type exprType = node.expr.getType();
             
             // 提取目标类型
             Type targetType = typeExtractor.extractTypeFromTypeNode(node.type);
@@ -433,11 +592,8 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
                 
                 // 访问所有元素并确定公共类型
                 for (ExprNode element : node.elements) {
-                    visitExpression(element);
-                    Type elemType = getTypeWithoutNullCheck(element);
-                    
-                    // 确保元素的符号已设置（如果是PathExprNode）
-                    ensureSymbolType(element);
+                    element.accept(mainExpressionChecker);
+                    Type elemType = element.getType();
                     
                     if (elementType == null) {
                         elementType = elemType;
@@ -457,15 +613,12 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
                 
             } else if (node.repeatedElement != null && node.size != null) {
                 // 带有重复元素的数组 [expr; size]
-                visitExpression(node.repeatedElement);
-                Type elementType = getTypeWithoutNullCheck(node.repeatedElement);
-                
-                // 确保重复元素的符号已设置（如果是PathExprNode）
-                ensureSymbolType(node.repeatedElement);
+                node.repeatedElement.accept(mainExpressionChecker);
+                Type elementType = node.repeatedElement.getType();
                 
                 // 首先，类型检查大小表达式
-                visitExpression(node.size);
-                Type sizeType = getTypeWithoutNullCheck(node.size);
+                node.size.accept(mainExpressionChecker);
+                Type sizeType = node.size.getType();
                 
                 // 检查大小表达式是否为数字类型
                 if (!TypeUtils.isNumericType(sizeType)) {
@@ -529,9 +682,6 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
             // 提取结构体类型
             Type structType = typeExtractor.extractTypeFromSymbol(structSymbol);
             
-            // 确保符号设置回structName节点
-            node.structName.setSymbol(structSymbol);
-            
             // 检查它是否是结构体类型
             if (!(structType instanceof StructConstructorType)) {
                 reportError("Expression is not a struct constructor: " + structType);
@@ -567,9 +717,9 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
                         return;
                     }
 
-                    visitExpression(fieldVal);
+                    fieldVal.value.accept(mainExpressionChecker);
                     
-                    Type valueType = getTypeWithoutNullCheck(fieldVal.value);
+                    Type valueType = fieldVal.value.getType();
 
                     if (valueType == null) {
                         throw new RuntimeException(
@@ -578,13 +728,11 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
                     }
                     
                     // 检查字段值类型是否与期望的字段类型匹配
-                    if (valueType == null || fieldType == null || !TypeUtils.isTypeCompatible(valueType, fieldType)) {
-                        // 尝试查找公共类型
-                        Type commonType = TypeUtils.findCommonType(valueType, fieldType);
-                        if (commonType == null || !TypeUtils.isTypeCompatible(commonType, fieldType)) {
-                            reportError("Field '" + fieldName + "' type mismatch: expected " + fieldType + ", got " + valueType + " at " + getCurrentContext());
-                            return;
-                        }
+                    if (!TypeUtils.isTypeCompatible(valueType, fieldType)) {
+                        throw new RuntimeException(
+                            "Type mismatch for field '" + fieldName + "' in struct " + structTypeInfo.getName() +
+                            ": expected " + fieldType + ", got " + valueType + " at " + getCurrentContext()
+                        );
                     }
                 }
                 
@@ -612,7 +760,7 @@ public class ComplexExpressionTypeChecker extends BaseExpressionTypeChecker {
     public void visit(FieldValNode node) {
         try {
             if (node.value != null) {
-                visitExpression(node.value);
+                node.value.accept(mainExpressionChecker);
             }
         } catch (RuntimeException e) {
             handleError(e);

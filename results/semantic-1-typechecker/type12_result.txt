@@ -2,5 +2,78 @@
 Enter Rust code (Ctrl+D to finish):
 Father relationships set successfully.
 Self and Self semantic checking completed successfully.
-Semantic error during namespace checking: Value 'Status' not found
-  at node: IdentifierNode
+Namespace semantic checking completed successfully.
+
+=== Symbol Debug Output ===
+Node: Enum(Status)         | Type: EnumNode                  | Symbol: Symbol{name='Status', kind=ENUM, scopeLevel=0}
+Node: Status               | Type: IdentifierNode            | Symbol: Symbol{name='Status', kind=ENUM, scopeLevel=0}
+Node: Active               | Type: IdentifierNode            | Symbol: Symbol{name='Active', kind=ENUM_VARIANT_CONSTRUCTOR, scopeLevel=1}
+Node: Inactive             | Type: IdentifierNode            | Symbol: Symbol{name='Inactive', kind=ENUM_VARIANT_CONSTRUCTOR, scopeLevel=1}
+Node: Pending              | Type: IdentifierNode            | Symbol: Symbol{name='Pending', kind=ENUM_VARIANT_CONSTRUCTOR, scopeLevel=1}
+Node: Function(process_statuses) | Type: FunctionNode              | Symbol: Symbol{name='process_statuses', kind=FUNCTION, scopeLevel=0}
+Node: process_statuses     | Type: IdentifierNode            | Symbol: Symbol{name='process_statuses', kind=FUNCTION, scopeLevel=0}
+Node: statuses             | Type: IdentifierNode            | Symbol: Symbol{name='statuses', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(Status)  | Type: PathExprSegNode           | Symbol: Symbol{name='Status', kind=ENUM, scopeLevel=0}
+Node: Status               | Type: IdentifierNode            | Symbol: Symbol{name='Status', kind=ENUM, scopeLevel=0}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: s                    | Type: IdentifierNode            | Symbol: Symbol{name='s', kind=LOCAL_VARIABLE, scopeLevel=3}
+Node: PathExprSeg(Status)  | Type: PathExprSegNode           | Symbol: Symbol{name='Status', kind=ENUM, scopeLevel=0}
+Node: Status               | Type: IdentifierNode            | Symbol: Symbol{name='Status', kind=ENUM, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='statuses', kind=PARAMETER, scopeLevel=1}
+Node: PathExprSeg(statuses) | Type: PathExprSegNode           | Symbol: Symbol{name='statuses', kind=PARAMETER, scopeLevel=1}
+Node: statuses             | Type: IdentifierNode            | Symbol: Symbol{name='statuses', kind=PARAMETER, scopeLevel=1}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(usize)   | Type: PathExprSegNode           | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: usize                | Type: IdentifierNode            | Symbol: Symbol{name='usize', kind=BUILTIN_TYPE, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(i)       | Type: PathExprSegNode           | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: Function(main)       | Type: FunctionNode              | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: main                 | Type: IdentifierNode            | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
+Node: status_array         | Type: IdentifierNode            | Symbol: Symbol{name='status_array', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(Status)  | Type: PathExprSegNode           | Symbol: Symbol{name='Status', kind=ENUM, scopeLevel=0}
+Node: Status               | Type: IdentifierNode            | Symbol: Symbol{name='Status', kind=ENUM, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='Status', kind=ENUM, scopeLevel=0}
+Node: PathExprSeg(Status)  | Type: PathExprSegNode           | Symbol: Symbol{name='Status', kind=ENUM, scopeLevel=0}
+Node: Status               | Type: IdentifierNode            | Symbol: Symbol{name='Status', kind=ENUM, scopeLevel=0}
+Node: PathExprSeg(Active)  | Type: PathExprSegNode           | Symbol: null
+Node: Active               | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='Status', kind=ENUM, scopeLevel=0}
+Node: PathExprSeg(Status)  | Type: PathExprSegNode           | Symbol: Symbol{name='Status', kind=ENUM, scopeLevel=0}
+Node: Status               | Type: IdentifierNode            | Symbol: Symbol{name='Status', kind=ENUM, scopeLevel=0}
+Node: PathExprSeg(Pending) | Type: PathExprSegNode           | Symbol: null
+Node: Pending              | Type: IdentifierNode            | Symbol: null
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='process_statuses', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(process_statuses) | Type: PathExprSegNode           | Symbol: Symbol{name='process_statuses', kind=FUNCTION, scopeLevel=0}
+Node: process_statuses     | Type: IdentifierNode            | Symbol: Symbol{name='process_statuses', kind=FUNCTION, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='status_array', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExprSeg(status_array) | Type: PathExprSegNode           | Symbol: Symbol{name='status_array', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: status_array         | Type: IdentifierNode            | Symbol: Symbol{name='status_array', kind=LOCAL_VARIABLE, scopeLevel=2}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: PathExprSeg(exit)    | Type: PathExprSegNode           | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+Node: exit                 | Type: IdentifierNode            | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
+
+=== Symbol Debug Summary ===
+Total nodes visited: 57
+Nodes with symbols: 53
+Nodes without symbols: 4
+
+Node type distribution:
+  PathExprSegNode: 17
+  IdentifierNode: 27
+  FunctionNode: 2
+  EnumNode: 1
+  PathExprNode: 10
+Type checking errors:
+  Array elements have incompatible types
+  Type of expression node is not set yet.

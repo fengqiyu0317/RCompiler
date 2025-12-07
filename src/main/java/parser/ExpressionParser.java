@@ -706,7 +706,7 @@ public class ExpressionParser extends BaseParser {
             tokenStream.consume("{"); // Consume the opening brace
             
             BlockExprNode node = new BlockExprNode();
-            Vector<ASTNode> statements = new Vector<>();
+            Vector<StmtNode> statements = new Vector<>();
             
             if (statementParser != null) {
                 // Check for empty block
@@ -727,9 +727,9 @@ public class ExpressionParser extends BaseParser {
                     
                     try {
                         // Try to parse a statement
-                        StmtNode stmt = statementParser.parseStatement();
-                        if (stmt != null) {
-                            statements.add(stmt);
+                        StmtNode stmtNode = statementParser.parseStatement();
+                        if (stmtNode != null) {
+                            statements.add(stmtNode);
                             continue;
                         }
                     } catch (Exception e) {

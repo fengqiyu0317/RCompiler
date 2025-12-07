@@ -141,9 +141,9 @@ Node: main                 | Type: IdentifierNode            | Symbol: Symbol{na
 Node: pool                 | Type: IdentifierNode            | Symbol: Symbol{name='pool', kind=LOCAL_VARIABLE, scopeLevel=2}
 Node: PathExprSeg(NodePool) | Type: PathExprSegNode           | Symbol: Symbol{name='NodePool', kind=STRUCT, scopeLevel=0}
 Node: NodePool             | Type: IdentifierNode            | Symbol: Symbol{name='NodePool', kind=STRUCT, scopeLevel=0}
-Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='NodePool', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: PathExprSeg(NodePool) | Type: PathExprSegNode           | Symbol: Symbol{name='NodePool', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: NodePool             | Type: IdentifierNode            | Symbol: Symbol{name='NodePool', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='NodePool', kind=STRUCT, scopeLevel=0}
+Node: PathExprSeg(NodePool) | Type: PathExprSegNode           | Symbol: Symbol{name='NodePool', kind=STRUCT, scopeLevel=0}
+Node: NodePool             | Type: IdentifierNode            | Symbol: Symbol{name='NodePool', kind=STRUCT, scopeLevel=0}
 Node: PathExprSeg(new)     | Type: PathExprSegNode           | Symbol: null
 Node: new                  | Type: IdentifierNode            | Symbol: null
 Node: node1                | Type: IdentifierNode            | Symbol: Symbol{name='node1', kind=LOCAL_VARIABLE, scopeLevel=2}
@@ -218,11 +218,8 @@ Node type distribution:
   StructNode: 2
 Type checking errors:
   Type path expression is missing path or name
-  Cannot find common type because second type is null at in function 'new' (Self: NodePool) 
+  Function body type mismatch: expected null, got NodePool in function 'new'
   Type path expression is missing path or name
-  Expression type is null for CallExprNode('NodePool') at in function 'main' 
-  Field 'next' type mismatch: expected i32, got str at in function 'main' 
-  Expression type is null for StructExprNode at in function 'main' 
-  Expression type is null for CallExprNode('NodePool') at in function 'main' 
-  Field 'next' type mismatch: expected i32, got str at in function 'main' 
-  Expression type is null for StructExprNode at in function 'main' 
+  Type of expression node is not set yet.
+  Type mismatch for field 'next' in struct Node: expected i32, got String at in function 'main' 
+  Type of expression node is not set yet.

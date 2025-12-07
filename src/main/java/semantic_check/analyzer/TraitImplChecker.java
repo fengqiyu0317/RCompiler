@@ -3,6 +3,9 @@
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Arrays;
+import java.util.ArrayList;
 
 public class TraitImplChecker extends VisitorBase {
     private final TypeErrorCollector errorCollector;
@@ -200,21 +203,22 @@ public class TraitImplChecker extends VisitorBase {
             returnType = typeExtractor.extractTypeFromTypeNode(function.returnType);
         }
         
-        return new FunctionType(paramTypes, returnType);
+        List<Type> paramTypeList = Arrays.asList(paramTypes);
+        return new FunctionType(paramTypeList, returnType);
     }
     
     // Check if two method signatures match
     private boolean methodSignaturesMatch(FunctionType traitMethod, FunctionType implMethod) {
         // Check parameter count
-        if (traitMethod.getParamTypes().length != implMethod.getParamTypes().length) {
+        if (traitMethod.getParameterTypes().size() != implMethod.getParameterTypes().size()) {
             return false;
         }
         
         // Check parameter types
-        Type[] traitParams = traitMethod.getParamTypes();
-        Type[] implParams = implMethod.getParamTypes();
-        for (int i = 0; i < traitParams.length; i++) {
-            if (!TypeUtils.isTypeCompatible(implParams[i], traitParams[i])) {
+        List<Type> traitParams = traitMethod.getParameterTypes();
+        List<Type> implParams = implMethod.getParameterTypes();
+        for (int i = 0; i < traitParams.size(); i++) {
+            if (!TypeUtils.isTypeCompatible(implParams.get(i), traitParams.get(i))) {
                 return false;
             }
         }

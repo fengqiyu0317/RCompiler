@@ -11,7 +11,7 @@ public class ControlFlowTypeChecker extends VisitorBase {
     // 联动的组件
     private final TypeExtractor typeExtractor;
     private final ConstantEvaluator constantEvaluator;
-    private final TypeCheckerRefactored typeCheckerRefactored;
+    private final TypeChecker typeChecker;
     
     // 控制流上下文栈
     private Stack<ControlFlowContext> contextStack = new Stack<>();
@@ -57,12 +57,12 @@ public class ControlFlowTypeChecker extends VisitorBase {
     
     public ControlFlowTypeChecker(TypeErrorCollector errorCollector, boolean throwOnError,
                                  TypeExtractor typeExtractor, ConstantEvaluator constantEvaluator,
-                                 TypeCheckerRefactored typeCheckerRefactored) {
+                                 TypeChecker typeChecker) {
         this.errorCollector = errorCollector;
         this.throwOnError = throwOnError;
         this.typeExtractor = typeExtractor;
         this.constantEvaluator = constantEvaluator;
-        this.typeCheckerRefactored = typeCheckerRefactored;
+        this.typeChecker = typeChecker;
     }
     
     // 为了向后兼容，保留旧的构造函数
@@ -71,7 +71,7 @@ public class ControlFlowTypeChecker extends VisitorBase {
         this.throwOnError = throwOnError;
         this.typeExtractor = null;
         this.constantEvaluator = null;
-        this.typeCheckerRefactored = null;
+        this.typeChecker = null;
     }
     
     /**
@@ -119,20 +119,22 @@ public class ControlFlowTypeChecker extends VisitorBase {
     
     /**
      * 查找最近的函数上下文
-     * 只有上一层恰好是function context才行，否则就要抛出错误
+     * 遍历上下文栈直到找到function context为止
      */
     public ControlFlowContext findNearestFunctionContext() {
         if (contextStack.isEmpty()) {
             return null;
         }
         
-        // 检查上一层是否恰好是function context
-        ControlFlowContext immediateParent = contextStack.peek();
-        if (immediateParent.getType() == ControlFlowContextType.FUNCTION) {
-            return immediateParent;
+        // 遍历上下文栈直到找到function context
+        for (int i = contextStack.size() - 1; i >= 0; i--) {
+            ControlFlowContext context = contextStack.get(i);
+            if (context.getType() == ControlFlowContextType.FUNCTION) {
+                return context;
+            }
         }
         
-        // 如果上一层不是function context，则返回null，调用者将抛出错误
+        // 如果没有找到function context，返回null，调用者将抛出错误
         return null;
     }
     
@@ -179,8 +181,8 @@ public class ControlFlowTypeChecker extends VisitorBase {
             // 检查条件表达式类型
             try {
                 // 使用表达式类型检查器检查条件表达式
-                if (typeCheckerRefactored != null) {
-                    node.condition.accept(typeCheckerRefactored);
+                if (typeChecker != null) {
+                    node.condition.accept(typeChecker);
                     Type conditionType = node.condition.getType();
                     
                     // 检查条件是否为布尔类型
@@ -211,27 +213,27 @@ public class ControlFlowTypeChecker extends VisitorBase {
         // 分析then分支
         Type thenBranchType = null;
         if (node.thenBranch != null) {
-            visit(node.thenBranch);
+            node.thenBranch.accept(this);
             thenBranchType = node.thenBranch.getType();
         }
         
         // 分析elseif分支（如果存在）
         Type elseifBranchType = null;
         if (node.elseifBranch != null) {
-            visit(node.elseifBranch);
+            node.elseifBranch.accept(this);
             elseifBranchType = node.elseifBranch.getType();
         }
         
         // 分析else分支（如果存在）
         Type elseBranchType = null;
         if (node.elseBranch != null) {
-            visit(node.elseBranch);
+            node.elseBranch.accept(this);
             elseBranchType = node.elseBranch.getType();
         }
         
         // 确定if表达式的类型
         Type ifType = determineIfExpressionType(
-            thenBranchType, elseifBranchType, elseBranchType, node.elseBranch != null
+            thenBranchType, elseifBranchType, elseBranchType, node.elseBranch != null, node
         );
         
         // 设置if表达式的类型
@@ -242,7 +244,7 @@ public class ControlFlowTypeChecker extends VisitorBase {
      * 确定if表达式的类型
      */
     private Type determineIfExpressionType(
-        Type thenBranchType, Type elseifBranchType, Type elseBranchType, boolean hasElseBranch
+        Type thenBranchType, Type elseifBranchType, Type elseBranchType, boolean hasElseBranch, ASTNode node
     ) {
         // 收集所有分支类型
         java.util.List<Type> allTypes = new java.util.ArrayList<>();
@@ -271,7 +273,7 @@ public class ControlFlowTypeChecker extends VisitorBase {
             if (commonType == null) {
                 // 类型不兼容，抛出错误
                 SemanticException error = new SemanticException(
-                    "Incompatible types in if expression branches"
+                    "Incompatible types in if expression branches", node
                 );
                 if (throwOnError) {
                     throw error;
@@ -288,7 +290,7 @@ public class ControlFlowTypeChecker extends VisitorBase {
     /**
      * 确定循环表达式的类型
      */
-    private Type determineLoopType(java.util.List<Type> breakTypes) {
+    private Type determineLoopType(java.util.List<Type> breakTypes, ASTNode node) {
         // 如果没有break类型，返回NeverType（无限循环）
         if (breakTypes.isEmpty()) {
             return NeverType.INSTANCE;
@@ -301,7 +303,7 @@ public class ControlFlowTypeChecker extends VisitorBase {
             if (commonType == null) {
                 // 类型不兼容，抛出错误
                 SemanticException error = new SemanticException(
-                    "Incompatible break types in loop"
+                    "Incompatible break types in loop", node
                 );
                 if (throwOnError) {
                     throw error;
@@ -322,11 +324,11 @@ public class ControlFlowTypeChecker extends VisitorBase {
             for (int i = 0; i < node.statements.size(); i++) {
                 ASTNode stmt = node.statements.get(i);
 
-                // 使用typeCheckerRefactored访问语句
-                if (typeCheckerRefactored != null) {
-                    stmt.accept(typeCheckerRefactored);
+                // 使用typeChecker访问语句
+                if (typeChecker != null) {
+                    stmt.accept(typeChecker);
                 } else {
-                    throw new RuntimeException("TypeCheckerRefactored is not available");
+                    throw new RuntimeException("TypeChecker is not available");
                 }
             }
         }
@@ -334,8 +336,8 @@ public class ControlFlowTypeChecker extends VisitorBase {
         // 确定块的类型
         if (node.returnValue != null) {
             // 块有显式返回值
-            if (typeCheckerRefactored != null) {
-                node.returnValue.accept(typeCheckerRefactored);
+            if (typeChecker != null) {
+                node.returnValue.accept(typeChecker);
                 Type returnValueType = node.returnValue.getType();
                 if (returnValueType == null) {
                     SemanticException error = new SemanticException(
@@ -381,8 +383,8 @@ public class ControlFlowTypeChecker extends VisitorBase {
             if (node.condition != null && !node.isInfinite) {
                 // 对于while循环，条件必须是布尔类型
                 try {
-                    if (typeCheckerRefactored != null) {
-                        node.condition.accept(typeCheckerRefactored);
+                    if (typeChecker != null) {
+                        node.condition.accept(typeChecker);
                         Type conditionType = node.condition.getType();
                         
                         // 检查条件是否为布尔类型
@@ -412,7 +414,7 @@ public class ControlFlowTypeChecker extends VisitorBase {
             
             // 分析循环体
             if (node.body != null) {
-                visit(node.body);
+                node.body.accept(this);
                 
                 // 收集break类型
                 ControlFlowContext loopContext = getCurrentContext();
@@ -422,7 +424,7 @@ public class ControlFlowTypeChecker extends VisitorBase {
                     
                     if (!breakTypes.isEmpty()) {
                         // 如果有break表达式，确定循环的类型
-                        Type loopType = determineLoopType(breakTypes);
+                        Type loopType = determineLoopType(breakTypes, node);
                         node.setType(loopType);
                     } else {
                         // 没有break表达式，循环是无限循环，返回never类型
@@ -472,8 +474,8 @@ public class ControlFlowTypeChecker extends VisitorBase {
         Type breakValueType = null;
         if (node.value != null) {
             try {
-                if (typeCheckerRefactored != null) {
-                    node.value.accept(typeCheckerRefactored);
+                if (typeChecker != null) {
+                    node.value.accept(typeChecker);
                     breakValueType = node.value.getType();
                 } else {
                     throw new RuntimeException("No expression type checker is available");
@@ -574,8 +576,8 @@ public class ControlFlowTypeChecker extends VisitorBase {
         // 检查返回值类型
         if (node.value != null) {
             try {
-                if (typeCheckerRefactored != null) {
-                    node.value.accept(typeCheckerRefactored);
+                if (typeChecker != null) {
+                    node.value.accept(typeChecker);
                     Type returnType = node.value.getType();
 
                     if (returnType == null) {

@@ -3,7 +3,7 @@
 public class PrimitiveType implements Type {
     public enum PrimitiveKind {
         INT,     // Undetermined integer (for type inference)
-        I32, U32, USIZE, ISIZE, BOOL, CHAR, STR
+        I32, U32, USIZE, ISIZE, BOOL, CHAR, STR, STRING
     }
     
     private final PrimitiveKind kind;
@@ -36,6 +36,7 @@ public class PrimitiveType implements Type {
             case BOOL: return "bool";
             case CHAR: return "char";
             case STR: return "str";
+            case STRING: return "String";
             default: return "unknown";
         }
     }
@@ -100,5 +101,9 @@ public class PrimitiveType implements Type {
     
     public static PrimitiveType getStrType() {
         return new PrimitiveType(PrimitiveKind.STR);
+    }
+    
+    public static PrimitiveType getStringType() {
+        return new PrimitiveType(PrimitiveKind.STRING);
     }
 }

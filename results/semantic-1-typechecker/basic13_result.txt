@@ -10,9 +10,9 @@ Node: main                 | Type: IdentifierNode            | Symbol: Symbol{na
 Node: buf                  | Type: IdentifierNode            | Symbol: Symbol{name='buf', kind=LOCAL_VARIABLE, scopeLevel=2}
 Node: PathExprSeg(Buffer)  | Type: PathExprSegNode           | Symbol: Symbol{name='Buffer', kind=STRUCT, scopeLevel=0}
 Node: Buffer               | Type: IdentifierNode            | Symbol: Symbol{name='Buffer', kind=STRUCT, scopeLevel=0}
-Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='Buffer', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: PathExprSeg(Buffer)  | Type: PathExprSegNode           | Symbol: Symbol{name='Buffer', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: Buffer               | Type: IdentifierNode            | Symbol: Symbol{name='Buffer', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='Buffer', kind=STRUCT, scopeLevel=0}
+Node: PathExprSeg(Buffer)  | Type: PathExprSegNode           | Symbol: Symbol{name='Buffer', kind=STRUCT, scopeLevel=0}
+Node: Buffer               | Type: IdentifierNode            | Symbol: Symbol{name='Buffer', kind=STRUCT, scopeLevel=0}
 Node: PathExprSeg(build)   | Type: PathExprSegNode           | Symbol: null
 Node: build                | Type: IdentifierNode            | Symbol: null
 Node: i                    | Type: IdentifierNode            | Symbol: Symbol{name='i', kind=LOCAL_VARIABLE, scopeLevel=2}
@@ -167,8 +167,8 @@ Node type distribution:
   StructNode: 1
 Type checking errors:
   Type path expression is missing path or name
-  Expression type is null for CallExprNode('Buffer') at in function 'main' 
-  Expression type is null for CallExprNode('Buffer') at in function 'main' 
-  Type path expression is missing path or name
-  Cannot find common type because second type is null at in function 'build' (Self: Buffer) 
-  Function body type mismatch: expected i32, got () in function 'swap' at in function 'swap' 
+  Type of expression node is not set yet.
+  Type of expression node is not set yet.
+  Type of expression node is not set yet.
+  Type of expression node is not set yet.
+  Function body type mismatch: expected i32, got () in function 'swap'

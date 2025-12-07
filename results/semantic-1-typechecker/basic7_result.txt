@@ -10,9 +10,9 @@ Node: main                 | Type: IdentifierNode            | Symbol: Symbol{na
 Node: matrix               | Type: IdentifierNode            | Symbol: Symbol{name='matrix', kind=LOCAL_VARIABLE, scopeLevel=2}
 Node: PathExprSeg(Matrix)  | Type: PathExprSegNode           | Symbol: Symbol{name='Matrix', kind=STRUCT, scopeLevel=0}
 Node: Matrix               | Type: IdentifierNode            | Symbol: Symbol{name='Matrix', kind=STRUCT, scopeLevel=0}
-Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='Matrix', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: PathExprSeg(Matrix)  | Type: PathExprSegNode           | Symbol: Symbol{name='Matrix', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
-Node: Matrix               | Type: IdentifierNode            | Symbol: Symbol{name='Matrix', kind=STRUCT_CONSTRUCTOR, scopeLevel=0}
+Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='Matrix', kind=STRUCT, scopeLevel=0}
+Node: PathExprSeg(Matrix)  | Type: PathExprSegNode           | Symbol: Symbol{name='Matrix', kind=STRUCT, scopeLevel=0}
+Node: Matrix               | Type: IdentifierNode            | Symbol: Symbol{name='Matrix', kind=STRUCT, scopeLevel=0}
 Node: PathExprSeg(identity) | Type: PathExprSegNode           | Symbol: null
 Node: identity             | Type: IdentifierNode            | Symbol: null
 Node: trace                | Type: IdentifierNode            | Symbol: Symbol{name='trace', kind=LOCAL_VARIABLE, scopeLevel=2}
@@ -87,7 +87,6 @@ Node type distribution:
   StructNode: 1
 Type checking errors:
   Type path expression is missing path or name
-  Expression type is null for CallExprNode('Matrix') at in function 'main' 
-  Expression type is null for CallExprNode('Matrix') at in function 'main' 
+  Type of expression node is not set yet.
   Type path expression is missing path or name
-  Cannot find common type because second type is null at in function 'identity' (Self: Matrix) 
+  Function body type mismatch: expected null, got Matrix in function 'identity'
