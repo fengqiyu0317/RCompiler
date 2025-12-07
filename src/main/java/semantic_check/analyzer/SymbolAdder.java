@@ -490,7 +490,7 @@ public class SymbolAdder extends VisitorBase {
         try {
             // Process statements in block
             if (node.statements != null) {
-                for (StmtNode stmt : node.statements) {
+                for (ASTNode stmt : node.statements) {
                     stmt.accept(this);
                 }
             }

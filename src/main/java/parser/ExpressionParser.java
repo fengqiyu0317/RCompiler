@@ -706,7 +706,7 @@ public class ExpressionParser extends BaseParser {
             tokenStream.consume("{"); // Consume the opening brace
             
             BlockExprNode node = new BlockExprNode();
-            Vector<StmtNode> statements = new Vector<>();
+            Vector<ASTNode> statements = new Vector<>();
             
             if (statementParser != null) {
                 // Check for empty block
@@ -758,6 +758,19 @@ public class ExpressionParser extends BaseParser {
                 node.statements = statements;
                 if (!hasExpression) {
                     node.returnValue = null;
+                    
+                    // Check if the last statement is an ExprStmtNode without a semicolon
+                    if (!statements.isEmpty()) {
+                        ASTNode lastStmt = statements.lastElement();
+                        if (lastStmt instanceof ExprStmtNode) {
+                            ExprStmtNode exprStmt = (ExprStmtNode) lastStmt;
+                            if (!exprStmt.hasSemicolon) {
+                                // Move the expression to returnValue and remove it from statements
+                                node.returnValue = exprStmt.expr;
+                                statements.remove(statements.size() - 1);
+                            }
+                        }
+                    }
                 }
             } else {
                 errorReporter.reportError("StatementParser not available for block expression", tokenStream.current());

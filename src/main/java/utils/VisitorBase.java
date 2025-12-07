@@ -12,9 +12,6 @@ public abstract class VisitorBase {
         // Base implementation - no children to traverse
     }
     
-    public void visit(StmtNode node) {
-        // Base implementation - no children to traverse
-    }
     
     public void visit(ItemNode node) {
         // Base implementation - no children to traverse

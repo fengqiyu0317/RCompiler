@@ -249,7 +249,7 @@ public class NamespaceAnalyzer extends VisitorBase {
     public void visit(BlockExprNode node) {
         // Only check references in phase 2
         if (node.statements != null) {
-            for (StmtNode stmt : node.statements) {
+            for (ASTNode stmt : node.statements) {
                 stmt.accept(symbolChecker);
             }
         }

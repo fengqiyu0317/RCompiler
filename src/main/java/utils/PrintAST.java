@@ -24,20 +24,6 @@ public class PrintAST extends VisitorBase {
     @Override
     public void visit(ASTNode node) {}
     @Override
-    public void visit(StmtNode node) {
-        // System.out.println(node instanceof FunctionNode);
-        // decide which specific StmtNode it is
-        if (node instanceof LetStmtNode n) {
-            visit(n);
-        } else if (node instanceof ExprStmtNode n) {
-            visit(n);
-        } else if (node instanceof ItemNode n) {
-            visit(n);
-        } else {
-            throw new ASTPrintException("unknown StmtNode");
-        }
-    }
-    @Override
     public void visit(ItemNode node) {
         // decide which specific ItemNode it is
         if (node instanceof FunctionNode n) {
@@ -289,7 +275,7 @@ public class PrintAST extends VisitorBase {
         System.out.println("BlockExprNode");
         indent();
         if (node.statements != null) {
-            for (StmtNode stmt : node.statements) {
+            for (ASTNode stmt : node.statements) {
                 stmt.accept(this);
             }
         }

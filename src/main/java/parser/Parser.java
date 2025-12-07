@@ -36,11 +36,11 @@ public class Parser {
     // Main entry method
     public void parse() throws ParserException {
         try {
-            Vector<StmtNode> statements = new Vector<>();
+            Vector<ASTNode> statements = new Vector<>();
             
             while (!tokenStream.isAtEnd()) {
                 try {
-                    StmtNode stmt = statementParser.parseStatement();
+                    ASTNode stmt = statementParser.parseStatement();
                     if (stmt != null) {
                         statements.add(stmt);
                     }
@@ -61,7 +61,7 @@ public class Parser {
     }
     
     
-    public Vector<StmtNode> getStatements() {
+    public Vector<ASTNode> getStatements() {
         return statements;
     }
     
@@ -73,7 +73,7 @@ public class Parser {
         return errorReporter.getErrors();
     }
     
-    private Vector<StmtNode> statements;
+    private Vector<ASTNode> statements;
     
     // Accessor methods for direct access to parsers
     // This provides a clean API for advanced users who need more control

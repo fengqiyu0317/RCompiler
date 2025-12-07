@@ -33,7 +33,7 @@ class ReadRustFile {
             // Set up father relationships before semantic checking
             try {
                 FatherSetterVisitor fatherSetter = new FatherSetterVisitor();
-                for (StmtNode stmt : parser.getStatements()) {
+                for (ASTNode stmt : parser.getStatements()) {
                     stmt.accept(fatherSetter);
                 }
                 System.out.println("Father relationships set successfully.");
@@ -46,7 +46,7 @@ class ReadRustFile {
             // Perform self and Self semantic checking
             try {
                 SelfSemanticAnalyzer selfAnalyzer = new SelfSemanticAnalyzer();
-                for (StmtNode stmt : parser.getStatements()) {
+                for (ASTNode stmt : parser.getStatements()) {
                     stmt.accept(selfAnalyzer);
                 }
                 System.out.println("Self and Self semantic checking completed successfully.");
@@ -67,7 +67,7 @@ class ReadRustFile {
                 NamespaceAnalyzer namespaceAnalyzer = new NamespaceAnalyzer();
                 namespaceAnalyzer.initializeGlobalScope();
                 
-                for (StmtNode stmt : parser.getStatements()) {
+                for (ASTNode stmt : parser.getStatements()) {
                     stmt.accept(namespaceAnalyzer);
                 }
                 
@@ -83,7 +83,7 @@ class ReadRustFile {
             try {
                 TypeChecker typeChecker = new TypeChecker(false); // Don't throw on error, collect all errors
                 
-                for (StmtNode stmt : parser.getStatements()) {
+                for (ASTNode stmt : parser.getStatements()) {
                     stmt.accept(typeChecker);
                 }
                 

@@ -1441,11 +1441,15 @@ Node type distribution:
   PathExprNode: 309
   StructNode: 2
 Type checking errors:
-  Function body type mismatch: expected i32, got () in function 'pattern_matching_with_lcp' at in function 'pattern_matching_with_lcp' 
-  Function body type mismatch: expected i32, got () in function 'analyze_suffix_patterns' at in function 'analyze_suffix_patterns' 
-  Function body type mismatch: expected i32, got () in function 'simulate_suffix_tree_operations' at in function 'simulate_suffix_tree_operations' 
-  Function body type mismatch: expected SuffixLCPProcessor, got () in function 'create_suffix_lcp_processor' at in function 'create_suffix_lcp_processor' 
+  Cannot assign int to SuffixLCPProcessor at in function 'perform_suffix_analysis' 
   Cannot assign int to SuffixLCPProcessor at in function 'perform_suffix_analysis' 
   Right operand of arithmetic expression is not numeric: SuffixLCPProcessor
   Expression type is null for ArithExprNode(PLUS) at in function 'perform_suffix_analysis' 
-  Function body type mismatch: expected i32, got () in function 'perform_suffix_analysis' at in function 'perform_suffix_analysis' 
+  Right operand of arithmetic expression is not numeric: SuffixLCPProcessor
+  Expression type is null for ArithExprNode(PLUS) at in function 'perform_suffix_analysis' 
+  Cannot assign int to SuffixLCPProcessor at in function 'perform_suffix_analysis' 
+  Cannot assign int to SuffixLCPProcessor at in function 'perform_suffix_analysis' 
+  Right operand of arithmetic expression is not numeric: SuffixLCPProcessor
+  Expression type is null for ArithExprNode(PLUS) at in function 'perform_suffix_analysis' 
+  Right operand of arithmetic expression is not numeric: SuffixLCPProcessor
+  Expression type is null for ArithExprNode(PLUS) at in function 'perform_suffix_analysis' 

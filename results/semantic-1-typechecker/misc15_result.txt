@@ -377,15 +377,5 @@ Node type distribution:
   SelfParaNode: 3
   StructNode: 2
 Type checking errors:
-  class StructConstructorType cannot be cast to class StructType (StructConstructorType and StructType are in unnamed module of loader 'app')
-  Called expression is not a function: StructConstructor<HashEntry>
-  Expression type is null for CallExprNode('HashEntry') at in function 'new' (Self: HashTable) 
-  Expression type is null for ArrayExprNode at in function 'new' (Self: HashTable) 
-  Expression type is null for StructExprNode at in function 'new' (Self: HashTable) 
-  Expression type is null for BlockExprNode at in function 'new' (Self: HashTable) 
-  Function body type mismatch: expected i32, got () in function 'hash_function' at in function 'hash_function' (Self: &HashTable) 
-  Function body type mismatch: expected bool, got () in function 'insert' at in function 'insert' (Self: &mut HashTable) 
-  Function body type mismatch: expected i32, got () in function 'get' at in function 'get' (Self: &HashTable) 
-  class StructConstructorType cannot be cast to class StructType (StructConstructorType and StructType are in unnamed module of loader 'app')
-  Called expression is not a function: StructConstructor<HashTable>
-  Expression type is null for CallExprNode('HashTable') at in function 'main' 
+  Function body type mismatch: expected bool, got AmbiguousBlock(! | ()) in function 'insert' at in function 'insert' (Self: &mut HashTable) 
+  Function body type mismatch: expected i32, got AmbiguousBlock(! | ()) in function 'get' at in function 'get' (Self: &HashTable) 

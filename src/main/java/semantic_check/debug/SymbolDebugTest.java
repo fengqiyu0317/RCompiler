@@ -103,7 +103,7 @@ public class SymbolDebugTest {
             // Set up father relationships before semantic checking
             try {
                 FatherSetterVisitor fatherSetter = new FatherSetterVisitor();
-                for (StmtNode stmt : parser.getStatements()) {
+                for (ASTNode stmt : parser.getStatements()) {
                     stmt.accept(fatherSetter);
                 }
                 System.out.println("Father relationships set successfully.");
@@ -117,7 +117,7 @@ public class SymbolDebugTest {
             // Perform self and Self semantic checking
             try {
                 SelfSemanticAnalyzer selfAnalyzer = new SelfSemanticAnalyzer();
-                for (StmtNode stmt : parser.getStatements()) {
+                for (ASTNode stmt : parser.getStatements()) {
                     stmt.accept(selfAnalyzer);
                 }
                 System.out.println("Self and Self semantic checking completed successfully.");
@@ -149,7 +149,7 @@ public class SymbolDebugTest {
                 System.out.println("\n=== Symbol Debug Output ===");
                 SymbolDebugVisitor debugVisitor = new SymbolDebugVisitor();
                 
-                for (StmtNode stmt : parser.getStatements()) {
+                for (ASTNode stmt : parser.getStatements()) {
                     stmt.accept(debugVisitor);
                 }
                 
@@ -172,7 +172,7 @@ public class SymbolDebugTest {
             try {
                 TypeChecker typeChecker = new TypeChecker(false); // Don't throw on error, collect all errors
                 
-                for (StmtNode stmt : parser.getStatements()) {
+                for (ASTNode stmt : parser.getStatements()) {
                     stmt.accept(typeChecker);
                 }
                 

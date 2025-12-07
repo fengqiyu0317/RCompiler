@@ -730,16 +730,5 @@ Node type distribution:
   PathExprNode: 140
   SelfParaNode: 8
   StructNode: 2
-Type checking errors:
-  class StructConstructorType cannot be cast to class StructType (StructConstructorType and StructType are in unnamed module of loader 'app')
-  Called expression is not a function: StructConstructor<Queue>
-  Expression type is null for CallExprNode('Queue') at in function 'topological_sort' (Self: &Graph) 
-  Function body type mismatch: expected [i32; 100], got () in function 'topological_sort' at in function 'topological_sort' (Self: &Graph) 
-  Function body type mismatch: expected bool, got () in function 'has_cycle' at in function 'has_cycle' (Self: &Graph) 
-  Function body type mismatch: expected bool, got () in function 'dfs_recursive' at in function 'dfs_recursive' (Self: &Graph) 
-  Function body type mismatch: expected bool, got () in function 'has_cycle_dfs' at in function 'has_cycle_dfs' (Self: &Graph) 
-  Function body type mismatch: expected i32, got () in function 'dequeue' at in function 'dequeue' (Self: &mut Queue) 
-  Function body type mismatch: expected bool, got () in function 'is_empty' at in function 'is_empty' (Self: &Queue) 
-  class StructConstructorType cannot be cast to class StructType (StructConstructorType and StructType are in unnamed module of loader 'app')
-  Called expression is not a function: StructConstructor<Graph>
-  Expression type is null for CallExprNode('Graph') at in function 'main' 
+Type checking completed successfully.
+Constant evaluation completed successfully.

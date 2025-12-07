@@ -45,17 +45,22 @@ abstract class ASTNode {
     }
 }
 
-// StmtNode represents a statement <statement>.
-// The grammer for statement is:
-// <statement> = <item> | <letstmt> | <exprstmt> | ;
-class StmtNode extends ASTNode {
-    public void accept(VisitorBase visitor) {
-        visitor.visit(this);
-    }
-}
 // ItemNode represents an item <item>.
 // There are several kinds of items: function, struct, enum, constant, trait, impl. so <item> = <function> | <structitem> | <enumitem> | <constitem> | <traititem> | <implitem>.
-class ItemNode extends StmtNode {
+class ItemNode extends ASTNode {
+    private Type type; // Type information for the statement
+
+    public Type getType() {
+        if (type == null) {
+            // throw semantic error
+            throw new SemanticError("Type information is not set for ItemNode at line " + line + ", column " + column);
+        }
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
     }
@@ -63,7 +68,16 @@ class ItemNode extends StmtNode {
 // LetStmtNode represents a let statement <letstmt>.
 // The grammer for let statement is:
 // <letstmt> = let <pattern> : <type> (= <expression>)? ;
-class LetStmtNode extends StmtNode {
+class LetStmtNode extends ASTNode {
+    private Type type; // Type information for the statement
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
     PatternNode name;
     TypeExprNode type;
     ExprNode value; // can be null
@@ -76,8 +90,18 @@ class LetStmtNode extends StmtNode {
 // ExprStmtNode represents an expression statement <exprstmt>.
 // The grammer for expression statement is:
 // <exprstmt> = <exprwithblock> ;? | <exprwithoutblock> ;
-class ExprStmtNode extends StmtNode {
+class ExprStmtNode extends ASTNode {
+    private Type type; // Type information for the statement
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
     ExprNode expr;
+    boolean hasSemicolon; // 记录是否有分号
     
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
@@ -801,7 +825,7 @@ class UnderscoreExprNode extends ExprWithoutBlockNode {
 // the grammer for block expression is:
 // <blockexpr> = { <statements>* }
 class BlockExprNode extends ExprWithBlockNode {
-    Vector<StmtNode> statements;
+    Vector<ASTNode> statements;
     ExprNode returnValue; // 表示块表达式的返回值
     
     public void accept(VisitorBase visitor) {
@@ -871,7 +895,7 @@ class TypeExprNode extends ASTNode {
 
 // TypePathExprNode represents a path type expression <typepathexpr>.
 // the grammer for path type expression is:
-// <typepathexpr> = <pathseg>
+// <typepathexr> = <pathseg>
 class TypePathExprNode extends TypeExprNode {
     PathExprSegNode path;
     

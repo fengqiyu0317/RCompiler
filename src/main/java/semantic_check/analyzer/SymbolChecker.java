@@ -578,11 +578,11 @@ public class SymbolChecker extends VisitorBase {
     public void visit(BlockExprNode node) {
         // Enter new scope
         enterScope();
-        
+
         try {
             // Process statements in block
             if (node.statements != null) {
-                for (StmtNode stmt : node.statements) {
+                for (ASTNode stmt : node.statements) {
                     stmt.accept(this);
                 }
             }
@@ -608,8 +608,18 @@ public class SymbolChecker extends VisitorBase {
     // Process path expression
     @Override
     public void visit(PathExprNode node) {
-        // Process left segment in value context
-        node.LSeg.accept(this);
+        // Process left segment in type context only if RSeg is not null
+        Context previousContext = currentContext;
+        if (node.RSeg != null) {
+            setContext(Context.TYPE_CONTEXT);
+        }
+        
+        try {
+            node.LSeg.accept(this);
+        } finally {
+            // Restore context
+            setContext(previousContext);
+        }
         
         // If left segment has resolved symbol, set it to path expression node
         if (node.LSeg != null && node.LSeg.getSymbol() != null) {

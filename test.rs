@@ -1,133 +1,260 @@
 /*
 Test Package: Semantic-1
-Test Target: expr
+Test Target: misc
 Author: Wenxin Zheng
 Time: 2025-08-08
 Verdict: Success
-Comment: Depth-first search algorithm with graph traversal, complex control flow, and nested data structures; printInt returns `()`
+Comment: Minimum Spanning Tree using Kruskal's Algorithm with Union-Find
 */
 
-struct GraphNode {
-    id: i32,
-    visited: bool,
-    neighbors: [i32; 5],
-    neighbor_count: i32,
+// Minimum Spanning Tree using Kruskal's Algorithm
+// With Union-Find (Disjoint Set Union) data structure
+
+struct Edge {
+    src: i32,
+    dest: i32,
+    weight: i32,
 }
 
-impl GraphNode {
-    fn new(node_id: i32) -> GraphNode {
-        GraphNode {
-            id: node_id,
-            visited: false,
-            neighbors: [0; 5],
-            neighbor_count: 0,
+struct UnionFind {
+    parent: [i32; 100],
+    rank: [i32; 100],
+    vertex_count: i32,
+}
+
+struct Graph {
+    edges: [Edge; 1000],
+    edge_count: i32,
+    vertex_count: i32,
+}
+
+impl Edge {
+    fn new(src: i32, dest: i32, weight: i32) -> Edge {
+        Edge {
+            src: src,
+            dest: dest,
+            weight: weight,
         }
     }
-    
-    fn add_neighbor(&mut self, neighbor_id: i32) {
-        if (self.neighbor_count < 5) {
-            self.neighbors[self.neighbor_count as usize] = neighbor_id;
-            self.neighbor_count = self.neighbor_count + 1;
-        }
-    }
-    
-    fn has_neighbor(&self, target_id: i32) -> bool {
+}
+
+impl UnionFind {
+    fn new(vertices: i32) -> UnionFind {
+        let mut uf: UnionFind = UnionFind {
+            parent: [0; 100],
+            rank: [0; 100],
+            vertex_count: vertices,
+        };
+        
         let mut i: i32 = 0;
-        loop {
-            if (i >= self.neighbor_count) {
-                break;
-            }
-            if (self.neighbors[i as usize] == target_id) {
-                return true;
-            }
-            i = i + 1;
-        }
-        return false;
-    }
-}
-
-fn depth_first_search(graph: &mut [GraphNode; 10], start_node: i32, target_node: i32) -> i32 {
-    let mut visited_count: i32 = 0;
-    let mut stack: [i32; 10] = [0; 10];
-    let mut stack_size: i32 = 0;
-    
-    stack[stack_size as usize] = start_node;
-    stack_size = stack_size + 1;
-    
-    loop {
-        if (stack_size == 0) {
-            break;
+        while (i < vertices) {
+            uf.parent[i as usize] = i;
+            uf.rank[i as usize] = 0;
+            i += 1;
         }
         
-        stack_size = stack_size - 1;
-        let current_node: i32 = stack[stack_size as usize];
-        
-        if (graph[current_node as usize].visited) {
-            continue;
-        }
-        
-        visited_count = visited_count + 1;
-        
-        if (current_node == target_node) {
-            return visited_count;
-        }
-        
-        let mut neighbor_index: i32 = 0;
-        loop {
-            if (neighbor_index >= graph[current_node as usize].neighbor_count) {
-                break;
-            }
-            
-            let neighbor: i32 = graph[current_node as usize].neighbors[neighbor_index as usize];
-            if (!graph[neighbor as usize].visited) {
-                stack[stack_size as usize] = neighbor;
-                stack_size = stack_size + 1;
-            }
-            
-            neighbor_index = neighbor_index + 1;
-        }
+        return uf;
     }
     
-    return -1;
-}
-
-fn calculate_graph_metrics(nodes: [GraphNode; 10]) -> i32 {
-    let mut total_edges: i32 = 0;
-    let mut max_degree: i32 = 0;
-    let mut connected_components: i32 = 0;
-    
-    let mut node_index: i32 = 0;
-    loop {
-        if (node_index >= 10) {
-            break;
+    fn find(&mut self, vertex: i32) -> i32 {
+        if (self.parent[vertex as usize] != vertex) {
+            self.parent[vertex as usize] = self.find(self.parent[vertex as usize]);
         }
-        
-        let current_node: &GraphNode = &nodes[node_index as usize];
-        let degree: i32 = current_node.neighbor_count;
-        total_edges = total_edges + degree;
-        
-        if (degree > max_degree) {
-            max_degree = degree;
-        }
-        
-        if (degree > 0) {
-            connected_components = connected_components + 1;
-        }
-        
-        node_index = node_index + 1;
+        return self.parent[vertex as usize];
     }
     
-    let metric: i32 = {
-        let edge_factor: i32 = total_edges * 2;
-        let degree_factor: i32 = max_degree * max_degree;
-        let component_factor: i32 = connected_components * 3;
-        let combined: i32 = edge_factor + degree_factor + component_factor;
-        if (combined > 50) {
-            combined % 30
+    fn union(&mut self, x: i32, y: i32) -> bool {
+        let root_x: i32 = self.find(x);
+        let root_y: i32 = self.find(y);
+        
+        if (root_x == root_y) {
+            return false; // Already in same set
+        }
+        
+        if (self.rank[root_x as usize] < self.rank[root_y as usize]) {
+            self.parent[root_x as usize] = root_y;
+        } else if (self.rank[root_x as usize] > self.rank[root_y as usize]) {
+            self.parent[root_y as usize] = root_x;
         } else {
-            combined + 10
+            self.parent[root_y as usize] = root_x;
+            self.rank[root_x as usize] += 1;
         }
-    };
+        
+        return true;
+    }
     
-    return metric;
+    fn is_connected(&mut self, x: i32, y: i32) -> bool {
+        return self.find(x) == self.find(y);
+    }
+    
+    fn count_components(&mut self) -> i32 {
+        let mut components: i32 = 0;
+        let mut i: i32 = 0;
+        
+        while (i < self.vertex_count) {
+            if (self.parent[i as usize] == i) {
+                components += 1;
+            }
+            i += 1;
+        }
+        
+        return components;
+    }
+}
+
+impl Graph {
+    fn new(vertices: i32) -> Graph {
+        Graph {
+            edges: [Edge::new(0, 0, 0); 1000],
+            edge_count: 0,
+            vertex_count: vertices,
+        }
+    }
+    
+    fn add_edge(&mut self, src: i32, dest: i32, weight: i32) {
+        if (self.edge_count < 1000) {
+            self.edges[self.edge_count as usize] = Edge::new(src, dest, weight);
+            self.edge_count += 1;
+        }
+    }
+    
+    fn partition(&mut self, low: i32, high: i32) -> i32 {
+        let pivot_weight: i32 = self.edges[high as usize].weight;
+        let mut i: i32 = low - 1;
+        
+        let mut j: i32 = low;
+        while (j < high) {
+            if (self.edges[j as usize].weight <= pivot_weight) {
+                i += 1;
+                self.swap_edges(i, j);
+            }
+            j += 1;
+        }
+        
+        self.swap_edges(i + 1, high);
+        return i + 1;
+    }
+    
+    fn quick_sort(&mut self, low: i32, high: i32) {
+        if (low < high) {
+            let pi: i32 = self.partition(low, high);
+            self.quick_sort(low, pi - 1);
+            self.quick_sort(pi + 1, high);
+        }
+    }
+    
+    fn swap_edges(&mut self, i: i32, j: i32) {
+        let temp: Edge = self.edges[i as usize];
+        self.edges[i as usize] = self.edges[j as usize];
+        self.edges[j as usize] = temp;
+    }
+    
+    fn sort_edges(&mut self) {
+        if (self.edge_count > 1) {
+            self.quick_sort(0, self.edge_count - 1);
+        }
+    }
+    
+    fn kruskal_mst(&mut self) -> [Edge; 100] {
+        let mut result: [Edge; 100] = [Edge::new(-1, -1, -1); 100];
+        let mut result_count: i32 = 0;
+        let mut uf: UnionFind = UnionFind::new(self.vertex_count);
+        
+        // Sort edges by weight
+        self.sort_edges();
+        
+        let mut i: i32 = 0;
+        while (i < self.edge_count && result_count < self.vertex_count - 1) {
+            let edge: Edge = self.edges[i as usize];
+            
+            if (uf.union(edge.src, edge.dest)) {
+                result[result_count as usize] = edge;
+                result_count += 1;
+            }
+            
+            i += 1;
+        }
+        
+        return result;
+    }
+    
+    fn calculate_mst_weight(&mut self) -> i32 {
+        let mst: [Edge; 100] = self.kruskal_mst();
+        let mut total_weight: i32 = 0;
+        
+        let mut i: i32 = 0;
+        while (i < 100 && mst[i as usize].src != -1) {
+            total_weight += mst[i as usize].weight;
+            i += 1;
+        }
+        
+        return total_weight;
+    }
+    
+    fn is_connected_graph(&mut self) -> bool {
+        let mut uf: UnionFind = UnionFind::new(self.vertex_count);
+        
+        let mut i: i32 = 0;
+        while (i < self.edge_count) {
+            let edge: Edge = self.edges[i as usize];
+            uf.union(edge.src, edge.dest);
+            i += 1;
+        }
+        
+        return (uf.count_components() == 1);
+    }
+    
+    fn count_mst_edges(&mut self) -> i32 {
+        let mst: [Edge; 100] = self.kruskal_mst();
+        let mut count: i32 = 0;
+        
+        let mut i: i32 = 0;
+        while (i < 100 && mst[i as usize].src != -1) {
+            count += 1;
+            i += 1;
+        }
+        
+        return count;
+    }
+}
+
+fn main() {
+    let vertices: i32 = getInt();
+    let mut graph: Graph = Graph::new(vertices);
+    
+    let edges: i32 = getInt();
+    let mut i: i32 = 0;
+    while (i < edges) {
+        let src: i32 = getInt();
+        let dest: i32 = getInt();
+        let weight: i32 = getInt();
+        graph.add_edge(src, dest, weight);
+        i += 1;
+    }
+    
+    let operation: i32 = getInt();
+    
+    if (operation == 1) { // Calculate MST weight
+        let mst_weight: i32 = graph.calculate_mst_weight();
+        printInt(mst_weight);
+    } else if (operation == 2) { // Check if graph is connected
+        if (graph.is_connected_graph()) {
+            printInt(1);
+        } else {
+            printInt(0);
+        }
+    } else if (operation == 3) { // Count MST edges
+        let edge_count: i32 = graph.count_mst_edges();
+        printInt(edge_count);
+    } else if (operation == 4) { // Print MST edges
+        let mst: [Edge; 100] = graph.kruskal_mst();
+        i = 0;
+        while (i < 100 && mst[i as usize].src != -1) {
+            printInt(mst[i as usize].src);
+            printInt(mst[i as usize].dest);
+            printInt(mst[i as usize].weight);
+            i += 1;
+        }
+    }
+    exit(0);
 }

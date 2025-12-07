@@ -29,7 +29,7 @@ public class StatementParser extends BaseParser {
     
     // Grammar: <statement> ::= <item> | <letstmt> | <exprstmt> | ;
     // Main statement parsing method
-    public StmtNode parseStatement() throws ParserException {
+    public ASTNode parseStatement() throws ParserException {
         try {
             // Handle empty statement
             if (tokenStream.matches(";")) {
@@ -479,7 +479,7 @@ public class StatementParser extends BaseParser {
                 ExprStmtNode stmt = new ExprStmtNode();
                 stmt.expr = expr;
                 // Expressions with blocks don't require semicolons, but they can have them
-                tokenStream.matches(";");
+                stmt.hasSemicolon = tokenStream.matches(";");
                 return stmt;
             } else if (currentToken.name.equals("{")) {
                 // Parse as block expression specifically
@@ -488,7 +488,7 @@ public class StatementParser extends BaseParser {
                 ExprStmtNode stmt = new ExprStmtNode();
                 stmt.expr = expr;
                 // Block expressions don't require semicolons, but they can have them
-                tokenStream.matches(";");
+                stmt.hasSemicolon = tokenStream.matches(";");
                 return stmt;
             } else {
                 // Parse as expression without block
@@ -504,6 +504,7 @@ public class StatementParser extends BaseParser {
                 
                 ExprStmtNode stmt = new ExprStmtNode();
                 stmt.expr = expr;
+                stmt.hasSemicolon = true; // We just consumed a semicolon
                 return stmt;
             }
         } catch (ParserException e) {
