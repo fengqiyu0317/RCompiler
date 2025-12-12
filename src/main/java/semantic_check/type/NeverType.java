@@ -2,8 +2,17 @@
 
 public class NeverType implements Type {
     public static final NeverType INSTANCE = new NeverType();
+    public static final NeverType MUTABLE_INSTANCE = new NeverType(true);
     
-    private NeverType() {}
+    private boolean isMutable;
+    
+    private NeverType() {
+        this(false);
+    }
+    
+    private NeverType(boolean isMutable) {
+        this.isMutable = isMutable;
+    }
     
     @Override
     public boolean equals(Type other) {
@@ -39,4 +48,14 @@ public class NeverType implements Type {
     public boolean isNever() {
         return true;
     }
+    
+    public boolean isMutable() {
+        return isMutable;
+    }
+    
+    @Override
+    public void setMutability(boolean isMutable) {
+        this.isMutable = isMutable;
+    }
+    
 }

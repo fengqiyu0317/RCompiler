@@ -19,6 +19,7 @@ public class TypeChecker extends VisitorBase {
     // Mutability检查器
     protected final MutabilityChecker mutabilityChecker;
     
+    
     // Trait impl checker for checking trait implementations
     private final TraitImplChecker traitImplChecker;
     
@@ -42,6 +43,7 @@ public class TypeChecker extends VisitorBase {
         // 创建mutability检查器
         this.mutabilityChecker = new MutabilityChecker(errorCollector, throwOnError);
         
+        
         // 创建专门的类型检查器，传递自身作为主检查器
         this.simpleExpressionChecker = new SimpleExpressionTypeChecker(
             errorCollector, throwOnError, typeExtractor, constantEvaluator, context, this);
@@ -64,6 +66,7 @@ public class TypeChecker extends VisitorBase {
         this.simpleExpressionChecker.setMutabilityChecker(mutabilityChecker);
         this.operatorExpressionChecker.setMutabilityChecker(mutabilityChecker);
         this.complexExpressionChecker.setMutabilityChecker(mutabilityChecker);
+        
         
         // Set up circular dependency between TypeExtractor and ExpressionTypeChecker
         this.typeExtractor.setExpressionTypeChecker(expressionTypeChecker);
@@ -236,6 +239,7 @@ public class TypeChecker extends VisitorBase {
             mutabilityChecker.checkMutability(node);
         }
     }
+    
     
     /**
      * 获取表达式类型上下文

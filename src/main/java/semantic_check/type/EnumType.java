@@ -9,17 +9,25 @@ public class EnumType implements Type {
     private final String name;
     private final Map<String, List<Type>> variants;
     private final Symbol enumSymbol;
+    private boolean isMutable;
     
     public EnumType(String name, Map<String, List<Type>> variants, Symbol enumSymbol) {
-        this.name = name;
-        this.variants = new HashMap<>(variants);
-        this.enumSymbol = enumSymbol;
+        this(name, variants, enumSymbol, false);
     }
     
     public EnumType(String name, Symbol enumSymbol) {
+        this(name, new HashMap<>(), enumSymbol, false);
+    }
+    
+    public EnumType(String name, Map<String, List<Type>> variants, Symbol enumSymbol, boolean isMutable) {
         this.name = name;
-        this.variants = new HashMap<>();
+        this.variants = new HashMap<>(variants);
         this.enumSymbol = enumSymbol;
+        this.isMutable = isMutable;
+    }
+    
+    public EnumType(String name, Symbol enumSymbol, boolean isMutable) {
+        this(name, new HashMap<>(), enumSymbol, isMutable);
     }
     
     public String getName() {
@@ -32,6 +40,11 @@ public class EnumType implements Type {
     
     public Symbol getEnumSymbol() {
         return enumSymbol;
+    }
+    
+    @Override
+    public void setMutability(boolean isMutable) {
+        this.isMutable = isMutable;
     }
     
     public void addVariant(String variantName, List<Type> variantTypes) {
@@ -91,4 +104,10 @@ public class EnumType implements Type {
     public boolean isNever() {
         return false;
     }
+    
+    @Override
+    public boolean isMutable() {
+        return isMutable;
+    }
+    
 }

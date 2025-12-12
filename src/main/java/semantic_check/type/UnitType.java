@@ -2,8 +2,17 @@
 
 public class UnitType implements Type {
     public static final UnitType INSTANCE = new UnitType();
+    public static final UnitType MUTABLE_INSTANCE = new UnitType(true);
     
-    private UnitType() {}
+    private boolean isMutable;
+    
+    private UnitType() {
+        this(false);
+    }
+    
+    private UnitType(boolean isMutable) {
+        this.isMutable = isMutable;
+    }
     
     @Override
     public boolean equals(Type other) {
@@ -39,4 +48,14 @@ public class UnitType implements Type {
     public boolean isNever() {
         return false;
     }
+    
+    public boolean isMutable() {
+        return isMutable;
+    }
+    
+    @Override
+    public void setMutability(boolean isMutable) {
+        this.isMutable = isMutable;
+    }
+    
 }

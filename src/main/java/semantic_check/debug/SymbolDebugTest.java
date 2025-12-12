@@ -209,6 +209,22 @@ public class SymbolDebugTest {
                 System.exit(1);
             }
             
+            // Perform ownership checking
+            try {
+                OwnershipChecker ownershipChecker = new OwnershipChecker(new TypeErrorCollector(), false);
+                
+                for (ASTNode stmt : parser.getStatements()) {
+                    stmt.accept(ownershipChecker);
+                }
+                
+                System.out.println("Ownership checking completed successfully.");
+                
+            } catch (Exception e) {
+                System.err.println("Error during ownership checking: " + e.getMessage());
+                e.printStackTrace();
+                System.exit(1);
+            }
+            
         } catch (ParserException e) {
             System.err.println("Parsing error: " + e.getMessage());
             e.printStackTrace();

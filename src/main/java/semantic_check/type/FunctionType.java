@@ -7,15 +7,27 @@ public class FunctionType implements Type {
     private final List<Type> parameterTypes;
     private final Type returnType;
     private final boolean isMethod;
+    private boolean isMutable;
+    private final Type selfType;
     
     public FunctionType(List<Type> parameterTypes, Type returnType, boolean isMethod) {
-        this.parameterTypes = new ArrayList<>(parameterTypes);
-        this.returnType = returnType;
-        this.isMethod = isMethod;
+        this(parameterTypes, returnType, isMethod, false, null);
     }
     
     public FunctionType(List<Type> parameterTypes, Type returnType) {
-        this(parameterTypes, returnType, false);
+        this(parameterTypes, returnType, false, false, null);
+    }
+    
+    public FunctionType(List<Type> parameterTypes, Type returnType, boolean isMethod, boolean isMutable) {
+        this(parameterTypes, returnType, isMethod, isMutable, null);
+    }
+    
+    public FunctionType(List<Type> parameterTypes, Type returnType, boolean isMethod, boolean isMutable, Type selfType) {
+        this.parameterTypes = new ArrayList<>(parameterTypes);
+        this.returnType = returnType;
+        this.isMethod = isMethod;
+        this.isMutable = isMutable;
+        this.selfType = selfType;
     }
     
     public List<Type> getParameterTypes() {
@@ -28,6 +40,15 @@ public class FunctionType implements Type {
     
     public boolean isMethod() {
         return isMethod;
+    }
+    
+    public Type getSelfType() {
+        return selfType;
+    }
+    
+    @Override
+    public void setMutability(boolean isMutable) {
+        this.isMutable = isMutable;
     }
     
     @Override
@@ -92,4 +113,10 @@ public class FunctionType implements Type {
     public boolean isNever() {
         return false;
     }
+    
+    @Override
+    public boolean isMutable() {
+        return isMutable;
+    }
+    
 }

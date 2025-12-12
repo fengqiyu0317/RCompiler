@@ -2,6 +2,7 @@
  * 简单表达式类型检查器
  * 处理字面量、路径表达式、分组表达式、下划线表达式等
  */
+
 public class SimpleExpressionTypeChecker extends VisitorBase {
     protected final TypeErrorCollector errorCollector;
     protected final boolean throwOnError;
@@ -170,21 +171,6 @@ public class SimpleExpressionTypeChecker extends VisitorBase {
     }
     
     /**
-     * Check if expression is assignable (left value)
-     */
-    protected boolean isAssignable(ExprNode expr) {
-        // 在Rust中，这四种类型的表达式可以是左值：
-        // 1. PathExprNode - 路径表达式（变量、字段等）
-        // 2. FieldExprNode - 字段访问表达式
-        // 3. IndexExprNode - 索引访问表达式
-        // 4. DerefExprNode - 解引用表达式
-        return expr instanceof PathExprNode ||
-               expr instanceof FieldExprNode ||
-               expr instanceof IndexExprNode ||
-               expr instanceof DerefExprNode;
-    }
-    
-    /**
      * 检查可变访问
      */
     protected void checkMutableAccess(ExprNode expr) {
@@ -203,6 +189,7 @@ public class SimpleExpressionTypeChecker extends VisitorBase {
                 mutabilityChecker.checkMutability(value);
             }
         }
+        
     }
     
     /**
@@ -211,6 +198,7 @@ public class SimpleExpressionTypeChecker extends VisitorBase {
     public void setMutabilityChecker(MutabilityChecker mutabilityChecker) {
         this.mutabilityChecker = mutabilityChecker;
     }
+    
     
     /**
      * 访问基础表达式节点
@@ -261,10 +249,10 @@ public class SimpleExpressionTypeChecker extends VisitorBase {
                 literalType = PrimitiveType.getCharType();
                 break;
             case STRING:
-                literalType = PrimitiveType.getStringType();
+                literalType = new ReferenceType(PrimitiveType.getStrType(), true, true); // &mut str
                 break;
             case CSTRING:
-                literalType = PrimitiveType.getStrType(); // 暂时视为字符串
+                literalType = new ReferenceType(PrimitiveType.getStrType(), true, true); // &mut str
                 break;
             default:
                 // 默认为未确定的整数类型
@@ -272,7 +260,14 @@ public class SimpleExpressionTypeChecker extends VisitorBase {
                 break;
         }
         
-        setType(node, literalType);
+        // For STRING and CSTRING, we already created a mutable reference type
+        // For other types, create a mutable version
+        if (node.literalType == literal_t.STRING || node.literalType == literal_t.CSTRING) {
+            setType(node, literalType);
+        } else {
+            Type mutableLiteralType = TypeUtils.createMutableType(literalType, true);
+            setType(node, mutableLiteralType);
+        }
     }
     
     /**
@@ -520,7 +515,8 @@ public class SimpleExpressionTypeChecker extends VisitorBase {
                 // 使用TypeChecker进行调用
                 node.innerExpr.accept(mainExpressionChecker);
                 Type innerType = node.innerExpr.getType();
-                setType(node, innerType);
+                Type mutableType = TypeUtils.createMutableType(innerType, true);
+                setType(node, mutableType);
             } else {
                 RuntimeException error = new RuntimeException(
                     "Grouped expression has no inner expression"
@@ -537,8 +533,7 @@ public class SimpleExpressionTypeChecker extends VisitorBase {
      */
     public void visit(UnderscoreExprNode node) {
         // 下划线用作通配符模式，匹配任何值但不绑定它
-        // 它是一个占位符，可以在上下文中推断为任何类型
-        // 目前，我们使用INT作为可以推断为其他数字类型的占位符类型
-        setType(node, PrimitiveType.getIntType());
+        // 使用 UnderscoreType，它不能和其它任何type兼容但任何type都能兼容它
+        setType(node, UnderscoreType.INSTANCE);
     }
 }

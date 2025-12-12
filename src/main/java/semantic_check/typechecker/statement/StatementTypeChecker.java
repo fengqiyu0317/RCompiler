@@ -1,4 +1,3 @@
-
 /**
  * Class responsible for type checking statements
  */
@@ -11,6 +10,9 @@ public class StatementTypeChecker extends VisitorBase {
     
     // Mutability检查器
     private final MutabilityChecker mutabilityChecker;
+    
+    // Ownership检查器
+    private final OwnershipChecker ownershipChecker;
     
     // This constructor is deprecated - use the one with TypeChecker
     public StatementTypeChecker(TypeErrorCollector errorCollector, boolean throwOnError,
@@ -28,6 +30,7 @@ public class StatementTypeChecker extends VisitorBase {
         this.typeChecker = typeChecker;
         this.controlFlowTypeChecker = controlFlowTypeChecker;
         this.mutabilityChecker = new MutabilityChecker(errorCollector, throwOnError);
+        this.ownershipChecker = new OwnershipChecker(errorCollector, throwOnError);
     }
     
     // ========================================
@@ -107,11 +110,19 @@ public class StatementTypeChecker extends VisitorBase {
                 
                 // If self is a reference, create a reference type
                 if (node.selfPara.isReference) {
-                    selfType = new ReferenceType(receiverType, node.selfPara.isMutable);
+                    // For self parameters, both reference and value mutability match the parameter mutability
+                    selfType = new ReferenceType(receiverType, true, node.selfPara.isMutable);
                 }
                 
                 // Set current Self type for use in method body
                 typeChecker.setCurrentType(selfType);
+            }
+            
+            // Visit function parameters to extract their types
+            if (node.parameters != null) {
+                for (ParameterNode param : node.parameters) {
+                    param.accept(this);
+                }
             }
             
             // Visit function body if it exists
@@ -292,10 +303,7 @@ public class StatementTypeChecker extends VisitorBase {
     // Visit let statement node
     public void visit(LetStmtNode node) throws RuntimeException {
         try {
-            // 首先进行mutability检查
-            // if (mutabilityChecker != null) {
-            //     mutabilityChecker.checkMutability(node);
-            // }
+            Type variableType = null;
             
             // Visit value if it exists
             if (node.value != null) {
@@ -305,6 +313,14 @@ public class StatementTypeChecker extends VisitorBase {
                 // If there's an explicit type, check compatibility
                 if (node.type != null) {
                     Type declaredType = typeExtractor.extractTypeFromTypeNode(node.type);
+                    // 如果变量声明为可变，确保声明类型也是可变的
+                    if (node.name instanceof IdPatNode) {
+                        // 需判断declaredType是否为reference type再设置mutability
+                        IdPatNode idPat = (IdPatNode) node.name;
+                        if (idPat.isMutable && declaredType != null) {
+                            declaredType.setMutability(true);
+                        } 
+                    }
                     if (!TypeUtils.isTypeCompatible(valueType, declaredType)) {
                         RuntimeException error = new RuntimeException(
                             "Cannot assign " + valueType + " to variable of type " + declaredType
@@ -316,8 +332,25 @@ public class StatementTypeChecker extends VisitorBase {
                         }
                         return;
                     }
+                    variableType = declaredType;
+                } else {
+                    // No explicit type, use inferred type from value
+                    variableType = valueType;
+                }
+            } else if (node.type != null) {
+                // No value but explicit type
+                variableType = typeExtractor.extractTypeFromTypeNode(node.type);
+                // 如果变量声明为可变，确保声明类型也是可变的
+                if (node.name instanceof IdPatNode) {
+                    IdPatNode idPat = (IdPatNode) node.name;
+                    if (idPat.isMutable && variableType != null) {
+                        variableType.setMutability(true);
+                    }
                 }
             }
+            
+            // Store the variable type in the LetStmtNode for later retrieval
+            node.setVariableType(variableType);
         } catch (RuntimeException e) {
             if (throwOnError) {
                 throw e;
@@ -476,7 +509,31 @@ public class StatementTypeChecker extends VisitorBase {
     
     // Visit parameter node
     public void visit(ParameterNode node) {
-        // Parameter type is already processed when function type is created
+        try {
+            Type paramType = null;
+            
+            // Extract type from type annotation if it exists
+            if (node.type != null) {
+                paramType = typeExtractor.extractTypeFromTypeNode(node.type);
+                
+                // Handle mutability for parameter type
+                if (node.name instanceof IdPatNode) {
+                    IdPatNode idPat = (IdPatNode) node.name;
+                    if (idPat.isMutable && paramType != null) {
+                        paramType.setMutability(true);
+                    }
+                }
+            }
+            
+            // Store the parameter type in the ParameterNode for later retrieval
+            node.setParameterType(paramType);
+        } catch (RuntimeException e) {
+            if (throwOnError) {
+                throw e;
+            } else {
+                errorCollector.addError(e.getMessage());
+            }
+        }
     }
     
     // Visit field node
@@ -502,4 +559,5 @@ public class StatementTypeChecker extends VisitorBase {
             mutabilityChecker.checkMutability(node);
         }
     }
+    
 }

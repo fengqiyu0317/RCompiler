@@ -10,12 +10,18 @@ public class TraitType implements Type {
     private final Map<String, FunctionType> methods;
     private final Map<String, Type> constants;
     private final Symbol traitSymbol;
+    private boolean isMutable;
     
     public TraitType(String name, Symbol traitSymbol) {
+        this(name, traitSymbol, false);
+    }
+    
+    public TraitType(String name, Symbol traitSymbol, boolean isMutable) {
         this.name = name;
         this.methods = new HashMap<>();
         this.constants = new HashMap<>();
         this.traitSymbol = traitSymbol;
+        this.isMutable = isMutable;
     }
     
     public String getName() {
@@ -32,6 +38,11 @@ public class TraitType implements Type {
     
     public Symbol getTraitSymbol() {
         return traitSymbol;
+    }
+    
+    @Override
+    public void setMutability(boolean isMutable) {
+        this.isMutable = isMutable;
     }
     
     public void addMethod(String methodName, FunctionType methodType) {
@@ -102,4 +113,10 @@ public class TraitType implements Type {
     public boolean isNever() {
         return false;
     }
+    
+    @Override
+    public boolean isMutable() {
+        return isMutable;
+    }
+    
 }

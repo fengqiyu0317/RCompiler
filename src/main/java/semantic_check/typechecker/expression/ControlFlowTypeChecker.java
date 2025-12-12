@@ -237,7 +237,8 @@ public class ControlFlowTypeChecker extends VisitorBase {
         );
         
         // 设置if表达式的类型
-        node.setType(ifType);
+        Type mutableType = TypeUtils.createMutableType(ifType, true);
+        node.setType(mutableType);
     }
     
     /**
@@ -327,6 +328,20 @@ public class ControlFlowTypeChecker extends VisitorBase {
                 // 使用typeChecker访问语句
                 if (typeChecker != null) {
                     stmt.accept(typeChecker);
+                    if (stmt instanceof ExprStmtNode) {
+                        ExprStmtNode exprStmt = (ExprStmtNode) stmt;
+                        if (!exprStmt.hasSemicolon && exprStmt.expr.getType() instanceof UnitType) {
+                            // 抛出错误
+                            SemanticException error = new SemanticException(
+                                "Expression of type 'Unit' used as value without semicolon", exprStmt
+                            );
+                            if (throwOnError) {
+                                throw error;
+                            } else {
+                                errorCollector.addError(error.getMessage());
+                            }
+                        }
+                    }
                 } else {
                     throw new RuntimeException("TypeChecker is not available");
                 }
@@ -350,7 +365,8 @@ public class ControlFlowTypeChecker extends VisitorBase {
                     }
                     return;
                 }
-                node.setType(returnValueType);
+                Type mutableType = TypeUtils.createMutableType(returnValueType, true);
+                node.setType(mutableType);
             } else {
                 throw new RuntimeException("No expression type checker is available");
             }
@@ -360,16 +376,22 @@ public class ControlFlowTypeChecker extends VisitorBase {
             if (lastStmt instanceof ExprStmtNode) {
                 ExprStmtNode exprStmt = (ExprStmtNode) lastStmt;
                 if (exprStmt.expr != null) {
-                    node.setType(exprStmt.expr.getType());
+                    if (exprStmt.expr.getType() instanceof NeverType) {
+                        node.setType(NeverType.MUTABLE_INSTANCE);
+                        return;
+                    } else {
+                        node.setType(UnitType.MUTABLE_INSTANCE);
+                        return;
+                    }
                 } else {
-                    node.setType(UnitType.INSTANCE);
+                    node.setType(UnitType.MUTABLE_INSTANCE);
                 }
             } else {
-                node.setType(UnitType.INSTANCE);
+                node.setType(UnitType.MUTABLE_INSTANCE);
             }
         } else {
             // 空块返回UnitType
-            node.setType(UnitType.INSTANCE);
+            node.setType(UnitType.MUTABLE_INSTANCE);
         }
     }
     
@@ -425,10 +447,11 @@ public class ControlFlowTypeChecker extends VisitorBase {
                     if (!breakTypes.isEmpty()) {
                         // 如果有break表达式，确定循环的类型
                         Type loopType = determineLoopType(breakTypes, node);
-                        node.setType(loopType);
+                        Type mutableType = TypeUtils.createMutableType(loopType, true);
+                        node.setType(mutableType);
                     } else {
                         // 没有break表达式，循环是无限循环，返回never类型
-                        node.setType(NeverType.INSTANCE);
+                        node.setType(NeverType.MUTABLE_INSTANCE);
                     }
                 } else {
                     // 不应该发生，抛出错误
@@ -443,7 +466,7 @@ public class ControlFlowTypeChecker extends VisitorBase {
                 }
             } else {
                 // 空循环体，返回never类型
-                node.setType(NeverType.INSTANCE);
+                node.setType(NeverType.MUTABLE_INSTANCE);
             }
         } finally {
             // 退出循环上下文

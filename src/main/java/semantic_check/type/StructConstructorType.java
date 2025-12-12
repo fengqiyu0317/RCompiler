@@ -2,13 +2,24 @@
 
 public class StructConstructorType implements Type {
     private final StructType structType;
+    private boolean isMutable;
     
     public StructConstructorType(StructType structType) {
+        this(structType, false);
+    }
+    
+    public StructConstructorType(StructType structType, boolean isMutable) {
         this.structType = structType;
+        this.isMutable = isMutable;
     }
     
     public StructType getStructType() {
         return structType;
+    }
+    
+    @Override
+    public void setMutability(boolean isMutable) {
+        this.isMutable = isMutable;
     }
     
     @Override
@@ -49,4 +60,10 @@ public class StructConstructorType implements Type {
     public boolean isNever() {
         return false;
     }
+    
+    @Override
+    public boolean isMutable() {
+        return isMutable;
+    }
+    
 }

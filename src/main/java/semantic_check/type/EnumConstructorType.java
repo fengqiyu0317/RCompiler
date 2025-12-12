@@ -2,13 +2,24 @@
 
 public class EnumConstructorType implements Type {
     private final EnumType enumType;
+    private boolean isMutable;
     
     public EnumConstructorType(EnumType enumType) {
+        this(enumType, false);
+    }
+    
+    public EnumConstructorType(EnumType enumType, boolean isMutable) {
         this.enumType = enumType;
+        this.isMutable = isMutable;
     }
     
     public EnumType getEnumType() {
         return enumType;
+    }
+    
+    @Override
+    public void setMutability(boolean isMutable) {
+        this.isMutable = isMutable;
     }
     
     @Override
@@ -49,4 +60,10 @@ public class EnumConstructorType implements Type {
     public boolean isNever() {
         return false;
     }
+    
+    @Override
+    public boolean isMutable() {
+        return isMutable;
+    }
+    
 }

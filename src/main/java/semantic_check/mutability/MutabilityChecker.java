@@ -128,6 +128,13 @@ public class MutabilityChecker extends VisitorBase {
                 reportError("Cannot assign to immutable expression", node);
                 return;
             }
+            
+            // 检查目标类型的可变性
+            Type targetType = node.left.getType();
+            if (targetType != null && !targetType.isMutable()) {
+                reportError("Cannot assign to immutable target of type " + targetType, node);
+                return;
+            }
         }
         
         // 检查赋值表达式
@@ -148,6 +155,13 @@ public class MutabilityChecker extends VisitorBase {
             // 检查是否可以赋值
             if (!isAssignableTarget(node.left)) {
                 reportError("Cannot perform compound assignment on immutable expression", node);
+                return;
+            }
+            
+            // 检查目标类型的可变性
+            Type targetType = node.left.getType();
+            if (targetType != null && !targetType.isMutable()) {
+                reportError("Cannot perform compound assignment on immutable target of type " + targetType, node);
                 return;
             }
         }
@@ -212,8 +226,20 @@ public class MutabilityChecker extends VisitorBase {
         // 检查变量访问
         String varName = getVariableName(node);
         if (varName != null) {
-            // 这里不需要特别的检查，只是记录访问
-            // 实际的mutability检查在使用变量的地方进行
+            // 检查变量的可变性
+            Symbol symbol = node.getSymbol();
+            if (symbol != null) {
+                Type symbolType = symbol.getType();
+                if (symbolType != null) {
+                    // 如果变量被声明为可变，但类型是不可变的，需要更新类型的可变性
+                    if (context.isVariableMutable(varName) && !symbolType.isMutable()) {
+                        // 创建一个可变版本的类型
+                        Type mutableType = TypeUtils.createMutableType(symbolType);
+                        symbol.setType(mutableType);
+                        node.setType(mutableType);
+                    }
+                }
+            }
         }
         
         // 检查RSeg（字段访问等）
@@ -332,27 +358,7 @@ public class MutabilityChecker extends VisitorBase {
      * 检查表达式是否是可赋值的目标
      */
     private boolean isAssignableTarget(ExprNode expr) {
-        // 在Rust中，这些类型的表达式可以是左值：
-        // 1. PathExprNode - 路径表达式（变量、字段等）
-        // 2. FieldExprNode - 字段访问表达式
-        // 3. IndexExprNode - 索引访问表达式
-        // 4. DerefExprNode - 解引用表达式
-        
-        if (expr instanceof PathExprNode) {
-            PathExprNode pathExpr = (PathExprNode) expr;
-            String varName = getVariableName(pathExpr);
-            
-            if (varName != null) {
-                MutabilityContext context = getCurrentContext();
-                if (context != null) {
-                    return context.isVariableMutable(varName);
-                }
-            }
-        }
-        
-        return expr instanceof FieldExprNode ||
-               expr instanceof IndexExprNode ||
-               expr instanceof DerefExprNode;
+        return AssignabilityChecker.isAssignable(expr);
     }
     
     /**
@@ -364,6 +370,10 @@ public class MutabilityChecker extends VisitorBase {
         }
         return null;
     }
+    
+    /**
+     * 创建类型的可变版本
+     */
     
     /**
      * Mutability上下文类

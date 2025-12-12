@@ -21,4 +21,11 @@ public interface Type {
     
     // Check if type is never type
     boolean isNever();
+    
+    // Check if type is mutable
+    boolean isMutable();
+    
+    // Set the mutability of the type
+    void setMutability(boolean isMutable);
+    
 }

@@ -172,17 +172,31 @@ public class OperatorExpressionTypeChecker extends VisitorBase {
     /**
      * Check if expression is assignable (left value)
      */
-    protected boolean isAssignable(ExprNode expr) {
+    public static boolean isAssignable(ExprNode expr) {
         // 在Rust中，这四种类型的表达式可以是左值：
         // 1. PathExprNode - 路径表达式（变量、字段等）
         // 2. FieldExprNode - 字段访问表达式
         // 3. IndexExprNode - 索引访问表达式
         // 4. DerefExprNode - 解引用表达式
-        return expr instanceof PathExprNode ||
-               expr instanceof FieldExprNode ||
-               expr instanceof IndexExprNode ||
-               expr instanceof DerefExprNode;
+        
+        // 首先检查表达式类型
+        if (!(expr instanceof PathExprNode ||
+              expr instanceof FieldExprNode ||
+              expr instanceof IndexExprNode ||
+              expr instanceof DerefExprNode)) {
+            return false;
+        }
+        
+        // 然后检查表达式的类型是否可变
+        Type exprType = expr.getType();
+        if (exprType != null) {
+            return exprType.isMutable();
+        }
+        
+        // 默认情况下，如果无法确定可变性，则认为不可变
+        return false;
     }
+    
     
     /**
      * 检查可变访问
@@ -203,6 +217,7 @@ public class OperatorExpressionTypeChecker extends VisitorBase {
                 mutabilityChecker.checkMutability(value);
             }
         }
+        
     }
     
     /**
@@ -211,6 +226,7 @@ public class OperatorExpressionTypeChecker extends VisitorBase {
     public void setMutabilityChecker(MutabilityChecker mutabilityChecker) {
         this.mutabilityChecker = mutabilityChecker;
     }
+    
     
     /**
      * 访问基础表达式节点
@@ -263,6 +279,13 @@ public class OperatorExpressionTypeChecker extends VisitorBase {
                 handleShiftOperation(node, leftType, rightType);
             } else {
                 handleRegularArithmeticOperation(node, leftType, rightType);
+            }
+            
+            // 确保算术表达式的类型是可变的
+            Type currentType = node.getType();
+            if (currentType != null) {
+                Type mutableType = TypeUtils.createMutableType(currentType, true);
+                setType(node, mutableType);
             }
         } catch (RuntimeException e) {
             handleError(e);
@@ -355,7 +378,8 @@ public class OperatorExpressionTypeChecker extends VisitorBase {
             }
             
             // 比较表达式总是返回布尔值
-            setType(node, PrimitiveType.getBoolType());
+            Type mutableType = TypeUtils.createMutableType(PrimitiveType.getBoolType(), true);
+            setType(node, mutableType);
         } catch (RuntimeException e) {
             handleError(e);
         }
@@ -390,7 +414,8 @@ public class OperatorExpressionTypeChecker extends VisitorBase {
             }
             
             // 逻辑表达式总是返回布尔值
-            setType(node, PrimitiveType.getBoolType());
+            Type mutableType = TypeUtils.createMutableType(PrimitiveType.getBoolType(), true);
+            setType(node, mutableType);
         } catch (RuntimeException e) {
             handleError(e);
         }
@@ -417,7 +442,8 @@ public class OperatorExpressionTypeChecker extends VisitorBase {
                     return;
                 }
                 // 结果是布尔值
-                setType(node, PrimitiveType.getBoolType());
+                Type mutableType = TypeUtils.createMutableType(PrimitiveType.getBoolType(), true);
+                setType(node, mutableType);
             } else {
                 // 算术取反（-）需要数字操作数
                 if (!TypeUtils.isNumericType(innerType)) {
@@ -425,7 +451,8 @@ public class OperatorExpressionTypeChecker extends VisitorBase {
                     return;
                 }
                 // 结果与操作数类型相同
-                setType(node, innerType);
+                Type mutableType = TypeUtils.createMutableType(innerType, true);
+                setType(node, mutableType);
             }
         } catch (RuntimeException e) {
             handleError(e);
@@ -442,18 +469,18 @@ public class OperatorExpressionTypeChecker extends VisitorBase {
                 return;
             }
             
-            // 检查左侧是否可赋值
-            if (!isAssignable(node.left)) {
-                reportError("Left side of assignment is not assignable");
-                return;
-            }
-            
             // 访问左右操作数，使用TypeChecker进行调用
             node.left.accept(mainExpressionChecker);
             node.right.accept(mainExpressionChecker);
             
             Type leftType = node.left.getType();
             Type rightType = node.right.getType();
+            
+            // 检查左侧是否可赋值
+            if (!isAssignable(node.left)) {
+                reportError("Left side of assignment is not assignable");
+                return;
+            }
             
             // 检查类型是否兼容
             if (!TypeUtils.isTypeCompatible(rightType, leftType)) {
@@ -477,18 +504,18 @@ public class OperatorExpressionTypeChecker extends VisitorBase {
                 return;
             }
             
-            // 检查左侧是否可赋值
-            if (!isAssignable(node.left)) {
-                reportError("Left side of compound assignment is not assignable");
-                return;
-            }
-            
             // 访问左右操作数，使用TypeChecker进行调用
             node.left.accept(mainExpressionChecker);
             node.right.accept(mainExpressionChecker);
             
             Type leftType = node.left.getType();
             Type rightType = node.right.getType();
+            
+            // 检查左侧是否可赋值
+            if (!isAssignable(node.left)) {
+                reportError("Left side of compound assignment is not assignable");
+                return;
+            }
             
             // 单独处理移位复合赋值和常规算术复合赋值
             Type resultType = null;

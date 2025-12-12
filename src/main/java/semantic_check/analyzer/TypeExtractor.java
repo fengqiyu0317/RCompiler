@@ -173,6 +173,55 @@ public class TypeExtractor {
             
             // Check if it's a method (has self parameter)
             boolean isMethod = funcNode.selfPara != null;
+            Type selfType = null;
+            
+            // If it's a method, determine the self type
+            if (isMethod) {
+                // For methods, Self refers to receiver type
+                // We need to determine type of receiver based on impl block
+                
+                // First, find parent impl node to determine receiver type
+                ASTNode parent = funcNode.getFather();
+                Type receiverType = null;
+                
+                while (parent != null && !(parent instanceof ImplNode)) {
+                    parent = parent.getFather();
+                }
+                
+                if (parent instanceof ImplNode) {
+                    ImplNode implNode = (ImplNode) parent;
+                    // Get type symbol from impl node
+                    Symbol typeSymbol = implNode.getTypeSymbol();
+                    if (typeSymbol != null) {
+                        try {
+                            receiverType = extractTypeFromSymbol(typeSymbol);
+                        } catch (RuntimeException e) {
+                            // Handle error extracting type from symbol
+                            if (throwOnError) {
+                                throw e;
+                            } else {
+                                errorCollector.addError(e);
+                            }
+                        }
+                    }
+                }
+                
+                // If we couldn't determine receiver type, use a placeholder
+                if (receiverType == null) {
+                    throw new RuntimeException(
+                        "Unable to determine receiver type for method"
+                    );
+                }
+                
+                // Handle self parameter based on its type and mutability
+                selfType = receiverType;
+                
+                // If self is a reference, create a reference type
+                if (funcNode.selfPara.isReference) {
+                    // For self parameters, both reference and value mutability match the parameter mutability
+                    selfType = new ReferenceType(receiverType, true, funcNode.selfPara.isMutable);
+                }
+            }
             
             // Process parameters
             if (funcNode.parameters != null) {
@@ -187,7 +236,7 @@ public class TypeExtractor {
                              extractTypeFromTypeNode(funcNode.returnType) :
                              UnitType.INSTANCE;
             
-            FunctionType functionType = new FunctionType(paramTypes, returnType, isMethod);
+            FunctionType functionType = new FunctionType(paramTypes, returnType, isMethod, false, selfType);
             setSymbolType(symbol, functionType);
             return functionType;
         }
@@ -280,8 +329,15 @@ public class TypeExtractor {
             
             if (currentNode instanceof ParameterNode) {
                 ParameterNode paramNode = (ParameterNode) currentNode;
-                if (paramNode.type != null) {
-                    Type paramType = extractTypeFromTypeNode(paramNode.type);
+                // Use the stored parameter type if available
+                Type paramType = paramNode.getParameterType();
+                if (paramType != null) {
+                    setSymbolType(symbol, paramType);
+                    return paramType;
+                }
+                // Fallback to extracting from type node if stored type is not available
+                else if (paramNode.type != null) {
+                    paramType = extractTypeFromTypeNode(paramNode.type);
                     setSymbolType(symbol, paramType);
                     return paramType;
                 }
@@ -313,17 +369,32 @@ public class TypeExtractor {
                     }
                     isMutable = refPat.isMutable;
                 }
+                // Check if we encounter an IdPatNode
+                else if (currentNode instanceof IdPatNode) {
+                    IdPatNode idPat = (IdPatNode) currentNode;
+                    if (idPat.isReference) {
+                        referenceCount++;
+                    }
+                    isMutable = idPat.isMutable;
+                }
                 currentNode = currentNode.getFather();
             }
             
             if (currentNode instanceof LetStmtNode) {
                 LetStmtNode letNode = (LetStmtNode) currentNode;
-                if (letNode.type != null) {
+                
+                // Use the stored variable type if available
+                varType = letNode.getVariableType();
+                
+                // If stored type is not available, fall back to extracting from type node
+                if (varType == null && letNode.type != null) {
                     varType = extractTypeFromTypeNode(letNode.type);
-                    
+                }
+                
+                if (varType != null) {
                     // Apply the appropriate number of references
                     for (int i = 0; i < referenceCount; i++) {
-                        varType = new ReferenceType(varType, isMutable);
+                        varType = new ReferenceType(varType, isMutable, isMutable);
                     }
                     
                     setSymbolType(symbol, varType);
@@ -563,7 +634,8 @@ public class TypeExtractor {
             Type innerType = extractTypeFromTypeNode(refExpr.innerType);
             
             // Create reference type
-            return new ReferenceType(innerType, refExpr.isMutable);
+            // For type references, both reference and value mutability match the expression mutability
+            return new ReferenceType(innerType, refExpr.isMutable, refExpr.isMutable);
         } catch (RuntimeException e) {
             if (throwOnError) {
                 throw e;
@@ -669,4 +741,8 @@ public class TypeExtractor {
         }
         return false;
     }
+    
+    /**
+     * 创建类型的可变版本
+     */
 }

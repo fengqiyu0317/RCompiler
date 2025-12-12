@@ -170,30 +170,6 @@ public class ComplexExpressionTypeChecker extends VisitorBase {
     }
     
     /**
-     * Check if expression is assignable (left value)
-     */
-    protected boolean isAssignable(ExprNode expr) {
-        // 在Rust中，这四种类型的表达式可以是左值：
-        // 1. PathExprNode - 路径表达式（变量、字段等）
-        // 2. FieldExprNode - 字段访问表达式
-        // 3. IndexExprNode - 索引访问表达式
-        // 4. DerefExprNode - 解引用表达式
-        return expr instanceof PathExprNode ||
-               expr instanceof FieldExprNode ||
-               expr instanceof IndexExprNode ||
-               expr instanceof DerefExprNode;
-    }
-    
-    /**
-     * 检查可变访问
-     */
-    protected void checkMutableAccess(ExprNode expr) {
-        if (mutabilityChecker != null) {
-            mutabilityChecker.checkMutability(expr);
-        }
-    }
-    
-    /**
      * 检查可变赋值
      */
     protected void checkMutableAssignment(ExprNode target, ExprNode value) {
@@ -203,6 +179,7 @@ public class ComplexExpressionTypeChecker extends VisitorBase {
                 mutabilityChecker.checkMutability(value);
             }
         }
+        
     }
     
     /**
@@ -211,6 +188,7 @@ public class ComplexExpressionTypeChecker extends VisitorBase {
     public void setMutabilityChecker(MutabilityChecker mutabilityChecker) {
         this.mutabilityChecker = mutabilityChecker;
     }
+    
     
     /**
      * 访问基础表达式节点
@@ -357,11 +335,81 @@ public class ComplexExpressionTypeChecker extends VisitorBase {
             node.methodName.setSymbol(methodSymbol);
             
             // 提取方法类型
-            Type methodType = typeExtractor.extractTypeFromSymbol(methodSymbol);
+            Type methodType;
+            // 检查methodSymbol对应的节点是否是BuiltinFunctionNode
+            if (methodSymbol.getDeclaration() instanceof BuiltinFunctionNode) {
+                // 对于BuiltinFunctionNode，直接根据节点构建methodType
+                BuiltinFunctionNode builtinNode = (BuiltinFunctionNode) methodSymbol.getDeclaration();
+                
+                // 构建参数类型列表
+                java.util.List<Type> paramTypes = new java.util.ArrayList<>();
+                
+                // 如果是方法，添加self参数类型
+                Type selfType = null;
+                if (builtinNode.selfPara != null) {
+                    // 根据接收者类型和self参数配置确定self类型
+                    selfType = dereferencedType; // 使用解引用后的接收者类型
+                    
+                    // 如果self是引用，创建引用类型
+                    if (builtinNode.selfPara.isReference) {
+                        selfType = new ReferenceType(selfType, true, builtinNode.selfPara.isMutable);
+                    }
+                }
+                
+                // 添加其他参数类型
+                if (builtinNode.parameters != null) {
+                    for (ParameterNode param : builtinNode.parameters) {
+                        Type paramType = typeExtractor.extractTypeFromTypeNode(param.type);
+                        paramTypes.add(paramType);
+                    }
+                }
+                
+                // 提取返回类型
+                Type returnType = builtinNode.returnType != null ?
+                                typeExtractor.extractTypeFromTypeNode(builtinNode.returnType) :
+                                UnitType.INSTANCE;
+                
+                // 创建FunctionType
+                methodType = new FunctionType(paramTypes, returnType, selfType != null, false, selfType);
+            } else {
+                // 对于非BuiltinFunctionNode，调用extractTypeFromSymbol
+                methodType = typeExtractor.extractTypeFromSymbol(methodSymbol);
+            }
             
             // 检查方法类型是否为函数类型
             if (!(methodType instanceof FunctionType)) {
                 reportError("Method is not a function: " + methodType);
+                return;
+            }
+            
+            // 进行mutability检查
+            try {
+                // 检查参数类型是否需要可变性
+                boolean needsMutable = false;
+                Type selfType = ((FunctionType) methodType).getSelfType();
+                if (selfType instanceof ReferenceType) {
+                    needsMutable = ((ReferenceType) selfType).isValueMutable();
+                } else {
+                    needsMutable = selfType != null && selfType.isMutable();
+                }
+                
+                // 只有当方法需要可变接收者时才检查接收者的可变性
+                if (needsMutable) {
+                    if (receiverType instanceof ReferenceType) {
+                        // 如果是ReferenceType，检查其isValueMutable
+                        ReferenceType refType = (ReferenceType) receiverType;
+                        if (!refType.isValueMutable()) {
+                            throw new RuntimeException("Cannot call method requiring mutable receiver on immutable reference: " + receiverType);
+                        }
+                    } else {
+                        // 否则检查其isMutable
+                        if (receiverType != null && !receiverType.isMutable()) {
+                            throw new RuntimeException("Cannot call method requiring mutable receiver on immutable value: " + receiverType);
+                        }
+                    }
+                }
+            } catch (RuntimeException e) {
+                reportError("Cannot access immutable receiver: " + e.getMessage());
                 return;
             }
             
@@ -389,6 +437,36 @@ public class ComplexExpressionTypeChecker extends VisitorBase {
                     arg.accept(mainExpressionChecker);
                     Type argType = arg.getType();
                     Type expectedType = funcType.getParameterTypes().get(i);
+                    
+                    // 进行mutability检查
+                    try {
+                        // 检查参数类型是否需要可变性
+                        boolean needsMutable = false;
+                        if (expectedType instanceof ReferenceType) {
+                            needsMutable = ((ReferenceType) expectedType).isValueMutable();
+                        } else {
+                            needsMutable = expectedType != null && expectedType.isMutable();
+                        }
+                        
+                        // 只有当参数类型需要可变性时才检查参数的可变性
+                        if (needsMutable) {
+                            if (argType instanceof ReferenceType) {
+                                // 如果是ReferenceType，检查其isValueMutable
+                                ReferenceType refType = (ReferenceType) argType;
+                                if (!refType.isValueMutable()) {
+                                    throw new RuntimeException("Cannot pass immutable reference to parameter expecting mutable reference: " + argType);
+                                }
+                            } else {
+                                // 否则检查其isMutable
+                                if (argType != null && !argType.isMutable()) {
+                                    throw new RuntimeException("Cannot pass immutable value to parameter expecting mutable value: " + argType);
+                                }
+                            }
+                        }
+                    } catch (RuntimeException e) {
+                        reportError("Cannot access immutable argument: " + e.getMessage());
+                        return;
+                    }
                     
                     if (!TypeUtils.isTypeCompatible(argType, expectedType)) {
                         throw new RuntimeException(
@@ -441,8 +519,20 @@ public class ComplexExpressionTypeChecker extends VisitorBase {
                 return;
             }
             
-            // 设置结果类型为字段类型
-            setType(node, fieldType);
+            // 字段访问的结果类型是字段类型，但需要根据接收者的可变性来设置字段类型的可变性
+            // 无论接收者是引用类型还是值类型，字段类型的可变性都应该与接收者类型的可变性保持一致
+            boolean isReceiverMutable;
+            if (receiverType instanceof ReferenceType) {
+                // 对于引用类型，使用值可变性
+                isReceiverMutable = ((ReferenceType) receiverType).isValueMutable();
+            } else {
+                // 对于其他类型，使用类型的可变性
+                isReceiverMutable = receiverType.isMutable();
+            }
+            
+            // 创建字段类型的副本并设置其可变性
+            Type resultType = TypeUtils.createMutableType(fieldType, isReceiverMutable);
+            setType(node, resultType);
             
             // 确保字段名的符号已设置（如果存在）
             // 注意：fieldName是IdentifierNode，不是PathExprNode，所以可能没有符号
@@ -488,9 +578,23 @@ public class ComplexExpressionTypeChecker extends VisitorBase {
                 return;
             }
             
-            // 设置结果类型为数组元素类型
+            // 获取元素类型
             ArrayType arrType = (ArrayType) dereferencedArrayType;
-            setType(node, arrType.getElementType());
+            Type elementType = arrType.getElementType();
+            
+            // 根据数组类型设置索引访问的可变性，采用与fieldExprNode类似的方式
+            boolean isArrayMutable;
+            if (arrayType instanceof ReferenceType) {
+                // 对于引用类型，使用值可变性
+                isArrayMutable = ((ReferenceType) arrayType).isValueMutable();
+            } else {
+                // 对于其他类型，使用类型的可变性
+                isArrayMutable = arrayType.isMutable();
+            }
+            
+            // 创建元素类型的副本并设置其可变性
+            Type resultType = TypeUtils.createMutableType(elementType, isArrayMutable);
+            setType(node, resultType);
         } catch (RuntimeException e) {
             handleError(e);
         }
@@ -510,12 +614,40 @@ public class ComplexExpressionTypeChecker extends VisitorBase {
             node.innerExpr.accept(mainExpressionChecker);
             Type innerType = node.innerExpr.getType();
             
+            // 检查借用规则
+            // 对于借用表达式，我们只需要检查内部表达式是否可变
+            if (node.isMutable) {
+                // 对于可变借用，需要检查内部表达式是否可变
+                try {
+                    // 直接实现可变访问检查，而不是调用checkMutableAccess函数
+                    Type exprType = node.innerExpr.getType();
+                    if (exprType instanceof ReferenceType) {
+                        // 如果是ReferenceType，检查其isValueMutable
+                        ReferenceType refType = (ReferenceType) exprType;
+                        if (!refType.isValueMutable()) {
+                            throw new RuntimeException("Cannot access mutable value through immutable reference: " + exprType);
+                        }
+                    } else {
+                        // 否则检查其isMutable
+                        if (exprType != null && !exprType.isMutable()) {
+                            throw new RuntimeException("Cannot access immutable value: " + exprType);
+                        }
+                    }
+                } catch (RuntimeException e) {
+                    reportError("Cannot create mutable borrow of immutable expression: " + e.getMessage());
+                    return;
+                }
+            }
+            // 不可变借用总是允许的
+            
             // 使用嵌套引用而不是isDoubleReference标志创建引用类型
-            Type refType = new ReferenceType(innerType, node.isMutable);
+            // For borrow expressions, the reference mutability matches the borrow mutability
+            // and the value mutability also matches the borrow mutability
+            Type refType = new ReferenceType(innerType, true, node.isMutable);
             
             // 如果是双重引用（&&），用另一个引用包装它
             if (node.isDoubleReference) {
-                refType = new ReferenceType(refType, node.isMutable);
+                refType = new ReferenceType(refType, true, node.isMutable);
             }
             
             setType(node, refType);
@@ -544,9 +676,13 @@ public class ComplexExpressionTypeChecker extends VisitorBase {
                 return;
             }
             
-            // 设置结果类型为引用的内部类型
+            // 获取引用类型
             ReferenceType refType = (ReferenceType) innerType;
-            setType(node, refType.getInnerType());
+            Type dereferencedType = refType.getInnerType();
+            
+            // 解引用后的类型就是引用指向的类型
+            // 可变性信息在赋值时检查
+            setType(node, dereferencedType);
         } catch (RuntimeException e) {
             handleError(e);
         }
@@ -608,7 +744,7 @@ public class ComplexExpressionTypeChecker extends VisitorBase {
                 }
                 
                 // 使用确定的元素类型和大小创建数组类型
-                ArrayType arrayType = new ArrayType(elementType, node.elements.size());
+                ArrayType arrayType = new ArrayType(elementType, node.elements.size(), true);
                 setType(node, arrayType);
                 
             } else if (node.repeatedElement != null && node.size != null) {
@@ -648,7 +784,7 @@ public class ComplexExpressionTypeChecker extends VisitorBase {
                 }
                 
                 // 使用重复元素类型和评估的大小创建数组类型
-                ArrayType arrayType = new ArrayType(elementType, arraySize);
+                ArrayType arrayType = new ArrayType(elementType, arraySize, true);
                 setType(node, arrayType);
                 
             } else {
@@ -745,10 +881,12 @@ public class ComplexExpressionTypeChecker extends VisitorBase {
                                " fields, but " + providedFieldCount + " were provided");
                     return;
                 }
+                
             }
             
             // 设置结果类型为结构体类型
-            setType(node, structTypeInfo);
+            Type mutableStructType = TypeUtils.createMutableType(structTypeInfo, true);
+            setType(node, mutableStructType);
         } catch (RuntimeException e) {
             handleError(e);
         }

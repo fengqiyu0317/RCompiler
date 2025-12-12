@@ -7,11 +7,17 @@ public class StructType implements Type {
     private final String name;
     private final Map<String, Type> fields;
     private final Symbol structSymbol;
+    private boolean isMutable;
     
     public StructType(String name, Map<String, Type> fields, Symbol structSymbol) {
+        this(name, fields, structSymbol, false);
+    }
+    
+    public StructType(String name, Map<String, Type> fields, Symbol structSymbol, boolean isMutable) {
         this.name = name;
         this.fields = new HashMap<>(fields);
         this.structSymbol = structSymbol;
+        this.isMutable = isMutable;
     }
     
     public String getName() {
@@ -24,6 +30,11 @@ public class StructType implements Type {
     
     public Symbol getStructSymbol() {
         return structSymbol;
+    }
+    
+    @Override
+    public void setMutability(boolean isMutable) {
+        this.isMutable = isMutable;
     }
     
     public Type getFieldType(String fieldName) {
@@ -68,4 +79,10 @@ public class StructType implements Type {
     public boolean isNever() {
         return false;
     }
+    
+    @Override
+    public boolean isMutable() {
+        return isMutable;
+    }
+    
 }

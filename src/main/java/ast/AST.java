@@ -65,8 +65,19 @@ class LetStmtNode extends StmtNode {
     TypeExprNode type;
     ExprNode value; // can be null
     
+    // 存储该let语句定义的变量的类型
+    private Type variableType;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public Type getVariableType() {
+        return variableType;
+    }
+    
+    public void setVariableType(Type variableType) {
+        this.variableType = variableType;
     }
 }
 
@@ -148,8 +159,19 @@ class ParameterNode extends ASTNode {
     PatternNode name;
     TypeExprNode type;
     
+    // 存储该参数的类型
+    private Type parameterType;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
+    }
+    
+    public Type getParameterType() {
+        return parameterType;
+    }
+    
+    public void setParameterType(Type parameterType) {
+        this.parameterType = parameterType;
     }
 }
 
@@ -380,6 +402,9 @@ class ExprNode extends ASTNode {
     // 存储该表达式节点的类型
     private Type type;
     
+    // 表示该表达式能否作为左值（lvalue）
+    private boolean isAssignable;
+    
     public void accept(VisitorBase visitor) {
         visitor.visit(this);
     }
@@ -401,6 +426,14 @@ class ExprNode extends ASTNode {
     
     public void setType(Type type) {
         this.type = type;
+    }
+    
+    public boolean isAssignable() {
+        return isAssignable;
+    }
+    
+    public void setAssignable(boolean assignable) {
+        isAssignable = assignable;
     }
 }
 

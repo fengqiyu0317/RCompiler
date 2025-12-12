@@ -93,7 +93,10 @@ public class TypeUtils {
         if (type1 == null || type2 == null) {
             return null;
         }
-        
+
+        if (type1 instanceof UnderscoreType || type2 instanceof UnderscoreType) {
+            return null; // Both are undetermined types
+        }
         
         // Special case: if one type is NeverType, return the other type
         if (type1.isNever()) {
@@ -119,8 +122,14 @@ public class TypeUtils {
                 return null; // Inner types are incompatible
             }
             
-            // Return a new reference type with common inner type and same mutability
-            return new ReferenceType(commonInnerType, ref1.isMutable());
+            // For common reference type, use the most restrictive mutability
+            // Reference is mutable only if both are mutable
+            boolean isRefMutable = ref1.isReferenceMutable() && ref2.isReferenceMutable();
+            // Value is mutable only if both are mutable
+            boolean isValueMutable = ref1.isValueMutable() && ref2.isValueMutable();
+            
+            // Return a new reference type with common inner type and combined mutability
+            return new ReferenceType(commonInnerType, isRefMutable, isValueMutable);
         }
         
         // If both are array types, check element types and sizes
@@ -168,6 +177,16 @@ public class TypeUtils {
      * Check if two types are compatible
      */
     public static boolean isTypeCompatible(Type actualType, Type expectedType) {
+        // If expected type is UnderscoreType, any actual type is compatible
+        if (expectedType instanceof UnderscoreType) {
+            return true;
+        }
+        
+        // If actual type is UnderscoreType, it cannot be compatible with any expected type
+        if (actualType instanceof UnderscoreType) {
+            return false;
+        }
+        
         // If types are exactly the same, they're compatible
         if (actualType.equals(expectedType)) {
             return true;
@@ -237,5 +256,55 @@ public class TypeUtils {
                operator == oper_t.LTE ||
                operator == oper_t.GT ||
                operator == oper_t.GTE;
+    }
+    
+    /**
+     * 创建类型的可变版本（默认为可变）
+     */
+    public static Type createMutableType(Type type) {
+        return createMutableType(type, true);
+    }
+    
+    /**
+     * 创建具有指定可变性的类型
+     */
+    public static Type createMutableType(Type type, boolean isMutable) {
+        if (type instanceof PrimitiveType) {
+            PrimitiveType primitiveType = (PrimitiveType) type;
+            return new PrimitiveType(primitiveType.getKind(), isMutable);
+        } else if (type instanceof ArrayType) {
+            ArrayType arrayType = (ArrayType) type;
+            return new ArrayType(arrayType.getElementType(), arrayType.getSize(), isMutable);
+        } else if (type instanceof StructType) {
+            StructType structType = (StructType) type;
+            return new StructType(structType.getName(), structType.getFields(), structType.getStructSymbol(), isMutable);
+        } else if (type instanceof UnitType) {
+            return isMutable ? UnitType.MUTABLE_INSTANCE : UnitType.INSTANCE;
+        } else if (type instanceof NeverType) {
+            return isMutable ? NeverType.MUTABLE_INSTANCE : NeverType.INSTANCE;
+        } else if (type instanceof FunctionType) {
+            FunctionType functionType = (FunctionType) type;
+            return new FunctionType(functionType.getParameterTypes(), functionType.getReturnType(), functionType.isMethod(), isMutable, functionType.getSelfType());
+        } else if (type instanceof EnumType) {
+            EnumType enumType = (EnumType) type;
+            return new EnumType(enumType.getName(), enumType.getVariants(), enumType.getEnumSymbol(), isMutable);
+        } else if (type instanceof TraitType) {
+            TraitType traitType = (TraitType) type;
+            return new TraitType(traitType.getName(), traitType.getTraitSymbol(), isMutable);
+        } else if (type instanceof StructConstructorType) {
+            StructConstructorType constructorType = (StructConstructorType) type;
+            return new StructConstructorType(constructorType.getStructType(), isMutable);
+        } else if (type instanceof EnumConstructorType) {
+            EnumConstructorType constructorType = (EnumConstructorType) type;
+            return new EnumConstructorType(constructorType.getEnumType(), isMutable);
+        } else if (type instanceof ReferenceType) {
+            ReferenceType refType = (ReferenceType) type;
+            refType.setMutability(isMutable);
+            // 引用类型的可变性由其自身决定，不需要修改
+            return refType;
+        }
+        
+        // 如果类型不支持可变性，返回原类型
+        return type;
     }
 }

@@ -7,9 +7,15 @@ public class PrimitiveType implements Type {
     }
     
     private final PrimitiveKind kind;
+    private boolean isMutable;
     
     public PrimitiveType(PrimitiveKind kind) {
+        this(kind, false);
+    }
+    
+    public PrimitiveType(PrimitiveKind kind, boolean isMutable) {
         this.kind = kind;
+        this.isMutable = isMutable;
     }
     
     public PrimitiveKind getKind() {
@@ -17,7 +23,17 @@ public class PrimitiveType implements Type {
     }
     
     @Override
+    public void setMutability(boolean isMutable) {
+        this.isMutable = isMutable;
+    }
+    
+    @Override
     public boolean equals(Type other) {
+        // PrimitiveType 不等于 UnderscoreType
+        if (other instanceof UnderscoreType) {
+            return false;
+        }
+        
         if (other instanceof PrimitiveType) {
             PrimitiveType otherPrimitive = (PrimitiveType) other;
             return kind == otherPrimitive.kind;
@@ -70,40 +86,82 @@ public class PrimitiveType implements Type {
         return false;
     }
     
+    @Override
+    public boolean isMutable() {
+        return isMutable;
+    }
+    
     // Factory methods for common primitive types
     public static PrimitiveType getIntType() {
         return new PrimitiveType(PrimitiveKind.INT);
+    }
+    
+    public static PrimitiveType getIntType(boolean isMutable) {
+        return new PrimitiveType(PrimitiveKind.INT, isMutable);
     }
     
     public static PrimitiveType getI32Type() {
         return new PrimitiveType(PrimitiveKind.I32);
     }
     
+    public static PrimitiveType getI32Type(boolean isMutable) {
+        return new PrimitiveType(PrimitiveKind.I32, isMutable);
+    }
+    
     public static PrimitiveType getU32Type() {
         return new PrimitiveType(PrimitiveKind.U32);
+    }
+    
+    public static PrimitiveType getU32Type(boolean isMutable) {
+        return new PrimitiveType(PrimitiveKind.U32, isMutable);
     }
     
     public static PrimitiveType getUsizeType() {
         return new PrimitiveType(PrimitiveKind.USIZE);
     }
     
+    public static PrimitiveType getUsizeType(boolean isMutable) {
+        return new PrimitiveType(PrimitiveKind.USIZE, isMutable);
+    }
+    
     public static PrimitiveType getIsizeType() {
         return new PrimitiveType(PrimitiveKind.ISIZE);
+    }
+    
+    public static PrimitiveType getIsizeType(boolean isMutable) {
+        return new PrimitiveType(PrimitiveKind.ISIZE, isMutable);
     }
     
     public static PrimitiveType getBoolType() {
         return new PrimitiveType(PrimitiveKind.BOOL);
     }
     
+    public static PrimitiveType getBoolType(boolean isMutable) {
+        return new PrimitiveType(PrimitiveKind.BOOL, isMutable);
+    }
+    
     public static PrimitiveType getCharType() {
         return new PrimitiveType(PrimitiveKind.CHAR);
+    }
+    
+    public static PrimitiveType getCharType(boolean isMutable) {
+        return new PrimitiveType(PrimitiveKind.CHAR, isMutable);
     }
     
     public static PrimitiveType getStrType() {
         return new PrimitiveType(PrimitiveKind.STR);
     }
     
+    public static PrimitiveType getStrType(boolean isMutable) {
+        return new PrimitiveType(PrimitiveKind.STR, isMutable);
+    }
+    
     public static PrimitiveType getStringType() {
         return new PrimitiveType(PrimitiveKind.STRING);
     }
+    
+    public static PrimitiveType getStringType(boolean isMutable) {
+        return new PrimitiveType(PrimitiveKind.STRING, isMutable);
+    }
+    
 }

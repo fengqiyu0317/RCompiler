@@ -3,10 +3,16 @@
 public class ArrayType implements Type {
     private final Type elementType;
     private final long size;
+    private boolean isMutable;
     
     public ArrayType(Type elementType, long size) {
+        this(elementType, size, false);
+    }
+    
+    public ArrayType(Type elementType, long size, boolean isMutable) {
         this.elementType = elementType;
         this.size = size;
+        this.isMutable = isMutable;
     }
     
     public Type getElementType() {
@@ -15,6 +21,11 @@ public class ArrayType implements Type {
     
     public long getSize() {
         return size;
+    }
+    
+    @Override
+    public void setMutability(boolean isMutable) {
+        this.isMutable = isMutable;
     }
     
     @Override
@@ -55,4 +66,10 @@ public class ArrayType implements Type {
     public boolean isNever() {
         return false;
     }
+    
+    @Override
+    public boolean isMutable() {
+        return isMutable;
+    }
+    
 }
