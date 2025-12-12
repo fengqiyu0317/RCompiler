@@ -8,6 +8,7 @@ public class PrimitiveType implements Type {
     
     private final PrimitiveKind kind;
     private boolean isMutable;
+    private Long value; // 存储int类型的值，用于溢出检测
     
     public PrimitiveType(PrimitiveKind kind) {
         this(kind, false);
@@ -16,10 +17,37 @@ public class PrimitiveType implements Type {
     public PrimitiveType(PrimitiveKind kind, boolean isMutable) {
         this.kind = kind;
         this.isMutable = isMutable;
+        this.value = null;
+    }
+    
+    // 添加构造函数重载以支持值记录
+    public PrimitiveType(PrimitiveKind kind, Long value) {
+        this(kind, false, value);
+    }
+    
+    public PrimitiveType(PrimitiveKind kind, boolean isMutable, Long value) {
+        this.kind = kind;
+        this.isMutable = isMutable;
+        this.value = value;
     }
     
     public PrimitiveKind getKind() {
         return kind;
+    }
+    
+    // 获取值
+    public Long getValue() {
+        return value;
+    }
+    
+    // 设置值
+    public void setValue(Long value) {
+        this.value = value;
+    }
+    
+    // 检查是否有值
+    public boolean hasValue() {
+        return value != null;
     }
     
     @Override
@@ -98,6 +126,47 @@ public class PrimitiveType implements Type {
     
     public static PrimitiveType getIntType(boolean isMutable) {
         return new PrimitiveType(PrimitiveKind.INT, isMutable);
+    }
+    
+    // 添加支持值的工厂方法
+    public static PrimitiveType getIntType(long value) {
+        return new PrimitiveType(PrimitiveKind.INT, value);
+    }
+    
+    public static PrimitiveType getIntType(boolean isMutable, long value) {
+        return new PrimitiveType(PrimitiveKind.INT, isMutable, value);
+    }
+    
+    public static PrimitiveType getI32Type(long value) {
+        return new PrimitiveType(PrimitiveKind.I32, value);
+    }
+    
+    public static PrimitiveType getI32Type(boolean isMutable, long value) {
+        return new PrimitiveType(PrimitiveKind.I32, isMutable, value);
+    }
+    
+    public static PrimitiveType getU32Type(long value) {
+        return new PrimitiveType(PrimitiveKind.U32, value);
+    }
+    
+    public static PrimitiveType getU32Type(boolean isMutable, long value) {
+        return new PrimitiveType(PrimitiveKind.U32, isMutable, value);
+    }
+    
+    public static PrimitiveType getUsizeType(long value) {
+        return new PrimitiveType(PrimitiveKind.USIZE, value);
+    }
+    
+    public static PrimitiveType getUsizeType(boolean isMutable, long value) {
+        return new PrimitiveType(PrimitiveKind.USIZE, isMutable, value);
+    }
+    
+    public static PrimitiveType getIsizeType(long value) {
+        return new PrimitiveType(PrimitiveKind.ISIZE, value);
+    }
+    
+    public static PrimitiveType getIsizeType(boolean isMutable, long value) {
+        return new PrimitiveType(PrimitiveKind.ISIZE, isMutable, value);
     }
     
     public static PrimitiveType getI32Type() {

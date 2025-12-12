@@ -284,6 +284,11 @@ public class ControlFlowTypeChecker extends VisitorBase {
                 }
             }
         }
+
+        if (commonType instanceof NeverType && elseBranchType == null && elseifBranchType == null) {
+            // 所有分支都是NeverType且没有else分支，返回UnitType
+            return UnitType.INSTANCE;
+        }
         
         return commonType;
     }
@@ -330,10 +335,11 @@ public class ControlFlowTypeChecker extends VisitorBase {
                     stmt.accept(typeChecker);
                     if (stmt instanceof ExprStmtNode) {
                         ExprStmtNode exprStmt = (ExprStmtNode) stmt;
-                        if (!exprStmt.hasSemicolon && exprStmt.expr.getType() instanceof UnitType) {
+                        if (!exprStmt.hasSemicolon && !(exprStmt.expr.getType() instanceof UnitType) && !(exprStmt.expr.getType() instanceof NeverType)) {
                             // 抛出错误
                             SemanticException error = new SemanticException(
-                                "Expression of type 'Unit' used as value without semicolon", exprStmt
+                                "Expression statements in blocks must end with a semicolon unless they are of unit type",
+                                exprStmt
                             );
                             if (throwOnError) {
                                 throw error;

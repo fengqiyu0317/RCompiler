@@ -161,9 +161,21 @@ public class TypeUtils {
             if (isNumericType(type1) && isNumericType(type2)) {
                 // If one is undetermined integer (INT), return the other type
                 if (kind1 == PrimitiveType.PrimitiveKind.INT) {
+                    // Check if the value fits in the other type
+                    PrimitiveType intType = (PrimitiveType) type1;
+                    if (intType.hasValue() && !isValueInRange(intType.getValue(), type2)) {
+                        // Value doesn't fit, types are incompatible
+                        return null;
+                    }
                     return type2;
                 }
                 if (kind2 == PrimitiveType.PrimitiveKind.INT) {
+                    // Check if the value fits in the other type
+                    PrimitiveType intType = (PrimitiveType) type2;
+                    if (intType.hasValue() && !isValueInRange(intType.getValue(), type1)) {
+                        // Value doesn't fit, types are incompatible
+                        return null;
+                    }
                     return type1;
                 }
             }
@@ -216,7 +228,12 @@ public class TypeUtils {
         if (sourceType.equals(targetType)) {
             return true;
         }
-        
+
+        // boolean can be cast to integer types
+        if ((isBooleanType(sourceType) || isCharType(sourceType)) && isIntegerType(targetType)) {
+            return true;
+        }
+
         // Integer types can be cast to each other
         if (isIntegerType(sourceType) && isIntegerType(targetType)) {
             return true;
@@ -225,7 +242,29 @@ public class TypeUtils {
         // All other cases: only allow casts between the same type
         return false;
     }
+
+    /**
+     * Check if type is boolean
+     */
+    public static boolean isBooleanType(Type type) {
+        if (type instanceof PrimitiveType) {
+            PrimitiveType.PrimitiveKind kind = ((PrimitiveType)type).getKind();
+            return kind == PrimitiveType.PrimitiveKind.BOOL;
+        }
+        return false;
+    }
     
+    /**
+     * Check if type is char
+     */
+    public static boolean isCharType(Type type) {
+        if (type instanceof PrimitiveType) {
+            PrimitiveType.PrimitiveKind kind = ((PrimitiveType)type).getKind();
+            return kind == PrimitiveType.PrimitiveKind.CHAR;
+        }
+        return false;
+    }
+
     /**
      * Check if operator is arithmetic compound assignment
      */
@@ -250,6 +289,24 @@ public class TypeUtils {
     public static boolean isShiftCompoundAssignment(oper_t operator) {
         return operator == oper_t.SHL_ASSIGN || operator == oper_t.SHR_ASSIGN;
     }
+    
+    /**
+     * Check if operator is bitwise operation (&, |, ^)
+     */
+    public static boolean isBitwiseOperation(oper_t operator) {
+        return operator == oper_t.AND ||
+               operator == oper_t.OR ||
+               operator == oper_t.XOR;
+    }
+    
+    /**
+     * Check if operator is bitwise compound assignment (&=, |=, ^=)
+     */
+    public static boolean isBitwiseCompoundAssignment(oper_t operator) {
+        return operator == oper_t.AND_ASSIGN ||
+               operator == oper_t.OR_ASSIGN ||
+               operator == oper_t.XOR_ASSIGN;
+    }
 
     public static boolean isRelationalOperator(oper_t operator) {
         return operator == oper_t.LT ||
@@ -271,7 +328,7 @@ public class TypeUtils {
     public static Type createMutableType(Type type, boolean isMutable) {
         if (type instanceof PrimitiveType) {
             PrimitiveType primitiveType = (PrimitiveType) type;
-            return new PrimitiveType(primitiveType.getKind(), isMutable);
+            return new PrimitiveType(primitiveType.getKind(), isMutable, primitiveType.getValue());
         } else if (type instanceof ArrayType) {
             ArrayType arrayType = (ArrayType) type;
             return new ArrayType(arrayType.getElementType(), arrayType.getSize(), isMutable);
@@ -306,5 +363,33 @@ public class TypeUtils {
         
         // 如果类型不支持可变性，返回原类型
         return type;
+    }
+    
+    /**
+     * Check if a value fits within the range of a type
+     */
+    public static boolean isValueInRange(long value, Type type) {
+        if (type instanceof PrimitiveType) {
+            PrimitiveType.PrimitiveKind kind = ((PrimitiveType)type).getKind();
+            
+            switch (kind) {
+                case I32:
+                    return value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE;
+                case U32:
+                    return value >= 0 && value <= 0xFFFFFFFFL;
+                case ISIZE:
+                    // 32-bit architecture
+                    return value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE;
+                case USIZE:
+                    // 32-bit architecture
+                    return value >= 0 && value <= 0xFFFFFFFFL;
+                case INT:
+                    // INT is undetermined, so any value fits
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        return false;
     }
 }

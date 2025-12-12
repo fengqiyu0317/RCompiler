@@ -127,6 +127,14 @@ public class StatementTypeChecker extends VisitorBase {
             
             // Visit function body if it exists
             if (node.body != null) {
+                // Check if this is the main function
+                boolean isMainFunction = node.name != null && "main".equals(node.name.name);
+                
+                // For main function, check exit function usage before visiting body
+                if (isMainFunction && node.body instanceof BlockExprNode) {
+                    checkMainFunctionExitUsage((BlockExprNode) node.body);
+                }
+                
                 // Visit function body
                 node.body.accept(typeChecker);
                 
@@ -558,6 +566,73 @@ public class StatementTypeChecker extends VisitorBase {
         if (mutabilityChecker != null) {
             mutabilityChecker.checkMutability(node);
         }
+    }
+    
+    /**
+     * 检查main函数中exit函数的使用情况
+     * 确保exit函数只在main函数的最后一条语句中被调用
+     */
+    private void checkMainFunctionExitUsage(BlockExprNode mainBody) {
+        if (mainBody.returnValue != null) {
+            // 将这个returnValue作为最后一条语句插入检查
+            ExprStmtNode returnStmt = new ExprStmtNode();
+            returnStmt.expr = mainBody.returnValue;
+            mainBody.statements.add(returnStmt);
+        }
+        // 检查除最后一条语句外的所有语句，确保它们不包含exit调用
+        for (int i = 0; i < mainBody.statements.size() - 1; i++) {
+            ASTNode stmt = mainBody.statements.get(i);
+            if (containsExitCall(stmt)) {
+                RuntimeException error = new RuntimeException(
+                    "exit() function must be the last statement in main function"
+                );
+                if (throwOnError) {
+                    throw error;
+                } else {
+                    errorCollector.addError(error.getMessage());
+                }
+            }
+        }
+        
+        // 检查最后一条语句，确保它包含exit调用或者是返回值中的exit调用
+        ASTNode lastStmt = mainBody.statements.get(mainBody.statements.size() - 1);
+        boolean lastStmtHasExit = containsExitCall(lastStmt);
+        
+        if (!lastStmtHasExit) {
+            RuntimeException error = new RuntimeException(
+                "exit() function must be the last statement in main function"
+            );
+            if (throwOnError) {
+                throw error;
+            } else {
+                errorCollector.addError(error.getMessage());
+            }
+        }
+    }
+    
+    /**
+     * 检查节点是否包含exit函数调用
+     */
+    private boolean containsExitCall(ASTNode node) {
+        if (node == null || !(node instanceof ExprStmtNode)) {
+            return false;
+        }
+
+        node = ((ExprStmtNode) node).expr;
+        
+        // 如果是CallExprNode，检查是否调用exit函数
+        if (node instanceof CallExprNode) {
+            CallExprNode callExpr = (CallExprNode) node;
+            if (callExpr.function instanceof PathExprNode) {
+                PathExprNode pathExpr = (PathExprNode) callExpr.function;
+                if (pathExpr.LSeg != null && pathExpr.LSeg.name != null &&
+                    "exit".equals(pathExpr.LSeg.name.name)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
     
 }

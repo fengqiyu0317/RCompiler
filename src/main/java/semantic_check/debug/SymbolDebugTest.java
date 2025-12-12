@@ -13,18 +13,18 @@ public class SymbolDebugTest {
      * Main method to run the symbol debug test
      */
     public static void main(String[] args) {
-        System.out.println("=== Symbol Debug Test ===");
+        // System.out.println("=== Symbol Debug Test ===");
         
         // Check if a file path is provided as argument
         if (args.length > 0) {
             String filePath = args[0];
-            System.out.println("Processing file: " + filePath);
+            // System.out.println("Processing file: " + filePath);
             processFile(filePath);
             return;
         }
         
         // If no file provided, read from stdin
-        System.out.println("Enter Rust code (Ctrl+D to finish):");
+        // System.out.println("Enter Rust code (Ctrl+D to finish):");
         
         Tokenizer tokenizer = new Tokenizer();
         try (Scanner scanner = new Scanner(System.in)) {
@@ -41,7 +41,7 @@ public class SymbolDebugTest {
      * Method to run symbol debug on a specific test file
      */
     public static void runTestOnFile(String filePath) {
-        System.out.println("=== Running Symbol Debug Test on: " + filePath + " ===");
+        // System.out.println("=== Running Symbol Debug Test on: " + filePath + " ===");
         processFile(filePath);
     }
     
@@ -106,7 +106,7 @@ public class SymbolDebugTest {
                 for (ASTNode stmt : parser.getStatements()) {
                     stmt.accept(fatherSetter);
                 }
-                System.out.println("Father relationships set successfully.");
+                // System.out.println("Father relationships set successfully.");
             } catch (Exception e) {
                 System.err.println("Error during father setting: " + e.getMessage());
                 e.printStackTrace();
@@ -120,7 +120,7 @@ public class SymbolDebugTest {
                 for (ASTNode stmt : parser.getStatements()) {
                     stmt.accept(selfAnalyzer);
                 }
-                System.out.println("Self and Self semantic checking completed successfully.");
+                // System.out.println("Self and Self semantic checking completed successfully.");
             } catch (SemanticException e) {
                 System.err.println("Self/Self semantic error: " + e.getMessage());
                 if (e.getNode() != null) {
@@ -152,18 +152,18 @@ public class SymbolDebugTest {
                 }
                 namespaceAnalyzer.analyze(statements);
                 
-                System.out.println("Namespace semantic checking completed successfully.");
+                // System.out.println("Namespace semantic checking completed successfully.");
                 
                 // Now use SymbolDebugVisitor to output symbol information
-                System.out.println("\n=== Symbol Debug Output ===");
-                SymbolDebugVisitor debugVisitor = new SymbolDebugVisitor();
+                // System.out.println("\n=== Symbol Debug Output ===");
+                // SymbolDebugVisitor debugVisitor = new SymbolDebugVisitor();
                 
-                for (ASTNode stmt : parser.getStatements()) {
-                    stmt.accept(debugVisitor);
-                }
+                // for (ASTNode stmt : parser.getStatements()) {
+                //     stmt.accept(debugVisitor);
+                // }
                 
                 // Print summary statistics
-                debugVisitor.printSummary();
+                // debugVisitor.printSummary();
                 
             } catch (SemanticException e) {
                 System.err.println("Semantic error during namespace checking: " + e.getMessage());
@@ -191,7 +191,7 @@ public class SymbolDebugTest {
                     typeChecker.getErrorCollector().printErrors();
                     System.exit(1);
                 } else {
-                    System.out.println("Type checking completed successfully.");
+                    // System.out.println("Type checking completed successfully.");
                 }
                 
                 // Check for constant evaluation errors
@@ -200,7 +200,7 @@ public class SymbolDebugTest {
                     typeChecker.getConstantEvaluationErrorCollector().printErrors();
                     System.exit(1);
                 } else {
-                    System.out.println("Constant evaluation completed successfully.");
+                    // System.out.println("Constant evaluation completed successfully.");
                 }
                 
             } catch (Exception e) {
@@ -217,7 +217,7 @@ public class SymbolDebugTest {
                     stmt.accept(ownershipChecker);
                 }
                 
-                System.out.println("Ownership checking completed successfully.");
+                // System.out.println("Ownership checking completed successfully.");
                 
             } catch (Exception e) {
                 System.err.println("Error during ownership checking: " + e.getMessage());

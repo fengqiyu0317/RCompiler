@@ -25,7 +25,8 @@ enum A {
 }
 
 fn main() {
-    let m: i32 = 1500000000 + 1500000000;
+    let m: bool = true;
+    let n: i32 = m;
     // println!("g.a: {}, h: {}", g.a, h);
     // {n}.b = String::from("changed");
     // let m = n;

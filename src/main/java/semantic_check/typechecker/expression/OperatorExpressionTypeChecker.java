@@ -274,9 +274,11 @@ public class OperatorExpressionTypeChecker extends VisitorBase {
             Type leftType = node.left.getType();
             Type rightType = node.right.getType();
             
-            // 单独处理移位操作和常规算术操作
+            // 区分移位操作、位操作和常规算术操作
             if (TypeUtils.isShiftOperation(node.operator)) {
                 handleShiftOperation(node, leftType, rightType);
+            } else if (TypeUtils.isBitwiseOperation(node.operator)) {
+                handleBitwiseOperation(node, leftType, rightType);
             } else {
                 handleRegularArithmeticOperation(node, leftType, rightType);
             }
@@ -318,6 +320,55 @@ public class OperatorExpressionTypeChecker extends VisitorBase {
     }
     
     /**
+     * 处理位操作 (&, |, ^)
+     */
+    private void handleBitwiseOperation(ArithExprNode node, Type leftType, Type rightType) {
+        // 对于位操作：
+        // 操作数可以是整数类型或布尔类型
+        // 如果两个操作数都是布尔类型，结果是布尔类型
+        // 如果两个操作数都是整数类型，结果是整数类型
+        // 不允许混合类型（布尔和整数）
+        
+        // 检查左操作数是否为整数类型或布尔类型
+        boolean leftIsInteger = TypeUtils.isIntegerType(leftType);
+        boolean leftIsBoolean = TypeUtils.isBooleanType(leftType);
+        
+        if (!leftIsInteger && !leftIsBoolean) {
+            reportError("Left operand of bitwise operation must be an integer or boolean type: " + leftType);
+            return;
+        }
+        
+        // 检查右操作数是否为整数类型或布尔类型
+        boolean rightIsInteger = TypeUtils.isIntegerType(rightType);
+        boolean rightIsBoolean = TypeUtils.isBooleanType(rightType);
+        
+        if (!rightIsInteger && !rightIsBoolean) {
+            reportError("Right operand of bitwise operation must be an integer or boolean type: " + rightType);
+            return;
+        }
+        
+        // 不允许混合类型（布尔和整数）
+        if ((leftIsBoolean && rightIsInteger) || (leftIsInteger && rightIsBoolean)) {
+            reportError("Cannot mix boolean and integer types in bitwise operation: " + leftType + " and " + rightType);
+            return;
+        }
+        
+        // 如果两个操作数都是布尔类型，结果是布尔类型
+        if (leftIsBoolean && rightIsBoolean) {
+            setType(node, PrimitiveType.getBoolType());
+        }
+        // 如果两个操作数都是整数类型，查找公共类型
+        else if (leftIsInteger && rightIsInteger) {
+            Type resultType = TypeUtils.findCommonType(leftType, rightType);
+            if (resultType == null) {
+                reportError("Cannot find common type for bitwise operation: " + leftType + " and " + rightType);
+                return;
+            }
+            setType(node, resultType);
+        }
+    }
+    
+    /**
      * 处理常规算术操作
      */
     private void handleRegularArithmeticOperation(ArithExprNode node, Type leftType, Type rightType) {
@@ -340,7 +391,128 @@ public class OperatorExpressionTypeChecker extends VisitorBase {
             return;
         }
         
+        // 检查整数溢出
+        checkIntegerOverflow(node, leftType, rightType, resultType);
+        
         setType(node, resultType);
+    }
+    
+    /**
+     * 检查整数溢出
+     */
+    private void checkIntegerOverflow(ArithExprNode node, Type leftType, Type rightType, Type resultType) {
+        // 只检查整数类型的溢出
+        if (!TypeUtils.isIntegerType(resultType)) {
+            return;
+        }
+        
+        // 如果两个操作数都是INT类型的字面量，进行编译时溢出检查
+        if (node.left instanceof LiteralExprNode && node.right instanceof LiteralExprNode) {
+            LiteralExprNode leftLiteral = (LiteralExprNode) node.left;
+            LiteralExprNode rightLiteral = (LiteralExprNode) node.right;
+            
+            // 确保两个都是INT类型（未推定类型）
+            if (isIntTypeLiteral(leftLiteral) && isIntTypeLiteral(rightLiteral)) {
+                long leftValue = leftLiteral.value_long;
+                long rightValue = rightLiteral.value_long;
+                long result = 0;
+                boolean overflow = false;
+                
+                // 根据运算符计算结果并检查溢出
+                switch (node.operator) {
+                    case PLUS:
+                        result = leftValue + rightValue;
+                        // 检查加法溢出
+                        if ((rightValue > 0 && leftValue > Long.MAX_VALUE - rightValue) ||
+                            (rightValue < 0 && leftValue < Long.MIN_VALUE - rightValue)) {
+                            overflow = true;
+                        }
+                        break;
+                    case MINUS:
+                        result = leftValue - rightValue;
+                        // 检查减法溢出
+                        if ((rightValue > 0 && leftValue < Long.MIN_VALUE + rightValue) ||
+                            (rightValue < 0 && leftValue > Long.MAX_VALUE + rightValue)) {
+                            overflow = true;
+                        }
+                        break;
+                    case MUL:
+                        result = leftValue * rightValue;
+                        // 检查乘法溢出
+                        if (leftValue != 0 && result / leftValue != rightValue) {
+                            overflow = true;
+                        }
+                        break;
+                    case DIV:
+                        // 除法溢出检查（除以零）
+                        if (rightValue == 0) {
+                            reportError("Division by zero in arithmetic expression");
+                            return;
+                        }
+                        result = leftValue / rightValue;
+                        // 除法一般不会溢出，除非是Long.MIN_VALUE / -1
+                        if (leftValue == Long.MIN_VALUE && rightValue == -1) {
+                            overflow = true;
+                        }
+                        break;
+                    case MOD:
+                        // 取模溢出检查（除以零）
+                        if (rightValue == 0) {
+                            reportError("Modulo by zero in arithmetic expression");
+                            return;
+                        }
+                        result = leftValue % rightValue;
+                        break;
+                    default:
+                        // 其他运算符不检查溢出
+                        return;
+                }
+                
+                // 检查结果是否在目标类型的范围内
+                if (!overflow && !TypeUtils.isValueInRange(result, resultType)) {
+                    overflow = true;
+                }
+                
+                // 如果检测到溢出，报告错误
+                if (overflow) {
+                    reportError("Integer overflow in arithmetic expression: " +
+                               leftValue + " " + getOperatorSymbol(node.operator) + " " + rightValue +
+                               " results in value outside the range of " + resultType);
+                }
+            }
+        }
+    }
+    
+    /**
+     * 检查字面量是否为整数类型
+     */
+    private boolean isIntegerLiteral(LiteralExprNode literal) {
+        return literal.literalType == literal_t.I32 ||
+               literal.literalType == literal_t.U32 ||
+               literal.literalType == literal_t.USIZE ||
+               literal.literalType == literal_t.ISIZE ||
+               literal.literalType == literal_t.INT;
+    }
+    
+    /**
+     * 检查字面量是否为INT类型（未推定类型）
+     */
+    private boolean isIntTypeLiteral(LiteralExprNode literal) {
+        return literal.literalType == literal_t.INT;
+    }
+    
+    /**
+     * 获取运算符的字符串表示
+     */
+    private String getOperatorSymbol(oper_t operator) {
+        switch (operator) {
+            case PLUS: return "+";
+            case MINUS: return "-";
+            case MUL: return "*";
+            case DIV: return "/";
+            case MOD: return "%";
+            default: return operator.toString();
+        }
     }
     
     /**
@@ -437,22 +609,47 @@ public class OperatorExpressionTypeChecker extends VisitorBase {
             
             if (node.isLogical) {
                 // 逻辑取反（!）需要布尔操作数
-                if (!innerType.isBoolean()) {
+                if (!innerType.isBoolean() && !TypeUtils.isNumericType(innerType)) {
                     reportError("Logical negation requires boolean operand: " + innerType);
                     return;
                 }
                 // 结果是布尔值
-                Type mutableType = TypeUtils.createMutableType(PrimitiveType.getBoolType(), true);
-                setType(node, mutableType);
+                Type resultType = TypeUtils.createMutableType(innerType, true);
+                // 如果是int类型，进行按位取反，结果类型不变
+                if (innerType instanceof PrimitiveType) {
+                    PrimitiveType primitiveType = (PrimitiveType) innerType;
+                    if (primitiveType.getKind() == PrimitiveType.PrimitiveKind.INT) {
+                        // 对于INT类型，如果它有值，进行按位取反
+                        if (primitiveType.hasValue()) {
+                            long value = primitiveType.getValue();
+                            // 创建新的INT类型，值为按位取反后的值
+                            resultType = PrimitiveType.getIntType(true, ~value);
+                        } 
+                    } 
+                }
+                setType(node, resultType);
             } else {
                 // 算术取反（-）需要数字操作数
                 if (!TypeUtils.isNumericType(innerType)) {
                     reportError("Arithmetic negation requires numeric operand: " + innerType);
                     return;
                 }
-                // 结果与操作数类型相同
-                Type mutableType = TypeUtils.createMutableType(innerType, true);
-                setType(node, mutableType);
+                
+                // 特殊处理PRIMITIVE INT类型的取负数
+                Type resultType = TypeUtils.createMutableType(innerType, true);
+                if (innerType instanceof PrimitiveType) {
+                    PrimitiveType primitiveType = (PrimitiveType) innerType;
+                    if (primitiveType.getKind() == PrimitiveType.PrimitiveKind.INT) {
+                        // 对于INT类型，如果它有值，检查取负后是否会导致溢出
+                        if (primitiveType.hasValue()) {
+                            long value = primitiveType.getValue();
+                            // 创建新的INT类型，值为取负后的值
+                            resultType = PrimitiveType.getIntType(true, -value);
+                        }
+                    }
+                }
+                
+                setType(node, resultType);
             }
         } catch (RuntimeException e) {
             handleError(e);
@@ -517,10 +714,12 @@ public class OperatorExpressionTypeChecker extends VisitorBase {
                 return;
             }
             
-            // 单独处理移位复合赋值和常规算术复合赋值
+            // 区分移位复合赋值、位复合赋值和常规算术复合赋值
             Type resultType = null;
             if (TypeUtils.isShiftCompoundAssignment(node.operator)) {
                 resultType = handleShiftCompoundAssignment(node, leftType, rightType);
+            } else if (TypeUtils.isBitwiseCompoundAssignment(node.operator)) {
+                resultType = handleBitwiseCompoundAssignment(node, leftType, rightType);
             } else if (TypeUtils.isArithmeticCompoundAssignment(node.operator)) {
                 resultType = handleArithmeticCompoundAssignment(node, leftType, rightType);
             }
@@ -558,6 +757,44 @@ public class OperatorExpressionTypeChecker extends VisitorBase {
             return null;
         }
 
+        return leftType;
+    }
+    
+    /**
+     * 处理位复合赋值 (&=, |=, ^=)
+     */
+    private Type handleBitwiseCompoundAssignment(ComAssignExprNode node, Type leftType, Type rightType) {
+        // 对于位复合赋值：
+        // 操作数可以是整数类型或布尔类型
+        // 如果两个操作数都是布尔类型，结果是布尔类型
+        // 如果两个操作数都是整数类型，结果是整数类型
+        // 不允许混合类型（布尔和整数）
+        
+        // 检查左操作数是否为整数类型或布尔类型
+        boolean leftIsInteger = TypeUtils.isIntegerType(leftType);
+        boolean leftIsBoolean = TypeUtils.isBooleanType(leftType);
+        
+        if (!leftIsInteger && !leftIsBoolean) {
+            reportError("Left operand of bitwise compound assignment must be an integer or boolean type: " + leftType + " at " + getCurrentContext());
+            return null;
+        }
+        
+        // 检查右操作数是否为整数类型或布尔类型
+        boolean rightIsInteger = TypeUtils.isIntegerType(rightType);
+        boolean rightIsBoolean = TypeUtils.isBooleanType(rightType);
+        
+        if (!rightIsInteger && !rightIsBoolean) {
+            reportError("Right operand of bitwise compound assignment must be an integer or boolean type: " + rightType + " at " + getCurrentContext());
+            return null;
+        }
+        
+        // 不允许混合类型（布尔和整数）
+        if ((leftIsBoolean && rightIsInteger) || (leftIsInteger && rightIsBoolean)) {
+            reportError("Cannot mix boolean and integer types in bitwise compound assignment: " + leftType + " and " + rightType + " at " + getCurrentContext());
+            return null;
+        }
+        
+        // 结果类型与左操作数类型相同
         return leftType;
     }
     

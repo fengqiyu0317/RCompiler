@@ -932,5 +932,6 @@ public class SymbolChecker extends VisitorBase {
                 setContext(previousContext);
             }
         }
+        
     }
 }

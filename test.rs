@@ -1,154 +1,316 @@
 /*
-Test Package: Semantic-1
-Test Target: misc
+Test Package: Semantic-2
+Test Target: comprehensive
 Author: Wenxin Zheng
-Time: 2025-08-08
-Verdict: Fail
-Comment: Brent's cycle detection algorithm with integer literal overflow error
+Time: 2025-08-17
+Verdict: Success
+Test Name: Custom Virtual Machine Execution Simulation
+Summary: This test comprehensively evaluates compiler optimizations for:
+Details:
+Large switch-case style dispatch for instruction decoding (simulated with if-else chains).
+Complex arithmetic and bitwise operations for ALU simulation.
+Pointer-like arithmetic using array indices for memory and stack access.
+Deeply nested conditional logic for instruction execution and flag updates.
+Loop performance for program execution cycle and memory initialization.
+Optimization of multi-dimensional array accesses for register file and memory simulation.
+Function call overhead for handling VM subroutines and system calls.
+Branch prediction in the context of frequent conditional jumps in the VM program.
 */
 
-// Brent's algorithm for cycle detection in pseudorandom sequences
-// More efficient than Floyd's tortoise-and-hare algorithm
+// comprehensive29.rx - Custom Virtual Machine Execution Simulation
+// This test comprehensively evaluates compiler optimizations for:
+// - Large switch-case style dispatch for instruction decoding (simulated with if-else chains).
+// - Complex arithmetic and bitwise operations for ALU simulation.
+// - Pointer-like arithmetic using array indices for memory and stack access.
+// - Deeply nested conditional logic for instruction execution and flag updates.
+// - Loop performance for program execution cycle and memory initialization.
+// - Optimization of multi-dimensional array accesses for register file and memory simulation.
+// - Function call overhead for handling VM subroutines and system calls.
+// - Branch prediction in the context of frequent conditional jumps in the VM program.
 
-struct CycleInfo {
-    cycle_length: i32,
-    cycle_start: i32,
+const REGISTER_COUNT: i32 = 16;
+const MEMORY_SIZE: i32 = 2048;
+const STACK_SIZE: i32 = 256;
+
+fn init_vm(
+    registers: &mut [i32; 16],
+    memory: &mut [i32; 2048],
+    stack: &mut [i32; 256],
+    pc: &mut i32,
+    sp: &mut i32,
+    zf: &mut bool,
+    cf: &mut bool,
+    halt: &mut bool,
+) {
+    let mut i: i32 = 0;
+    while (i < REGISTER_COUNT) {
+        registers[i as usize] = 0;
+        i = i + 1;
+    }
+    i = 0;
+    while (i < MEMORY_SIZE) {
+        memory[i as usize] = 0;
+        i = i + 1;
+    }
+    i = 0;
+    while (i < STACK_SIZE) {
+        stack[i as usize] = 0;
+        i = i + 1;
+    }
+
+    *pc = 0;
+    *sp = STACK_SIZE;
+    *zf = false;
+    *cf = false;
+    *halt = false;
 }
 
-// Linear congruential generator for pseudorandom sequence
-fn lcg_next(seed: i32, a: i32, c: i32, m: i32) -> i32 {
-    let result: i32 = ((seed as i32 * a as i32 + c as i32) % m as i32) as i32;
-    if (result < 0) {
-        return result + m;
+fn load_program(memory: &mut [i32; 2048]) {
+    // A complex program to test various instructions and logic.
+    // This program calculates Fibonacci numbers iteratively and recursively,
+    // performs some complex arithmetic, and tests conditional branches.
+
+    // Opcodes:
+    // 0: HALT, 1: MOV_REG, 2: MOV_IMM, 3: ADD, 4: SUB, 5: MUL, 6: DIV
+    // 7: AND, 8: OR, 9: XOR, 10: NOT, 11: SHL, 12: SHR
+    // 13: PUSH, 14: POP, 15: LOAD, 16: STORE
+    // 17: JMP, 18: JZ, 19: JNZ, 20: JC, 21: JNC
+    // 22: CALL, 23: RET, 24: CMP_REG, 25: CMP_IMM
+    // 26: PRINT_REG
+
+    let program: [i32; 168] = [
+        // --- Part 1: Iterative Fibonacci ---
+        // R0: n, R1: a, R2: b, R3: temp, R4: counter
+        2, 0, 15,       // MOV R0, 15 (Calculate Fib(15))
+        2, 1, 0,        // MOV R1, 0  (a = 0)
+        2, 2, 1,        // MOV R2, 1  (b = 1)
+        1, 4, 0,        // MOV R4, R0 (counter = n)
+        25, 4, 1,       // CMP R4, 1
+        18, 36, 0,      // JZ fib_iter_end (if n <= 1, jump to end)
+
+        // Loop start (pc=21)
+        1, 3, 1,        // MOV R3, R1 (temp = a)
+        1, 1, 2,        // MOV R1, R2 (a = b)
+        3, 2, 3, 0,     // ADD R2, R3 (b = b + temp)
+        4, 4, 1, 0,     // SUB R4, 1
+        25, 4, 1,       // CMP R4, 1
+        19, 21, 0,      // JNZ loop_start
+
+        // fib_iter_end (pc=36)
+        26, 1, 0,       // PRINT_REG R1 (Print result of iterative fib)
+
+        // --- Part 2: Recursive Fibonacci Setup ---
+        2, 0, 10,       // MOV R0, 10 (Calculate Fib(10) recursively)
+        13, 0, 0,       // PUSH R0
+        22, 81, 0,      // CALL fib_recursive
+        14, 1, 0,       // POP R1 (get result)
+        26, 1, 0,       // PRINT_REG R1
+
+        // --- Part 3: Complex arithmetic and bitwise ops ---
+        2, 5, 12345,    // MOV R5, 12345
+        2, 6, 54321,    // MOV R6, 54321
+        7, 5, 6, 0,     // AND R5, R6
+        26, 5, 0,       // PRINT_REG R5
+        2, 5, 12345,    // Reset R5
+        8, 5, 6, 0,     // OR R5, R6
+        26, 5, 0,       // PRINT_REG R5
+        11, 5, 3, 0,    // SHL R5, 3
+        26, 5, 0,       // PRINT_REG R5
+        12, 5, 5, 0,    // SHR R5, 5
+        26, 5, 0,       // PRINT_REG R5
+
+        0, 0, 0,        // HALT
+
+        // --- fib_recursive function (pc=81) ---
+        // Arg is on stack, R0 is used for calculations
+        13, 14, 0,      // PUSH R14 (link register)
+        13, 2, 0,       // PUSH R2
+        13, 3, 0,       // PUSH R3
+
+        // Load argument
+        15, 0, 1, 4,    // LOAD R0, [SP+4] (arg is at sp+4*word_size, simplified here)
+        
+        25, 0, 2,       // CMP R0, 2
+        20, 108, 0,     // JC fib_base_case (if n < 2)
+
+        // Recursive step
+        4, 0, 1, 0,     // SUB R0, 1 (n-1)
+        13, 0, 0,       // PUSH R0
+        22, 81, 0,      // CALL fib_recursive
+        14, 2, 0,       // POP R2 (result of fib(n-1))
+
+        4, 0, 1, 0,     // SUB R0, 1 (n-2)
+        13, 0, 0,       // PUSH R0
+        22, 81, 0,      // CALL fib_recursive
+        14, 3, 0,       // POP R3 (result of fib(n-2))
+
+        3, 0, 2, 3,     // ADD R0, R2, R3
+        17, 114, 0,     // JMP fib_end
+
+        // fib_base_case (pc=108)
+        15, 0, 1, 4,    // LOAD R0, [SP+4]
+        
+        // fib_end (pc=114)
+        16, 0, 1, 4,    // STORE R0, [SP+4] (store return value)
+        14, 3, 0,       // POP R3
+        14, 2, 0,       // POP R2
+        14, 14, 0,      // POP R14
+        23, 0, 0        // RET
+    ];
+
+    let mut i: i32 = 0;
+    while (i < 168) {
+        memory[i as usize] = program[i as usize];
+        i = i + 1;
     }
-    return result;
 }
 
-// Brent's cycle detection algorithm implementation
-fn brent_cycle_detection(initial_seed: i32, lcg_a: i32, lcg_c: i32, lcg_m: i32) -> CycleInfo {
-    let mut power: i32 = 1;
-    let mut lambda: i32 = 1;  // Cycle length
-    let mut tortoise: i32 = initial_seed;
-    let mut hare: i32 = lcg_next(initial_seed, lcg_a, lcg_c, lcg_m);
-    
-    // Find cycle length using Brent's algorithm
-    while (tortoise != hare) {
-        if (power == lambda) {
-            tortoise = hare;
-            power *= 2;
-            lambda = 0;
+fn fetch_decode_execute(
+    registers: &mut [i32; 16],
+    memory: &mut [i32; 2048],
+    stack: &mut [i32; 256],
+    pc: &mut i32,
+    sp: &mut i32,
+    zf: &mut bool,
+    cf: &mut bool,
+    halt: &mut bool,
+) {
+    while ((*halt) == false) {
+        if ((*pc) < 0 || (*pc) >= MEMORY_SIZE) {
+            *halt = true;
         }
-        hare = lcg_next(hare, lcg_a, lcg_c, lcg_m);
-        lambda += 1;
-        
-        // Safety check to prevent infinite loops
-        if (lambda > 10000) {
-            break;
-        }
-    }
-    
-    // Find cycle start position (μ)
-    let mut mu: i32 = 0;
-    tortoise = initial_seed;
-    hare = initial_seed;
-    
-    // Move hare lambda steps ahead
-    let mut step: i32 = 0;
-    while (step < lambda) {
-        hare = lcg_next(hare, lcg_a, lcg_c, lcg_m);
-        step += 1;
-    }
-    
-    // Find start of cycle
-    while (tortoise != hare) {
-        tortoise = lcg_next(tortoise, lcg_a, lcg_c, lcg_m);
-        hare = lcg_next(hare, lcg_a, lcg_c, lcg_m);
-        mu += 1;
-        
-        if (mu > 10000) {
-            break;
-        }
-    }
-    
-    let cycle_info: CycleInfo = CycleInfo {
-        cycle_length: lambda,
-        cycle_start: mu,
-    };
-    
-    return cycle_info;
-}
+        if ((*halt) == true) {
+            // loop exit
+        } else {
+            let opcode: i32 = memory[*pc as usize];
+            *pc = (*pc) + 1;
 
-// Analyze multiple LCG parameters for cycle characteristics
-fn analyze_lcg_cycles() -> i32 {
-    let mut total_analysis: i32 = 0;
-    let mut param: i32 = 1;
-    
-    while (param <= 3) {
-        let a: i32 = 3001;        // Reduced multiplier (< 4000)
-        let c: i32 = 17;          // Small additive constant
-        let m: i32 = 500003;      // Prime ~5e5 (ensures (m-1)*a < 2^31)
-        
-        let param_set: i32 = 42 + param;  // This should cause compilation error
-        
-        let cycle_result: CycleInfo = brent_cycle_detection(param_set, a, c, m);
-        total_analysis += cycle_result.cycle_length + cycle_result.cycle_start;
-        
-        // Nested analysis with different parameters
-        let mut inner_seed: i32 = param_set * 3;
-        while (inner_seed <= param_set * 3 + 2) {
-            let inner_a: i32 = 48271;  // Another common LCG multiplier
-            let inner_cycle: CycleInfo = brent_cycle_detection(inner_seed, inner_a, c, m);
-            
-            total_analysis += inner_cycle.cycle_length / 100;  // Scale down to avoid overflow
-            
-            // Additional recursive analysis
-            if (inner_cycle.cycle_length > 0) {
-                let recursive_seed: i32 = inner_cycle.cycle_start;
-                let recursive_cycle: CycleInfo = brent_cycle_detection(recursive_seed, a, 1, 997);
-                total_analysis += recursive_cycle.cycle_start;
+            // Simulating a switch statement with if-else if
+            if (opcode == 0) { // HALT
+                *halt = true;
+            } else if (opcode == 1) { // MOV_REG
+                let r_dst: i32 = memory[*pc as usize];
+                let r_src: i32 = memory[*pc as usize + 1];
+                registers[r_dst as usize] = registers[r_src as usize];
+                *pc = (*pc) + 2;
+            } else if (opcode == 2) { // MOV_IMM
+                let r_dst: i32 = memory[*pc as usize];
+                let imm: i32 = memory[*pc as usize + 1];
+                registers[r_dst as usize] = imm;
+                *pc = (*pc) + 2;
+            } else if (opcode == 3) { // ADD
+                let r_dst: i32 = memory[*pc as usize];
+                let r_src: i32 = memory[*pc as usize + 1];
+                let res: i32 = registers[r_dst as usize] + registers[r_src as usize];
+                // Simplified overflow check
+                if (registers[r_dst as usize] > 0 && registers[r_src as usize] > 0 && res < 0) {
+                    *cf = true;
+                } else if (registers[r_dst as usize] < 0 && registers[r_src as usize] < 0 && res > 0) {
+                    *cf = true;
+                } else {
+                    *cf = false;
+                }
+                registers[r_dst as usize] = res;
+                *zf = res == 0;
+                *pc = (*pc) + 2;
+            } else if (opcode == 4) { // SUB
+                let r_dst: i32 = memory[*pc as usize];
+                let r_src: i32 = memory[*pc as usize + 1];
+                let res: i32 = registers[r_dst as usize] - registers[r_src as usize];
+                // Simplified borrow check
+                if (registers[r_dst as usize] > 0 && registers[r_src as usize] < 0 && res < 0) {
+                    *cf = true;
+                } else if (registers[r_dst as usize] < 0 && registers[r_src as usize] > 0 && res > 0) {
+                    *cf = true;
+                } else {
+                    *cf = false;
+                }
+                registers[r_dst as usize] = res;
+                *zf = res == 0;
+                *pc = (*pc) + 2;
+            } else if (opcode == 5) { // MUL
+                let r_dst: i32 = memory[*pc as usize];
+                let r_src: i32 = memory[*pc as usize + 1];
+                registers[r_dst as usize] = registers[r_dst as usize] * registers[r_src as usize];
+                *zf = registers[r_dst as usize] == 0;
+                *pc = (*pc) + 2;
+            } else if (opcode == 6) { // DIV
+                let r_dst: i32 = memory[*pc as usize];
+                let r_src: i32 = memory[*pc as usize + 1];
+                if (registers[r_src as usize] != 0) {
+                    registers[r_dst as usize] = registers[r_dst as usize] / registers[r_src as usize];
+                } else {
+                    *halt = true; // Division by zero
+                };
+                *zf = registers[r_dst as usize] == 0;
+                *pc = (*pc) + 2;
+            } else if (opcode == 7) { // AND
+                let r_dst: i32 = memory[*pc as usize];
+                let r_src: i32 = memory[*pc as usize + 1];
+                registers[r_dst as usize] = registers[r_dst as usize] & registers[r_src as usize];
+                *zf = registers[r_dst as usize] == 0;
+                *pc = (*pc) + 2;
+            } else if (opcode == 8) { // OR
+                let r_dst: i32 = memory[*pc as usize];
+                let r_src: i32 = memory[*pc as usize + 1];
+                registers[r_dst as usize] = registers[r_dst as usize] | registers[r_src as usize];
+                *zf = registers[r_dst as usize] == 0;
+                *pc = (*pc) + 2;
+            } else if (opcode == 9) { // XOR
+                let r_dst: i32 = memory[*pc as usize];
+                let r_src: i32 = memory[*pc as usize + 1];
+                registers[r_dst as usize] = registers[r_dst as usize] ^ registers[r_src as usize];
+                *zf = registers[r_dst as usize] == 0;
+                *pc = (*pc) + 2;
+            } else if (opcode == 10) { // NOT
+                let r_dst: i32 = memory[*pc as usize];
+                registers[r_dst as usize] = !registers[r_dst as usize];
+                *zf = registers[r_dst as usize] == 0;
+                *pc = (*pc) + 1;
             }
-            
-            inner_seed += 1;
         }
-        
-        param += 1;
     }
-    
-    return total_analysis % 1000000;  // Prevent overflow
-}
-
-// Additional verification using different cycle detection approach
-fn verify_cycles_with_different_method() -> i32 {
-    let mut verification_sum: i32 = 0;
-    let mut test_seed: i32 = 12345;
-    
-    // Use simple Floyd's algorithm for comparison
-    while (test_seed <= 12347) {
-        let mut slow: i32 = test_seed;
-        let mut fast: i32 = test_seed;
-        let mut steps: i32 = 0;
-        
-        // Floyd's cycle detection
-        loop {
-            slow = lcg_next(slow, 1103515245, 12345, 2147483648);
-            fast = lcg_next(fast, 1103515245, 12345, 2147483648);
-            fast = lcg_next(fast, 1103515245, 12345, 2147483648);
-            steps += 1;
-            
-            if (slow == fast || steps > 1000) {
-                break;
-            }
-        }
-        
-        verification_sum += steps;
-        test_seed += 1;
-    }
-    
-    return verification_sum;
 }
 
 fn main() {
-    let brent_result: i32 = analyze_lcg_cycles();
-    let floyd_result: i32 = verify_cycles_with_different_method();
-    let final_result: i32 = brent_result + floyd_result;
+
+    let mut registers: [i32; 16] = [0; 16];
+    let mut memory: [i32; 2048] = [0; 2048];
+    let mut stack: [i32; 256] = [0; 256];
+
+    let mut pc: i32 = 0;
+    let mut sp: i32 = 0;
+    let mut zf: bool = false;
+    let mut cf: bool = false;
+    let mut halt: bool = false;
+
+    init_vm(
+        &mut registers,
+        &mut memory,
+        &mut stack,
+        &mut pc,
+        &mut sp,
+        &mut zf,
+        &mut cf,
+        &mut halt,
+    );
+    load_program(&mut memory);
+    fetch_decode_execute(
+        &mut registers,
+        &mut memory,
+        &mut stack,
+        &mut pc,
+        &mut sp,
+        &mut zf,
+        &mut cf,
+        &mut halt,
+    );
+    
+    // Final check to ensure halt worked
+    if (halt) {
+        printlnInt(1337);
+    } else {
+        printlnInt(9999);
+    }
+    exit(0);
 }

@@ -228,19 +228,19 @@ public class SimpleExpressionTypeChecker extends VisitorBase {
         
         switch (node.literalType) {
             case I32:
-                literalType = PrimitiveType.getI32Type();
+                literalType = PrimitiveType.getI32Type(node.value_long);
                 break;
             case U32:
-                literalType = PrimitiveType.getU32Type();
+                literalType = PrimitiveType.getU32Type(node.value_long);
                 break;
             case USIZE:
-                literalType = PrimitiveType.getUsizeType();
+                literalType = PrimitiveType.getUsizeType(node.value_long);
                 break;
             case ISIZE:
-                literalType = PrimitiveType.getIsizeType();
+                literalType = PrimitiveType.getIsizeType(node.value_long);
                 break;
             case INT:
-                literalType = PrimitiveType.getIntType();
+                literalType = PrimitiveType.getIntType(node.value_long);
                 break;
             case BOOL:
                 literalType = PrimitiveType.getBoolType();
@@ -256,7 +256,7 @@ public class SimpleExpressionTypeChecker extends VisitorBase {
                 break;
             default:
                 // 默认为未确定的整数类型
-                literalType = PrimitiveType.getIntType();
+                literalType = PrimitiveType.getIntType(node.value_long);
                 break;
         }
         

@@ -1,28 +1,2 @@
-=== Symbol Debug Test ===
-Enter Rust code (Ctrl+D to finish):
-Father relationships set successfully.
-Self and Self semantic checking completed successfully.
-Namespace semantic checking completed successfully.
-
-=== Symbol Debug Output ===
-Node: Function(main)       | Type: FunctionNode              | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
-Node: main                 | Type: IdentifierNode            | Symbol: Symbol{name='main', kind=FUNCTION, scopeLevel=0}
-Node: x                    | Type: IdentifierNode            | Symbol: Symbol{name='x', kind=LOCAL_VARIABLE, scopeLevel=2}
-Node: PathExprSeg(i32)     | Type: PathExprSegNode           | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
-Node: i32                  | Type: IdentifierNode            | Symbol: Symbol{name='i32', kind=BUILTIN_TYPE, scopeLevel=0}
-Node: PathExpr             | Type: PathExprNode              | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
-Node: PathExprSeg(exit)    | Type: PathExprSegNode           | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
-Node: exit                 | Type: IdentifierNode            | Symbol: Symbol{name='exit', kind=FUNCTION, scopeLevel=0}
-
-=== Symbol Debug Summary ===
-Total nodes visited: 8
-Nodes with symbols: 8
-Nodes without symbols: 0
-
-Node type distribution:
-  PathExprSegNode: 2
-  IdentifierNode: 4
-  FunctionNode: 1
-  PathExprNode: 1
 Type checking errors:
   Cannot assign bool to variable of type i32

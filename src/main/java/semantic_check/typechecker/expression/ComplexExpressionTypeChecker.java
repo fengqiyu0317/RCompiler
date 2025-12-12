@@ -189,6 +189,72 @@ public class ComplexExpressionTypeChecker extends VisitorBase {
         this.mutabilityChecker = mutabilityChecker;
     }
     
+    /**
+     * 检查exit函数调用是否在main函数的最后一条语句
+     */
+    private void checkExitFunctionPosition(CallExprNode exitCallNode) {
+        ASTNode current = exitCallNode;
+        FunctionNode mainFunction = null;
+        boolean isInMainFunction = false;
+        
+        current = current.getFather(); // 先上升到语句节点
+        if (!(current instanceof ExprStmtNode)) {
+            if (!(current instanceof BlockExprNode)) {
+                // 抛出错误
+                reportError("exit() function can only be called within main function");
+                return;
+            }
+        } else {
+            current = current.getFather(); // 然后上升到块节点
+        }
+
+        if (!(current instanceof BlockExprNode)) {
+            // 抛出错误
+            reportError("exit() function can only be called within main function");
+            return;
+        }
+
+        current = current.getFather(); // 然后上升到函数体节点
+        if (current instanceof FunctionNode) {
+            FunctionNode funcNode = (FunctionNode) current;
+            if (funcNode.name != null && "main".equals(funcNode.name.name)) {
+                mainFunction = funcNode;
+                isInMainFunction = true;
+            }
+        } else {
+            // 抛出错误
+            reportError("exit() function can only be called within main function");
+            return;
+        }
+        
+        // 如果不在main函数中，则抛出错误
+        if (!isInMainFunction) {
+            reportError("exit() function can only be called within main function");
+            return;
+        }
+
+        FunctionNode funcNode = (FunctionNode) current;
+        if(funcNode.selfPara != null) {
+            // 抛出错误
+            reportError("exit() function cannot be called within methods");
+            return;
+        }
+    }
+    
+    /**
+     * 检查节点是否在指定语句中
+     */
+    private boolean isNodeInStatement(ASTNode node, ASTNode statement) {
+        ASTNode current = node;
+        while (current != null) {
+            if (current == statement) {
+                return true;
+            }
+            current = current.getFather();
+        }
+        return false;
+    }
+    
     
     /**
      * 访问基础表达式节点
@@ -231,6 +297,16 @@ public class ComplexExpressionTypeChecker extends VisitorBase {
             }
             
             FunctionType funcType = (FunctionType) functionType;
+            
+            // 特殊检查：exit函数调用必须在main函数的最后一条语句
+            if (node.function instanceof PathExprNode) {
+                PathExprNode pathExpr = (PathExprNode) node.function;
+                if (pathExpr.LSeg != null && pathExpr.LSeg.name != null &&
+                    "exit".equals(pathExpr.LSeg.name.name)) {
+                    // 检查是否在main函数中且是最后一条语句
+                    checkExitFunctionPosition(node);
+                }
+            }
             
             // 检查参数数量
             int expectedArgs = funcType.getParameterTypes().size();

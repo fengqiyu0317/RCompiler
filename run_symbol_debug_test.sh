@@ -11,10 +11,10 @@ if [ $? -ne 0 ]; then
 fi
 
 # Directory containing test cases
-TEST_DIR="RCompiler-Testcases/semantic-1"
+TEST_DIR="RCompiler-Testcases/semantic-2"
 
 # Create results directory if it doesn't exist
-RESULTS_DIR="results/semantic-1-typechecker"
+RESULTS_DIR="results/semantic-2-typechecker"
 mkdir -p "$RESULTS_DIR"
 
 # Counter for processed files
