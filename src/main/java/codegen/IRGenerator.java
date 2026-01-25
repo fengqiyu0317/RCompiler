@@ -18,28 +18,7 @@ import java.util.*;
  */
 public class IRGenerator extends VisitorBase {
 
-    // ==================== 状态变量 ====================
-
-    private IRModule module;
-    private IRFunction currentFunction;
-    private IRBasicBlock currentBlock;
-
-    // 符号到 IR 值的映射（变量名 -> 地址）
-    private final Map<Symbol, IRValue> symbolMap = new HashMap<>();
-
-    // 常量符号到常量值的映射（用于常量内联）
-    private final Map<Symbol, IRConstant> constSymbolMap = new HashMap<>();
-
-    // 循环上下文栈（用于 break/continue）
-    private final Deque<LoopContext> loopStack = new ArrayDeque<>();
-
-    // 当前 impl 块的目标类型（用于 self 类型解析）
-    private IRStructType currentImplType = null;
-
-    // 常量求值器（复用语义分析阶段的实例）
-    private ConstantEvaluator constantEvaluator;
-
-    // ==================== 循环上下文 ====================
+    // ==================== 内部类 ====================
 
     /**
      * 循环上下文，记录循环的头部和出口基本块
@@ -65,8 +44,6 @@ public class IRGenerator extends VisitorBase {
         }
     }
 
-    // ==================== 函数上下文（用于嵌套函数/闭包） ====================
-
     /**
      * 函数上下文，用于保存和恢复嵌套函数处理时的状态
      */
@@ -86,31 +63,29 @@ public class IRGenerator extends VisitorBase {
         }
     }
 
-    /**
-     * 保存当前函数上下文（进入嵌套函数/闭包前调用）
-     * @return 保存的上下文，用于后续恢复
-     */
-    protected FunctionContext saveFunctionContext() {
-        return new FunctionContext(
-            currentFunction,
-            currentBlock,
-            IRRegister.getCounter(),
-            symbolMap
-        );
-    }
+    // ==================== 状态变量 ====================
 
-    /**
-     * 恢复函数上下文（退出嵌套函数/闭包后调用）
-     * @param context 之前保存的上下文
-     */
-    protected void restoreFunctionContext(FunctionContext context) {
-        currentFunction = context.function;
-        currentBlock = context.block;
-        IRRegister.setCounter(context.registerCounter);
-        // 恢复符号映射
-        symbolMap.clear();
-        symbolMap.putAll(context.capturedSymbols);
-    }
+    private IRModule module;
+    private IRFunction currentFunction;
+    private IRBasicBlock currentBlock;
+
+    // 符号到 IR 值的映射（变量名 -> 地址）
+    private final Map<Symbol, IRValue> symbolMap = new HashMap<>();
+
+    // 常量符号到常量值的映射（用于常量内联）
+    private final Map<Symbol, IRConstant> constSymbolMap = new HashMap<>();
+
+    // 循环上下文栈（用于 break/continue）
+    private final Deque<LoopContext> loopStack = new ArrayDeque<>();
+
+    // 当前 impl 块的目标类型（用于 self 类型解析）
+    private IRStructType currentImplType = null;
+
+    // 常量求值器（复用语义分析阶段的实例）
+    private ConstantEvaluator constantEvaluator;
+
+    // 字符串常量计数器
+    private int stringConstantCounter = 0;
 
     // ==================== 入口方法 ====================
 
@@ -185,227 +160,7 @@ public class IRGenerator extends VisitorBase {
         module.addEnum(node.name.name, IRIntType.I32, variantValues);
     }
 
-    // ==================== 辅助方法：临时变量和标签 ====================
-
-    /**
-     * 创建新的临时变量
-     */
-    protected IRRegister newTemp(IRType type) {
-        return new IRRegister(type);
-    }
-
-    /**
-     * 创建带提示名的临时变量
-     */
-    protected IRRegister newTemp(IRType type, String hint) {
-        return new IRRegister(type, hint);
-    }
-
-    /**
-     * 发射指令到当前基本块
-     */
-    protected void emit(IRInstruction inst) {
-        if (currentBlock == null) {
-            throw new IllegalStateException("No current block to emit instruction");
-        }
-        currentBlock.addInstruction(inst);
-    }
-
-    /**
-     * 创建新的基本块并添加到当前函数
-     */
-    protected IRBasicBlock createBlock(String name) {
-        IRBasicBlock block = new IRBasicBlock(name);
-        currentFunction.addBlock(block);
-        return block;
-    }
-
-    /**
-     * 设置当前基本块
-     */
-    protected void setCurrentBlock(IRBasicBlock block) {
-        currentBlock = block;
-    }
-
-    // ==================== 辅助方法：循环上下文 ====================
-
-    /**
-     * 压入循环上下文
-     */
-    protected void pushLoopContext(IRBasicBlock header, IRBasicBlock exit, IRType resultType) {
-        loopStack.push(new LoopContext(header, exit, resultType));
-    }
-
-    /**
-     * 弹出循环上下文
-     */
-    protected LoopContext popLoopContext() {
-        return loopStack.pop();
-    }
-
-    /**
-     * 获取当前循环的头部基本块（continue 目标）
-     */
-    protected IRBasicBlock getCurrentLoopHeader() {
-        if (loopStack.isEmpty()) {
-            throw new IllegalStateException("Not inside a loop");
-        }
-        return loopStack.peek().headerBlock;
-    }
-
-    /**
-     * 获取当前循环的出口基本块（break 目标）
-     */
-    protected IRBasicBlock getCurrentLoopExit() {
-        if (loopStack.isEmpty()) {
-            throw new IllegalStateException("Not inside a loop");
-        }
-        return loopStack.peek().exitBlock;
-    }
-
-    /**
-     * 获取当前循环上下文
-     */
-    protected LoopContext getCurrentLoopContext() {
-        if (loopStack.isEmpty()) {
-            throw new IllegalStateException("Not inside a loop");
-        }
-        return loopStack.peek();
-    }
-
-    // ==================== 辅助方法：类型转换 ====================
-
-    /**
-     * 将 AST 类型转换为 IR 类型
-     */
-    protected IRType convertType(Type astType) {
-        if (astType instanceof PrimitiveType) {
-            PrimitiveType pt = (PrimitiveType) astType;
-            switch (pt.getKind()) {
-                case I32:
-                case U32:
-                    return IRIntType.I32;
-                case BOOL:
-                    return IRIntType.I1;
-                case CHAR:
-                    return IRIntType.I32;  // char 用 i32 表示
-                case USIZE:
-                case ISIZE:
-                    return IRIntType.I64;
-                default:
-                    throw new RuntimeException("Unsupported primitive type: " + pt);
-            }
-        } else if (astType instanceof ReferenceType) {
-            ReferenceType rt = (ReferenceType) astType;
-            return new IRPtrType(convertType(rt.getInnerType()));
-        } else if (astType instanceof ArrayType) {
-            ArrayType at = (ArrayType) astType;
-            return new IRArrayType(convertType(at.getElementType()), at.getSize());
-        } else if (astType instanceof StructType) {
-            StructType st = (StructType) astType;
-            IRStructType irStruct = module.getStruct(st.getName());
-            if (irStruct == null) {
-                throw new RuntimeException("Unknown struct type: " + st.getName());
-            }
-            return irStruct;
-        } else if (astType instanceof UnitType) {
-            return IRVoidType.INSTANCE;
-        } else if (astType instanceof NeverType) {
-            return IRVoidType.INSTANCE;  // never 类型在 IR 层面用 void 表示
-        }
-        throw new RuntimeException("Unknown type: " + astType);
-    }
-
-    /**
-     * 从 TypeExprNode 提取 Type
-     * 这个方法需要根据你的类型系统实现
-     */
-    protected Type extractType(TypeExprNode typeExpr) {
-        // TODO: 实现类型提取逻辑
-        // 这需要访问你的类型检查器或符号表
-        throw new UnsupportedOperationException("extractType not implemented");
-    }
-
-    // ==================== 辅助方法：符号管理 ====================
-
-    /**
-     * 映射符号到 IR 值
-     */
-    protected void mapSymbol(Symbol symbol, IRValue value) {
-        symbolMap.put(symbol, value);
-    }
-
-    /**
-     * 获取符号对应的 IR 值
-     */
-    protected IRValue getSymbolValue(Symbol symbol) {
-        IRValue value = symbolMap.get(symbol);
-        if (value == null) {
-            throw new RuntimeException("Unknown symbol: " + symbol);
-        }
-        return value;
-    }
-
-    /**
-     * 从 PatternNode 获取变量名
-     */
-    protected String getPatternName(PatternNode pattern) {
-        if (pattern instanceof IdPatNode) {
-            return ((IdPatNode) pattern).name.name;
-        }
-        return "tmp";
-    }
-
-    /**
-     * 从节点获取符号
-     * 这个方法需要根据你的符号表实现
-     */
-    protected Symbol getSymbol(ASTNode node) {
-        // TODO: 实现符号获取逻辑
-        throw new UnsupportedOperationException("getSymbol not implemented");
-    }
-
-    // ==================== 辅助方法：运算符映射 ====================
-
-    /**
-     * 将 AST 运算符映射到 IR 二元运算
-     */
-    protected BinaryOpInst.Op mapBinaryOp(oper_t op, boolean isSigned) {
-        switch (op) {
-            case ADD: return BinaryOpInst.Op.ADD;
-            case SUB: return BinaryOpInst.Op.SUB;
-            case MUL: return BinaryOpInst.Op.MUL;
-            case DIV: return isSigned ? BinaryOpInst.Op.SDIV : BinaryOpInst.Op.UDIV;
-            case MOD: return isSigned ? BinaryOpInst.Op.SREM : BinaryOpInst.Op.UREM;
-            case BITAND: return BinaryOpInst.Op.AND;
-            case BITOR: return BinaryOpInst.Op.OR;
-            case BITXOR: return BinaryOpInst.Op.XOR;
-            case SHL: return BinaryOpInst.Op.SHL;
-            case SHR: return isSigned ? BinaryOpInst.Op.ASHR : BinaryOpInst.Op.LSHR;
-            default:
-                throw new RuntimeException("Unknown binary operator: " + op);
-        }
-    }
-
-    /**
-     * 将 AST 比较运算符映射到 IR 比较谓词
-     */
-    protected CmpInst.Pred mapCmpPred(oper_t op, boolean isSigned) {
-        switch (op) {
-            case EQ: return CmpInst.Pred.EQ;
-            case NE: return CmpInst.Pred.NE;
-            case LT: return isSigned ? CmpInst.Pred.SLT : CmpInst.Pred.ULT;
-            case LE: return isSigned ? CmpInst.Pred.SLE : CmpInst.Pred.ULE;
-            case GT: return isSigned ? CmpInst.Pred.SGT : CmpInst.Pred.UGT;
-            case GE: return isSigned ? CmpInst.Pred.SGE : CmpInst.Pred.UGE;
-            default:
-                throw new RuntimeException("Unknown comparison operator: " + op);
-        }
-    }
-
-    // ==================== Visitor 方法（框架） ====================
-
-    // --- 顶层项 ---
+    // ==================== Visitor 方法：顶层项 ====================
 
     @Override
     public void visit(FunctionNode node) {
@@ -495,20 +250,11 @@ public class IRGenerator extends VisitorBase {
 
     @Override
     public void visit(EnumNode node) {
-        // 简单枚举：用 i32 表示，每个变体对应一个整数值
-        Map<String, Integer> variantValues = new LinkedHashMap<>();
-
-        if (node.variants != null) {
-            int value = 0;
-            for (IdentifierNode variant : node.variants) {
-                variantValues.put(variant.name, value);
-                value++;
-            }
+        // 枚举类型已在 Pass 1 (collectEnum) 中收集
+        // 此处检查是否已注册，如果没有则注册
+        if (module.getEnum(node.name.name) == null) {
+            collectEnum(node);
         }
-
-        // 注册枚举信息到模块
-        // 枚举类型在 IR 中用 i32 表示
-        module.addEnum(node.name.name, IRIntType.I32, variantValues);
     }
 
     @Override
@@ -574,7 +320,7 @@ public class IRGenerator extends VisitorBase {
         currentImplType = savedImplType;
     }
 
-    // --- 语句 ---
+    // ==================== Visitor 方法：语句 ====================
 
     @Override
     public void visit(LetStmtNode node) {
@@ -606,32 +352,7 @@ public class IRGenerator extends VisitorBase {
         }
     }
 
-    // --- 表达式（需要返回 IRValue，可能需要单独的 visitExpr 方法） ---
-    // visitExpr(LiteralExprNode node) -> IRValue
-    // visitExpr(PathExprNode node) -> IRValue
-    // visitExpr(ArithExprNode node) -> IRValue
-    // visitExpr(CompExprNode node) -> IRValue
-    // visitExpr(LazyExprNode node) -> IRValue
-    // visitExpr(AssignExprNode node) -> IRValue
-    // visitExpr(ComAssignExprNode node) -> IRValue
-    // visitExpr(CallExprNode node) -> IRValue
-    // visitExpr(MethodCallExprNode node) -> IRValue
-    // visitExpr(FieldExprNode node) -> IRValue
-    // visitExpr(IndexExprNode node) -> IRValue
-    // visitExpr(ArrayExprNode node) -> IRValue
-    // visitExpr(StructExprNode node) -> IRValue
-    // visitExpr(BorrowExprNode node) -> IRValue
-    // visitExpr(DerefExprNode node) -> IRValue
-    // visitExpr(NegaExprNode node) -> IRValue
-    // visitExpr(TypeCastExprNode node) -> IRValue
-    // visitExpr(BlockExprNode node) -> IRValue
-    // visitExpr(IfExprNode node) -> IRValue
-    // visitExpr(LoopExprNode node) -> IRValue
-    // visitExpr(BreakExprNode node) -> IRValue
-    // visitExpr(ContinueExprNode node) -> IRValue
-    // visitExpr(ReturnExprNode node) -> IRValue
-
-    // ==================== 辅助方法：表达式求值 ====================
+    // ==================== 表达式求值入口 ====================
 
     /**
      * 求值表达式，返回 IR 值
@@ -1444,6 +1165,120 @@ public class IRGenerator extends VisitorBase {
         return null;
     }
 
+    // ==================== 辅助方法：IR 构建 ====================
+
+    /**
+     * 创建新的临时变量
+     */
+    protected IRRegister newTemp(IRType type) {
+        return new IRRegister(type);
+    }
+
+    /**
+     * 创建带提示名的临时变量
+     */
+    protected IRRegister newTemp(IRType type, String hint) {
+        return new IRRegister(type, hint);
+    }
+
+    /**
+     * 发射指令到当前基本块
+     */
+    protected void emit(IRInstruction inst) {
+        if (currentBlock == null) {
+            throw new IllegalStateException("No current block to emit instruction");
+        }
+        currentBlock.addInstruction(inst);
+    }
+
+    /**
+     * 创建新的基本块并添加到当前函数
+     */
+    protected IRBasicBlock createBlock(String name) {
+        IRBasicBlock block = new IRBasicBlock(name);
+        currentFunction.addBlock(block);
+        return block;
+    }
+
+    /**
+     * 设置当前基本块
+     */
+    protected void setCurrentBlock(IRBasicBlock block) {
+        currentBlock = block;
+    }
+
+    // ==================== 辅助方法：上下文管理 ====================
+
+    /**
+     * 保存当前函数上下文（进入嵌套函数/闭包前调用）
+     * @return 保存的上下文，用于后续恢复
+     */
+    protected FunctionContext saveFunctionContext() {
+        return new FunctionContext(
+            currentFunction,
+            currentBlock,
+            IRRegister.getCounter(),
+            symbolMap
+        );
+    }
+
+    /**
+     * 恢复函数上下文（退出嵌套函数/闭包后调用）
+     * @param context 之前保存的上下文
+     */
+    protected void restoreFunctionContext(FunctionContext context) {
+        currentFunction = context.function;
+        currentBlock = context.block;
+        IRRegister.setCounter(context.registerCounter);
+        // 恢复符号映射
+        symbolMap.clear();
+        symbolMap.putAll(context.capturedSymbols);
+    }
+
+    /**
+     * 压入循环上下文
+     */
+    protected void pushLoopContext(IRBasicBlock header, IRBasicBlock exit, IRType resultType) {
+        loopStack.push(new LoopContext(header, exit, resultType));
+    }
+
+    /**
+     * 弹出循环上下文
+     */
+    protected LoopContext popLoopContext() {
+        return loopStack.pop();
+    }
+
+    /**
+     * 获取当前循环的头部基本块（continue 目标）
+     */
+    protected IRBasicBlock getCurrentLoopHeader() {
+        if (loopStack.isEmpty()) {
+            throw new IllegalStateException("Not inside a loop");
+        }
+        return loopStack.peek().headerBlock;
+    }
+
+    /**
+     * 获取当前循环的出口基本块（break 目标）
+     */
+    protected IRBasicBlock getCurrentLoopExit() {
+        if (loopStack.isEmpty()) {
+            throw new IllegalStateException("Not inside a loop");
+        }
+        return loopStack.peek().exitBlock;
+    }
+
+    /**
+     * 获取当前循环上下文
+     */
+    protected LoopContext getCurrentLoopContext() {
+        if (loopStack.isEmpty()) {
+            throw new IllegalStateException("Not inside a loop");
+        }
+        return loopStack.peek();
+    }
+
     // ==================== 辅助方法：左值处理 ====================
 
     /**
@@ -1525,28 +1360,58 @@ public class IRGenerator extends VisitorBase {
         return elemAddr;
     }
 
-    // ==================== 辅助方法：运算符映射 ====================
+    // ==================== 辅助方法：类型转换 ====================
 
     /**
-     * 将复合赋值运算符映射到基本二元运算
+     * 将 AST 类型转换为 IR 类型
      */
-    protected BinaryOpInst.Op mapComAssignOp(oper_t op, boolean isSigned) {
-        switch (op) {
-            case PLUS_ASSIGN: return BinaryOpInst.Op.ADD;
-            case MINUS_ASSIGN: return BinaryOpInst.Op.SUB;
-            case MUL_ASSIGN: return BinaryOpInst.Op.MUL;
-            case DIV_ASSIGN: return isSigned ? BinaryOpInst.Op.SDIV : BinaryOpInst.Op.UDIV;
-            case MOD_ASSIGN: return isSigned ? BinaryOpInst.Op.SREM : BinaryOpInst.Op.UREM;
-            case AND_ASSIGN: return BinaryOpInst.Op.AND;
-            case OR_ASSIGN: return BinaryOpInst.Op.OR;
-            case XOR_ASSIGN: return BinaryOpInst.Op.XOR;
-            case SHL_ASSIGN: return BinaryOpInst.Op.SHL;
-            case SHR_ASSIGN: return isSigned ? BinaryOpInst.Op.ASHR : BinaryOpInst.Op.LSHR;
-            default:
-                throw new RuntimeException("Unknown compound assignment operator: " + op);
+    protected IRType convertType(Type astType) {
+        if (astType instanceof PrimitiveType) {
+            PrimitiveType pt = (PrimitiveType) astType;
+            switch (pt.getKind()) {
+                case I32:
+                case U32:
+                    return IRIntType.I32;
+                case BOOL:
+                    return IRIntType.I1;
+                case CHAR:
+                    return IRIntType.I32;  // char 用 i32 表示
+                case USIZE:
+                case ISIZE:
+                    return IRIntType.I64;
+                default:
+                    throw new RuntimeException("Unsupported primitive type: " + pt);
+            }
+        } else if (astType instanceof ReferenceType) {
+            ReferenceType rt = (ReferenceType) astType;
+            return new IRPtrType(convertType(rt.getInnerType()));
+        } else if (astType instanceof ArrayType) {
+            ArrayType at = (ArrayType) astType;
+            return new IRArrayType(convertType(at.getElementType()), at.getSize());
+        } else if (astType instanceof StructType) {
+            StructType st = (StructType) astType;
+            IRStructType irStruct = module.getStruct(st.getName());
+            if (irStruct == null) {
+                throw new RuntimeException("Unknown struct type: " + st.getName());
+            }
+            return irStruct;
+        } else if (astType instanceof UnitType) {
+            return IRVoidType.INSTANCE;
+        } else if (astType instanceof NeverType) {
+            return IRVoidType.INSTANCE;  // never 类型在 IR 层面用 void 表示
         }
+        throw new RuntimeException("Unknown type: " + astType);
     }
 
+    /**
+     * 从 TypeExprNode 提取 Type
+     * 这个方法需要根据你的类型系统实现
+     */
+    protected Type extractType(TypeExprNode typeExpr) {
+        // TODO: 实现类型提取逻辑
+        // 这需要访问你的类型检查器或符号表
+        throw new UnsupportedOperationException("extractType not implemented");
+    }
     /**
      * 从表达式获取类型名（用于方法调用）
      */
@@ -1578,7 +1443,6 @@ public class IRGenerator extends VisitorBase {
         throw new RuntimeException("Cannot get struct type from: " + type);
     }
 
-    // ==================== 辅助方法：类型转换 ====================
 
     /**
      * 必要时生成类型转换指令
@@ -1653,7 +1517,6 @@ public class IRGenerator extends VisitorBase {
         return true;
     }
 
-    // ==================== 辅助方法：函数类型 ====================
 
     /**
      * 从 IRFunction 获取函数类型
@@ -1665,26 +1528,6 @@ public class IRGenerator extends VisitorBase {
         }
         return new IRFunctionType(func.getReturnType(), paramTypes);
     }
-
-    // ==================== 辅助方法：字符串常量 ====================
-
-    private int stringConstantCounter = 0;
-
-    /**
-     * 创建字符串常量（全局）
-     */
-    protected IRValue createStringConstant(String str) {
-        String globalName = ".str." + stringConstantCounter++;
-        IRGlobal strGlobal = new IRGlobal(
-            new IRArrayType(IRIntType.I8, str.length() + 1),  // +1 for null terminator
-            globalName
-        );
-        module.addGlobal(strGlobal);
-        return strGlobal;
-    }
-
-    // ==================== 辅助方法：self 参数类型转换 ====================
-
     /**
      * 转换 self 参数类型
      */
@@ -1702,7 +1545,60 @@ public class IRGenerator extends VisitorBase {
         // self / &self / &mut self 都用指针传递
         return new IRPtrType(currentImplType);
     }
+    /**
+     * 从 TypeExprNode 获取类型名
+     */
+    protected String getTypeName(TypeExprNode typeExpr) {
+        if (typeExpr instanceof TypePathExprNode) {
+            TypePathExprNode pathType = (TypePathExprNode) typeExpr;
+            if (pathType.path != null && !pathType.path.isEmpty()) {
+                // 获取路径的最后一个段作为类型名
+                PathExprSegNode lastSeg = pathType.path.get(pathType.path.size() - 1);
+                return lastSeg.name.name;
+            }
+        }
+        throw new RuntimeException("Cannot get type name from: " + typeExpr.getClass());
+    }
 
+
+    // ==================== 辅助方法：符号管理 ====================
+
+    /**
+     * 映射符号到 IR 值
+     */
+    protected void mapSymbol(Symbol symbol, IRValue value) {
+        symbolMap.put(symbol, value);
+    }
+
+    /**
+     * 获取符号对应的 IR 值
+     */
+    protected IRValue getSymbolValue(Symbol symbol) {
+        IRValue value = symbolMap.get(symbol);
+        if (value == null) {
+            throw new RuntimeException("Unknown symbol: " + symbol);
+        }
+        return value;
+    }
+
+    /**
+     * 从 PatternNode 获取变量名
+     */
+    protected String getPatternName(PatternNode pattern) {
+        if (pattern instanceof IdPatNode) {
+            return ((IdPatNode) pattern).name.name;
+        }
+        return "tmp";
+    }
+
+    /**
+     * 从节点获取符号
+     * 这个方法需要根据你的符号表实现
+     */
+    protected Symbol getSymbol(ASTNode node) {
+        // TODO: 实现符号获取逻辑
+        throw new UnsupportedOperationException("getSymbol not implemented");
+    }
     /**
      * 从 PatternNode 获取符号
      */
@@ -1713,7 +1609,86 @@ public class IRGenerator extends VisitorBase {
         throw new RuntimeException("Cannot get symbol from pattern: " + pattern.getClass());
     }
 
-    // ==================== 辅助方法：常量转换 ====================
+    /**
+     * 获取常量符号的值
+     */
+    protected IRConstant getConstSymbolValue(Symbol symbol) {
+        return constSymbolMap.get(symbol);
+    }
+
+    // ==================== 辅助方法：运算符映射 ====================
+
+    /**
+     * 将 AST 运算符映射到 IR 二元运算
+     */
+    protected BinaryOpInst.Op mapBinaryOp(oper_t op, boolean isSigned) {
+        switch (op) {
+            case ADD: return BinaryOpInst.Op.ADD;
+            case SUB: return BinaryOpInst.Op.SUB;
+            case MUL: return BinaryOpInst.Op.MUL;
+            case DIV: return isSigned ? BinaryOpInst.Op.SDIV : BinaryOpInst.Op.UDIV;
+            case MOD: return isSigned ? BinaryOpInst.Op.SREM : BinaryOpInst.Op.UREM;
+            case BITAND: return BinaryOpInst.Op.AND;
+            case BITOR: return BinaryOpInst.Op.OR;
+            case BITXOR: return BinaryOpInst.Op.XOR;
+            case SHL: return BinaryOpInst.Op.SHL;
+            case SHR: return isSigned ? BinaryOpInst.Op.ASHR : BinaryOpInst.Op.LSHR;
+            default:
+                throw new RuntimeException("Unknown binary operator: " + op);
+        }
+    }
+
+    /**
+     * 将 AST 比较运算符映射到 IR 比较谓词
+     */
+    protected CmpInst.Pred mapCmpPred(oper_t op, boolean isSigned) {
+        switch (op) {
+            case EQ: return CmpInst.Pred.EQ;
+            case NE: return CmpInst.Pred.NE;
+            case LT: return isSigned ? CmpInst.Pred.SLT : CmpInst.Pred.ULT;
+            case LE: return isSigned ? CmpInst.Pred.SLE : CmpInst.Pred.ULE;
+            case GT: return isSigned ? CmpInst.Pred.SGT : CmpInst.Pred.UGT;
+            case GE: return isSigned ? CmpInst.Pred.SGE : CmpInst.Pred.UGE;
+            default:
+                throw new RuntimeException("Unknown comparison operator: " + op);
+        }
+    }
+
+    /**
+     * 将复合赋值运算符映射到基本二元运算
+     */
+    protected BinaryOpInst.Op mapComAssignOp(oper_t op, boolean isSigned) {
+        switch (op) {
+            case PLUS_ASSIGN: return BinaryOpInst.Op.ADD;
+            case MINUS_ASSIGN: return BinaryOpInst.Op.SUB;
+            case MUL_ASSIGN: return BinaryOpInst.Op.MUL;
+            case DIV_ASSIGN: return isSigned ? BinaryOpInst.Op.SDIV : BinaryOpInst.Op.UDIV;
+            case MOD_ASSIGN: return isSigned ? BinaryOpInst.Op.SREM : BinaryOpInst.Op.UREM;
+            case AND_ASSIGN: return BinaryOpInst.Op.AND;
+            case OR_ASSIGN: return BinaryOpInst.Op.OR;
+            case XOR_ASSIGN: return BinaryOpInst.Op.XOR;
+            case SHL_ASSIGN: return BinaryOpInst.Op.SHL;
+            case SHR_ASSIGN: return isSigned ? BinaryOpInst.Op.ASHR : BinaryOpInst.Op.LSHR;
+            default:
+                throw new RuntimeException("Unknown compound assignment operator: " + op);
+        }
+    }
+
+
+    // ==================== 辅助方法：常量处理 ====================
+
+    /**
+     * 创建字符串常量（全局）
+     */
+    protected IRValue createStringConstant(String str) {
+        String globalName = ".str." + stringConstantCounter++;
+        IRGlobal strGlobal = new IRGlobal(
+            new IRArrayType(IRIntType.I8, str.length() + 1),  // +1 for null terminator
+            globalName
+        );
+        module.addGlobal(strGlobal);
+        return strGlobal;
+    }
 
     /**
      * 将 ConstantValue 转换为 IRConstant
@@ -1741,25 +1716,4 @@ public class IRGenerator extends VisitorBase {
         return new IRConstant(targetType, val);
     }
 
-    /**
-     * 从 TypeExprNode 获取类型名
-     */
-    protected String getTypeName(TypeExprNode typeExpr) {
-        if (typeExpr instanceof TypePathExprNode) {
-            TypePathExprNode pathType = (TypePathExprNode) typeExpr;
-            if (pathType.path != null && !pathType.path.isEmpty()) {
-                // 获取路径的最后一个段作为类型名
-                PathExprSegNode lastSeg = pathType.path.get(pathType.path.size() - 1);
-                return lastSeg.name.name;
-            }
-        }
-        throw new RuntimeException("Cannot get type name from: " + typeExpr.getClass());
-    }
-
-    /**
-     * 获取常量符号的值
-     */
-    protected IRConstant getConstSymbolValue(Symbol symbol) {
-        return constSymbolMap.get(symbol);
-    }
 }
