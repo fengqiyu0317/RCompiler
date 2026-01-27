@@ -97,6 +97,23 @@ public class IRModule {
         return functions.size();
     }
 
+    /**
+     * 移除函数
+     * @param name 函数名
+     */
+    public void removeFunction(String name) {
+        functions.remove(name);
+    }
+
+    /**
+     * 设置函数（用于恢复被覆盖的函数）
+     * @param name 函数名
+     * @param func 函数对象
+     */
+    public void setFunction(String name, IRFunction func) {
+        functions.put(name, func);
+    }
+
     // ==================== 全局变量管理 ====================
 
     /**
@@ -177,6 +194,23 @@ public class IRModule {
         return structs.size();
     }
 
+    /**
+     * 移除结构体类型
+     * @param name 结构体名
+     */
+    public void removeStruct(String name) {
+        structs.remove(name);
+    }
+
+    /**
+     * 设置结构体类型（用于恢复被覆盖的结构体）
+     * @param name 结构体名
+     * @param struct 结构体类型
+     */
+    public void setStruct(String name, IRStructType struct) {
+        structs.put(name, struct);
+    }
+
     // ==================== 枚举类型管理 ====================
 
     /**
@@ -217,5 +251,22 @@ public class IRModule {
 
     public int getEnumCount() {
         return enums.size();
+    }
+
+    /**
+     * 移除枚举类型
+     * @param name 枚举名
+     */
+    public void removeEnum(String name) {
+        enums.remove(name);
+    }
+
+    /**
+     * 设置枚举类型（用于恢复被覆盖的枚举）
+     * @param name 枚举名
+     * @param enumInfo 枚举信息
+     */
+    public void setEnum(String name, EnumInfo enumInfo) {
+        enums.put(name, enumInfo);
     }
 }

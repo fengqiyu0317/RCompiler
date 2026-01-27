@@ -970,24 +970,76 @@ public class IRGenerator extends VisitorBase {
      * 处理块表达式
      */
     protected IRValue visitBlock(BlockExprNode node) {
-        // 1. 处理块中的所有语句
+        // 1. 先扫描块中的类型和函数定义，保存可能被覆盖的旧值
+        Map<String, IRStructType> savedStructs = new HashMap<>();
+        Map<String, IRModule.EnumInfo> savedEnums = new HashMap<>();
+        Map<String, IRFunction> savedFunctions = new HashMap<>();
+
+        if (node.statements != null) {
+            for (StmtNode stmt : node.statements) {
+                if (stmt instanceof StructNode) {
+                    StructNode structNode = (StructNode) stmt;
+                    String name = structNode.name.name;
+                    // 保存旧值（可能为 null）
+                    savedStructs.put(name, module.getStruct(name));
+                    collectStruct(structNode);
+                } else if (stmt instanceof EnumNode) {
+                    EnumNode enumNode = (EnumNode) stmt;
+                    String name = enumNode.name.name;
+                    // 保存旧值（可能为 null）
+                    savedEnums.put(name, module.getEnum(name));
+                    collectEnum(enumNode);
+                } else if (stmt instanceof FunctionNode) {
+                    FunctionNode funcNode = (FunctionNode) stmt;
+                    String name = funcNode.name.name;
+                    // 保存旧值（可能为 null）
+                    savedFunctions.put(name, module.getFunction(name));
+                    // 函数会在 visit 时添加到 module
+                }
+            }
+        }
+
+        // 2. 处理块中的所有语句
+        IRValue result = null;
         if (node.statements != null) {
             for (StmtNode stmt : node.statements) {
                 stmt.accept(this);
                 // 如果当前块已终结（遇到 return/break/continue），停止处理后续语句
                 if (currentBlock.isTerminated()) {
-                    return null;
+                    break;
                 }
             }
         }
 
-        // 2. 处理返回值表达式（如果有）
-        if (node.returnValue != null) {
-            return visitExpr(node.returnValue);
+        // 3. 处理返回值表达式（如果有）
+        if (!currentBlock.isTerminated() && node.returnValue != null) {
+            result = visitExpr(node.returnValue);
         }
 
-        // 3. 无返回值，返回 null（表示 unit 类型）
-        return null;
+        // 4. 恢复 module 状态
+        for (Map.Entry<String, IRStructType> entry : savedStructs.entrySet()) {
+            if (entry.getValue() == null) {
+                module.removeStruct(entry.getKey());
+            } else {
+                module.setStruct(entry.getKey(), entry.getValue());
+            }
+        }
+        for (Map.Entry<String, IRModule.EnumInfo> entry : savedEnums.entrySet()) {
+            if (entry.getValue() == null) {
+                module.removeEnum(entry.getKey());
+            } else {
+                module.setEnum(entry.getKey(), entry.getValue());
+            }
+        }
+        for (Map.Entry<String, IRFunction> entry : savedFunctions.entrySet()) {
+            if (entry.getValue() == null) {
+                module.removeFunction(entry.getKey());
+            } else {
+                module.setFunction(entry.getKey(), entry.getValue());
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -1441,29 +1493,22 @@ public class IRGenerator extends VisitorBase {
      * 从表达式获取类型名（用于方法调用）
      */
     protected String getTypeNameFromExpr(ExprNode expr) {
-        Type type = expr.getType();
-        if (type instanceof StructType) {
-            return ((StructType) type).getName();
-        } else if (type instanceof ReferenceType) {
-            Type inner = ((ReferenceType) type).getInnerType();
-            if (inner instanceof StructType) {
-                return ((StructType) inner).getName();
-            }
+        IRStructType structType = getStructType(expr.getType());
+        if (structType != null) {
+            return structType.getName();
         }
-        return type.toString();
+        return expr.getType().toString();
     }
 
     /**
      * 从 AST 类型获取 IR 结构体类型
      */
     protected IRStructType getStructType(Type type) {
+        while (type instanceof ReferenceType) {
+            type = ((ReferenceType) type).getInnerType();
+        }
         if (type instanceof StructType) {
             return module.getStruct(((StructType) type).getName());
-        } else if (type instanceof ReferenceType) {
-            Type inner = ((ReferenceType) type).getInnerType();
-            if (inner instanceof StructType) {
-                return module.getStruct(((StructType) inner).getName());
-            }
         }
         throw new RuntimeException("Cannot get struct type from: " + type);
     }
@@ -1628,14 +1673,6 @@ public class IRGenerator extends VisitorBase {
         return "tmp";
     }
 
-    /**
-     * 从节点获取符号
-     * 这个方法需要根据你的符号表实现
-     */
-    protected Symbol getSymbol(ASTNode node) {
-        // TODO: 实现符号获取逻辑
-        throw new UnsupportedOperationException("getSymbol not implemented");
-    }
     /**
      * 从 PatternNode 获取符号
      */
