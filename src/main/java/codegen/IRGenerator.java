@@ -1758,7 +1758,8 @@ public class IRGenerator extends VisitorBase {
         String globalName = ".str." + stringConstantCounter++;
         IRGlobal strGlobal = new IRGlobal(
             new IRArrayType(IRIntType.I8, str.length() + 1),  // +1 for null terminator
-            globalName
+            globalName,
+            str  // 字符串内容
         );
         module.addGlobal(strGlobal);
         return strGlobal;
