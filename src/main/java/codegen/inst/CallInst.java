@@ -11,36 +11,69 @@ import java.util.stream.Collectors;
 
 /**
  * 函数调用指令
- * 形式: %dst = call <ret-type> @func(<args...>)
- *       call void @func(<args...>)
+ * 直接调用形式: %dst = call <ret-type> @func(<args...>)
+ * 间接调用形式: %dst = call <ret-type> %fptr(<args...>)
  */
 public class CallInst extends IRInstruction {
-    private final IRValue function;
+    private final String functionName;  // 直接调用时的函数名（以 @ 开头）
+    private final IRValue functionPtr;  // 间接调用时的函数指针
     private final List<IRValue> args;
     private final IRType returnType;
 
     /**
-     * 创建有返回值的调用指令
+     * 创建直接调用指令（有返回值）
      */
-    public CallInst(IRRegister result, IRValue function, List<IRValue> args) {
+    public CallInst(IRRegister result, String functionName, List<IRValue> args) {
         this.result = result;
-        this.function = function;
+        this.functionName = functionName;
+        this.functionPtr = null;
         this.args = new ArrayList<>(args);
         this.returnType = result.getType();
     }
 
     /**
-     * 创建无返回值的调用指令
+     * 创建直接调用指令（无返回值）
      */
-    public CallInst(IRValue function, List<IRValue> args) {
+    public CallInst(String functionName, List<IRValue> args) {
         this.result = null;
-        this.function = function;
+        this.functionName = functionName;
+        this.functionPtr = null;
         this.args = new ArrayList<>(args);
         this.returnType = IRVoidType.INSTANCE;
     }
 
-    public IRValue getFunction() {
-        return function;
+    /**
+     * 创建间接调用指令（有返回值，通过函数指针）
+     */
+    public CallInst(IRRegister result, IRValue functionPtr, List<IRValue> args) {
+        this.result = result;
+        this.functionName = null;
+        this.functionPtr = functionPtr;
+        this.args = new ArrayList<>(args);
+        this.returnType = result.getType();
+    }
+
+    /**
+     * 创建间接调用指令（无返回值，通过函数指针）
+     */
+    public CallInst(IRValue functionPtr, List<IRValue> args) {
+        this.result = null;
+        this.functionName = null;
+        this.functionPtr = functionPtr;
+        this.args = new ArrayList<>(args);
+        this.returnType = IRVoidType.INSTANCE;
+    }
+
+    public boolean isDirect() {
+        return functionName != null;
+    }
+
+    public String getFunctionName() {
+        return functionName;
+    }
+
+    public IRValue getFunctionPtr() {
+        return functionPtr;
     }
 
     public List<IRValue> getArgs() {
@@ -57,10 +90,12 @@ public class CallInst extends IRInstruction {
             .map(a -> a.getType() + " " + a)
             .collect(Collectors.joining(", "));
 
+        String callee = isDirect() ? "@" + functionName : functionPtr.toString();
+
         if (result != null) {
-            return result + " = call " + returnType + " " + function + "(" + argStr + ")";
+            return result + " = call " + returnType + " " + callee + "(" + argStr + ")";
         }
-        return "call void " + function + "(" + argStr + ")";
+        return "call void " + callee + "(" + argStr + ")";
     }
 
     @Override

@@ -7,6 +7,8 @@ import codegen.inst.*;
 import codegen.type.*;
 import codegen.value.*;
 
+import semantic_check.symbol.SymbolKind;
+
 import java.util.*;
 
 /**
@@ -173,7 +175,12 @@ public class IRGenerator extends VisitorBase {
             : IRVoidType.INSTANCE;
 
         // 3. 创建 IRFunction 并添加到模块
-        currentFunction = new IRFunction(node.name.name, returnType);
+        // 如果在 impl 块中，生成 mangled 名称：TypeName::methodName
+        String funcName = node.name.name;
+        if (currentImplType != null) {
+            funcName = currentImplType.getName() + "::" + funcName;
+        }
+        currentFunction = new IRFunction(funcName, returnType);
         module.addFunction(currentFunction);
 
         // 4. 重置临时变量计数器（每个函数独立编号）
@@ -295,20 +302,8 @@ public class IRGenerator extends VisitorBase {
         if (node.items != null) {
             for (AssoItemNode item : node.items) {
                 if (item.function != null) {
-                    FunctionNode method = item.function;
-
-                    // 生成方法名：TypeName::methodName
-                    String mangledName = targetTypeName + "::" + method.name.name;
-
-                    // 保存原始名称，设置 mangled 名称
-                    String originalName = method.name.name;
-                    method.name.name = mangledName;
-
-                    // 处理方法
-                    visit(method);
-
-                    // 恢复原始名称
-                    method.name.name = originalName;
+                    // 处理方法（mangled 名称在 visit(FunctionNode) 中自动生成）
+                    visit(item.function);
                 } else if (item.constant != null) {
                     // 处理关联常量
                     visit(item.constant);
@@ -462,15 +457,10 @@ public class IRGenerator extends VisitorBase {
             case CONSTANT:
                 // 常量：返回常量值（内联）
                 IRConstant constVal = getConstSymbolValue(symbol);
-                if (constVal != null) {
-                    return constVal;
+                if (constVal == null) {
+                    throw new RuntimeException("Constant value not found: " + symbol.getName());
                 }
-                // 如果常量值未找到，尝试从 ConstantEvaluator 获取
-                ConstantValue cv = symbol.getConstantValue();
-                if (cv != null) {
-                    return convertConstantValue(cv, convertType(symbol.getType()));
-                }
-                throw new RuntimeException("Constant value not found: " + symbol.getName());
+                return constVal;
 
             case ENUM_VARIANT_CONSTRUCTOR:
                 // 枚举变体：返回对应的整数值
@@ -657,13 +647,10 @@ public class IRGenerator extends VisitorBase {
      * 处理函数调用表达式
      */
     protected IRValue visitCall(CallExprNode node) {
-        // 1. 获取被调用函数
-        IRValue callee = visitExpr(node.function);
-
-        // 2. 获取返回类型
+        // 1. 获取返回类型
         IRType returnType = convertType(node.getType());
 
-        // 3. 求值所有参数
+        // 2. 求值所有参数
         List<IRValue> args = new ArrayList<>();
         if (node.arguments != null) {
             for (ExprNode arg : node.arguments) {
@@ -671,9 +658,28 @@ public class IRGenerator extends VisitorBase {
             }
         }
 
-        // 4. 生成调用指令
+        // 3. 判断是直接调用还是间接调用
+        if (node.function instanceof PathExprNode) {
+            PathExprNode pathExpr = (PathExprNode) node.function;
+            Symbol symbol = pathExpr.getSymbol();
+            if (symbol != null && symbol.getKind() == SymbolKind.FUNCTION) {
+                // 直接调用：使用函数名
+                String funcName = symbol.getName();
+                if (returnType instanceof IRVoidType) {
+                    emit(new CallInst(funcName, args));
+                    return null;
+                } else {
+                    IRRegister result = newTemp(returnType);
+                    emit(new CallInst(result, funcName, args));
+                    return result;
+                }
+            }
+        }
+
+        // 4. 间接调用：通过函数指针
+        IRValue callee = visitExpr(node.function);
         if (returnType instanceof IRVoidType) {
-            emit(new CallInst(null, callee, args));
+            emit(new CallInst(callee, args));
             return null;
         } else {
             IRRegister result = newTemp(returnType);
@@ -705,24 +711,13 @@ public class IRGenerator extends VisitorBase {
             }
         }
 
-        // 5. 创建方法引用
-        IRFunction methodFunc = module.getFunction(methodName);
-        IRValue calleeValue;
-        if (methodFunc != null) {
-            IRFunctionType funcType = getFunctionType(methodFunc);
-            calleeValue = new IRGlobal(new IRPtrType(funcType), methodName);
-        } else {
-            // 方法可能还未定义，创建占位符
-            calleeValue = new IRGlobal(new IRPtrType(IRVoidType.INSTANCE), methodName);
-        }
-
-        // 6. 生成调用指令
+        // 5. 生成直接调用指令
         if (returnType instanceof IRVoidType) {
-            emit(new CallInst(null, calleeValue, args));
+            emit(new CallInst(methodName, args));
             return null;
         } else {
             IRRegister result = newTemp(returnType);
-            emit(new CallInst(result, calleeValue, args));
+            emit(new CallInst(result, methodName, args));
             return result;
         }
     }
@@ -1306,15 +1301,10 @@ public class IRGenerator extends VisitorBase {
      * 获取表达式的地址（用于需要地址的场景，如方法调用的 self）
      */
     protected IRValue visitExprAsAddr(ExprNode expr) {
-        if (expr instanceof PathExprNode) {
-            Symbol symbol = ((PathExprNode) expr).getSymbol();
-            return getSymbolValue(symbol);
-        } else if (expr instanceof FieldExprNode) {
-            return visitFieldLValue((FieldExprNode) expr);
-        } else if (expr instanceof IndexExprNode) {
-            return visitIndexLValue((IndexExprNode) expr);
-        } else if (expr instanceof DerefExprNode) {
-            return visitExpr(((DerefExprNode) expr).innerExpr);
+        // 如果是左值表达式，直接使用 visitLValue
+        if (expr instanceof PathExprNode || expr instanceof FieldExprNode ||
+            expr instanceof IndexExprNode || expr instanceof DerefExprNode) {
+            return visitLValue(expr);
         }
         // 其他情况：先求值，再存到临时变量取地址
         IRValue value = visitExpr(expr);
@@ -1395,6 +1385,9 @@ public class IRGenerator extends VisitorBase {
                 throw new RuntimeException("Unknown struct type: " + st.getName());
             }
             return irStruct;
+        } else if (astType instanceof EnumType) {
+            // 枚举类型在 IR 中用 i32 表示
+            return IRIntType.I32;
         } else if (astType instanceof UnitType) {
             return IRVoidType.INSTANCE;
         } else if (astType instanceof NeverType) {
@@ -1551,10 +1544,22 @@ public class IRGenerator extends VisitorBase {
     protected String getTypeName(TypeExprNode typeExpr) {
         if (typeExpr instanceof TypePathExprNode) {
             TypePathExprNode pathType = (TypePathExprNode) typeExpr;
-            if (pathType.path != null && !pathType.path.isEmpty()) {
-                // 获取路径的最后一个段作为类型名
-                PathExprSegNode lastSeg = pathType.path.get(pathType.path.size() - 1);
-                return lastSeg.name.name;
+            if (pathType.path != null) {
+                switch (pathType.path.patternType) {
+                    case IDENT:
+                        if (pathType.path.name != null) {
+                            return pathType.path.name.name;
+                        }
+                        break;
+                    case SELF:
+                        return "self";
+                    case SELF_TYPE:
+                        // Self 类型：返回当前 impl 块的目标类型名
+                        if (currentImplType != null) {
+                            return currentImplType.getName();
+                        }
+                        return "Self";
+                }
             }
         }
         throw new RuntimeException("Cannot get type name from: " + typeExpr.getClass());
