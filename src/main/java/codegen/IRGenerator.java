@@ -8,6 +8,7 @@ import codegen.type.*;
 import codegen.value.*;
 
 import semantic_check.symbol.SymbolKind;
+import semantic_check.type.PrimitiveType;
 
 import java.util.*;
 
@@ -887,8 +888,14 @@ public class IRGenerator extends VisitorBase {
         IRRegister result = newTemp(type);
 
         if (node.isLogical) {
-            // 逻辑取反 !x：使用 xor x, true
-            emit(new BinaryOpInst(result, BinaryOpInst.Op.XOR, inner, IRConstant.i1(true)));
+            // ! 运算符
+            if (type == IRIntType.I1) {
+                // bool 类型：逻辑取反，xor x, true
+                emit(new BinaryOpInst(result, BinaryOpInst.Op.XOR, inner, IRConstant.i1(true)));
+            } else {
+                // 整数类型：按位取反，xor x, -1
+                emit(new BinaryOpInst(result, BinaryOpInst.Op.XOR, inner, new IRConstant(type, -1)));
+            }
         } else {
             // 算术取反 -x：使用 sub 0, x
             IRValue zero;
@@ -1398,12 +1405,37 @@ public class IRGenerator extends VisitorBase {
 
     /**
      * 从 TypeExprNode 提取 Type
-     * 这个方法需要根据你的类型系统实现
+     * 简单实现：处理基本类型
      */
     protected Type extractType(TypeExprNode typeExpr) {
-        // TODO: 实现类型提取逻辑
-        // 这需要访问你的类型检查器或符号表
-        throw new UnsupportedOperationException("extractType not implemented");
+        if (typeExpr instanceof TypePathExprNode) {
+            TypePathExprNode pathType = (TypePathExprNode) typeExpr;
+            if (pathType.path != null && pathType.path.name != null) {
+                String typeName = pathType.path.name.name;
+                switch (typeName) {
+                    case "i32":
+                        return PrimitiveType.getI32Type();
+                    case "u32":
+                        return PrimitiveType.getU32Type();
+                    case "isize":
+                        return PrimitiveType.getIsizeType();
+                    case "usize":
+                        return PrimitiveType.getUsizeType();
+                    case "bool":
+                        return PrimitiveType.getBoolType();
+                    case "char":
+                        return PrimitiveType.getCharType();
+                    case "str":
+                        return PrimitiveType.getStrType();
+                    case "String":
+                        return PrimitiveType.getStringType();
+                    default:
+                        // 可能是自定义类型（结构体、枚举等）
+                        throw new RuntimeException("Unknown type: " + typeName);
+                }
+            }
+        }
+        throw new RuntimeException("Cannot extract type from: " + typeExpr.getClass());
     }
     /**
      * 从表达式获取类型名（用于方法调用）
