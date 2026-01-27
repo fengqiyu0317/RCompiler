@@ -1,6 +1,8 @@
 import java.util.Scanner;
 import java.util.Vector;
 
+import codegen.ir.IRModule;
+
 public class Main {
     public static void main(String[] args) {
         ReadRustFile.read_init();
@@ -91,23 +93,41 @@ class ReadRustFile {
                 if (typeChecker.hasErrors()) {
                     System.err.println("Type checking errors:");
                     typeChecker.getErrorCollector().printErrors();
+                    return;
                 } else {
                     System.out.println("Type checking completed successfully.");
                 }
-                
+
                 // Check for constant evaluation errors
                 if (typeChecker.hasConstantEvaluationErrors()) {
                     System.err.println("Constant evaluation errors:");
                     typeChecker.getConstantEvaluationErrorCollector().printErrors();
+                    return;
                 } else {
                     System.out.println("Constant evaluation completed successfully.");
                 }
-                
+
             } catch (Exception e) {
                 System.err.println("Error during type checking: " + e.getMessage());
                 e.printStackTrace();
+                return;
             }
-            
+
+            // Generate IR code
+            // try {
+            //     IRGenerator irGenerator = new IRGenerator();
+            //     IRModule module = irGenerator.generate(parser.getStatements());
+
+            //     System.out.println("\n========== Generated IR ==========");
+            //     IRPrinter printer = new IRPrinter();
+            //     printer.print(module);
+            //     System.out.println("===================================");
+
+            // } catch (Exception e) {
+            //     System.err.println("Error during IR generation: " + e.getMessage());
+            //     e.printStackTrace();
+            // }
+
         } catch (ParserException e) {
             System.err.println("Parsing error: " + e.getMessage());
             e.printStackTrace();

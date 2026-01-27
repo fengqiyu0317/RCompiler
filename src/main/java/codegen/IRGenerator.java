@@ -1,14 +1,9 @@
-package codegen;
-
 import codegen.ir.IRBasicBlock;
 import codegen.ir.IRFunction;
 import codegen.ir.IRModule;
 import codegen.inst.*;
 import codegen.type.*;
 import codegen.value.*;
-
-import semantic_check.symbol.SymbolKind;
-import semantic_check.type.PrimitiveType;
 
 import java.util.*;
 
@@ -935,30 +930,30 @@ public class IRGenerator extends VisitorBase {
         // 4. 根据源类型和目标类型选择转换操作
         if (sourceType instanceof IRIntType && targetType instanceof IRIntType) {
             // 整数之间的转换
-            int sourceBits = ((IRIntType) sourceType).getBitWidth();
-            int targetBits = ((IRIntType) targetType).getBitWidth();
+            int sourceBits = ((IRIntType) sourceType).getBits();
+            int targetBits = ((IRIntType) targetType).getBits();
 
             if (targetBits > sourceBits) {
                 // 扩展：根据源类型是否有符号选择 sext 或 zext
                 boolean isSigned = isSignedType(node.expr.getType());
-                CastInst.Op op = isSigned ? CastInst.Op.SEXT : CastInst.Op.ZEXT;
+                CastInst.CastOp op = isSigned ? CastInst.CastOp.SEXT : CastInst.CastOp.ZEXT;
                 emit(new CastInst(result, op, source, targetType));
             } else if (targetBits < sourceBits) {
                 // 截断
-                emit(new CastInst(result, CastInst.Op.TRUNC, source, targetType));
+                emit(new CastInst(result, CastInst.CastOp.TRUNC, source, targetType));
             } else {
                 // 位宽相同但类型不同（如 i32 和 u32），直接使用 bitcast
-                emit(new CastInst(result, CastInst.Op.BITCAST, source, targetType));
+                emit(new CastInst(result, CastInst.CastOp.BITCAST, source, targetType));
             }
         } else if (sourceType instanceof IRPtrType && targetType instanceof IRPtrType) {
             // 指针之间的转换：使用 bitcast
-            emit(new CastInst(result, CastInst.Op.BITCAST, source, targetType));
+            emit(new CastInst(result, CastInst.CastOp.BITCAST, source, targetType));
         } else if (sourceType instanceof IRPtrType && targetType instanceof IRIntType) {
             // 指针转整数：使用 ptrtoint
-            emit(new CastInst(result, CastInst.Op.PTRTOINT, source, targetType));
+            emit(new CastInst(result, CastInst.CastOp.PTRTOINT, source, targetType));
         } else if (sourceType instanceof IRIntType && targetType instanceof IRPtrType) {
             // 整数转指针：使用 inttoptr
-            emit(new CastInst(result, CastInst.Op.INTTOPTR, source, targetType));
+            emit(new CastInst(result, CastInst.CastOp.INTTOPTR, source, targetType));
         } else {
             throw new RuntimeException("Unsupported type cast: " + sourceType + " -> " + targetType);
         }
@@ -1436,7 +1431,7 @@ public class IRGenerator extends VisitorBase {
             return new IRPtrType(convertType(rt.getInnerType()));
         } else if (astType instanceof ArrayType) {
             ArrayType at = (ArrayType) astType;
-            return new IRArrayType(convertType(at.getElementType()), at.getSize());
+            return new IRArrayType(convertType(at.getElementType()), (int) at.getSize());
         } else if (astType instanceof StructType) {
             StructType st = (StructType) astType;
             IRStructType irStruct = module.getStruct(st.getName());
@@ -1527,18 +1522,18 @@ public class IRGenerator extends VisitorBase {
 
         // 整数类型之间的转换
         if (sourceType instanceof IRIntType && targetType instanceof IRIntType) {
-            int sourceBits = ((IRIntType) sourceType).getBitWidth();
-            int targetBits = ((IRIntType) targetType).getBitWidth();
+            int sourceBits = ((IRIntType) sourceType).getBits();
+            int targetBits = ((IRIntType) targetType).getBits();
 
             IRRegister result = newTemp(targetType);
 
             if (targetBits > sourceBits) {
                 // 扩展：根据源类型选择 sext 或 zext
                 // 这里简化处理，默认使用有符号扩展
-                emit(new CastInst(result, CastInst.Op.SEXT, value, targetType));
+                emit(new CastInst(result, CastInst.CastOp.SEXT, value, targetType));
             } else {
                 // 截断
-                emit(new CastInst(result, CastInst.Op.TRUNC, value, targetType));
+                emit(new CastInst(result, CastInst.CastOp.TRUNC, value, targetType));
             }
 
             return result;
@@ -1557,8 +1552,8 @@ public class IRGenerator extends VisitorBase {
 
         // 整数类型：选择较大的类型
         if (type1 instanceof IRIntType && type2 instanceof IRIntType) {
-            int bits1 = ((IRIntType) type1).getBitWidth();
-            int bits2 = ((IRIntType) type2).getBitWidth();
+            int bits1 = ((IRIntType) type1).getBits();
+            int bits2 = ((IRIntType) type2).getBits();
             return bits1 >= bits2 ? type1 : type2;
         }
 
@@ -1697,14 +1692,14 @@ public class IRGenerator extends VisitorBase {
      */
     protected BinaryOpInst.Op mapBinaryOp(oper_t op, boolean isSigned) {
         switch (op) {
-            case ADD: return BinaryOpInst.Op.ADD;
-            case SUB: return BinaryOpInst.Op.SUB;
+            case PLUS: return BinaryOpInst.Op.ADD;
+            case MINUS: return BinaryOpInst.Op.SUB;
             case MUL: return BinaryOpInst.Op.MUL;
             case DIV: return isSigned ? BinaryOpInst.Op.SDIV : BinaryOpInst.Op.UDIV;
             case MOD: return isSigned ? BinaryOpInst.Op.SREM : BinaryOpInst.Op.UREM;
-            case BITAND: return BinaryOpInst.Op.AND;
-            case BITOR: return BinaryOpInst.Op.OR;
-            case BITXOR: return BinaryOpInst.Op.XOR;
+            case AND: return BinaryOpInst.Op.AND;
+            case OR: return BinaryOpInst.Op.OR;
+            case XOR: return BinaryOpInst.Op.XOR;
             case SHL: return BinaryOpInst.Op.SHL;
             case SHR: return isSigned ? BinaryOpInst.Op.ASHR : BinaryOpInst.Op.LSHR;
             default:
@@ -1718,11 +1713,11 @@ public class IRGenerator extends VisitorBase {
     protected CmpInst.Pred mapCmpPred(oper_t op, boolean isSigned) {
         switch (op) {
             case EQ: return CmpInst.Pred.EQ;
-            case NE: return CmpInst.Pred.NE;
+            case NEQ: return CmpInst.Pred.NE;
             case LT: return isSigned ? CmpInst.Pred.SLT : CmpInst.Pred.ULT;
-            case LE: return isSigned ? CmpInst.Pred.SLE : CmpInst.Pred.ULE;
+            case LTE: return isSigned ? CmpInst.Pred.SLE : CmpInst.Pred.ULE;
             case GT: return isSigned ? CmpInst.Pred.SGT : CmpInst.Pred.UGT;
-            case GE: return isSigned ? CmpInst.Pred.SGE : CmpInst.Pred.UGE;
+            case GTE: return isSigned ? CmpInst.Pred.SGE : CmpInst.Pred.UGE;
             default:
                 throw new RuntimeException("Unknown comparison operator: " + op);
         }

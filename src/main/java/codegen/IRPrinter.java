@@ -1,5 +1,3 @@
-package codegen;
-
 import codegen.ir.IRBasicBlock;
 import codegen.ir.IRFunction;
 import codegen.ir.IRModule;
@@ -42,7 +40,7 @@ public class IRPrinter {
 
         // 打印全局变量
         for (var global : module.getGlobals()) {
-            out.println(global + " = global " + global.getType());
+            out.println(global.toDefinition());
         }
         if (module.getGlobalCount() > 0) {
             out.println();
