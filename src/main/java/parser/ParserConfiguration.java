@@ -49,10 +49,7 @@ public class ParserConfiguration {
     }
     
     public boolean isAssignmentOperator(String name) {
-        return name.equals("=") || name.equals("+=") || name.equals("-=") || 
-               name.equals("*=") || name.equals("/=") || name.equals("%=") || 
-               name.equals("&=") || name.equals("|=") || name.equals("^=") || 
-               name.equals("<<=") || name.equals(">>=");
+        return name.equals("=");
     }
     
     public boolean isLogicalOperator(String name) {

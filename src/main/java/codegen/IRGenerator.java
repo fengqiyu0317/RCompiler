@@ -396,6 +396,10 @@ public class IRGenerator extends VisitorBase {
             return visitContinue((ContinueExprNode) expr);
         } else if (expr instanceof ReturnExprNode) {
             return visitReturn((ReturnExprNode) expr);
+        } else if (expr instanceof GroupExprNode) {
+            return visitGroup((GroupExprNode) expr);
+        } else if (expr instanceof UnderscoreExprNode) {
+            return visitUnderscore((UnderscoreExprNode) expr);
         }
         // TODO: 其他表达式类型
         throw new UnsupportedOperationException("visitExpr not implemented for: " + expr.getClass());
@@ -1212,6 +1216,24 @@ public class IRGenerator extends VisitorBase {
 
         // return 是终结指令，不返回值（控制流已转移）
         return null;
+    }
+
+    /**
+     * 处理括号表达式
+     * 括号只改变优先级，直接求值内部表达式
+     */
+    protected IRValue visitGroup(GroupExprNode node) {
+        return visitExpr(node.innerExpr);
+    }
+
+    /**
+     * 处理下划线表达式
+     * 下划线表达式作为右值时通常是错误，但在某些上下文中可能出现
+     */
+    protected IRValue visitUnderscore(UnderscoreExprNode node) {
+        // 下划线表达式作为右值时，返回一个未定义值
+        // 实际上这种情况应该在语义分析阶段被捕获
+        throw new UnsupportedOperationException("Underscore expression cannot be used as rvalue");
     }
 
     // ==================== 辅助方法：IR 构建 ====================
