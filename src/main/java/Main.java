@@ -68,11 +68,13 @@ class ReadRustFile {
             try {
                 NamespaceAnalyzer namespaceAnalyzer = new NamespaceAnalyzer();
                 namespaceAnalyzer.initializeGlobalScope();
-                
+
+                java.util.Vector<StmtNode> stmts = new java.util.Vector<>();
                 for (ASTNode stmt : parser.getStatements()) {
-                    stmt.accept(namespaceAnalyzer);
+                    stmts.add((StmtNode) stmt);
                 }
-                
+                namespaceAnalyzer.analyze(stmts);
+
                 System.out.println("Namespace semantic checking completed successfully.");
                 
             } catch (Exception e) {
@@ -114,19 +116,19 @@ class ReadRustFile {
             }
 
             // Generate IR code
-            // try {
-            //     IRGenerator irGenerator = new IRGenerator();
-            //     IRModule module = irGenerator.generate(parser.getStatements());
+            try {
+                IRGenerator irGenerator = new IRGenerator();
+                IRModule module = irGenerator.generate(parser.getStatements());
 
-            //     System.out.println("\n========== Generated IR ==========");
-            //     IRPrinter printer = new IRPrinter();
-            //     printer.print(module);
-            //     System.out.println("===================================");
+                System.out.println("\n========== Generated IR ==========");
+                IRPrinter printer = new IRPrinter();
+                printer.print(module);
+                System.out.println("===================================");
 
-            // } catch (Exception e) {
-            //     System.err.println("Error during IR generation: " + e.getMessage());
-            //     e.printStackTrace();
-            // }
+            } catch (Exception e) {
+                System.err.println("Error during IR generation: " + e.getMessage());
+                e.printStackTrace();
+            }
 
         } catch (ParserException e) {
             System.err.println("Parsing error: " + e.getMessage());
