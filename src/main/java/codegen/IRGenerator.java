@@ -170,10 +170,10 @@ public class IRGenerator extends VisitorBase {
             : IRVoidType.INSTANCE;
 
         // 3. 创建 IRFunction 并添加到模块
-        // 如果在 impl 块中，生成 mangled 名称：TypeName::methodName
+        // 如果在 impl 块中，生成 mangled 名称：TypeName.methodName
         String funcName = node.name.name;
         if (currentImplType != null) {
-            funcName = currentImplType.getName() + "::" + funcName;
+            funcName = mangleMethodName(currentImplType.getName(), funcName);
         }
         currentFunction = new IRFunction(funcName, returnType);
         module.addFunction(currentFunction);
@@ -697,9 +697,21 @@ public class IRGenerator extends VisitorBase {
         // 1. 获取接收者（作为 self 参数）
         IRValue receiver = visitExprAsAddr(node.receiver);
 
-        // 2. 构造方法名（TypeName::methodName）
+        // 自动解引用到结构体指针（匹配 &self / &mut self）
+        while (receiver.getType() instanceof IRPtrType) {
+            IRType pointee = ((IRPtrType) receiver.getType()).getPointee();
+            if (!(pointee instanceof IRPtrType) ||
+                !(((IRPtrType) pointee).getPointee() instanceof IRStructType)) {
+                break;
+            }
+            IRRegister loaded = newTemp((IRPtrType) pointee);
+            emit(new LoadInst(loaded, receiver));
+            receiver = loaded;
+        }
+
+        // 2. 构造方法名（TypeName.methodName）
         String typeName = getTypeNameFromExpr(node.receiver);
-        String methodName = typeName + "::" + node.methodName.name.name;
+        String methodName = mangleMethodName(typeName, node.methodName.name.name);
 
         // 3. 获取方法的返回类型
         IRType returnType = convertType(node.getType());
@@ -722,6 +734,13 @@ public class IRGenerator extends VisitorBase {
             emit(new CallInst(result, methodName, args));
             return result;
         }
+    }
+
+    /**
+     * 生成方法的 IR 名称
+     */
+    private String mangleMethodName(String typeName, String methodName) {
+        return typeName + "." + methodName;
     }
 
     /**
@@ -1398,6 +1417,18 @@ public class IRGenerator extends VisitorBase {
     protected IRValue visitFieldLValue(FieldExprNode node) {
         IRValue baseAddr = visitExprAsAddr(node.receiver);
         IRStructType structType = getStructType(node.receiver.getType());
+
+        // 自动解引用到结构体指针
+        while (baseAddr.getType() instanceof IRPtrType) {
+            IRType pointee = ((IRPtrType) baseAddr.getType()).getPointee();
+            if (!(pointee instanceof IRPtrType) ||
+                !(((IRPtrType) pointee).getPointee() instanceof IRStructType)) {
+                break;
+            }
+            IRRegister loaded = newTemp((IRPtrType) pointee);
+            emit(new LoadInst(loaded, baseAddr));
+            baseAddr = loaded;
+        }
         int fieldIndex = structType.getFieldIndex(node.fieldName.name);
 
         IRRegister fieldAddr = newTemp(new IRPtrType(structType.getFieldType(fieldIndex)));
@@ -1415,6 +1446,18 @@ public class IRGenerator extends VisitorBase {
     protected IRValue visitIndexLValue(IndexExprNode node) {
         IRValue baseAddr = visitExprAsAddr(node.array);
         IRValue index = visitExpr(node.index);
+
+        // 自动解引用到数组指针
+        while (baseAddr.getType() instanceof IRPtrType) {
+            IRType pointee = ((IRPtrType) baseAddr.getType()).getPointee();
+            if (!(pointee instanceof IRPtrType) ||
+                !(((IRPtrType) pointee).getPointee() instanceof IRArrayType)) {
+                break;
+            }
+            IRRegister loaded = newTemp((IRPtrType) pointee);
+            emit(new LoadInst(loaded, baseAddr));
+            baseAddr = loaded;
+        }
 
         IRArrayType arrayType = (IRArrayType) ((IRPtrType) baseAddr.getType()).getPointee();
         IRType elemType = arrayType.getElementType();
