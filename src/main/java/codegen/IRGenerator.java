@@ -70,9 +70,6 @@ public class IRGenerator extends VisitorBase {
     // 符号到 IR 值的映射（变量名 -> 地址）
     private final Map<Symbol, IRValue> symbolMap = new HashMap<>();
 
-    // 常量符号到常量值的映射（用于常量内联）
-    private final Map<Symbol, IRConstant> constSymbolMap = new HashMap<>();
-
     // 循环上下文栈（用于 break/continue）
     private final Deque<LoopContext> loopStack = new ArrayDeque<>();
 
@@ -271,12 +268,15 @@ public class IRGenerator extends VisitorBase {
         if (node.value != null) {
             ConstantValue constVal = constantEvaluator.evaluate(node.value);
             if (constVal != null) {
-                // 3. 将 ConstantValue 转换为 IRConstant
-                IRConstant irConst = convertConstantValue(constVal, constType);
+                IRValue irConst = convertConstantValueToInitializer(constVal, constType);
 
-                // 4. 记录常量符号映射（用于后续引用时内联）
                 if (irConst != null && node.getSymbol() != null) {
-                    constSymbolMap.put(node.getSymbol(), irConst);
+                    String globalName = node.name.name;
+                    IRGlobal global = new IRGlobal(constType, globalName, irConst);
+                    module.addGlobal(global);
+
+                    // 常量进入 symbolMap：允许取地址
+                    mapSymbol(node.getSymbol(), global);
                 }
             }
         }
@@ -457,12 +457,12 @@ public class IRGenerator extends VisitorBase {
                 return result;
 
             case CONSTANT:
-                // 常量：返回常量值（内联）
-                IRConstant constVal = getConstSymbolValue(symbol);
-                if (constVal == null) {
-                    throw new RuntimeException("Constant value not found: " + symbol.getName());
-                }
-                return constVal;
+                // 常量：从全局地址加载
+                IRValue constAddr = getSymbolValue(symbol);
+                IRType constType = ((IRPtrType) constAddr.getType()).getPointee();
+                IRRegister constResult = newTemp(constType);
+                emit(new LoadInst(constResult, constAddr));
+                return constResult;
 
             case ENUM_VARIANT_CONSTRUCTOR:
                 // 枚举变体：返回对应的整数值
@@ -1679,13 +1679,6 @@ public class IRGenerator extends VisitorBase {
         throw new RuntimeException("Cannot get symbol from pattern: " + pattern.getClass());
     }
 
-    /**
-     * 获取常量符号的值
-     */
-    protected IRConstant getConstSymbolValue(Symbol symbol) {
-        return constSymbolMap.get(symbol);
-    }
-
     // ==================== 辅助方法：运算符映射 ====================
 
     /**
@@ -1759,6 +1752,35 @@ public class IRGenerator extends VisitorBase {
         );
         module.addGlobal(strGlobal);
         return strGlobal;
+    }
+
+    /**
+     * 将 ConstantValue 转换为可用于全局初始化的 IR 值
+     */
+    protected IRValue convertConstantValueToInitializer(ConstantValue value, IRType targetType) {
+        if (targetType instanceof IRArrayType) {
+            return convertConstantArray(value, (IRArrayType) targetType);
+        }
+        return convertConstantValue(value, targetType);
+    }
+
+    /**
+     * 将 ConstantValue 数组转换为 IRConstArray
+     */
+    protected IRConstArray convertConstantArray(ConstantValue value, IRArrayType arrayType) {
+        List<ConstantValue> elements = value.getAsArray();
+        List<IRValue> irElements = new ArrayList<>();
+        IRType elemType = arrayType.getElementType();
+
+        for (ConstantValue element : elements) {
+            if (elemType instanceof IRArrayType) {
+                irElements.add(convertConstantArray(element, (IRArrayType) elemType));
+            } else {
+                irElements.add(convertConstantValue(element, elemType));
+            }
+        }
+
+        return new IRConstArray(arrayType, irElements);
     }
 
     /**

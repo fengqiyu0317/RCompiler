@@ -1,5 +1,6 @@
 package codegen.value;
 
+import codegen.type.IRPtrType;
 import codegen.type.IRType;
 
 /**
@@ -7,18 +8,32 @@ import codegen.type.IRType;
  * 表示全局变量或函数，以 @ 为前缀
  */
 public class IRGlobal extends IRValue {
+    private final IRType valueType;
     private String stringInitializer;  // 字符串初始值（用于字符串常量）
+    private IRValue initializer;       // 通用初始化值（数组常量等）
 
     public IRGlobal(IRType type, String name) {
-        this.type = type;
+        this.valueType = type;
+        this.type = new IRPtrType(type);
         this.name = name;
         this.stringInitializer = null;
+        this.initializer = null;
     }
 
     public IRGlobal(IRType type, String name, String stringInitializer) {
-        this.type = type;
+        this.valueType = type;
+        this.type = new IRPtrType(type);
         this.name = name;
         this.stringInitializer = stringInitializer;
+        this.initializer = null;
+    }
+
+    public IRGlobal(IRType type, String name, IRValue initializer) {
+        this.valueType = type;
+        this.type = new IRPtrType(type);
+        this.name = name;
+        this.stringInitializer = null;
+        this.initializer = initializer;
     }
 
     public String getStringInitializer() {
@@ -27,6 +42,18 @@ public class IRGlobal extends IRValue {
 
     public void setStringInitializer(String stringInitializer) {
         this.stringInitializer = stringInitializer;
+    }
+
+    public IRValue getInitializer() {
+        return initializer;
+    }
+
+    public IRType getValueType() {
+        return valueType;
+    }
+
+    public void setInitializer(IRValue initializer) {
+        this.initializer = initializer;
     }
 
     @Override
@@ -39,9 +66,22 @@ public class IRGlobal extends IRValue {
      */
     public String toDefinition() {
         if (stringInitializer != null) {
-            return "@" + name + " = global " + type + " c\"" + escapeString(stringInitializer) + "\\00\"";
+            return "@" + name + " = global " + valueType + " c\"" + escapeString(stringInitializer) + "\\00\"";
         }
-        return "@" + name + " = global " + type;
+        if (initializer != null) {
+            return "@" + name + " = constant " + valueType + " " + formatInitializer(initializer);
+        }
+        return "@" + name + " = global " + valueType;
+    }
+
+    private String formatInitializer(IRValue value) {
+        if (value instanceof IRConstArray) {
+            return ((IRConstArray) value).toString();
+        }
+        if (value instanceof IRConstant) {
+            return ((IRConstant) value).toString();
+        }
+        return value.toString();
     }
 
     /**
