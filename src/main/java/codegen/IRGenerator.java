@@ -81,6 +81,7 @@ public class IRGenerator extends VisitorBase {
 
     // 常量求值器（复用语义分析阶段的实例）
     private ConstantEvaluator constantEvaluator;
+    private TypeExtractor typeExtractor;
 
     // 字符串常量计数器
     private int stringConstantCounter = 0;
@@ -105,6 +106,7 @@ public class IRGenerator extends VisitorBase {
     public IRModule generate(List<ASTNode> statements, ConstantEvaluator constantEvaluator) {
         module = new IRModule();
         this.constantEvaluator = constantEvaluator;
+        this.typeExtractor = new TypeExtractor(new TypeErrorCollector(), false, constantEvaluator);
 
         // Pass 1: 收集类型定义（结构体、枚举）
         for (ASTNode stmt : statements) {
@@ -1435,6 +1437,7 @@ public class IRGenerator extends VisitorBase {
         if (astType instanceof PrimitiveType) {
             PrimitiveType pt = (PrimitiveType) astType;
             switch (pt.getKind()) {
+                case INT:
                 case I32:
                 case U32:
                     return IRIntType.I32;
@@ -1477,34 +1480,10 @@ public class IRGenerator extends VisitorBase {
      * 简单实现：处理基本类型
      */
     protected Type extractType(TypeExprNode typeExpr) {
-        if (typeExpr instanceof TypePathExprNode) {
-            TypePathExprNode pathType = (TypePathExprNode) typeExpr;
-            if (pathType.path != null && pathType.path.name != null) {
-                String typeName = pathType.path.name.name;
-                switch (typeName) {
-                    case "i32":
-                        return PrimitiveType.getI32Type();
-                    case "u32":
-                        return PrimitiveType.getU32Type();
-                    case "isize":
-                        return PrimitiveType.getIsizeType();
-                    case "usize":
-                        return PrimitiveType.getUsizeType();
-                    case "bool":
-                        return PrimitiveType.getBoolType();
-                    case "char":
-                        return PrimitiveType.getCharType();
-                    case "str":
-                        return PrimitiveType.getStrType();
-                    case "String":
-                        return PrimitiveType.getStringType();
-                    default:
-                        // 可能是自定义类型（结构体、枚举等）
-                        throw new RuntimeException("Unknown type: " + typeName);
-                }
-            }
+        if (typeExtractor == null) {
+            throw new RuntimeException("TypeExtractor is not initialized");
         }
-        throw new RuntimeException("Cannot extract type from: " + typeExpr.getClass());
+        return typeExtractor.extractTypeFromTypeNode(typeExpr);
     }
     /**
      * 从表达式获取类型名（用于方法调用）

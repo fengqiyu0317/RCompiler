@@ -23,9 +23,6 @@ public class TypeChecker extends VisitorBase {
     // Trait impl checker for checking trait implementations
     private final TraitImplChecker traitImplChecker;
     
-    // Expression type checker for checking expression types
-    private final ExpressionTypeChecker expressionTypeChecker;
-    
     public TypeChecker(boolean throwOnError) {
         this.errorCollector = new TypeErrorCollector();
         this.throwOnError = throwOnError;
@@ -35,8 +32,6 @@ public class TypeChecker extends VisitorBase {
         this.typeExtractor = new TypeExtractor(errorCollector, throwOnError, constantEvaluator);
         // Set the TypeChecker reference after creating the TypeExtractor
         this.typeExtractor.setTypeChecker(this);
-        this.expressionTypeChecker = new ExpressionTypeChecker(errorCollector, throwOnError, typeExtractor, constantEvaluator);
-        
         // 创建表达式类型上下文
         this.context = new ExpressionTypeContext();
         
@@ -68,8 +63,8 @@ public class TypeChecker extends VisitorBase {
         this.complexExpressionChecker.setMutabilityChecker(mutabilityChecker);
         
         
-        // Set up circular dependency between TypeExtractor and ExpressionTypeChecker
-        this.typeExtractor.setExpressionTypeChecker(expressionTypeChecker);
+        // Set up circular dependency between TypeExtractor and expression visitor
+        this.typeExtractor.setExpressionTypeChecker(this);
     }
     
     // ==================== 公共方法 ====================

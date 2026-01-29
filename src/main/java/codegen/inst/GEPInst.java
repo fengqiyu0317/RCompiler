@@ -2,6 +2,7 @@ package codegen.inst;
 
 import codegen.value.IRRegister;
 import codegen.value.IRValue;
+import codegen.type.IRPtrType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,8 +65,13 @@ public class GEPInst extends IRInstruction {
         String idxStr = indices.stream()
             .map(i -> i.getType() + " " + i)
             .collect(Collectors.joining(", "));
-        return result + " = getelementptr " + base.getType() + ", " +
-               base.getType() + " " + base + ", " + idxStr;
+        String baseType = base.getType().toString();
+        String elemType = baseType;
+        if (base.getType() instanceof IRPtrType) {
+            elemType = ((IRPtrType) base.getType()).getPointee().toString();
+        }
+        return result + " = getelementptr " + elemType + ", " +
+               baseType + " " + base + ", " + idxStr;
     }
 
     @Override

@@ -14,13 +14,6 @@ public class StatementTypeChecker extends VisitorBase {
     // Ownership检查器
     private final OwnershipChecker ownershipChecker;
     
-    // This constructor is deprecated - use the one with TypeChecker
-    public StatementTypeChecker(TypeErrorCollector errorCollector, boolean throwOnError,
-                             TypeExtractor typeExtractor, ExpressionTypeChecker expressionTypeChecker,
-                             ControlFlowTypeChecker controlFlowTypeChecker) {
-        throw new RuntimeException("This constructor is deprecated. Use the constructor with TypeChecker.");
-    }
-    
     public StatementTypeChecker(TypeErrorCollector errorCollector, boolean throwOnError,
                              TypeExtractor typeExtractor, TypeChecker typeChecker,
                              ControlFlowTypeChecker controlFlowTypeChecker) {
