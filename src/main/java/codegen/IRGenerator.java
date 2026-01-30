@@ -330,6 +330,7 @@ public class IRGenerator extends VisitorBase {
         // 4. 如果有初始化表达式，生成初始化代码
         if (node.value != null) {
             IRValue initValue = visitExpr(node.value);
+            initValue = emitCastIfNeeded(initValue, varType);
             emit(new StoreInst(initValue, addr));
         }
 
@@ -608,10 +609,14 @@ public class IRGenerator extends VisitorBase {
         // 2. 求值右边表达式
         IRValue value = visitExpr(node.right);
 
-        // 3. 生成 store 指令
+        // 3. 必要时进行类型转换（右操作数转换为左操作数类型）
+        IRType valType = ((IRPtrType) addr.getType()).getPointee();
+        value = emitCastIfNeeded(value, valType);
+
+        // 4. 生成 store 指令
         emit(new StoreInst(value, addr));
 
-        // 4. 赋值表达式返回 unit 类型
+        // 5. 赋值表达式返回 unit 类型
         return null;
     }
 
@@ -667,6 +672,10 @@ public class IRGenerator extends VisitorBase {
             if (symbol != null && symbol.getKind() == SymbolKind.FUNCTION) {
                 // 直接调用：使用函数名
                 String funcName = symbol.getName();
+                IRFunction targetFunc = module.getFunction(funcName);
+                if (targetFunc != null) {
+                    args = castCallArgs(args, targetFunc);
+                }
                 if (returnType instanceof IRVoidType) {
                     emit(new CallInst(funcName, args));
                     return null;
@@ -725,6 +734,11 @@ public class IRGenerator extends VisitorBase {
             }
         }
 
+        IRFunction targetFunc = module.getFunction(methodName);
+        if (targetFunc != null) {
+            args = castCallArgs(args, targetFunc);
+        }
+
         // 5. 生成直接调用指令
         if (returnType instanceof IRVoidType) {
             emit(new CallInst(methodName, args));
@@ -741,6 +755,23 @@ public class IRGenerator extends VisitorBase {
      */
     private String mangleMethodName(String typeName, String methodName) {
         return typeName + "." + methodName;
+    }
+
+    /**
+     * 对调用参数进行必要的类型转换
+     */
+    private List<IRValue> castCallArgs(List<IRValue> args, IRFunction func) {
+        List<IRValue> casted = new ArrayList<>(args.size());
+        List<IRRegister> params = func.getParams();
+        for (int i = 0; i < args.size(); i++) {
+            IRValue arg = args.get(i);
+            if (i < params.size()) {
+                IRType paramType = params.get(i).getType();
+                arg = emitCastIfNeeded(arg, paramType);
+            }
+            casted.add(arg);
+        }
+        return casted;
     }
 
     /**
@@ -780,7 +811,7 @@ public class IRGenerator extends VisitorBase {
         // 获取数组类型
         IRArrayType arrayType = (IRArrayType) convertType(node.getType());
         IRType elemType = arrayType.getElementType();
-        int arraySize = arrayType.getSize();
+        int arraySize = arrayType.getLength();
 
         // 分配数组空间
         IRRegister arrayAddr = newTemp(new IRPtrType(arrayType), "arr");
@@ -1287,7 +1318,13 @@ public class IRGenerator extends VisitorBase {
      * 创建新的基本块并添加到当前函数
      */
     protected IRBasicBlock createBlock(String name) {
-        IRBasicBlock block = new IRBasicBlock(name);
+        String uniqueName = name;
+        int suffix = 0;
+        while (currentFunction.getBlock(uniqueName) != null) {
+            suffix++;
+            uniqueName = name + "." + suffix;
+        }
+        IRBasicBlock block = new IRBasicBlock(uniqueName);
         currentFunction.addBlock(block);
         return block;
     }
@@ -1583,7 +1620,63 @@ public class IRGenerator extends VisitorBase {
             return result;
         }
 
+        // 数组类型之间的转换（支持多维数组，元素为整数）
+        if (sourceType instanceof IRArrayType && targetType instanceof IRArrayType) {
+            IRArrayType srcArr = (IRArrayType) sourceType;
+            IRArrayType dstArr = (IRArrayType) targetType;
+            if (srcArr.getLength() == dstArr.getLength()) {
+                return castArrayValue(value, srcArr, dstArr);
+            }
+        }
+
         throw new RuntimeException("Unsupported cast: " + sourceType + " -> " + targetType);
+    }
+
+    /**
+     * 递归转换数组值（多维数组）
+     */
+    private IRValue castArrayValue(IRValue value, IRArrayType srcArr, IRArrayType dstArr) {
+        IRRegister srcAddr = newTemp(new IRPtrType(srcArr));
+        emit(new AllocaInst(srcAddr, srcArr));
+        emit(new StoreInst(value, srcAddr));
+
+        IRRegister dstAddr = newTemp(new IRPtrType(dstArr));
+        emit(new AllocaInst(dstAddr, dstArr));
+
+        for (int i = 0; i < srcArr.getLength(); i++) {
+            IRRegister srcElemAddr = newTemp(new IRPtrType(srcArr.getElementType()));
+            emit(new GEPInst(srcElemAddr, srcAddr, Arrays.asList(
+                IRConstant.i32(0),
+                IRConstant.i32(i)
+            )));
+
+            IRRegister srcElemVal = newTemp(srcArr.getElementType());
+            emit(new LoadInst(srcElemVal, srcElemAddr));
+
+            IRValue castElem;
+            if (srcArr.getElementType() instanceof IRArrayType &&
+                dstArr.getElementType() instanceof IRArrayType) {
+                IRArrayType srcElemArr = (IRArrayType) srcArr.getElementType();
+                IRArrayType dstElemArr = (IRArrayType) dstArr.getElementType();
+                if (srcElemArr.getLength() != dstElemArr.getLength()) {
+                    throw new RuntimeException("Unsupported cast: " + srcArr + " -> " + dstArr);
+                }
+                castElem = castArrayValue(srcElemVal, srcElemArr, dstElemArr);
+            } else {
+                castElem = emitCastIfNeeded(srcElemVal, dstArr.getElementType());
+            }
+
+            IRRegister dstElemAddr = newTemp(new IRPtrType(dstArr.getElementType()));
+            emit(new GEPInst(dstElemAddr, dstAddr, Arrays.asList(
+                IRConstant.i32(0),
+                IRConstant.i32(i)
+            )));
+            emit(new StoreInst(castElem, dstElemAddr));
+        }
+
+        IRRegister result = newTemp(dstArr);
+        emit(new LoadInst(result, dstAddr));
+        return result;
     }
 
     /**
