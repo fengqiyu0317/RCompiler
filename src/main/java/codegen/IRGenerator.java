@@ -202,19 +202,26 @@ public class IRGenerator extends VisitorBase {
         if (node.parameters != null) {
             for (ParameterNode param : node.parameters) {
                 IRType paramType = convertType(param.getParameterType());
+                if (paramType instanceof IRArrayType) {
+                    paramType = new IRPtrType(paramType);
+                }
                 String paramName = getPatternName(param.name);
 
                 // 创建参数寄存器
                 IRRegister paramReg = newTemp(paramType, paramName);
                 currentFunction.addParam(paramReg);
 
-                // 为参数分配栈空间（便于后续可能的取地址操作）
-                IRRegister paramAddr = newTemp(new IRPtrType(paramType), paramName + ".addr");
-                emit(new AllocaInst(paramAddr, paramType));
-                emit(new StoreInst(paramReg, paramAddr));
-
-                // 记录参数符号到地址的映射
-                mapSymbol(getSymbolFromPattern(param.name), paramAddr);
+                if (paramType instanceof IRPtrType) {
+                    // 指针参数直接映射为指针值，避免多一层间接
+                    mapSymbol(getSymbolFromPattern(param.name), paramReg);
+                } else {
+                    // 为参数分配栈空间（便于后续可能的取地址操作）
+                    IRRegister paramAddr = newTemp(new IRPtrType(paramType), paramName + ".addr");
+                    emit(new AllocaInst(paramAddr, paramType));
+                    emit(new StoreInst(paramReg, paramAddr));
+                    // 记录参数符号到地址的映射
+                    mapSymbol(getSymbolFromPattern(param.name), paramAddr);
+                }
             }
         }
 
@@ -458,7 +465,14 @@ public class IRGenerator extends VisitorBase {
                 return result;
 
             case CONSTANT:
-                // 常量：从全局地址加载
+                // 常量：标量可直接内联，复杂类型走全局地址
+                ConstantValue constVal = symbol.getConstantValue();
+                if (constVal != null && symbol.getType() != null) {
+                    IRType constType = convertType(symbol.getType());
+                    if (constType instanceof IRIntType) {
+                        return convertConstantValue(constVal, constType);
+                    }
+                }
                 IRValue constAddr = getSymbolValue(symbol);
                 IRType constType = ((IRPtrType) constAddr.getType()).getPointee();
                 IRRegister constResult = newTemp(constType);
@@ -657,14 +671,6 @@ public class IRGenerator extends VisitorBase {
         // 1. 获取返回类型
         IRType returnType = convertType(node.getType());
 
-        // 2. 求值所有参数
-        List<IRValue> args = new ArrayList<>();
-        if (node.arguments != null) {
-            for (ExprNode arg : node.arguments) {
-                args.add(visitExpr(arg));
-            }
-        }
-
         // 3. 判断是直接调用还是间接调用
         if (node.function instanceof PathExprNode) {
             PathExprNode pathExpr = (PathExprNode) node.function;
@@ -673,6 +679,15 @@ public class IRGenerator extends VisitorBase {
                 // 直接调用：使用函数名
                 String funcName = symbol.getName();
                 IRFunction targetFunc = module.getFunction(funcName);
+                List<IRValue> args = new ArrayList<>();
+                if (node.arguments != null) {
+                    List<IRRegister> params = targetFunc != null ? targetFunc.getParams() : null;
+                    for (int i = 0; i < node.arguments.size(); i++) {
+                        ExprNode argExpr = node.arguments.get(i);
+                        IRType paramType = (params != null && i < params.size()) ? params.get(i).getType() : null;
+                        args.add(buildArgForParam(argExpr, paramType));
+                    }
+                }
                 if (targetFunc != null) {
                     args = castCallArgs(args, targetFunc);
                 }
@@ -688,6 +703,12 @@ public class IRGenerator extends VisitorBase {
         }
 
         // 4. 间接调用：通过函数指针
+        List<IRValue> args = new ArrayList<>();
+        if (node.arguments != null) {
+            for (ExprNode arg : node.arguments) {
+                args.add(visitExpr(arg));
+            }
+        }
         IRValue callee = visitExpr(node.function);
         if (returnType instanceof IRVoidType) {
             emit(new CallInst(callee, args));
@@ -729,8 +750,14 @@ public class IRGenerator extends VisitorBase {
         List<IRValue> args = new ArrayList<>();
         args.add(receiver);  // self 作为第一个参数
         if (node.arguments != null) {
-            for (ExprNode arg : node.arguments) {
-                args.add(visitExpr(arg));
+            IRFunction targetFunc = module.getFunction(methodName);
+            List<IRRegister> params = targetFunc != null ? targetFunc.getParams() : null;
+            for (int i = 0; i < node.arguments.size(); i++) {
+                ExprNode argExpr = node.arguments.get(i);
+                IRType paramType = (params != null && (i + 1) < params.size())
+                    ? params.get(i + 1).getType()
+                    : null;
+                args.add(buildArgForParam(argExpr, paramType));
             }
         }
 
@@ -767,11 +794,75 @@ public class IRGenerator extends VisitorBase {
             IRValue arg = args.get(i);
             if (i < params.size()) {
                 IRType paramType = params.get(i).getType();
-                arg = emitCastIfNeeded(arg, paramType);
+                if (paramType instanceof IRPtrType && (arg.getType() instanceof IRArrayType ||
+                    arg.getType() instanceof IRStructType)) {
+                    IRType pointee = ((IRPtrType) paramType).getPointee();
+                    if (arg.getType().equals(pointee)) {
+                        IRRegister temp = newTemp(new IRPtrType(pointee));
+                        emit(new AllocaInst(temp, pointee));
+                        emit(new StoreInst(arg, temp));
+                        arg = temp;
+                    } else if (pointee instanceof IRArrayType && arg.getType() instanceof IRArrayType) {
+                        IRArrayType dstArr = (IRArrayType) pointee;
+                        IRArrayType srcArr = (IRArrayType) arg.getType();
+                        if (srcArr.getLength() == dstArr.getLength()) {
+                            IRValue castedArr = castArrayValue(arg, srcArr, dstArr);
+                            IRRegister temp = newTemp(new IRPtrType(dstArr));
+                            emit(new AllocaInst(temp, dstArr));
+                            emit(new StoreInst(castedArr, temp));
+                            arg = temp;
+                        }
+                    }
+                }
+                if (arg.getType() instanceof IRIntType && paramType instanceof IRIntType) {
+                    arg = emitCastIfNeeded(arg, paramType);
+                }
             }
             casted.add(arg);
         }
         return casted;
+    }
+
+    /**
+     * 根据参数类型构造实参（避免数组按值拷贝）
+     */
+    private IRValue buildArgForParam(ExprNode argExpr, IRType paramType) {
+        if (paramType instanceof IRPtrType) {
+            IRType pointee = ((IRPtrType) paramType).getPointee();
+            if (pointee instanceof IRArrayType) {
+                if (argExpr instanceof PathExprNode) {
+                    Symbol symbol = ((PathExprNode) argExpr).getSymbol();
+                    IRValue addr = getSymbolValue(symbol);
+                    while (addr.getType() instanceof IRPtrType) {
+                        IRType pt = ((IRPtrType) addr.getType()).getPointee();
+                        if (pt instanceof IRArrayType) {
+                            return addr;
+                        }
+                        if (pt instanceof IRPtrType) {
+                            IRRegister loaded = newTemp((IRPtrType) pt);
+                            emit(new LoadInst(loaded, addr));
+                            addr = loaded;
+                            continue;
+                        }
+                        break;
+                    }
+                    return addr;
+                }
+                if (argExpr instanceof FieldExprNode || argExpr instanceof IndexExprNode ||
+                    argExpr instanceof DerefExprNode) {
+                    return visitExprAsAddr(argExpr);
+                }
+                IRValue val = visitExpr(argExpr);
+                if (val.getType() instanceof IRPtrType) {
+                    return val;
+                }
+                IRRegister temp = newTemp(new IRPtrType(pointee));
+                emit(new AllocaInst(temp, pointee));
+                emit(new StoreInst(val, temp));
+                return temp;
+            }
+        }
+        return visitExpr(argExpr);
     }
 
     /**
