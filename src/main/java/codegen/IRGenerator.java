@@ -1,3 +1,4 @@
+import codegen.TargetConfig;
 import codegen.ir.IRBasicBlock;
 import codegen.ir.IRFunction;
 import codegen.ir.IRModule;
@@ -202,26 +203,18 @@ public class IRGenerator extends VisitorBase {
         if (node.parameters != null) {
             for (ParameterNode param : node.parameters) {
                 IRType paramType = convertType(param.getParameterType());
-                if (paramType instanceof IRArrayType) {
-                    paramType = new IRPtrType(paramType);
-                }
                 String paramName = getPatternName(param.name);
 
                 // 创建参数寄存器
                 IRRegister paramReg = newTemp(paramType, paramName);
                 currentFunction.addParam(paramReg);
 
-                if (paramType instanceof IRPtrType) {
-                    // 指针参数直接映射为指针值，避免多一层间接
-                    mapSymbol(getSymbolFromPattern(param.name), paramReg);
-                } else {
-                    // 为参数分配栈空间（便于后续可能的取地址操作）
-                    IRRegister paramAddr = newTemp(new IRPtrType(paramType), paramName + ".addr");
-                    emit(new AllocaInst(paramAddr, paramType));
-                    emit(new StoreInst(paramReg, paramAddr));
-                    // 记录参数符号到地址的映射
-                    mapSymbol(getSymbolFromPattern(param.name), paramAddr);
-                }
+                // 为参数分配栈空间（便于后续可能的取地址操作）
+                IRRegister paramAddr = newTemp(new IRPtrType(paramType), paramName + ".addr");
+                emit(new AllocaInst(paramAddr, paramType));
+                emit(new StoreInst(paramReg, paramAddr));
+                // 记录参数符号到地址的映射
+                mapSymbol(getSymbolFromPattern(param.name), paramAddr);
             }
         }
 
@@ -428,9 +421,8 @@ public class IRGenerator extends VisitorBase {
             case U32:
                 return IRConstant.i32(node.value_long);  // u32 也用 i32 表示
             case ISIZE:
-                return IRConstant.i64(node.value_long);
             case USIZE:
-                return IRConstant.i64(node.value_long);
+                return makeTargetSizedIntConstant(node.value_long);
             case BOOL:
                 return IRConstant.i1(node.value_bool);
             case CHAR:
@@ -443,6 +435,17 @@ public class IRGenerator extends VisitorBase {
             default:
                 throw new RuntimeException("Unsupported literal type: " + node.literalType);
         }
+    }
+
+    private IRConstant makeTargetSizedIntConstant(long value) {
+        int bits = TargetConfig.USIZE_BITS;
+        if (bits == 32) {
+            return IRConstant.i32(value);
+        }
+        if (bits == 64) {
+            return IRConstant.i64(value);
+        }
+        return new IRConstant(IRIntType.get(bits), value);
     }
 
     /**
@@ -724,6 +727,16 @@ public class IRGenerator extends VisitorBase {
      * 处理方法调用表达式
      */
     protected IRValue visitMethodCall(MethodCallExprNode node) {
+        Type receiverType = node.receiver.getType();
+        while (receiverType instanceof ReferenceType) {
+            receiverType = ((ReferenceType) receiverType).getInnerType();
+        }
+        if (receiverType instanceof ArrayType &&
+            "len".equals(node.methodName.name.name)) {
+            long length = ((ArrayType) receiverType).getSize();
+            return makeTargetSizedIntConstant(length);
+        }
+
         // 1. 获取接收者（作为 self 参数）
         IRValue receiver = visitExprAsAddr(node.receiver);
 
@@ -794,24 +807,12 @@ public class IRGenerator extends VisitorBase {
             IRValue arg = args.get(i);
             if (i < params.size()) {
                 IRType paramType = params.get(i).getType();
-                if (paramType instanceof IRPtrType && (arg.getType() instanceof IRArrayType ||
-                    arg.getType() instanceof IRStructType)) {
-                    IRType pointee = ((IRPtrType) paramType).getPointee();
-                    if (arg.getType().equals(pointee)) {
-                        IRRegister temp = newTemp(new IRPtrType(pointee));
-                        emit(new AllocaInst(temp, pointee));
-                        emit(new StoreInst(arg, temp));
-                        arg = temp;
-                    } else if (pointee instanceof IRArrayType && arg.getType() instanceof IRArrayType) {
-                        IRArrayType dstArr = (IRArrayType) pointee;
-                        IRArrayType srcArr = (IRArrayType) arg.getType();
-                        if (srcArr.getLength() == dstArr.getLength()) {
-                            IRValue castedArr = castArrayValue(arg, srcArr, dstArr);
-                            IRRegister temp = newTemp(new IRPtrType(dstArr));
-                            emit(new AllocaInst(temp, dstArr));
-                            emit(new StoreInst(castedArr, temp));
-                            arg = temp;
-                        }
+                if (!arg.getType().equals(paramType) &&
+                    paramType instanceof IRArrayType && arg.getType() instanceof IRArrayType) {
+                    IRArrayType dstArr = (IRArrayType) paramType;
+                    IRArrayType srcArr = (IRArrayType) arg.getType();
+                    if (srcArr.getLength() == dstArr.getLength()) {
+                        arg = castArrayValue(arg, srcArr, dstArr);
                     }
                 }
                 if (arg.getType() instanceof IRIntType && paramType instanceof IRIntType) {
@@ -827,41 +828,6 @@ public class IRGenerator extends VisitorBase {
      * 根据参数类型构造实参（避免数组按值拷贝）
      */
     private IRValue buildArgForParam(ExprNode argExpr, IRType paramType) {
-        if (paramType instanceof IRPtrType) {
-            IRType pointee = ((IRPtrType) paramType).getPointee();
-            if (pointee instanceof IRArrayType) {
-                if (argExpr instanceof PathExprNode) {
-                    Symbol symbol = ((PathExprNode) argExpr).getSymbol();
-                    IRValue addr = getSymbolValue(symbol);
-                    while (addr.getType() instanceof IRPtrType) {
-                        IRType pt = ((IRPtrType) addr.getType()).getPointee();
-                        if (pt instanceof IRArrayType) {
-                            return addr;
-                        }
-                        if (pt instanceof IRPtrType) {
-                            IRRegister loaded = newTemp((IRPtrType) pt);
-                            emit(new LoadInst(loaded, addr));
-                            addr = loaded;
-                            continue;
-                        }
-                        break;
-                    }
-                    return addr;
-                }
-                if (argExpr instanceof FieldExprNode || argExpr instanceof IndexExprNode ||
-                    argExpr instanceof DerefExprNode) {
-                    return visitExprAsAddr(argExpr);
-                }
-                IRValue val = visitExpr(argExpr);
-                if (val.getType() instanceof IRPtrType) {
-                    return val;
-                }
-                IRRegister temp = newTemp(new IRPtrType(pointee));
-                emit(new AllocaInst(temp, pointee));
-                emit(new StoreInst(val, temp));
-                return temp;
-            }
-        }
         return visitExpr(argExpr);
     }
 
@@ -1545,6 +1511,9 @@ public class IRGenerator extends VisitorBase {
     protected IRValue visitFieldLValue(FieldExprNode node) {
         IRValue baseAddr = visitExprAsAddr(node.receiver);
         IRStructType structType = getStructType(node.receiver.getType());
+        if (structType == null) {
+            throw new RuntimeException("Field access on non-struct type: " + node.receiver.getType());
+        }
 
         // 自动解引用到结构体指针
         while (baseAddr.getType() instanceof IRPtrType) {
@@ -1617,8 +1586,9 @@ public class IRGenerator extends VisitorBase {
                 case CHAR:
                     return IRIntType.I32;  // char 用 i32 表示
                 case USIZE:
+                    return IRIntType.get(TargetConfig.USIZE_BITS);
                 case ISIZE:
-                    return IRIntType.I64;
+                    return IRIntType.get(TargetConfig.ISIZE_BITS);
                 default:
                     throw new RuntimeException("Unsupported primitive type: " + pt);
             }
@@ -1677,7 +1647,7 @@ public class IRGenerator extends VisitorBase {
         if (type instanceof StructType) {
             return module.getStruct(((StructType) type).getName());
         }
-        throw new RuntimeException("Cannot get struct type from: " + type);
+        return null;
     }
 
 

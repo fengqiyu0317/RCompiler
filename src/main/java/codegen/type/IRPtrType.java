@@ -1,5 +1,6 @@
 package codegen.type;
 
+import codegen.TargetConfig;
 import java.util.Objects;
 
 /**
@@ -23,12 +24,12 @@ public class IRPtrType extends IRType {
 
     @Override
     public int getSize() {
-        return 8;  // 64-bit pointer
+        return TargetConfig.pointerBytes();
     }
 
     @Override
     public int getAlign() {
-        return 8;
+        return TargetConfig.pointerBytes();
     }
 
     @Override
