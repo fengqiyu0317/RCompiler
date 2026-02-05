@@ -679,8 +679,8 @@ public class IRGenerator extends VisitorBase {
             PathExprNode pathExpr = (PathExprNode) node.function;
             Symbol symbol = pathExpr.getSymbol();
             if (symbol != null && symbol.getKind() == SymbolKind.FUNCTION) {
-                // 直接调用：使用函数名
-                String funcName = symbol.getName();
+                // 直接调用：使用函数名（impl 内方法需要 name mangling）
+                String funcName = getDirectFunctionName(symbol);
                 IRFunction targetFunc = module.getFunction(funcName);
                 List<IRValue> args = new ArrayList<>();
                 if (node.arguments != null) {
@@ -694,11 +694,12 @@ public class IRGenerator extends VisitorBase {
                 if (targetFunc != null) {
                     args = castCallArgs(args, targetFunc);
                 }
-                if (returnType instanceof IRVoidType) {
+                IRType effectiveReturnType = targetFunc != null ? targetFunc.getReturnType() : returnType;
+                if (effectiveReturnType instanceof IRVoidType) {
                     emit(new CallInst(funcName, args));
                     return null;
                 } else {
-                    IRRegister result = newTemp(returnType);
+                    IRRegister result = newTemp(effectiveReturnType);
                     emit(new CallInst(result, funcName, args));
                     return result;
                 }
@@ -795,6 +796,31 @@ public class IRGenerator extends VisitorBase {
      */
     private String mangleMethodName(String typeName, String methodName) {
         return typeName + "." + methodName;
+    }
+
+    /**
+     * 获取直接调用时的函数名（处理 impl 内的关联函数）
+     */
+    private String getDirectFunctionName(Symbol symbol) {
+        if (symbol == null) {
+            return null;
+        }
+        String baseName = symbol.getName();
+        ASTNode decl = symbol.getDeclaration();
+        if (decl instanceof FunctionNode) {
+            ASTNode parent = decl.getFather();
+            while (parent != null && !(parent instanceof ImplNode)) {
+                parent = parent.getFather();
+            }
+            if (parent instanceof ImplNode) {
+                ImplNode impl = (ImplNode) parent;
+                if (impl.typeName != null) {
+                    String typeName = getTypeName(impl.typeName);
+                    return mangleMethodName(typeName, baseName);
+                }
+            }
+        }
+        return baseName;
     }
 
     /**
