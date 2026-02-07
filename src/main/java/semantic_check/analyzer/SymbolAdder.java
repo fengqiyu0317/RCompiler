@@ -305,7 +305,8 @@ public class SymbolAdder extends VisitorBase {
                         SymbolKind.ENUM_VARIANT_CONSTRUCTOR,
                         variant, // Point to the variant node instead of the enum node
                         currentScope.getScopeLevel(),
-                        false
+                        false,
+                        node.name.name // Record the enum name for codegen lookup
                     );
 
                     // Add to value namespace

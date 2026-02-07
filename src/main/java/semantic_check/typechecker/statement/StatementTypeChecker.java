@@ -372,18 +372,9 @@ public class StatementTypeChecker extends VisitorBase {
                 // Set the type of the statement based on the expression
                 // For expression statements, the type is typically unit type unless it's the last expression in a block
                 if (exprType != null) {
-                    // If the expression statement has a semicolon, it's unit type
-                    // If it doesn't have a semicolon, it's the expression's type
-                    if (node.hasSemicolon) {
-                        // ExprStmtNode doesn't have setType method, so we need to handle this differently
-                        // We'll store the type in the expression node itself
-                        if(node.expr.getType() != NeverType.INSTANCE) {
-                            node.expr.setType(UnitType.INSTANCE);
-                        }
-                    } else {
-                        // The expression already has its type set
-                        // No need to do anything here
-                    }
+                    // Expression statements evaluate the expression but do not change its type.
+                    // The statement's value is unit when it has a semicolon, but we avoid
+                    // overwriting the expression type because codegen relies on it.
                 } else {
                     // throw error if expression type is null
                     RuntimeException error = new RuntimeException(

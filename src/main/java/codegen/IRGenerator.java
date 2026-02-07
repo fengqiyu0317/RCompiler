@@ -1186,7 +1186,7 @@ public class IRGenerator extends VisitorBase {
         // 2. 创建基本块
         IRBasicBlock thenBlock = createBlock("if.then");
         IRBasicBlock elseBlock = createBlock("if.else");
-        IRBasicBlock mergeBlock = createBlock("if.merge");
+        IRBasicBlock mergeBlock = null;
 
         // 3. 生成条件分支
         emit(new CondBranchInst(cond, thenBlock, elseBlock));
@@ -1195,14 +1195,20 @@ public class IRGenerator extends VisitorBase {
         setCurrentBlock(thenBlock);
         IRValue thenVal = visitBlock(node.thenBranch);
         IRBasicBlock thenEndBlock = currentBlock;  // 保存（可能因嵌套而改变）
+        boolean thenFallsThrough = false;
         if (!currentBlock.isTerminated()) {
+            if (mergeBlock == null) {
+                mergeBlock = createBlock("if.merge");
+            }
             emit(new BranchInst(mergeBlock));
+            thenFallsThrough = true;
         }
 
         // 5. 处理 else 分支
         setCurrentBlock(elseBlock);
         IRValue elseVal = null;
         IRBasicBlock elseEndBlock = elseBlock;
+        boolean elseFallsThrough = false;
 
         if (node.elseifBranch != null) {
             // else if 分支
@@ -1215,15 +1221,25 @@ public class IRGenerator extends VisitorBase {
         }
 
         if (!currentBlock.isTerminated()) {
+            if (mergeBlock == null) {
+                mergeBlock = createBlock("if.merge");
+            }
             emit(new BranchInst(mergeBlock));
+            elseFallsThrough = true;
         }
 
-        // 6. 合并块
-        setCurrentBlock(mergeBlock);
+        // 6. 合并块（只有在分支有落点时才使用）
+        boolean mergeReachable = mergeBlock != null;
+        if (mergeReachable) {
+            setCurrentBlock(mergeBlock);
+        } else {
+            // 两个分支都终结，保持在终结块以避免生成不可达的返回
+            setCurrentBlock(elseEndBlock.isTerminated() ? elseEndBlock : thenEndBlock);
+        }
 
         // 7. 如果 if 表达式有值，使用 phi 合并
         IRType resultType = convertType(node.getType());
-        if (!(resultType instanceof IRVoidType) && thenVal != null) {
+        if (mergeReachable && !(resultType instanceof IRVoidType) && thenVal != null) {
             IRRegister result = newTemp(resultType);
             PhiInst phi = new PhiInst(result);
 
@@ -1285,11 +1301,20 @@ public class IRGenerator extends VisitorBase {
         // 8. 弹出循环上下文并获取 break 值
         LoopContext loopCtx = popLoopContext();
 
-        // 9. 设置当前块为出口块
-        setCurrentBlock(exitBlock);
+        // 9. 设置当前块为出口块（仅当出口可达）
+        boolean exitReachable = !node.isInfinite || !loopCtx.breakBlocks.isEmpty();
+        if (exitReachable) {
+            setCurrentBlock(exitBlock);
+        } else {
+            // 出口不可达：为 exitBlock 添加终结指令，避免生成空块
+            IRBasicBlock savedBlock = currentBlock;
+            setCurrentBlock(exitBlock);
+            emit(new BranchInst(exitBlock));
+            setCurrentBlock(savedBlock);
+        }
 
         // 10. 如果循环有返回值，使用 phi 合并所有 break 的值
-        if (hasValue && !loopCtx.breakValues.isEmpty()) {
+        if (exitReachable && hasValue && !loopCtx.breakValues.isEmpty()) {
             IRRegister result = newTemp(resultType);
             PhiInst phi = new PhiInst(result);
 
