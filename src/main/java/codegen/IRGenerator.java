@@ -51,14 +51,18 @@ public class IRGenerator extends VisitorBase {
         final IRBasicBlock block;
         final int registerCounter;
         final Map<Symbol, IRValue> capturedSymbols;  // 保存当前符号映射的快照
+        final IRValue sretPtr;
+        final IRType sretType;
 
         FunctionContext(IRFunction function, IRBasicBlock block, int registerCounter,
-                        Map<Symbol, IRValue> symbolMap) {
+                        Map<Symbol, IRValue> symbolMap, IRValue sretPtr, IRType sretType) {
             this.function = function;
             this.block = block;
             this.registerCounter = registerCounter;
             // 保存符号映射的浅拷贝
             this.capturedSymbols = new HashMap<>(symbolMap);
+            this.sretPtr = sretPtr;
+            this.sretType = sretType;
         }
     }
 
@@ -67,6 +71,12 @@ public class IRGenerator extends VisitorBase {
     private IRModule module;
     private IRFunction currentFunction;
     private IRBasicBlock currentBlock;
+    private IRValue currentSretPtr;
+    private IRType currentSretType;
+    private final Map<String, IRType> sretReturnTypes = new HashMap<>();
+    private IRValue sretReturnTarget;
+    private BlockExprNode sretReturnBlock;
+    private static final int ARRAY_REPEAT_LOOP_THRESHOLD = 256;
 
     // 符号到 IR 值的映射（变量名 -> 地址）
     private final Map<Symbol, IRValue> symbolMap = new HashMap<>();
@@ -169,6 +179,8 @@ public class IRGenerator extends VisitorBase {
         IRType returnType = node.returnType != null
             ? convertType(extractType(node.returnType))
             : IRVoidType.INSTANCE;
+        boolean useSret = needsSret(returnType);
+        IRType irReturnType = useSret ? IRVoidType.INSTANCE : returnType;
 
         // 3. 创建 IRFunction 并添加到模块
         // 如果在 impl 块中，生成 mangled 名称：TypeName.methodName
@@ -176,8 +188,11 @@ public class IRGenerator extends VisitorBase {
         if (currentImplType != null) {
             funcName = mangleMethodName(currentImplType.getName(), funcName);
         }
-        currentFunction = new IRFunction(funcName, returnType);
+        currentFunction = new IRFunction(funcName, irReturnType);
         module.addFunction(currentFunction);
+        if (useSret) {
+            sretReturnTypes.put(funcName, returnType);
+        }
 
         // 4. 重置临时变量计数器（每个函数独立编号）
         IRRegister.resetCounter();
@@ -186,7 +201,18 @@ public class IRGenerator extends VisitorBase {
         IRBasicBlock entryBlock = createBlock("entry");
         setCurrentBlock(entryBlock);
 
-        // 6. 处理 self 参数（如果是方法）
+        // 6. 处理 sret 隐藏参数
+        if (useSret) {
+            IRRegister sretParam = newTemp(new IRPtrType(returnType), "sret");
+            currentFunction.addParam(sretParam);
+            currentSretPtr = sretParam;
+            currentSretType = returnType;
+        } else {
+            currentSretPtr = null;
+            currentSretType = null;
+        }
+
+        // 7. 处理 self 参数（如果是方法）
         if (node.selfPara != null) {
             IRType selfType = convertSelfType(node.selfPara);
             IRRegister selfParam = newTemp(selfType, "self");
@@ -199,7 +225,7 @@ public class IRGenerator extends VisitorBase {
             mapSymbol(node.selfPara.getSymbol(), selfAddr);
         }
 
-        // 7. 处理普通参数
+        // 8. 处理普通参数
         if (node.parameters != null) {
             for (ParameterNode param : node.parameters) {
                 IRType paramType = convertType(param.getParameterType());
@@ -218,13 +244,30 @@ public class IRGenerator extends VisitorBase {
             }
         }
 
-        // 8. 处理函数体
+        // 9. 处理函数体
         if (node.body != null) {
+            IRValue savedSretTarget = sretReturnTarget;
+            BlockExprNode savedSretBlock = sretReturnBlock;
+            if (useSret && node.body instanceof BlockExprNode) {
+                sretReturnTarget = currentSretPtr;
+                sretReturnBlock = (BlockExprNode) node.body;
+            } else {
+                sretReturnTarget = null;
+                sretReturnBlock = null;
+            }
             IRValue bodyResult = visitExpr(node.body);
+            sretReturnTarget = savedSretTarget;
+            sretReturnBlock = savedSretBlock;
 
-            // 9. 如果函数体没有显式终结，添加返回指令
+            // 10. 如果函数体没有显式终结，添加返回指令
             if (!currentBlock.isTerminated()) {
-                if (returnType instanceof IRVoidType) {
+                if (useSret) {
+                    if (bodyResult != null) {
+                        bodyResult = emitCastIfNeeded(bodyResult, returnType);
+                        emit(new StoreInst(bodyResult, currentSretPtr));
+                    }
+                    emit(new ReturnInst());
+                } else if (returnType instanceof IRVoidType) {
                     emit(new ReturnInst());
                 } else {
                     emit(new ReturnInst(bodyResult));
@@ -329,9 +372,15 @@ public class IRGenerator extends VisitorBase {
 
         // 4. 如果有初始化表达式，生成初始化代码
         if (node.value != null) {
-            IRValue initValue = visitExpr(node.value);
-            initValue = emitCastIfNeeded(initValue, varType);
-            emit(new StoreInst(initValue, addr));
+            if (node.value instanceof StructExprNode && varType instanceof IRStructType) {
+                emitStructExprToAddr((StructExprNode) node.value, addr);
+            } else if (node.value instanceof ArrayExprNode && varType instanceof IRArrayType) {
+                emitArrayExprToAddr((ArrayExprNode) node.value, addr);
+            } else if (!emitSretInitIfNeeded(node.value, addr)) {
+                IRValue initValue = visitExpr(node.value);
+                initValue = emitCastIfNeeded(initValue, varType);
+                emit(new StoreInst(initValue, addr));
+            }
         }
 
         // 5. 记录符号到地址的映射
@@ -682,6 +731,13 @@ public class IRGenerator extends VisitorBase {
                 // 直接调用：使用函数名（impl 内方法需要 name mangling）
                 String funcName = getDirectFunctionName(symbol);
                 IRFunction targetFunc = module.getFunction(funcName);
+                IRType sretType = sretReturnTypes.get(funcName);
+                if (sretType == null && needsSret(returnType)) {
+                    sretType = returnType;
+                }
+                if (sretType != null) {
+                    return emitSretDirectCall(node, funcName, targetFunc, sretType, null);
+                }
                 List<IRValue> args = new ArrayList<>();
                 if (node.arguments != null) {
                     List<IRRegister> params = targetFunc != null ? targetFunc.getParams() : null;
@@ -707,20 +763,37 @@ public class IRGenerator extends VisitorBase {
         }
 
         // 4. 间接调用：通过函数指针
-        List<IRValue> args = new ArrayList<>();
-        if (node.arguments != null) {
-            for (ExprNode arg : node.arguments) {
-                args.add(visitExpr(arg));
+        if (needsSret(returnType)) {
+            IRRegister sretAddr = newTemp(new IRPtrType(returnType), "sret.tmp");
+            emit(new AllocaInst(sretAddr, returnType));
+            List<IRValue> args = new ArrayList<>();
+            args.add(sretAddr);
+            if (node.arguments != null) {
+                for (ExprNode arg : node.arguments) {
+                    args.add(visitExpr(arg));
+                }
             }
-        }
-        IRValue callee = visitExpr(node.function);
-        if (returnType instanceof IRVoidType) {
+            IRValue callee = visitExpr(node.function);
             emit(new CallInst(callee, args));
-            return null;
-        } else {
             IRRegister result = newTemp(returnType);
-            emit(new CallInst(result, callee, args));
+            emit(new LoadInst(result, sretAddr));
             return result;
+        } else {
+            List<IRValue> args = new ArrayList<>();
+            if (node.arguments != null) {
+                for (ExprNode arg : node.arguments) {
+                    args.add(visitExpr(arg));
+                }
+            }
+            IRValue callee = visitExpr(node.function);
+            if (returnType instanceof IRVoidType) {
+                emit(new CallInst(callee, args));
+                return null;
+            } else {
+                IRRegister result = newTemp(returnType);
+                emit(new CallInst(result, callee, args));
+                return result;
+            }
         }
     }
 
@@ -759,35 +832,44 @@ public class IRGenerator extends VisitorBase {
 
         // 3. 获取方法的返回类型
         IRType returnType = convertType(node.getType());
+        IRType sretType = sretReturnTypes.get(methodName);
+        if (sretType == null && needsSret(returnType)) {
+            sretType = returnType;
+        }
 
-        // 4. 求值其他参数
-        List<IRValue> args = new ArrayList<>();
-        args.add(receiver);  // self 作为第一个参数
-        if (node.arguments != null) {
+        if (sretType != null) {
             IRFunction targetFunc = module.getFunction(methodName);
-            List<IRRegister> params = targetFunc != null ? targetFunc.getParams() : null;
-            for (int i = 0; i < node.arguments.size(); i++) {
-                ExprNode argExpr = node.arguments.get(i);
-                IRType paramType = (params != null && (i + 1) < params.size())
-                    ? params.get(i + 1).getType()
-                    : null;
-                args.add(buildArgForParam(argExpr, paramType));
-            }
-        }
-
-        IRFunction targetFunc = module.getFunction(methodName);
-        if (targetFunc != null) {
-            args = castCallArgs(args, targetFunc);
-        }
-
-        // 5. 生成直接调用指令
-        if (returnType instanceof IRVoidType) {
-            emit(new CallInst(methodName, args));
-            return null;
+            return emitSretMethodCall(node, methodName, targetFunc, sretType, receiver, null);
         } else {
-            IRRegister result = newTemp(returnType);
-            emit(new CallInst(result, methodName, args));
-            return result;
+            // 4. 求值其他参数
+            List<IRValue> args = new ArrayList<>();
+            args.add(receiver);  // self 作为第一个参数
+            if (node.arguments != null) {
+                IRFunction targetFunc = module.getFunction(methodName);
+                List<IRRegister> params = targetFunc != null ? targetFunc.getParams() : null;
+                for (int i = 0; i < node.arguments.size(); i++) {
+                    ExprNode argExpr = node.arguments.get(i);
+                    IRType paramType = (params != null && (i + 1) < params.size())
+                        ? params.get(i + 1).getType()
+                        : null;
+                    args.add(buildArgForParam(argExpr, paramType));
+                }
+            }
+
+            IRFunction targetFunc = module.getFunction(methodName);
+            if (targetFunc != null) {
+                args = castCallArgs(args, targetFunc);
+            }
+
+            // 5. 生成直接调用指令
+            if (returnType instanceof IRVoidType) {
+                emit(new CallInst(methodName, args));
+                return null;
+            } else {
+                IRRegister result = newTemp(returnType);
+                emit(new CallInst(result, methodName, args));
+                return result;
+            }
         }
     }
 
@@ -1147,6 +1229,16 @@ public class IRGenerator extends VisitorBase {
 
         // 3. 处理返回值表达式（如果有）
         if (!currentBlock.isTerminated() && node.returnValue != null) {
+            if (node == sretReturnBlock && sretReturnTarget != null) {
+                if (node.returnValue instanceof StructExprNode) {
+                    emitStructExprToAddr((StructExprNode) node.returnValue, sretReturnTarget);
+                    return null;
+                }
+                if (node.returnValue instanceof ArrayExprNode) {
+                    emitArrayExprToAddr((ArrayExprNode) node.returnValue, sretReturnTarget);
+                    return null;
+                }
+            }
             result = visitExpr(node.returnValue);
         }
 
@@ -1340,6 +1432,11 @@ public class IRGenerator extends VisitorBase {
         if (node.value != null) {
             IRValue breakVal = visitExpr(node.value);
             loopCtx.addBreakValue(breakVal, currentBlock);
+        } else {
+            if (loopCtx.resultType != null) {
+                throw new RuntimeException("Break with value required in value-returning loop");
+            }
+            loopCtx.addBreakValue(null, currentBlock);
         }
 
         // 3. 跳转到循环出口
@@ -1367,8 +1464,30 @@ public class IRGenerator extends VisitorBase {
     protected IRValue visitReturn(ReturnExprNode node) {
         // 1. 如果有返回值，求值
         if (node.value != null) {
+            if (currentSretPtr != null) {
+                if (node.value instanceof StructExprNode) {
+                    emitStructExprToAddr((StructExprNode) node.value, currentSretPtr);
+                    emit(new ReturnInst());
+                    return null;
+                }
+                if (node.value instanceof ArrayExprNode) {
+                    emitArrayExprToAddr((ArrayExprNode) node.value, currentSretPtr);
+                    emit(new ReturnInst());
+                    return null;
+                }
+            }
+            if (currentSretPtr != null && emitSretReturnIfNeeded(node.value)) {
+                emit(new ReturnInst());
+                return null;
+            }
             IRValue retVal = visitExpr(node.value);
-            emit(new ReturnInst(retVal));
+            if (currentSretPtr != null) {
+                retVal = emitCastIfNeeded(retVal, currentSretType);
+                emit(new StoreInst(retVal, currentSretPtr));
+                emit(new ReturnInst());
+            } else {
+                emit(new ReturnInst(retVal));
+            }
         } else {
             // 无返回值（void）
             emit(new ReturnInst());
@@ -1455,7 +1574,9 @@ public class IRGenerator extends VisitorBase {
             currentFunction,
             currentBlock,
             IRRegister.getCounter(),
-            symbolMap
+            symbolMap,
+            currentSretPtr,
+            currentSretType
         );
     }
 
@@ -1467,9 +1588,238 @@ public class IRGenerator extends VisitorBase {
         currentFunction = context.function;
         currentBlock = context.block;
         IRRegister.setCounter(context.registerCounter);
+        currentSretPtr = context.sretPtr;
+        currentSretType = context.sretType;
         // 恢复符号映射
         symbolMap.clear();
         symbolMap.putAll(context.capturedSymbols);
+    }
+
+    private boolean needsSret(IRType type) {
+        return type instanceof IRStructType || type instanceof IRArrayType;
+    }
+
+    private boolean emitSretInitIfNeeded(ExprNode expr, IRValue targetAddr) {
+        IRType exprType = convertType(expr.getType());
+        if (!needsSret(exprType)) {
+            return false;
+        }
+        if (expr instanceof CallExprNode) {
+            CallExprNode call = (CallExprNode) expr;
+            if (call.function instanceof PathExprNode) {
+                Symbol symbol = ((PathExprNode) call.function).getSymbol();
+                if (symbol != null && symbol.getKind() == SymbolKind.FUNCTION) {
+                    String funcName = getDirectFunctionName(symbol);
+                    IRFunction targetFunc = module.getFunction(funcName);
+                    IRType sretType = sretReturnTypes.get(funcName);
+                    if (sretType == null) {
+                        sretType = exprType;
+                    }
+                    emitSretDirectCall(call, funcName, targetFunc, sretType, targetAddr);
+                    return true;
+                }
+            }
+        } else if (expr instanceof MethodCallExprNode) {
+            MethodCallExprNode call = (MethodCallExprNode) expr;
+            String typeName = getTypeNameFromExpr(call.receiver);
+            String methodName = mangleMethodName(typeName, call.methodName.name.name);
+            IRFunction targetFunc = module.getFunction(methodName);
+            IRType sretType = sretReturnTypes.get(methodName);
+            if (sretType == null) {
+                sretType = exprType;
+            }
+            IRValue receiver = visitExprAsAddr(call.receiver);
+            // 自动解引用到结构体指针（匹配 &self / &mut self）
+            while (receiver.getType() instanceof IRPtrType) {
+                IRType pointee = ((IRPtrType) receiver.getType()).getPointee();
+                if (!(pointee instanceof IRPtrType) ||
+                    !(((IRPtrType) pointee).getPointee() instanceof IRStructType)) {
+                    break;
+                }
+                IRRegister loaded = newTemp((IRPtrType) pointee);
+                emit(new LoadInst(loaded, receiver));
+                receiver = loaded;
+            }
+            emitSretMethodCall(call, methodName, targetFunc, sretType, receiver, targetAddr);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean emitSretReturnIfNeeded(ExprNode expr) {
+        IRType exprType = convertType(expr.getType());
+        if (!needsSret(exprType)) {
+            return false;
+        }
+        if (expr instanceof CallExprNode) {
+            CallExprNode call = (CallExprNode) expr;
+            if (call.function instanceof PathExprNode) {
+                Symbol symbol = ((PathExprNode) call.function).getSymbol();
+                if (symbol != null && symbol.getKind() == SymbolKind.FUNCTION) {
+                    String funcName = getDirectFunctionName(symbol);
+                    IRFunction targetFunc = module.getFunction(funcName);
+                    IRType sretType = sretReturnTypes.get(funcName);
+                    if (sretType == null) {
+                        sretType = exprType;
+                    }
+                    emitSretDirectCall(call, funcName, targetFunc, sretType, currentSretPtr);
+                    return true;
+                }
+            }
+        } else if (expr instanceof MethodCallExprNode) {
+            MethodCallExprNode call = (MethodCallExprNode) expr;
+            String typeName = getTypeNameFromExpr(call.receiver);
+            String methodName = mangleMethodName(typeName, call.methodName.name.name);
+            IRFunction targetFunc = module.getFunction(methodName);
+            IRType sretType = sretReturnTypes.get(methodName);
+            if (sretType == null) {
+                sretType = exprType;
+            }
+            IRValue receiver = visitExprAsAddr(call.receiver);
+            // 自动解引用到结构体指针（匹配 &self / &mut self）
+            while (receiver.getType() instanceof IRPtrType) {
+                IRType pointee = ((IRPtrType) receiver.getType()).getPointee();
+                if (!(pointee instanceof IRPtrType) ||
+                    !(((IRPtrType) pointee).getPointee() instanceof IRStructType)) {
+                    break;
+                }
+                IRRegister loaded = newTemp((IRPtrType) pointee);
+                emit(new LoadInst(loaded, receiver));
+                receiver = loaded;
+            }
+            emitSretMethodCall(call, methodName, targetFunc, sretType, receiver, currentSretPtr);
+            return true;
+        }
+        return false;
+    }
+
+    private IRValue emitSretDirectCall(CallExprNode node, String funcName, IRFunction targetFunc,
+                                       IRType sretType, IRValue sretOutAddr) {
+        IRValue outAddr = sretOutAddr;
+        if (outAddr == null) {
+            IRRegister tmpAddr = newTemp(new IRPtrType(sretType), "sret.tmp");
+            emit(new AllocaInst(tmpAddr, sretType));
+            outAddr = tmpAddr;
+        }
+        List<IRValue> args = new ArrayList<>();
+        args.add(outAddr);
+        if (node.arguments != null) {
+            List<IRRegister> params = targetFunc != null ? targetFunc.getParams() : null;
+            for (int i = 0; i < node.arguments.size(); i++) {
+                ExprNode argExpr = node.arguments.get(i);
+                int paramIndex = i + 1;
+                IRType paramType = (params != null && paramIndex < params.size())
+                    ? params.get(paramIndex).getType()
+                    : null;
+                args.add(buildArgForParam(argExpr, paramType));
+            }
+        }
+        if (targetFunc != null) {
+            args = castCallArgs(args, targetFunc);
+        }
+        emit(new CallInst(funcName, args));
+        if (sretOutAddr != null) {
+            return null;
+        }
+        IRRegister result = newTemp(sretType);
+        emit(new LoadInst(result, outAddr));
+        return result;
+    }
+
+    private IRValue emitSretMethodCall(MethodCallExprNode node, String methodName, IRFunction targetFunc,
+                                       IRType sretType, IRValue receiver, IRValue sretOutAddr) {
+        IRValue outAddr = sretOutAddr;
+        if (outAddr == null) {
+            IRRegister tmpAddr = newTemp(new IRPtrType(sretType), "sret.tmp");
+            emit(new AllocaInst(tmpAddr, sretType));
+            outAddr = tmpAddr;
+        }
+        List<IRValue> args = new ArrayList<>();
+        args.add(outAddr);
+        args.add(receiver);
+        if (node.arguments != null) {
+            List<IRRegister> params = targetFunc != null ? targetFunc.getParams() : null;
+            for (int i = 0; i < node.arguments.size(); i++) {
+                ExprNode argExpr = node.arguments.get(i);
+                int paramIndex = i + 2;
+                IRType paramType = (params != null && paramIndex < params.size())
+                    ? params.get(paramIndex).getType()
+                    : null;
+                args.add(buildArgForParam(argExpr, paramType));
+            }
+        }
+        if (targetFunc != null) {
+            args = castCallArgs(args, targetFunc);
+        }
+        emit(new CallInst(methodName, args));
+        if (sretOutAddr != null) {
+            return null;
+        }
+        IRRegister result = newTemp(sretType);
+        emit(new LoadInst(result, outAddr));
+        return result;
+    }
+
+    private void emitArrayExprToAddr(ArrayExprNode node, IRValue arrayAddr) {
+        IRArrayType arrayType = (IRArrayType) convertType(node.getType());
+        IRType elemType = arrayType.getElementType();
+        int arraySize = arrayType.getLength();
+
+        if (node.elements != null && !node.elements.isEmpty()) {
+            for (int i = 0; i < node.elements.size(); i++) {
+                IRRegister elemAddr = newTemp(new IRPtrType(elemType));
+                emit(new GEPInst(elemAddr, arrayAddr, Arrays.asList(
+                    IRConstant.i32(0),
+                    IRConstant.i32(i)
+                )));
+                IRValue elemVal = visitExpr(node.elements.get(i));
+                elemVal = emitCastIfNeeded(elemVal, elemType);
+                emit(new StoreInst(elemVal, elemAddr));
+            }
+        } else if (node.repeatedElement != null && node.size != null) {
+            IRValue initVal = visitExpr(node.repeatedElement);
+            initVal = emitCastIfNeeded(initVal, elemType);
+            for (int i = 0; i < arraySize; i++) {
+                IRRegister elemAddr = newTemp(new IRPtrType(elemType));
+                emit(new GEPInst(elemAddr, arrayAddr, Arrays.asList(
+                    IRConstant.i32(0),
+                    IRConstant.i32(i)
+                )));
+                emit(new StoreInst(initVal, elemAddr));
+            }
+        }
+    }
+
+    private void emitStructExprToAddr(StructExprNode node, IRValue structAddr) {
+        String structName = node.structName.name.name;
+        IRStructType structType = module.getStruct(structName);
+        if (structType == null) {
+            throw new RuntimeException("Unknown struct type: " + structName);
+        }
+        if (node.fieldValues != null) {
+            for (FieldValNode fieldVal : node.fieldValues) {
+                String fieldName = fieldVal.fieldName.name;
+                int fieldIndex = structType.getFieldIndex(fieldName);
+                IRType fieldType = structType.getFieldType(fieldIndex);
+
+                IRRegister fieldAddr = newTemp(new IRPtrType(fieldType));
+                emit(new GEPInst(fieldAddr, structAddr, Arrays.asList(
+                    IRConstant.i32(0),
+                    IRConstant.i32(fieldIndex)
+                )));
+
+                ExprNode valueExpr = fieldVal.value;
+                if (valueExpr instanceof ArrayExprNode && fieldType instanceof IRArrayType) {
+                    emitArrayExprToAddr((ArrayExprNode) valueExpr, fieldAddr);
+                } else if (valueExpr instanceof StructExprNode && fieldType instanceof IRStructType) {
+                    emitStructExprToAddr((StructExprNode) valueExpr, fieldAddr);
+                } else {
+                    IRValue fieldValue = visitExpr(valueExpr);
+                    fieldValue = emitCastIfNeeded(fieldValue, fieldType);
+                    emit(new StoreInst(fieldValue, fieldAddr));
+                }
+            }
+        }
     }
 
     /**
