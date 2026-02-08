@@ -86,6 +86,8 @@ public class IRGenerator extends VisitorBase {
 
     // 当前 impl 块的目标类型（用于 self 类型解析）
     private IRStructType currentImplType = null;
+    private final Map<FunctionNode, String> functionNodeNameMap = new IdentityHashMap<>();
+    private final Map<Symbol, String> functionSymbolNameMap = new IdentityHashMap<>();
 
     // 常量求值器（复用语义分析阶段的实例）
     private ConstantEvaluator constantEvaluator;
@@ -183,11 +185,8 @@ public class IRGenerator extends VisitorBase {
         IRType irReturnType = useSret ? IRVoidType.INSTANCE : returnType;
 
         // 3. 创建 IRFunction 并添加到模块
-        // 如果在 impl 块中，生成 mangled 名称：TypeName.methodName
-        String funcName = node.name.name;
-        if (currentImplType != null) {
-            funcName = mangleMethodName(currentImplType.getName(), funcName);
-        }
+        // 支持 impl 方法与嵌套函数的 mangling
+        String funcName = getOrComputeFunctionName(node);
         currentFunction = new IRFunction(funcName, irReturnType);
         module.addFunction(currentFunction);
         if (useSret) {
@@ -378,8 +377,10 @@ public class IRGenerator extends VisitorBase {
                 emitArrayExprToAddr((ArrayExprNode) node.value, addr);
             } else if (!emitSretInitIfNeeded(node.value, addr)) {
                 IRValue initValue = visitExpr(node.value);
-                initValue = emitCastIfNeeded(initValue, varType);
-                emit(new StoreInst(initValue, addr));
+                if (initValue != null) {
+                    initValue = emitCastIfNeeded(initValue, varType);
+                    emit(new StoreInst(initValue, addr));
+                }
             }
         }
 
@@ -881,26 +882,93 @@ public class IRGenerator extends VisitorBase {
     }
 
     /**
-     * 获取直接调用时的函数名（处理 impl 内的关联函数）
+     * 判断是否为 impl 块内直接声明的方法（非嵌套函数）
+     */
+    private boolean isDirectImplMethod(FunctionNode node) {
+        ASTNode parent = node.getFather();
+        if (!(parent instanceof AssoItemNode)) {
+            return false;
+        }
+        return parent.getFather() instanceof ImplNode;
+    }
+
+    /**
+     * 获取 enclosing 的 FunctionNode（用于嵌套函数名拼接）
+     */
+    private FunctionNode findEnclosingFunctionNode(FunctionNode node) {
+        ASTNode parent = node.getFather();
+        while (parent != null) {
+            if (parent instanceof FunctionNode) {
+                return (FunctionNode) parent;
+            }
+            parent = parent.getFather();
+        }
+        return null;
+    }
+
+    /**
+     * 为嵌套函数生成稳定的 mangled 名称
+     */
+    private String mangleNestedFunctionName(String parentName, FunctionNode node) {
+        String name = parentName + "$" + node.name.name;
+        int line = node.getLine();
+        int column = node.getColumn();
+        if (line >= 0) {
+            name += "$L" + line;
+            if (column >= 0) {
+                name += "C" + column;
+            }
+        }
+        return name;
+    }
+
+    /**
+     * 计算并缓存函数的 IR 名称（支持 impl 方法与嵌套函数）
+     */
+    private String getOrComputeFunctionName(FunctionNode node) {
+        String cached = functionNodeNameMap.get(node);
+        if (cached != null) {
+            return cached;
+        }
+
+        String funcName;
+        if (isDirectImplMethod(node)) {
+            ASTNode parent = node.getFather();
+            ImplNode impl = (ImplNode) parent.getFather();
+            String typeName = getTypeName(impl.typeName);
+            funcName = mangleMethodName(typeName, node.name.name);
+        } else {
+            FunctionNode enclosing = findEnclosingFunctionNode(node);
+            if (enclosing != null) {
+                String parentName = getOrComputeFunctionName(enclosing);
+                funcName = mangleNestedFunctionName(parentName, node);
+            } else {
+                funcName = node.name.name;
+            }
+        }
+
+        functionNodeNameMap.put(node, funcName);
+        if (node.getSymbol() != null) {
+            functionSymbolNameMap.put(node.getSymbol(), funcName);
+        }
+        return funcName;
+    }
+
+    /**
+     * 获取直接调用时的函数名（处理 impl 内的关联函数与嵌套函数）
      */
     private String getDirectFunctionName(Symbol symbol) {
         if (symbol == null) {
             return null;
         }
+        String cached = functionSymbolNameMap.get(symbol);
+        if (cached != null) {
+            return cached;
+        }
         String baseName = symbol.getName();
         ASTNode decl = symbol.getDeclaration();
         if (decl instanceof FunctionNode) {
-            ASTNode parent = decl.getFather();
-            while (parent != null && !(parent instanceof ImplNode)) {
-                parent = parent.getFather();
-            }
-            if (parent instanceof ImplNode) {
-                ImplNode impl = (ImplNode) parent;
-                if (impl.typeName != null) {
-                    String typeName = getTypeName(impl.typeName);
-                    return mangleMethodName(typeName, baseName);
-                }
-            }
+            return getOrComputeFunctionName((FunctionNode) decl);
         }
         return baseName;
     }
@@ -1258,9 +1326,7 @@ public class IRGenerator extends VisitorBase {
             }
         }
         for (Map.Entry<String, IRFunction> entry : savedFunctions.entrySet()) {
-            if (entry.getValue() == null) {
-                module.removeFunction(entry.getKey());
-            } else {
+            if (entry.getValue() != null) {
                 module.setFunction(entry.getKey(), entry.getValue());
             }
         }
@@ -1329,22 +1395,23 @@ public class IRGenerator extends VisitorBase {
             setCurrentBlock(elseEndBlock.isTerminated() ? elseEndBlock : thenEndBlock);
         }
 
-        // 7. 如果 if 表达式有值，使用 phi 合并
+        // 7. 如果 if 表达式有值，按落点情况选择结果或用 phi 合并
         IRType resultType = convertType(node.getType());
-        if (mergeReachable && !(resultType instanceof IRVoidType) && thenVal != null) {
-            IRRegister result = newTemp(resultType);
-            PhiInst phi = new PhiInst(result);
-
-            // 只有当分支没有提前终结时才添加 incoming
-            if (!thenEndBlock.isTerminated() || thenEndBlock.getTerminator() instanceof BranchInst) {
+        if (mergeReachable && !(resultType instanceof IRVoidType)) {
+            if (thenFallsThrough && elseFallsThrough && thenVal != null && elseVal != null) {
+                IRRegister result = newTemp(resultType);
+                PhiInst phi = new PhiInst(result);
                 phi.addIncoming(thenVal, thenEndBlock);
-            }
-            if (elseVal != null && (!elseEndBlock.isTerminated() || elseEndBlock.getTerminator() instanceof BranchInst)) {
                 phi.addIncoming(elseVal, elseEndBlock);
+                emit(phi);
+                return result;
             }
-
-            emit(phi);
-            return result;
+            if (thenFallsThrough && !elseFallsThrough) {
+                return thenVal;
+            }
+            if (elseFallsThrough && !thenFallsThrough) {
+                return elseVal;
+            }
         }
 
         return null;
