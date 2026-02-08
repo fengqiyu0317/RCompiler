@@ -76,7 +76,7 @@ public class IRGenerator extends VisitorBase {
     private final Map<String, IRType> sretReturnTypes = new HashMap<>();
     private IRValue sretReturnTarget;
     private BlockExprNode sretReturnBlock;
-    private static final int ARRAY_REPEAT_LOOP_THRESHOLD = 256;
+    private static final int ARRAY_REPEAT_LOOP_THRESHOLD = 0;
 
     // 符号到 IR 值的映射（变量名 -> 地址）
     private final Map<Symbol, IRValue> symbolMap = new HashMap<>();
@@ -1779,6 +1779,43 @@ public class IRGenerator extends VisitorBase {
         } else if (node.repeatedElement != null && node.size != null) {
             IRValue initVal = visitExpr(node.repeatedElement);
             initVal = emitCastIfNeeded(initVal, elemType);
+            emitArrayRepeatStore(initVal, elemType, arrayAddr, arraySize);
+        }
+    }
+
+    private void emitArrayRepeatStore(IRValue initVal, IRType elemType, IRValue arrayAddr, int arraySize) {
+        if (arraySize > ARRAY_REPEAT_LOOP_THRESHOLD && !currentBlock.isTerminated()) {
+            IRRegister indexAddr = newTemp(new IRPtrType(IRIntType.I32), "arr.idx");
+            emit(new AllocaInst(indexAddr, IRIntType.I32));
+            emit(new StoreInst(IRConstant.i32(0), indexAddr));
+
+            IRBasicBlock headerBlock = createBlock("arr.init.header");
+            IRBasicBlock bodyBlock = createBlock("arr.init.body");
+            IRBasicBlock exitBlock = createBlock("arr.init.exit");
+
+            emit(new BranchInst(headerBlock));
+
+            setCurrentBlock(headerBlock);
+            IRRegister idxVal = newTemp(IRIntType.I32);
+            emit(new LoadInst(idxVal, indexAddr));
+            IRRegister cond = newTemp(IRIntType.I1);
+            emit(new CmpInst(cond, CmpInst.Pred.SLT, idxVal, IRConstant.i32(arraySize)));
+            emit(new CondBranchInst(cond, bodyBlock, exitBlock));
+
+            setCurrentBlock(bodyBlock);
+            IRRegister elemAddr = newTemp(new IRPtrType(elemType));
+            emit(new GEPInst(elemAddr, arrayAddr, Arrays.asList(
+                IRConstant.i32(0),
+                idxVal
+            )));
+            emit(new StoreInst(initVal, elemAddr));
+            IRRegister nextIdx = newTemp(IRIntType.I32);
+            emit(new BinaryOpInst(nextIdx, BinaryOpInst.Op.ADD, idxVal, IRConstant.i32(1)));
+            emit(new StoreInst(nextIdx, indexAddr));
+            emit(new BranchInst(headerBlock));
+
+            setCurrentBlock(exitBlock);
+        } else {
             for (int i = 0; i < arraySize; i++) {
                 IRRegister elemAddr = newTemp(new IRPtrType(elemType));
                 emit(new GEPInst(elemAddr, arrayAddr, Arrays.asList(
