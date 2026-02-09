@@ -42,7 +42,15 @@ public class ConstantEvaluator extends VisitorBase {
         }
         
         // Check if the expression already has type information from TypeChecker
-        Type exprType = expr.getType();
+        Type exprType = null;
+        try {
+            exprType = expr.getType();
+        } catch (RuntimeException e) {
+            // Type not set yet; fall back to evaluation without type info.
+            if (!"Type of expression node is not set yet.".equals(e.getMessage())) {
+                throw e;
+            }
+        }
         if (exprType == null) {
             // If no type information is available, evaluate the expression
             expr.accept(this);

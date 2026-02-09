@@ -116,7 +116,7 @@ public class IRGenerator extends VisitorBase {
     public IRModule generate(List<ASTNode> statements, ConstantEvaluator constantEvaluator) {
         module = new IRModule();
         this.constantEvaluator = constantEvaluator;
-        this.typeExtractor = new TypeExtractor(new TypeErrorCollector(), false, constantEvaluator);
+        this.typeExtractor = new TypeExtractor(new TypeErrorCollector(), true, constantEvaluator);
 
         // Pass 1: 收集类型定义（结构体、枚举）
         for (ASTNode stmt : statements) {
@@ -129,7 +129,17 @@ public class IRGenerator extends VisitorBase {
 
         // Pass 2: 生成函数和全局变量
         for (ASTNode stmt : statements) {
-            stmt.accept(this);
+            try {
+                stmt.accept(this);
+            } catch (RuntimeException e) {
+                int line = stmt != null ? stmt.getLine() : -1;
+                int column = stmt != null ? stmt.getColumn() : -1;
+                String where = stmt != null ? stmt.getClass().getSimpleName() : "<null>";
+                throw new RuntimeException(
+                    "IR gen failed at top-level " + where + " (line " + line + ", col " + column + ")",
+                    e
+                );
+            }
         }
 
         return module;
@@ -145,7 +155,24 @@ public class IRGenerator extends VisitorBase {
         List<String> fieldNames = new ArrayList<>();
         if (node.fields != null) {
             for (FieldNode field : node.fields) {
-                IRType fieldType = convertType(extractType(field.type));
+                Type astType = extractType(field.type);
+                if (astType == null) {
+                    String fieldName = field.name != null ? field.name.name : "<unknown>";
+                    String structName = node.name != null ? node.name.name : "<unknown>";
+                    String typeInfo = field.type != null ? field.type.getClass().getSimpleName() : "<null>";
+                    throw new RuntimeException(
+                        "Struct field AST type is null: " + structName + "." + fieldName + " (type node " + typeInfo + ")"
+                    );
+                }
+                IRType fieldType = convertType(astType);
+                if (fieldType == null) {
+                    String fieldName = field.name != null ? field.name.name : "<unknown>";
+                    String structName = node.name != null ? node.name.name : "<unknown>";
+                    String typeInfo = field.type != null ? field.type.getClass().getSimpleName() : "<null>";
+                    throw new RuntimeException(
+                        "Struct field type is null: " + structName + "." + fieldName + " (type node " + typeInfo + ")"
+                    );
+                }
                 fieldTypes.add(fieldType);
                 fieldNames.add(field.name.name);
             }
@@ -360,7 +387,18 @@ public class IRGenerator extends VisitorBase {
     @Override
     public void visit(LetStmtNode node) {
         // 1. 获取变量类型
-        IRType varType = convertType(node.getVariableType());
+        Type varAstType = node.getVariableType();
+        if (varAstType == null) {
+            if (node.type != null) {
+                varAstType = extractType(node.type);
+            } else if (node.value != null && node.value.getType() != null) {
+                varAstType = node.value.getType();
+            }
+        }
+        if (varAstType == null) {
+            throw new RuntimeException("Let statement variable type is null: " + getPatternName(node.name));
+        }
+        IRType varType = convertType(varAstType);
 
         // 2. 获取变量名
         String varName = getPatternName(node.name);
@@ -403,6 +441,10 @@ public class IRGenerator extends VisitorBase {
      * 这是表达式处理的入口方法
      */
     protected IRValue visitExpr(ExprNode expr) {
+        if (expr == null) {
+            throw new RuntimeException("visitExpr called with null expression");
+        }
+        try {
         if (expr instanceof LiteralExprNode) {
             return visitLiteral((LiteralExprNode) expr);
         } else if (expr instanceof PathExprNode) {
@@ -456,6 +498,19 @@ public class IRGenerator extends VisitorBase {
         }
         // TODO: 其他表达式类型
         throw new UnsupportedOperationException("visitExpr not implemented for: " + expr.getClass());
+        } catch (RuntimeException e) {
+            String msg = e.getMessage();
+            if (msg != null && msg.contains("Unknown type: null")) {
+                int line = expr.getLine();
+                int column = expr.getColumn();
+                throw new RuntimeException(
+                    "Unknown type: null at expr " + expr.getClass().getSimpleName() +
+                        " (line " + line + ", col " + column + ")",
+                    e
+                );
+            }
+            throw e;
+        }
     }
 
     // ==================== 表达式处理方法 ====================
