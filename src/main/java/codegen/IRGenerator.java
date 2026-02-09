@@ -510,6 +510,7 @@ public class IRGenerator extends VisitorBase {
         switch (symbol.getKind()) {
             case LOCAL_VARIABLE:
             case PARAMETER:
+            case SELF_CONSTRUCTOR:
                 // 变量/参数：从地址加载值
                 IRValue addr = getSymbolValue(symbol);
                 IRType valType = ((IRPtrType) addr.getType()).getPointee();
@@ -830,6 +831,8 @@ public class IRGenerator extends VisitorBase {
         // 2. 构造方法名（TypeName.methodName）
         String typeName = getTypeNameFromExpr(node.receiver);
         String methodName = mangleMethodName(typeName, node.methodName.name.name);
+        IRFunction targetFunc = module.getFunction(methodName);
+        receiver = adjustReceiverForMethod(receiver, targetFunc, 0);
 
         // 3. 获取方法的返回类型
         IRType returnType = convertType(node.getType());
@@ -839,14 +842,12 @@ public class IRGenerator extends VisitorBase {
         }
 
         if (sretType != null) {
-            IRFunction targetFunc = module.getFunction(methodName);
             return emitSretMethodCall(node, methodName, targetFunc, sretType, receiver, null);
         } else {
             // 4. 求值其他参数
             List<IRValue> args = new ArrayList<>();
             args.add(receiver);  // self 作为第一个参数
             if (node.arguments != null) {
-                IRFunction targetFunc = module.getFunction(methodName);
                 List<IRRegister> params = targetFunc != null ? targetFunc.getParams() : null;
                 for (int i = 0; i < node.arguments.size(); i++) {
                     ExprNode argExpr = node.arguments.get(i);
@@ -857,7 +858,6 @@ public class IRGenerator extends VisitorBase {
                 }
             }
 
-            IRFunction targetFunc = module.getFunction(methodName);
             if (targetFunc != null) {
                 args = castCallArgs(args, targetFunc);
             }
@@ -872,6 +872,26 @@ public class IRGenerator extends VisitorBase {
                 return result;
             }
         }
+    }
+
+    private IRValue adjustReceiverForMethod(IRValue receiver, IRFunction targetFunc, int selfParamIndex) {
+        if (targetFunc == null) {
+            return receiver;
+        }
+        List<IRRegister> params = targetFunc.getParams();
+        if (params == null || params.size() <= selfParamIndex) {
+            return receiver;
+        }
+        IRType expected = params.get(selfParamIndex).getType();
+        if (!(expected instanceof IRPtrType) && receiver.getType() instanceof IRPtrType) {
+            IRType pointee = ((IRPtrType) receiver.getType()).getPointee();
+            if (expected.equals(pointee)) {
+                IRRegister loaded = newTemp(expected);
+                emit(new LoadInst(loaded, receiver));
+                return loaded;
+            }
+        }
+        return receiver;
     }
 
     /**
@@ -1801,6 +1821,7 @@ public class IRGenerator extends VisitorBase {
             emit(new AllocaInst(tmpAddr, sretType));
             outAddr = tmpAddr;
         }
+        receiver = adjustReceiverForMethod(receiver, targetFunc, 1);
         List<IRValue> args = new ArrayList<>();
         args.add(outAddr);
         args.add(receiver);
@@ -2310,8 +2331,11 @@ public class IRGenerator extends VisitorBase {
             throw new RuntimeException("self outside of impl block");
         }
 
-        // self / &self / &mut self 都用指针传递
-        return new IRPtrType(currentImplType);
+        // &self / &mut self 用指针传递，按值 self 直接用结构体类型
+        if (selfPara.isReference) {
+            return new IRPtrType(currentImplType);
+        }
+        return currentImplType;
     }
     /**
      * 从 TypeExprNode 获取类型名
