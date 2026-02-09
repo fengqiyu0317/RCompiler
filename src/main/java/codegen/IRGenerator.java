@@ -74,6 +74,8 @@ public class IRGenerator extends VisitorBase {
     private IRValue currentSretPtr;
     private IRType currentSretType;
     private final Map<String, IRType> sretReturnTypes = new HashMap<>();
+    private final Map<String, Set<Integer>> byRefParamIndices = new HashMap<>();
+    private final Map<String, Set<Integer>> byRefMutableParamIndices = new HashMap<>();
     private IRValue sretReturnTarget;
     private BlockExprNode sretReturnBlock;
     private static final int ARRAY_REPEAT_LOOP_THRESHOLD = 0;
@@ -135,8 +137,9 @@ public class IRGenerator extends VisitorBase {
                 int line = stmt != null ? stmt.getLine() : -1;
                 int column = stmt != null ? stmt.getColumn() : -1;
                 String where = stmt != null ? stmt.getClass().getSimpleName() : "<null>";
+                String detail = e.getMessage() != null ? (": " + e.getMessage()) : "";
                 throw new RuntimeException(
-                    "IR gen failed at top-level " + where + " (line " + line + ", col " + column + ")",
+                    "IR gen failed at top-level " + where + " (line " + line + ", col " + column + ")" + detail,
                     e
                 );
             }
@@ -257,16 +260,45 @@ public class IRGenerator extends VisitorBase {
                 IRType paramType = convertType(param.getParameterType());
                 String paramName = getPatternName(param.name);
 
+                boolean byRefParam = needsSret(paramType);
+                int paramIndex = currentFunction.getParamCount();
+                if (byRefParam) {
+                    byRefParamIndices
+                        .computeIfAbsent(funcName, k -> new HashSet<>())
+                        .add(paramIndex);
+                    if (isMutablePattern(param.name)) {
+                        byRefMutableParamIndices
+                            .computeIfAbsent(funcName, k -> new HashSet<>())
+                            .add(paramIndex);
+                    }
+                }
+
+                IRType paramRegType = byRefParam ? new IRPtrType(paramType) : paramType;
+
                 // 创建参数寄存器
-                IRRegister paramReg = newTemp(paramType, paramName);
+                IRRegister paramReg = newTemp(paramRegType, paramName);
                 currentFunction.addParam(paramReg);
 
-                // 为参数分配栈空间（便于后续可能的取地址操作）
-                IRRegister paramAddr = newTemp(new IRPtrType(paramType), paramName + ".addr");
-                emit(new AllocaInst(paramAddr, paramType));
-                emit(new StoreInst(paramReg, paramAddr));
-                // 记录参数符号到地址的映射
-                mapSymbol(getSymbolFromPattern(param.name), paramAddr);
+                if (byRefParam) {
+                    if (isByRefMutableParam(funcName, paramIndex)) {
+                        IRRegister paramAddr = newTemp(new IRPtrType(paramType), paramName + ".addr");
+                        emit(new AllocaInst(paramAddr, paramType));
+                        IRRegister paramVal = newTemp(paramType);
+                        emit(new LoadInst(paramVal, paramReg));
+                        emit(new StoreInst(paramVal, paramAddr));
+                        mapSymbol(getSymbolFromPattern(param.name), paramAddr);
+                    } else {
+                        // 只读参数：直接绑定到传入地址
+                        mapSymbol(getSymbolFromPattern(param.name), paramReg);
+                    }
+                } else {
+                    // 为参数分配栈空间（便于后续可能的取地址操作）
+                    IRRegister paramAddr = newTemp(new IRPtrType(paramType), paramName + ".addr");
+                    emit(new AllocaInst(paramAddr, paramType));
+                    emit(new StoreInst(paramReg, paramAddr));
+                    // 记录参数符号到地址的映射
+                    mapSymbol(getSymbolFromPattern(param.name), paramAddr);
+                }
             }
         }
 
@@ -403,9 +435,19 @@ public class IRGenerator extends VisitorBase {
         // 2. 获取变量名
         String varName = getPatternName(node.name);
 
-        // 3. 分配栈空间
-        IRRegister addr = newTemp(new IRPtrType(varType), varName + ".addr");
-        emit(new AllocaInst(addr, varType));
+        // 3. 分配栈空间（sret 函数可直接绑定返回缓冲区）
+        IRValue addr;
+        boolean bindToSret = currentSretPtr != null
+            && currentSretType != null
+            && varType.equals(currentSretType)
+            && node.value != null;
+        if (bindToSret) {
+            addr = currentSretPtr;
+        } else {
+            IRRegister stackAddr = newTemp(new IRPtrType(varType), varName + ".addr");
+            emit(new AllocaInst(stackAddr, varType));
+            addr = stackAddr;
+        }
 
         // 4. 如果有初始化表达式，生成初始化代码
         if (node.value != null) {
@@ -787,6 +829,7 @@ public class IRGenerator extends VisitorBase {
             if (symbol != null && symbol.getKind() == SymbolKind.FUNCTION) {
                 // 直接调用：使用函数名（impl 内方法需要 name mangling）
                 String funcName = getDirectFunctionName(symbol);
+                ensureByRefParamInfo(symbol, funcName);
                 IRFunction targetFunc = module.getFunction(funcName);
                 IRType sretType = sretReturnTypes.get(funcName);
                 if (sretType == null && needsSret(returnType)) {
@@ -801,7 +844,7 @@ public class IRGenerator extends VisitorBase {
                     for (int i = 0; i < node.arguments.size(); i++) {
                         ExprNode argExpr = node.arguments.get(i);
                         IRType paramType = (params != null && i < params.size()) ? params.get(i).getType() : null;
-                        args.add(buildArgForParam(argExpr, paramType));
+                        args.add(buildArgForParam(argExpr, paramType, funcName, i));
                     }
                 }
                 if (targetFunc != null) {
@@ -909,7 +952,7 @@ public class IRGenerator extends VisitorBase {
                     IRType paramType = (params != null && (i + 1) < params.size())
                         ? params.get(i + 1).getType()
                         : null;
-                    args.add(buildArgForParam(argExpr, paramType));
+                    args.add(buildArgForParam(argExpr, paramType, methodName, i + 1));
                 }
             }
 
@@ -1048,6 +1091,47 @@ public class IRGenerator extends VisitorBase {
         return baseName;
     }
 
+    private void ensureByRefParamInfo(Symbol symbol, String funcName) {
+        if (funcName == null || symbol == null || byRefParamIndices.containsKey(funcName)) {
+            return;
+        }
+        ASTNode decl = symbol.getDeclaration();
+        if (!(decl instanceof FunctionNode)) {
+            return;
+        }
+        FunctionNode fn = (FunctionNode) decl;
+
+        IRType returnType = fn.returnType != null
+            ? convertType(extractType(fn.returnType))
+            : IRVoidType.INSTANCE;
+        int paramIndex = needsSret(returnType) ? 1 : 0;
+        if (fn.selfPara != null) {
+            paramIndex += 1;
+        }
+        if (fn.parameters == null) {
+            return;
+        }
+        for (ParameterNode param : fn.parameters) {
+            Type paramAstType = param.getParameterType();
+            if (paramAstType == null) {
+                paramIndex += 1;
+                continue;
+            }
+            IRType paramType = convertType(paramAstType);
+            if (needsSret(paramType)) {
+                byRefParamIndices
+                    .computeIfAbsent(funcName, k -> new HashSet<>())
+                    .add(paramIndex);
+                if (isMutablePattern(param.name)) {
+                    byRefMutableParamIndices
+                        .computeIfAbsent(funcName, k -> new HashSet<>())
+                        .add(paramIndex);
+                }
+            }
+            paramIndex += 1;
+        }
+    }
+
     /**
      * 对调用参数进行必要的类型转换
      */
@@ -1076,9 +1160,12 @@ public class IRGenerator extends VisitorBase {
     }
 
     /**
-     * 根据参数类型构造实参（避免数组按值拷贝）
+     * 根据参数类型构造实参（避免大对象按值拷贝）
      */
-    private IRValue buildArgForParam(ExprNode argExpr, IRType paramType) {
+    private IRValue buildArgForParam(ExprNode argExpr, IRType paramType, String funcName, int paramIndex) {
+        if (isByRefParam(funcName, paramIndex)) {
+            return visitExprAsAddr(argExpr);
+        }
         return visitExpr(argExpr);
     }
 
@@ -1381,6 +1468,9 @@ public class IRGenerator extends VisitorBase {
                     emitArrayExprToAddr((ArrayExprNode) node.returnValue, sretReturnTarget);
                     return null;
                 }
+                if (isPathToAddr(node.returnValue, sretReturnTarget)) {
+                    return null;
+                }
             }
             result = visitExpr(node.returnValue);
         }
@@ -1619,6 +1709,10 @@ public class IRGenerator extends VisitorBase {
                     emit(new ReturnInst());
                     return null;
                 }
+                if (isPathToAddr(node.value, currentSretPtr)) {
+                    emit(new ReturnInst());
+                    return null;
+                }
             }
             if (currentSretPtr != null && emitSretReturnIfNeeded(node.value)) {
                 emit(new ReturnInst());
@@ -1754,6 +1848,7 @@ public class IRGenerator extends VisitorBase {
                 Symbol symbol = ((PathExprNode) call.function).getSymbol();
                 if (symbol != null && symbol.getKind() == SymbolKind.FUNCTION) {
                     String funcName = getDirectFunctionName(symbol);
+                    ensureByRefParamInfo(symbol, funcName);
                     IRFunction targetFunc = module.getFunction(funcName);
                     IRType sretType = sretReturnTypes.get(funcName);
                     if (sretType == null) {
@@ -1801,6 +1896,7 @@ public class IRGenerator extends VisitorBase {
                 Symbol symbol = ((PathExprNode) call.function).getSymbol();
                 if (symbol != null && symbol.getKind() == SymbolKind.FUNCTION) {
                     String funcName = getDirectFunctionName(symbol);
+                    ensureByRefParamInfo(symbol, funcName);
                     IRFunction targetFunc = module.getFunction(funcName);
                     IRType sretType = sretReturnTypes.get(funcName);
                     if (sretType == null) {
@@ -1837,6 +1933,26 @@ public class IRGenerator extends VisitorBase {
         return false;
     }
 
+    private boolean isPathToAddr(ExprNode expr, IRValue targetAddr) {
+        if (!(expr instanceof PathExprNode) || targetAddr == null) {
+            return false;
+        }
+        Symbol symbol = ((PathExprNode) expr).getSymbol();
+        if (symbol == null) {
+            return false;
+        }
+        switch (symbol.getKind()) {
+            case LOCAL_VARIABLE:
+            case PARAMETER:
+            case SELF_CONSTRUCTOR:
+                break;
+            default:
+                return false;
+        }
+        IRValue addr = getSymbolValue(symbol);
+        return addr == targetAddr;
+    }
+
     private IRValue emitSretDirectCall(CallExprNode node, String funcName, IRFunction targetFunc,
                                        IRType sretType, IRValue sretOutAddr) {
         IRValue outAddr = sretOutAddr;
@@ -1855,7 +1971,7 @@ public class IRGenerator extends VisitorBase {
                 IRType paramType = (params != null && paramIndex < params.size())
                     ? params.get(paramIndex).getType()
                     : null;
-                args.add(buildArgForParam(argExpr, paramType));
+                args.add(buildArgForParam(argExpr, paramType, funcName, paramIndex));
             }
         }
         if (targetFunc != null) {
@@ -1890,7 +2006,7 @@ public class IRGenerator extends VisitorBase {
                 IRType paramType = (params != null && paramIndex < params.size())
                     ? params.get(paramIndex).getType()
                     : null;
-                args.add(buildArgForParam(argExpr, paramType));
+                args.add(buildArgForParam(argExpr, paramType, methodName, paramIndex));
             }
         }
         if (targetFunc != null) {
@@ -2450,6 +2566,29 @@ public class IRGenerator extends VisitorBase {
             return ((IdPatNode) pattern).name.name;
         }
         return "tmp";
+    }
+
+    private boolean isMutablePattern(PatternNode pattern) {
+        if (pattern instanceof IdPatNode) {
+            return ((IdPatNode) pattern).isMutable;
+        }
+        return false;
+    }
+
+    private boolean isByRefParam(String funcName, int paramIndex) {
+        if (funcName == null) {
+            return false;
+        }
+        Set<Integer> indices = byRefParamIndices.get(funcName);
+        return indices != null && indices.contains(paramIndex);
+    }
+
+    private boolean isByRefMutableParam(String funcName, int paramIndex) {
+        if (funcName == null) {
+            return false;
+        }
+        Set<Integer> indices = byRefMutableParamIndices.get(funcName);
+        return indices != null && indices.contains(paramIndex);
     }
 
     /**
