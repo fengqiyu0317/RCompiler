@@ -1388,14 +1388,16 @@ public class IRGenerator extends VisitorBase {
         // 4. 恢复 module 状态
         for (Map.Entry<String, IRStructType> entry : savedStructs.entrySet()) {
             if (entry.getValue() == null) {
-                module.removeStruct(entry.getKey());
+                // Keep block-scoped structs in the module so their IR definitions remain available.
+                continue;
             } else {
                 module.setStruct(entry.getKey(), entry.getValue());
             }
         }
         for (Map.Entry<String, IRModule.EnumInfo> entry : savedEnums.entrySet()) {
             if (entry.getValue() == null) {
-                module.removeEnum(entry.getKey());
+                // Keep block-scoped enums in the module so their IR definitions remain available.
+                continue;
             } else {
                 module.setEnum(entry.getKey(), entry.getValue());
             }
