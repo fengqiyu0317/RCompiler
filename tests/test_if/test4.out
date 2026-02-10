@@ -1,0 +1,193 @@
+=== 已设置 NO_CACHE，强制重新生成 ===
+=== 检测到改动，重新编译/生成 ===
+=== 编译器未改动，跳过编译，仅重新生成 ===
+
+=== 生成 IR ===
+错误: IR 生成失败 (exit code: 2)
+错误信息:
+; RCompiler Builtin Functions
+; 使用 REIMU 支持的 libc 函数实现
+
+; 外部函数声明 (REIMU 支持的 libc 函数)
+declare i32 @puts(i8*)
+declare i32 @putchar(i32)
+declare i32 @printf(i8*, ...)
+declare i32 @sprintf(i8*, i8*, ...)
+declare i32 @getchar()
+declare i32 @scanf(i8*, ...)
+declare i32 @sscanf(i8*, i8*, ...)
+declare i8* @malloc(i64)
+declare i8* @calloc(i64, i64)
+declare i8* @realloc(i8*, i64)
+declare void @free(i8*)
+declare i8* @memset(i8*, i32, i64)
+declare i32 @memcmp(i8*, i8*, i64)
+declare i8* @memcpy(i8*, i8*, i64)
+declare i8* @memmove(i8*, i8*, i64)
+declare i8* @strcpy(i8*, i8*)
+declare i64 @strlen(i8*)
+declare i8* @strcat(i8*, i8*)
+declare i32 @strcmp(i8*, i8*)
+
+; 格式字符串
+@.str.fmt.int = private constant [3 x i8] c"%d\00"
+@.str.fmt.int.newline = private constant [4 x i8] c"%d\0A\00"
+@.str.fmt.str = private constant [3 x i8] c"%s\00"
+@.str.newline = private constant [2 x i8] c"\0A\00"
+@.str.fmt.scan.int = private constant [3 x i8] c"%d\00"
+@.str.fmt.scan.line = private constant [6 x i8] c"%[^\0A]\00"
+
+; ==================== I/O 函数 ====================
+
+; print(s: &str) -> ()
+; 输出字符串，不换行
+define void @print(i8* %s) {
+entry:
+    %fmt = getelementptr [3 x i8], [3 x i8]* @.str.fmt.str, i32 0, i32 0
+    call i32 (i8*, ...) @printf(i8* %fmt, i8* %s)
+    ret void
+}
+
+; println(s: &str) -> ()
+; 输出字符串并换行
+define void @println(i8* %s) {
+entry:
+    call i32 @puts(i8* %s)
+    ret void
+}
+
+; printInt(n: i32) -> ()
+; 输出整数，不换行
+define void @printInt(i32 %n) {
+entry:
+    %fmt = getelementptr [3 x i8], [3 x i8]* @.str.fmt.int, i32 0, i32 0
+    call i32 (i8*, ...) @printf(i8* %fmt, i32 %n)
+    ret void
+}
+
+; printlnInt(n: i32) -> ()
+; 输出整数并换行
+define void @printlnInt(i32 %n) {
+entry:
+    %fmt = getelementptr [4 x i8], [4 x i8]* @.str.fmt.int.newline, i32 0, i32 0
+    call i32 (i8*, ...) @printf(i8* %fmt, i32 %n)
+    ret void
+}
+
+; getString() -> String
+; 读取一行字符串
+define i8* @getString() {
+entry:
+    ; 分配缓冲区 (4096 字节)
+    %buf = call i8* @malloc(i64 4096)
+    call i8* @memset(i8* %buf, i32 0, i64 4096)
+
+    ; 读取一行
+    %fmt = getelementptr [6 x i8], [6 x i8]* @.str.fmt.scan.line, i32 0, i32 0
+    call i32 (i8*, ...) @scanf(i8* %fmt, i8* %buf)
+
+    ; 消耗换行符
+    call i32 @getchar()
+
+    ret i8* %buf
+}
+
+; getInt() -> i32
+; 读取整数
+define i32 @getInt() {
+entry:
+    %n = alloca i32
+    %fmt = getelementptr [3 x i8], [3 x i8]* @.str.fmt.scan.int, i32 0, i32 0
+    call i32 (i8*, ...) @scanf(i8* %fmt, i32* %n)
+    %result = load i32, i32* %n
+    ret i32 %result
+}
+
+; exit(code: i32) -> ()
+declare void @exit(i32)
+
+; ==================== String 方法 ====================
+
+; String::from(s: &str) -> String
+; 从字符串切片创建 String
+define i8* @"String::from"(i8* %s) {
+entry:
+    %len = call i64 @strlen(i8* %s)
+    %size = add i64 %len, 1
+    %new_str = call i8* @malloc(i64 %size)
+    call i8* @strcpy(i8* %new_str, i8* %s)
+    ret i8* %new_str
+}
+
+; String.as_str(&self) -> &str
+; 返回字符串切片（直接返回指针）
+define i8* @"String::as_str"(i8* %self) {
+entry:
+    ret i8* %self
+}
+
+; String.as_mut_str(&mut self) -> &mut str
+define i8* @"String::as_mut_str"(i8* %self) {
+entry:
+    ret i8* %self
+}
+
+; String.len(&self) -> usize
+define i64 @"String::len"(i8* %self) {
+entry:
+    %len = call i64 @strlen(i8* %self)
+    ret i64 %len
+}
+
+; String.append(&mut self, s: &str) -> ()
+; 注意：这个实现假设 self 有足够空间，实际需要 realloc
+define void @"String::append"(i8* %self, i8* %s) {
+entry:
+    ; 获取当前长度
+    %self_len = call i64 @strlen(i8* %self)
+    %s_len = call i64 @strlen(i8* %s)
+    %new_len = add i64 %self_len, %s_len
+    %new_size = add i64 %new_len, 1
+
+    ; 重新分配内存
+    %new_buf = call i8* @realloc(i8* %self, i64 %new_size)
+
+    ; 追加字符串
+    call i8* @strcat(i8* %new_buf, i8* %s)
+    ret void
+}
+
+; ==================== 数值方法 ====================
+
+; u32.to_string(&self) -> String
+define i8* @"u32::to_string"(i32 %self) {
+entry:
+    ; 分配缓冲区 (最多 12 字符: -2147483648 + null)
+    %buf = call i8* @malloc(i64 12)
+    %fmt = getelementptr [3 x i8], [3 x i8]* @.str.fmt.int, i32 0, i32 0
+    call i32 (i8*, i8*, ...) @sprintf(i8* %buf, i8* %fmt, i32 %self)
+    ret i8* %buf
+}
+
+; usize.to_string(&self) -> String
+define i8* @"usize::to_string"(i64 %self) {
+entry:
+    %buf = call i8* @malloc(i64 21)
+    %val32 = trunc i64 %self to i32
+    %fmt = getelementptr [3 x i8], [3 x i8]* @.str.fmt.int, i32 0, i32 0
+    call i32 (i8*, i8*, ...) @sprintf(i8* %buf, i8* %fmt, i32 %val32)
+    ret i8* %buf
+}
+
+; &str.len(&self) -> usize
+define i64 @"str::len"(i8* %self) {
+entry:
+    %len = call i64 @strlen(i8* %self)
+    ret i64 %len
+}
+Type checking errors:
+  Left side of assignment is not assignable
+  Type of expression node is not set yet.
+  Type of expression node is not set yet.
+  Type of expression node is not set yet.
+make: *** [Makefile:63: run] Error 1

@@ -1,0 +1,80 @@
+=== 已设置 NO_CACHE，强制重新生成 ===
+=== 检测到改动，重新编译/生成 ===
+=== 编译器未改动，跳过编译，仅重新生成 ===
+
+=== 生成 IR ===
+生成的 IR: 已写入 ir_result.out
+
+=== 用 clang 生成 RISC-V 汇编 ===
+生成成功: /tmp/reimu_run/b2cb615823c24c6a3efaf09f30a4b30948d1e448/test.s, /tmp/reimu_run/b2cb615823c24c6a3efaf09f30a4b30948d1e448/builtin.s
+
+=== 运行 REIMU ===
+(使用输入文件: tests/test_comprehensive/test8.in)
+./test_ir.sh: line 342: warning: command substitution: ignored null byte in input
+Warning: attribute ignored: .attribute
+Warning: attribute ignored: .file
+Warning: attribute ignored: .type
+Warning: attribute ignored: .cfi_startproc
+Warning: attribute ignored: .cfi_def_cfa_offset
+Warning: attribute ignored: .cfi_offset
+Warning: attribute ignored: .size
+Warning: attribute ignored: .cfi_endproc
+Warning: attribute ignored: .unknown
+Warning: attribute ignored: .addrsig
+Warning: attribute ignored: .addrsig_sym
+Warning: attribute ignored: .cfi_def_cfa
+
+=============================== Build time: 7ms ================================
+
+1800
+1801
+1134903170
+1
+9
+0
+0
+1802
+1803
+5
+30
+14
+0
+1804
+1805
+625
+4000
+1528
+0
+238990
+1806
+1807
+57
+391
+22
+1808
+1809
+4116
+999999
+17
+1810
+1899
+
+Exit code: 0
+Total cycles: 421136979
+Instruction parsed: 6633
+Instruction counts:
+# simple   = 1063197
+# mul      = 56179
+# div      = 0
+# mem      = 6533196
+# branch   = 146850
+# jump     = 226202
+# jalr     = 13802
+# libcMem  = 0
+# libcIO   = 32
+# libcOp   = 0
+
+============================= Interpret time: 80ms =============================
+
+=== 结果 ===
+程序 exit code: 0

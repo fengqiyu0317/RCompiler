@@ -1,0 +1,10 @@
+/*
+If test 5 (from semantic-1/if5): if expression as value assignment
+*/
+
+fn main() {
+    let a: i32 = 4;
+    let b: i32 = if (a > 3) { a * 2 } else { a / 2 };
+    printlnInt(b);
+    exit(0);
+}

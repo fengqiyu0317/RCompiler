@@ -1,0 +1,15 @@
+/*
+If test 7 (from semantic-1/if7): logical OR operations in condition
+*/
+
+fn main() {
+    let ch: char = 'a';
+    if (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u') {
+        let vowel: bool = true;
+        printlnInt(vowel as i32);
+    } else {
+        let vowel: bool = false;
+        printlnInt(vowel as i32);
+    }
+    exit(0);
+}

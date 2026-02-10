@@ -1,0 +1,21 @@
+/*
+Autoref test 4 (from semantic-1/autoref4): method on reference
+*/
+
+struct Calculator {
+    result: i32
+}
+
+impl Calculator {
+    fn get_result(&self) -> i32 {
+        return self.result;
+    }
+}
+
+fn main() {
+    let calc: Calculator = Calculator { result: 100 };
+    let calc_ref: &Calculator = &calc;
+    let value: i32 = calc_ref.get_result();
+    printlnInt(value);
+    exit(0);
+}

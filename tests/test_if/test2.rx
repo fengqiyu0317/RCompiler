@@ -1,0 +1,14 @@
+/*
+If test 2 (from semantic-1/if2): if-else with mutable variable modification
+*/
+
+fn main() {
+    let mut flag: bool = true;
+    if (flag) {
+        flag = false;
+    } else {
+        flag = true;
+    }
+    printlnInt(flag as i32);
+    exit(0);
+}

@@ -1,0 +1,12 @@
+/*
+If test 10 (from semantic-1/if10): block expression in condition
+*/
+
+fn main() {
+    let mut n: i32 = 5;
+    if ({ n -= 1; n } > 3) {
+        n = 0;
+    }
+    printlnInt(n);
+    exit(0);
+}

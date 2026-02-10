@@ -1,0 +1,16 @@
+define i32 @test_return_expr() {
+entry:
+    %x.addr.0 = alloca i32
+    ret i32 42
+}
+
+define void @main() {
+entry:
+    %result.addr.0 = alloca i32
+    %t1 = call i32 @test_return_expr()
+    store i32 %t1, i32* %result.addr.0
+    %t2 = load i32, i32* %result.addr.0
+    call void @printlnInt(i32 %t2)
+    call void @exit(i32 0)
+    ret void
+}

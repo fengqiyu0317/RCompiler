@@ -1,0 +1,14 @@
+define void @main() {
+entry:
+    %b.addr.0 = alloca i32
+    %t1 = call i32 @getInt()
+    %t2 = add i32 %t1, 1
+    store i32 %t2, i32* %b.addr.0
+    %t3 = load i32, i32* %b.addr.0
+    call void @printlnInt(i32 %t3)
+    %t4 = load i32, i32* %b.addr.0
+    call void @exit(i32 %t4)
+    %t5 = load i32, i32* %b.addr.0
+    call void @exit(i32 %t5)
+    ret void
+}

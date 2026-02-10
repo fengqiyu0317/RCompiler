@@ -28,16 +28,20 @@ ERROR_TEST_RUNNER = ErrorTestRunner
 BATCH_TEST_RUNNER = BatchTestRunner
 
 # 默认目标
-.PHONY: all compile run test clean rebuild help compile-incremental
+.PHONY: all build compile run test clean rebuild help compile-incremental
 
 # 全部编译
-all: compile
+all: build
 
 # 创建目标目录
 $(TARGET_DIR):
-	mkdir -p $(TARGET_DIR)
+	@mkdir -p $(TARGET_DIR)
 
-# 编译主程序（智能增量编译）
+# build 目标 (评测用)
+build: $(TARGET_DIR)
+	@$(JAVAC) $(JAVAC_FLAGS) $(SRC_FILES)
+
+# 编译主程序（智能增量编译，带提示信息）
 compile: $(TARGET_DIR)
 	@echo "检查文件修改状态..."
 	@$(JAVAC) $(JAVAC_FLAGS) $(SRC_FILES)
@@ -53,10 +57,10 @@ compile-test: compile
 	@$(JAVAC) $(JAVAC_FLAGS) $(TEST_FILES)
 	@echo "测试编译完成！"
 
-# 运行主程序
+# run 目标 (评测用): 从 stdin 读入代码，stdout 输出 IR，stderr 输出 builtin.ll
 run:
-	@echo "运行主程序..."
-	$(JAVA) $(JAVA_FLAGS) $(MAIN_CLASS)
+	@cat builtin.ll >&2
+	@$(JAVA) $(JAVA_FLAGS) $(MAIN_CLASS)
 
 # 运行主程序并重定向输入输出
 # 使用方法: make run-redirect INPUT=input.txt OUTPUT=output.txt

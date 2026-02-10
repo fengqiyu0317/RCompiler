@@ -1,0 +1,97 @@
+=== 已设置 NO_CACHE，强制重新生成 ===
+=== 检测到改动，重新编译/生成 ===
+=== 编译器未改动，跳过编译，仅重新生成 ===
+
+=== 生成 IR ===
+生成的 IR: 已写入 ir_result.out
+
+=== 用 clang 生成 RISC-V 汇编 ===
+生成成功: /tmp/reimu_run/878f89e2b74151c23c19195f74ef7580ecea62a4/test.s, /tmp/reimu_run/878f89e2b74151c23c19195f74ef7580ecea62a4/builtin.s
+
+=== 运行 REIMU ===
+(使用输入文件: tests/test_comprehensive/test33.in)
+./test_ir.sh: line 342: warning: command substitution: ignored null byte in input
+Warning: attribute ignored: .attribute
+Warning: attribute ignored: .file
+Warning: attribute ignored: .type
+Warning: attribute ignored: .cfi_startproc
+Warning: attribute ignored: .cfi_def_cfa_offset
+Warning: attribute ignored: .cfi_offset
+Warning: attribute ignored: .size
+Warning: attribute ignored: .cfi_endproc
+Warning: attribute ignored: .unknown
+Warning: attribute ignored: .addrsig
+Warning: attribute ignored: .addrsig_sym
+Warning: attribute ignored: .cfi_def_cfa
+
+=============================== Build time: 2ms ================================
+
+100020
+202542
+5003
+100012
+201799
+5004
+5018
+5019
+100007
+200969
+5002
+5004
+5018
+100002
+200369
+5002
+100001
+200100
+100000
+200000
+100000
+200000
+100000
+200000
+100000
+200000
+100000
+200000
+-1
+9999
+19999
+29999
+39999
+49999
+59999
+69999
+79999
+89999
+99999
+109999
+119999
+129999
+139999
+149999
+159999
+169999
+179999
+189999
+9999
+
+Exit code: 0
+Total cycles: 13916374
+Instruction parsed: 1958
+Instruction counts:
+# simple   = 255059
+# mul      = 33512
+# div      = 80
+# mem      = 205249
+# branch   = 32672
+# jump     = 51708
+# jalr     = 3554
+# libcMem  = 0
+# libcIO   = 49
+# libcOp   = 0
+
+============================= Interpret time: 21ms =============================
+
+=== 结果 ===
+程序 exit code: 0

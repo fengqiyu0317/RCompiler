@@ -1,0 +1,25 @@
+define i32 @test(i1 %b.0) {
+entry:
+    %b.addr.1 = alloca i1
+    store i1 %b.0, i1* %b.addr.1
+    %x.addr.2 = alloca i1
+    %t3 = load i1, i1* %b.addr.1
+    br i1 %t3, label %if.then, label %if.else
+if.then:
+    ret i32 0
+if.else:
+    br label %if.merge
+if.merge:
+    ret i32 1
+}
+
+define void @main() {
+entry:
+    %result.addr.0 = alloca i32
+    %t1 = call i32 @test(i1 1)
+    store i32 %t1, i32* %result.addr.0
+    %t2 = load i32, i32* %result.addr.0
+    call void @printlnInt(i32 %t2)
+    call void @exit(i32 0)
+    ret void
+}

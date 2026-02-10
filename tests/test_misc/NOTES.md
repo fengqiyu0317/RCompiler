@@ -1,0 +1,58 @@
+# test_misc summaries
+
+- test1: sum 1..n and print result.
+- test2: read n integers and print maximum.
+- test3: compute nth Fibonacci number using struct state.
+- test4: compute factorial(n); if result even print result*2 else result; n<0 prints -1.
+- test5: read n numbers, bubble sort, print sorted values.
+- test6: prime check; print 1 if prime else 0.
+- test7: binary search in sorted array; print index or -1.
+- test8: read matrix, transpose, print transposed elements.
+- test9: compute gcd and lcm of two integers, print both.
+- test10: array-backed stack; execute push/pop/peek ops and print results for pop/peek.
+- test11: simple calculator; op_code 1..5 for add/sub/mul/div/mod.
+- test12: palindrome check for integer; prints 1 and digit count if palindrome else 0 and -1.
+- test13: simple list with push_front/pop_front/size ops; prints pop and size results.
+- test14: power calculation base^exponent; method 1 iterative, 2 recursive.
+- test15: hash table insert/get with linear probing; print get results.
+- test16: binary search tree insert n values; print inorder traversal.
+- test17: min-heap with insert/extract_min/peek; print extract/peek results.
+- test18: quicksort n values and print sorted array.
+- test19: merge sort n values and print sorted array.
+- test20: KMP pattern matching on integer arrays; prints first occurrence and total matches.
+- test21: array-based linked list with insert front/back, delete, search, print.
+- test22: stack ops (push/pop/peek/size/is_empty/print).
+- test23: circular queue enqueue/dequeue/front/size/print.
+- test24: AVL tree insert/search/inorder/height operations.
+- test25: undirected graph with DFS/BFS/path/connected components operations.
+- test26: union-find operations (union/find/is_connected/component count/size).
+- test27: segment tree for range sum queries and point updates.
+- test28: trie operations (insert/search/starts_with/count prefix) using ASCII codes for letters.
+- test29: Fenwick tree with set_value, range sum, prefix sum, point query.
+- test30: red-black tree insert/search/inorder/black height/validate operations.
+- test31: Dijkstra shortest paths from source; prints distances for all vertices.
+- test32: topological sort or cycle check on directed graph (Kahn/DFS).
+- test33: Kosaraju SCC; can count, check strongly connected, or print components.
+- test34: Kruskal MST; operations include MST weight/connected/edge count/print edges.
+- test35: Bellman-Ford shortest paths / negative cycle checks.
+- test36: Pollard's rho factorization; prints a (likely prime) factor from recursive splitting.
+- test37: Miller-Rabin primality test with given witness; prints 1 if likely prime.
+- test38: quadratic sieve-style factor search; prints a non-trivial factor if found.
+- test39: Schönhage-Strassen-like digit convolution multiply two integers.
+- test40: continued fraction period for sqrt(n) and Pell equation solver (prints derived value).
+- test41: baby-step giant-step discrete log; prints x such that g^x ≡ h (mod p).
+- test42: Tonelli-Shanks modular square root; prints sqrt or -1.
+- test43: elliptic curve scalar multiplication; prints x of k*P or -1 if infinity.
+- test44: Lenstra elliptic curve factorization; prints a found factor or n if none.
+- test45: Solovay-Strassen primality test; prints 1 if prime else a factor.
+- test46: Ackermann function demo; no input (uses m=2,n=3).
+- test47: Collatz max sequence length for range 1..10; no input.
+- test48: Hofstadter Q-sequence sum for n=6; no input.
+- test49: Josephus problem variations for n=3..7 and k=2..4; no input.
+- test50: integer partition sum for n=1..5; no input.
+- test51: sum of Catalan numbers for n=0..4; no input.
+- test52: Tower of Hanoi move counts for discs 1..6; no input.
+- test53: digital root pattern counting for numbers 10..100 step 7; no input.
+- test54: Moser circle regions sum for n=0..6; no input.
+- test55: Stern-Brocot (Stern's diatomic) sequence analysis; no input.
+- test56: complex Walsh-Hadamard/bitset convolution analysis; no input.

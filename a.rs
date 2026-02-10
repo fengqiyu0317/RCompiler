@@ -1,56 +1,45 @@
-struct S {
-    a: i32,
-    b: String,
-}
+// struct S {
+//     a: i32,
+//     b: String,
+// }
 
-struct U {
-    a: i32
-}
+// struct U {
+//     a: i32
+// }
 
-trait T {
-    fn foo() -> i32 {
-        42
-    }
-}
+// trait T {
+//     fn foo() -> i32 {
+//         42
+//     }
+// }
 
-impl S {
-    fn bar(&mut self) {
-        self.a = 10;
-    }
-}
+// impl S {
+//     fn bar(&mut self) {
+//         self.a = 10;
+//     }
+// }
 
-enum A {
-    B,
-    C
+// enum A {
+//     B,
+//     C
+// }
+
+// fn add(x: i32, y: i32) -> i32 {
+//     fn sub(x: i32, y: i32) -> i32 {
+//         x - y
+//     }
+//     x + y + sub(x, y)
+// }
+
+fn modify(mut a: [i32; 3]) {
+    a[0] = 10;
+    println!("{:?}", a);
 }
 
 fn main() {
-    let m: bool = true;
-    let n: i32 = m;
-    // println!("g.a: {}, h: {}", g.a, h);
-    // {n}.b = String::from("changed");
-    // let m = n;
-    // let p = &s1;
-    // let q = *p;
-    // {
-    //     let mut s1 = String::from("foo");
-    //     let mut g = s1;
-    // }
-    // n.bar();
-    // output n.a and n.b
-    // println!("n.a: {}, n.b: {}", n.a, n.b);
-    // if (2 + 2 == 4) {
-    //     1
-    // } else {
-    //     2
-    // }
-    // let x: i32 = 4;
-    // let x: i32 = loop {
-    //     if (2 + 2 == 4) {
-    //         break 1;
-    //     } else {
-    //         2
-    //     }
-    //     break 3;
-    // };
+    let mut arr: [i32; 3] = [1, 2, 3];
+    let mut arr1 = arr; // This creates a copy of the array
+    arr1[0] = 10; // This modifies the copy, not the original array
+    println!("Original array: {:?}", arr); // Output: [1, 2, 3]
+    println!("Modified array: {:?}", arr1); // Output: [10, 2, 3]
 }

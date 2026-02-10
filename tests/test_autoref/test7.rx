@@ -1,0 +1,32 @@
+/*
+Autoref test 7 (from semantic-1/autoref9): mixed auto ref/deref
+*/
+
+struct Account {
+    balance: i32,
+    id: i32
+}
+
+impl Account {
+    fn get_balance(&self) -> i32 {
+        return self.balance;
+    }
+
+    fn deposit(&mut self, amount: i32) {
+        self.balance = self.balance + amount;
+    }
+
+    fn get_id(&self) -> i32 {
+        return self.id;
+    }
+}
+
+fn main() {
+    let mut account: Account = Account { balance: 100, id: 12345 };
+    let initial_balance: i32 = account.get_balance();
+    account.deposit(50);
+    let new_balance: i32 = account.get_balance();
+    let account_id: i32 = account.get_id();
+    printlnInt(new_balance + account_id);
+    exit(0);
+}

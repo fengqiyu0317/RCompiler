@@ -1,0 +1,14 @@
+/*
+Array test 2 (from semantic-1/array2): mutable array + output
+*/
+
+fn main() {
+    let mut flags: [bool; 5] = [false; 5];
+    flags[2] = true;
+    printlnInt(flags[0] as i32);
+    printlnInt(flags[1] as i32);
+    printlnInt(flags[2] as i32);
+    printlnInt(flags[3] as i32);
+    printlnInt(flags[4] as i32);
+    exit(0);
+}

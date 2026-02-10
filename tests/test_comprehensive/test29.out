@@ -1,0 +1,49 @@
+=== 已设置 NO_CACHE，强制重新生成 ===
+=== 检测到改动，重新编译/生成 ===
+=== 编译器未改动，跳过编译，仅重新生成 ===
+
+=== 生成 IR ===
+生成的 IR: 已写入 ir_result.out
+
+=== 用 clang 生成 RISC-V 汇编 ===
+生成成功: /tmp/reimu_run/2c7d5ec9c57d05a2d66cfd22aab561e7e63037c4/test.s, /tmp/reimu_run/2c7d5ec9c57d05a2d66cfd22aab561e7e63037c4/builtin.s
+
+=== 运行 REIMU ===
+(使用输入文件: tests/test_comprehensive/test29.in)
+./test_ir.sh: line 342: warning: command substitution: ignored null byte in input
+Warning: attribute ignored: .attribute
+Warning: attribute ignored: .file
+Warning: attribute ignored: .type
+Warning: attribute ignored: .cfi_startproc
+Warning: attribute ignored: .cfi_def_cfa_offset
+Warning: attribute ignored: .cfi_offset
+Warning: attribute ignored: .size
+Warning: attribute ignored: .cfi_endproc
+Warning: attribute ignored: .unknown
+Warning: attribute ignored: .addrsig
+Warning: attribute ignored: .addrsig_sym
+Warning: attribute ignored: .cfi_def_cfa
+
+=============================== Build time: 1ms ================================
+
+1337
+
+Exit code: 0
+Total cycles: 2422394
+Instruction parsed: 789
+Instruction counts:
+# simple   = 24552
+# mul      = 0
+# div      = 0
+# mem      = 36546
+# branch   = 4903
+# jump     = 9783
+# jalr     = 5
+# libcMem  = 0
+# libcIO   = 1
+# libcOp   = 0
+
+============================= Interpret time: 16ms =============================
+
+=== 结果 ===
+程序 exit code: 0

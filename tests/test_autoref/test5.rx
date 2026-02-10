@@ -1,0 +1,11 @@
+/*
+Autoref test 5 (from semantic-1/autoref5): array indexing on reference
+*/
+
+fn main() {
+    let numbers: [i32; 5] = [10, 20, 30, 40, 50];
+    let numbers_ref: &[i32; 5] = &numbers;
+    let third_item: i32 = numbers_ref[2];
+    printlnInt(third_item);
+    exit(0);
+}

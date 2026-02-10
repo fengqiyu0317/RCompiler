@@ -1,0 +1,17 @@
+/*
+If test 4 (from semantic-1/if4): if-else if-else chain
+*/
+
+fn main() {
+    let temperature: i32 = 25;
+    let status_code: i32;
+    if (temperature > 30) {
+        status_code = 1; // hot
+    } else if (temperature < 10) {
+        status_code = 2; // cold
+    } else {
+        status_code = 3; // mild
+    }
+    printlnInt(status_code);
+    exit(0);
+}

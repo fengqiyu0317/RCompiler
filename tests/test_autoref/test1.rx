@@ -1,0 +1,20 @@
+/*
+Autoref test 1 (from semantic-1/autoref1): &self on value
+*/
+
+struct Counter {
+    value: i32
+}
+
+impl Counter {
+    fn get_value(&self) -> i32 {
+        return self.value;
+    }
+}
+
+fn main() {
+    let counter: Counter = Counter { value: 42 };
+    let result: i32 = counter.get_value();
+    printlnInt(result);
+    exit(0);
+}

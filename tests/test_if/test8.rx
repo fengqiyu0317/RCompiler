@@ -1,0 +1,12 @@
+/*
+If test 8 (from semantic-1/if8): chained if expression with multiple branches
+*/
+
+fn main() {
+    let score: i32 = 87;
+    let grade: char = if (score >= 90) { 'A' }
+                else if (score >= 80) { 'B' }
+                else { 'C' };
+    printlnInt(grade as i32);
+    exit(0);
+}

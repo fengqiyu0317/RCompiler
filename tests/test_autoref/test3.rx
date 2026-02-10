@@ -1,0 +1,17 @@
+/*
+Autoref test 3 (from semantic-1/autoref3): field access through reference
+*/
+
+struct Point {
+    x: i32,
+    y: i32
+}
+
+fn main() {
+    let p: Point = Point { x: 10, y: 20 };
+    let p_ref: &Point = &p;
+    let x_value: i32 = p_ref.x;
+    let y_value: i32 = p_ref.y;
+    printlnInt(x_value + y_value);
+    exit(0);
+}

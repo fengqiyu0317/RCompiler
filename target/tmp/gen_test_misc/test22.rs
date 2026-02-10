@@ -1,0 +1,249 @@
+use std::io::{self, Read, Write};
+use std::process;
+
+static mut INPUT: Option<Vec<String>> = None;
+static mut INDEX: usize = 0;
+
+fn init_input() {
+    unsafe {
+        if INPUT.is_some() { return; }
+        let mut s = String::new();
+        io::stdin().read_to_string(&mut s).unwrap();
+        let tokens: Vec<String> = s.split_whitespace().map(|t| t.to_string()).collect();
+        INPUT = Some(tokens);
+        INDEX = 0;
+    }
+}
+
+fn next_token() -> Option<String> {
+    init_input();
+    unsafe {
+        if let Some(ref v) = INPUT {
+            if INDEX < v.len() {
+                let tok = v[INDEX].clone();
+                INDEX += 1;
+                return Some(tok);
+            }
+        }
+    }
+    None
+}
+
+fn getInt() -> i32 {
+    match next_token() {
+        Some(t) => t.parse::<i32>().unwrap_or(0),
+        None => 0,
+    }
+}
+
+fn getString() -> String {
+    match next_token() {
+        Some(t) => t,
+        None => String::new(),
+    }
+}
+
+fn printInt(n: i32) { print!("{}", n); }
+fn printlnInt(n: i32) { println!("{}", n); }
+fn print(s: &str) { print!("{}", s); }
+fn println(s: &str) { println!("{}", s); }
+fn exit(code: i32) { let _ = io::stdout().flush(); process::exit(code); }
+
+/*
+Test Package: Semantic-1
+Test Target: misc
+Author: Wenxin Zheng
+Time: 2025-08-08
+Verdict: Success
+Comment: Stack implementation with dynamic resizing simulation
+*/
+
+// Stack implementation with dynamic resizing simulation
+// LIFO (Last In First Out) data structure
+const MAXN: usize = 10;
+
+#[derive(Copy, Clone)]
+struct Stack {
+    data: [i32; 1000],
+    top: i32,
+    capacity: i32,
+}
+
+impl Stack {
+    fn new() -> Stack {
+        Stack {
+            data: [0; 1000],
+            top: -1,
+            capacity: 1000,
+        }
+    }
+    
+    fn is_empty(&self) -> bool {
+        return (self.top == -1);
+    }
+    
+    fn is_full(&self) -> bool {
+        return (self.top >= self.capacity - 1);
+    }
+    
+    fn push(&mut self, value: i32) -> bool {
+        if (self.is_full()) {
+            return false;
+        }
+        
+        self.top += 1;
+        self.data[self.top as usize] = value;
+        return true;
+    }
+    
+    fn pop(&mut self) -> i32 {
+        if (self.is_empty()) {
+            return -1; // Stack underflow
+        }
+        
+        let value: i32 = self.data[self.top as usize];
+        self.top -= 1;
+        return value;
+    }
+    
+    fn peek(&self) -> i32 {
+        if (self.is_empty()) {
+            return -1;
+        }
+        return self.data[self.top as usize];
+    }
+    
+    fn size(&self) -> i32 {
+        return self.top + 1;
+    }
+    
+    fn clear(&mut self) {
+        self.top = -1;
+    }
+    
+    fn print_stack(&self) {
+        let mut i: i32 = self.top;
+        while (i >= 0) {
+            printInt(self.data[i as usize]);
+            i -= 1;
+        }
+    }
+    
+    // Check if parentheses are balanced
+    fn is_balanced_parentheses(&mut self, expr: &[i32; MAXN], length: i32) -> bool {
+        self.clear();
+
+        if (length > MAXN as i32) {
+            return false;
+        }
+        
+        let mut i: i32 = 0;
+        while (i < length) {
+            let ch: i32 = expr[i as usize];
+            
+            if (ch == 40 || ch == 91 || ch == 123) { // '(', '[', '{'
+                self.push(ch);
+            } else if (ch == 41 || ch == 93 || ch == 125) { // ')', ']', '}'
+                if (self.is_empty()) {
+                    return false;
+                }
+                
+                let last: i32 = self.pop();
+                if ((ch == 41 && last != 40) ||
+                   (ch == 93 && last != 91) ||
+                   (ch == 125 && last != 123)) {
+                    return false;
+                }
+            }
+            
+            i += 1;
+        }
+        
+        return (self.is_empty());
+    }
+    
+    // Evaluate postfix expression
+    fn evaluate_postfix(&mut self, expr: &[i32; MAXN], length: i32) -> i32 {
+        self.clear();
+        
+        if (length > MAXN as i32) {
+            return -1;
+        }
+        
+        let mut i: i32 = 0;
+        while (i < length) {
+            let token: i32 = expr[i as usize];
+            
+            if (token >= 0 && token <= 9) { // Operand (single digit)
+                self.push(token);
+            } else if (token == 43 || token == 45 || token == 42 || token == 47) { // +, -, *, /
+                if (self.size() < 2) {
+                    return -1; // Invalid expression
+                }
+                
+                let b: i32 = self.pop();
+                let a: i32 = self.pop();
+                
+                let result: i32 = if (token == 43) {
+                    a + b
+                } else if (token == 45) {
+                    a - b
+                } else if (token == 42) {
+                    a * b
+                } else if (token == 47) {
+                    if (b == 0) {
+                        return -1; // Division by zero
+                    }
+                    a / b
+                } else {
+                    0
+                };
+                
+                self.push(result);
+            }
+            
+            i += 1;
+        }
+        
+        if (self.size() == 1) {
+            return self.pop();
+        } else {
+            return -1; // Invalid expression
+        }
+    }
+}
+
+fn main() {
+    let mut stack: Stack = Stack::new();
+    let n: i32 = getInt();
+    
+    let mut i: i32 = 0;
+    while (i < n) {
+        let operation: i32 = getInt();
+        
+        if (operation == 1) { // Push
+            let value: i32 = getInt();
+            stack.push(value);
+        } else if (operation == 2) { // Pop
+            let value: i32 = stack.pop();
+            printInt(value);
+        } else if (operation == 3) { // Peek
+            let value: i32 = stack.peek();
+            printInt(value);
+        } else if (operation == 4) { // Size
+            let size: i32 = stack.size();
+            printInt(size);
+        } else if (operation == 5) { // Is empty
+            if (stack.is_empty()) {
+                printInt(1);
+            } else {
+                printInt(0);
+            }
+        } else if (operation == 6) { // Print stack
+            stack.print_stack();
+        }
+        
+        i += 1;
+    }
+    exit(0);
+}

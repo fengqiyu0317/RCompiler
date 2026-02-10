@@ -1,0 +1,30 @@
+/*
+Autoref test 2 (from semantic-1/autoref2): &mut self on mutable value
+*/
+
+struct Counter {
+    value: i32
+}
+
+impl Counter {
+    fn increment(&mut self) {
+        self.value = self.value + 1;
+    }
+
+    fn get_value(&self) -> i32 {
+        return self.value;
+    }
+
+    fn consume_and_double(self) -> i32 {
+        return self.value * 2;
+    }
+}
+
+fn main() {
+    let mut counter: Counter = Counter { value: 10 };
+    counter.increment();
+    let result: i32 = counter.get_value();
+    let final_result: i32 = counter.consume_and_double();
+    printlnInt(final_result);
+    exit(0);
+}
